@@ -3,22 +3,22 @@
        <div class="empty1"></div>   
        <div class="footer-wrap">
 		<div class="footer1">
-			<dl class="yes">
-				<dt class="sprite tab_bar_home_b"></dt>
+			<router-link :to="'home'" tag="dl" >
+				<dt class="sprite tab_bar_home_a"></dt>
 				<dd>首页</dd>
-			</dl>
-			<dl class="no" data = 'html/moreGoods.html'>
+			</router-link>
+			<router-link :to="'more'" tag="dl">
 				<dt class="sprite tab_bar_more_a"></dt>
 				<dd>更多商品</dd>
-			</dl>
-			<dl class="no" data = "html/wo.html">
+			</router-link>
+			<router-link :to="'my'" tag="dl">
 				<dt class="sprite tab_bar_mine_a"></dt>
 				<dd>我</dd>
-			</dl>
-			<dl class="no" data = 'html/login.html'>
+			</router-link>
+			<router-link :to="'message'" tag="dl">
 				<dt class="sprite tab_bar_Message_a"></dt>
 				<dd>消息</dd>
-			</dl>
+			</router-link>
 		</div>
 	</div>
    </div>
@@ -54,4 +54,11 @@ export default {
 .tab_bar_mine_b{background-position:-426px -81px;}
 .tab_bar_Message_a{background-position:-605px -1px;}
 .tab_bar_Message_b{background-position:-603px -81px;}
+
+
+
+.router-link-active .tab_bar_home_a{background-position:-95px -81px;}
+.router-link-active .tab_bar_more_a{background-position:-269px -81px;}
+.router-link-active .tab_bar_mine_a{background-position:-426px -81px;}
+.router-link-active .tab_bar_Message_a{background-position:-603px -81px;}
 </style>
