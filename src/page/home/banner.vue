@@ -1,6 +1,6 @@
 <template>
 <div>
- <div class="swiper-container banner1">
+ <div id="banner-wrap" class="swiper-container banner1">
     <div class="swiper-wrapper">
       <!-- <div class="swiper-slide" v-for="(item,index) in imgList" :style="{backgroundImage: 'url(' + item.img + ')'}" :key="index"></div> -->
       <div class="swiper-slide">
