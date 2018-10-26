@@ -25,4 +25,13 @@ export default {
 }
 .empty{width: 100%;height: 87px;}
 .empty1{width: 100%;height: 98px;}
+.float_right{float: right;}
+.float_left{float: left;}
+.clearfloat:after {
+    content: ".";
+    display: block;
+    height: 0;
+    overflow: hidden;
+    clear: both;
+}
 </style>
