@@ -7,7 +7,7 @@
         </div>
         <div class="header-wrap" v-if="type == 'more'">
             <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="'返回'"></div>
-			<h2 class="index_tit header_tit" v-text="'更多商品'"></h2>
+			<h2 class="index_tit header_tit" v-text="type == 'home'"></h2>
         </div>
         <div class="empty"></div>
     </div>
@@ -18,15 +18,15 @@
     export default {
     
         name: 'app-header',
-    
+        props: ["type"],
         data() {
-    
             return {
-                type:'home',
             }
     
         },
-    
+        created:{
+            
+        },
         components: {}
     
     }

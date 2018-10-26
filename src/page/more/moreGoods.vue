@@ -1,6 +1,6 @@
 <template>
    <div class="moreGoods">
-        <app-header></app-header>
+        <app-header type = "more"></app-header>
         <h1>more</h1>
         <app-footer></app-footer>
    </div>
