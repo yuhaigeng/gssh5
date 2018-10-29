@@ -2,15 +2,8 @@
     <div>
         <div id="banner-wrap" class="swiper-container banner1">
             <div class="swiper-wrapper">
-                <!-- <div class="swiper-slide" v-for="(item,index) in imgList" :style="{backgroundImage: 'url(' + item.img + ')'}" :key="index"></div> -->
-                <div class="swiper-slide">
-                    <img src="../../assets/img/fruit_banner.png" alt="">
-                </div>
-                <div class="swiper-slide">
-                    <img src="../../assets/img/fruit_banner.png" alt="">
-                </div>
-                <div class="swiper-slide">
-                    <img src="../../assets/img/fruit_banner.png" alt="">
+                <div class="swiper-slide" v-for="(item,index) in imgList" :key="index">
+                    <img :src="item.img" alt="">
                 </div>
             </div>
             <!-- 如果需要分页器 -->
@@ -20,11 +13,7 @@
             <div class="gonggao">
                 <div class="swiper-container banner2">
                     <ul class="swiper-wrapper">
-                        <li class="swiper-slide">
-                            <p>这是公告一</p>
-                        </li>
-                        <li class="swiper-slide">
-                            <p>这是公告二</p>
+                        <li class="swiper-slide" v-for="(item,index) in gonggaoList" :key="index" v-text="item.content">
                         </li>
                     </ul>
                 </div>
@@ -40,11 +29,17 @@
         name: 'banner',
         data() {
             return {
-                imgList: [{
-                    img: "../../assets/img/fruit_banner.png",
-                    img: "../../assets/img/fruit_banner.png",
-                    img: "../../assets/img/fruit_banner.png"
-                }, ]
+    
+                imgList: [
+                    {img: "http://img.guoss.cn/gss_img_root/img_ads/974/20181023141954.jpg"},
+                    {img: "http://img.guoss.cn/gss_img_root/img_ads/975/20181023142440.jpg"},
+                    {img: "http://img.guoss.cn/gss_img_root/img_ads/976/20181023142657.jpg"},{img:"http://img.guoss.cn/gss_img_root/img_ads/977/20181023142753.jpg"},{img:"http://img.guoss.cn/gss_img_root/img_ads/978/20181023142900.jpg"},
+                    ],
+                gonggaoList:[{
+                    content:'这是公告一'
+                },{
+                    content:'这是公告二'
+                }]
             }
         },
         mounted() {
