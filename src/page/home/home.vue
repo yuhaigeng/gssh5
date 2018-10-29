@@ -1,8 +1,8 @@
 <template>
    <div class="home">
-        <app-header></app-header>
+        <app-header type="home"></app-header>
         <app-banner></app-banner>
-        
+        <h1>hello world</h1>
         <homeGoods></homeGoods>
         <alert></alert>
         <app-footer></app-footer>

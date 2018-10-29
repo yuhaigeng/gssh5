@@ -24,15 +24,10 @@
 
 <script>
     import Swiper from 'swiper'
-    
     import '@/common/swiper-3.3.1.min.css'
-    
     export default {
-    
         name: 'banner',
-    
         data() {
-    
             return {
     
                 imgList: [
@@ -46,132 +41,63 @@
                     content:'这是公告二'
                 }]
             }
-    
         },
-    
         mounted() {
-    
             var mySwiper = new Swiper('.banner1', {
-    
                 autoplay: true,
-    
                 loop: true,
-    
                 delay: 2000,
-    
                 pagination: {
-    
                     el: '.swiper-pagination',
-    
                     clickable: true,
-    
                     autoplayDisableOnInteraction: false
-    
                 },
-    
             })
-    
             var swiper = new Swiper('.banner2', {
-    
                 autoplay: true,
-    
                 direction: 'vertical',
-    
                 loop: true,
-    
                 delay: 1000,
-    
             })
-    
-        },
-    
+        }
     }
 </script>
 
 <style scoped>
     #banner-wrap {
-    
         width: 100%;
-    
         height: 280px;
-    
         overflow: hidden;
-    
         position: relative;
-    
     }
-    
-    
-    
     .swiper-wrapper,
-    
     .swiper-slide {
-    
         width: 100%;
-    
         height: 100%;
-    
     }
-    
-    
-    
     .swiper-slide img {
-    
         width: 100%;
-    
         height: 100%;
-    
     }
-    
-    
-    
     .sprite {
-    
         background-image: url(../../assets/img/sprite.png);
-    
         background-repeat: no-repeat;
-    
     }
-    
-    
-    
     .gonggao-wrap {
-    
         width: 100%;
-    
         height: 50px;
-    
         overflow: hidden;
-    
     }
-    
-    
-    
     .icon_voice {
-    
         background-position: -1084px -444px;
-    
     }
-    
-    
-    
     .banner2 {
-    
         float: left;
-    
     }
-    
-    
-    
     .gonggao li {
-    
         text-indent: 70px;
-    
         line-height: 50px;
-    
         font-size: 26px;
-    
         color: #f66b0c;
-    
     }
 </style>
