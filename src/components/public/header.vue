@@ -23,11 +23,7 @@
             return {
             }
     
-        },
-        created:{
-            
-        },
-        components: {}
+        }
     
     }
 </script>
