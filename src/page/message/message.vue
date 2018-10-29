@@ -1,6 +1,6 @@
 <template>
    <div class="message">
-        <app-header></app-header>
+        <app-header type="message"></app-header>
         <h1>message</h1>
         <app-footer></app-footer>
    </div>

@@ -2,13 +2,13 @@
    <div class="moreGoods">
         <app-header type = "more"></app-header>
         <h1>more</h1>
-        <app-footer></app-footer>
+        <app-footer-go-shop></app-footer-go-shop>
    </div>
 </template>
 
 <script>
 import appHeader from "../../components/public/header.vue";
-import appFooter from "../../components/public/footer.vue";
+import appFooterGoShop from "../../components/footerGoShop.vue";
 export default {
    name: 'more',
    data() {
@@ -16,7 +16,7 @@ export default {
    },
   components: {
     appHeader,
-    appFooter
+    appFooterGoShop
   }
 }
 </script>

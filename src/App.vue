@@ -34,4 +34,6 @@ export default {
     overflow: hidden;
     clear: both;
 }
+.hidden{display: none;}
+.show{display: block;};
 </style>
