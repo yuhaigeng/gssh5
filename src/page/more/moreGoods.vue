@@ -1,6 +1,6 @@
 <template>
    <div class="moreGoods">
-        <app-header type = "more"></app-header>
+        <app-header :type ="headerMsg"></app-header>
         <h1>more</h1>
         <app-footer></app-footer>
    </div>
@@ -12,7 +12,13 @@ import appFooter from "../../components/public/footer.vue";
 export default {
    name: 'more',
    data() {
-       return {}
+       return {
+         headerMsg:{
+            type:"common",
+            title:'更多商品',
+            left:'返回'
+         }
+       }
    },
   components: {
     appHeader,

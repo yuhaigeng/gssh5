@@ -34,4 +34,9 @@ export default {
     overflow: hidden;
     clear: both;
 }
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>

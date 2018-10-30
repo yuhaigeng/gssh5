@@ -42,6 +42,7 @@
 
 <style scoped>
  .center_wrap {
+     max-width:750px;
     margin-bottom: 20px;
 }
 .index-module {

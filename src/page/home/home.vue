@@ -1,7 +1,7 @@
 <template>
    <div class="home">
         <app-header type="home"></app-header>
-        <app-banner></app-banner>
+        <app-banner class="topHeight"></app-banner>
         <h1>hello world</h1>
         <homeGoods :mainActivityList = 'mainActivityList'></homeGoods>
         <homeGoods :mainActivityList = 'mainActivityList'></homeGoods>
@@ -13,9 +13,9 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
-import appBanner from "../../page/home/banner.vue"
+import appBanner from "../../page/home/banner.vue";
 import alert from "../../components/public/alert.vue";
-import homeGoods from "./homeGoods.vue"
+import homeGoods from "./homeGoods.vue";
 export default {
    name: 'home',
    data() {
@@ -50,6 +50,8 @@ export default {
 </script>
 
 <style scoped >
-    
+    .topHeight{
+        margin-top:87px; 
+    }
 
 </style>

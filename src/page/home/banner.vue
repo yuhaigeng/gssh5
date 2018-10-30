@@ -46,7 +46,7 @@
             var mySwiper = new Swiper('.banner1', {
                 autoplay: true,
                 loop: true,
-                delay: 2000,
+                // delay: 2000,
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true,
@@ -57,7 +57,7 @@
                 autoplay: true,
                 direction: 'vertical',
                 loop: true,
-                delay: 1000,
+                // delay: 1000,
             })
         }
     }
