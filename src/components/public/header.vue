@@ -37,12 +37,6 @@
 					<a class="telPhone" ></a>
 				</div>
         </div>
-        <!-- message 头部 -->
-        <div  class="header-wrap"  v-if="type == 'message'">
-            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="'返回'"></div>
-			<h2 class="index_tit header_tit" v-text="'消息'"></h2>
-        </div>
-         <!-- <div class="empty"></div> -->
     </div>
 </template>
 
@@ -54,9 +48,16 @@
         props: ["type"],
         data() {
             return {
+                logined:true,
             }
         },
         methods:{
+            goBack : function(){
+                window.history.go(-1);
+            },
+            goToNext:function(){
+
+            },
             register:function(){
                 console.log('注册')
             }

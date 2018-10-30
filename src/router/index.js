@@ -20,6 +20,7 @@ export default new Router({
       {path: '/login',component: r => require.ensure([],() => r(require('../page/login/login.vue')), 'login')},
       {path: '/register',component: r => require.ensure([],() => r(require('../page/login/register.vue')), 'register')},
       
+      {path: '/detail',component: r => require.ensure([], () => r(require('../page/more/goodsDetails.vue')), 'detail')}
     ]
   }]
 })
