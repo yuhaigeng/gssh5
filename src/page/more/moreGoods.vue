@@ -29,12 +29,12 @@
         </div>
       </div>
     </div>
-    <app-footer></app-footer>
+    <app-footer-go-shop></app-footer-go-shop>
   </div>
 </template>
 <script>
   import appHeader from "../../components/public/header.vue";
-  import appFooter from "../../components/public/footer.vue";
+  import appFooterGoShop from "../../components/footerGoShop.vue";
   export default {
     name: 'more',
     data() {
@@ -58,16 +58,13 @@
     },
     components: {
       appHeader,
-      appFooter
+      appFooterGoShop
     },
     methods: {
       menuClick(name, index) {
         this.name = name
         this.itemIndex = index
       }
-    },
-    
-    mounted(){
     }
   }
 </script>

@@ -6,10 +6,30 @@
             <div class="header_right sprite icon_search_a"></div>
         </div>
         <div class="header-wrap" v-if="type == 'more'">
-            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="'返回'"></div>
-			<h2 class="index_tit header_tit" v-text="type == 'home'"></h2>
+            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="'返回'" @click="goBack"></div>
+			<h2 class="index_tit header_tit" v-text="'更多商品'"></h2>
         </div>
-        <div class="empty"></div>
+        <div v-show="logined" v-if="type == 'my'" class="header-wrap goodsDetails_header wo_header">
+            <div class="header_left">
+                <dl data-url="set.html" @click="goToNext" >
+                    <dt><img src="../../assets/img/icon_set.png"/></dt>
+                    <dd>设置</dd>
+                </dl>
+            </div>
+            <div class="index_tit header_tit">我的</div>
+            <div class="header_right">
+                <dl>
+                    <dt><img src="../../assets/img/icon_server.png"/></dt>
+                    <dd>人工客服</dd>
+                </dl>
+                <a class="telPhone" :href="'tel:123456'"></a>
+            </div>
+        </div>
+        <div class="header-wrap" v-if="type == 'message'">
+            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="'返回'" @click="goBack"></div>
+			<h2 class="index_tit header_tit" v-text="'消息'"></h2>
+        </div>
+        <div class="empty" v-if="type == 'my'" v-text="type"></div>
     </div>
 </template>
 
@@ -21,8 +41,16 @@
         props: ["type"],
         data() {
             return {
+                logined:true,
             }
-    
+        },
+        methods:{
+            goBack : function(){
+                window.history.go(-1);
+            },
+            goToNext:function(){
+
+            }
         }
     
     }
