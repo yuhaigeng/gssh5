@@ -8,7 +8,7 @@
                 </div>  
             </div>
             <div class="index-module-goods clearfloat">
-                <dl class="index-module-item clearfloat" v-for="item in  mainActivityList.activityDetailsList">
+                <dl class="index-module-item clearfloat" v-for="(item,index) in  mainActivityList.activityDetailsList" :key="index">
                     <dt>
                         <img :src="item.goodsLogo" alt="">
                     </dt>

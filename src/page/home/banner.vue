@@ -29,7 +29,6 @@
         name: 'banner',
         data() {
             return {
-    
                 imgList: [
                     {img: "http://img.guoss.cn/gss_img_root/img_ads/974/20181023141954.jpg"},
                     {img: "http://img.guoss.cn/gss_img_root/img_ads/975/20181023142440.jpg"},
