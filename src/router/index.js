@@ -17,7 +17,8 @@ export default new Router({
       {path: '/more',component: r => require.ensure([], () => r(require('../page/more/moreGoods.vue')), 'more')},
       {path: '/my',component: r => require.ensure([], () => r(require('../page/my/my.vue')), 'my')},
       {path: '/message',component: r => require.ensure([], () => r(require('../page/message/message.vue')), 'message')},
-      {path: '/detail',component: r => require.ensure([], () => r(require('../page/more/goodsDetails.vue')), 'detail')}
+      {path: '/detail',component: r => require.ensure([], () => r(require('../page/more/goodsDetails.vue')), 'detail')},
+      {path: '/search',component: r => require.ensure([], () => r(require('../page/more/search.vue')), 'search')}
     ]
   }]
 })

@@ -13,6 +13,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "jquery": "^2.2.4",
+    "jquey": "0.0.1-security",
     "swiper": "^4.4.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
