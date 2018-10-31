@@ -4,6 +4,7 @@
         <div   class="header-wrap" v-if="type == 'home'">
             <div class="header_left index_header_left sprite icon_location_a"></div>
             <h1 class="index_tit header_tit"><img src="../../assets/img/top_logo@2x.png" alt="" /></h1>
+            <router-link to="/search">
             <div class="header_right sprite icon_search_a"></div>
            
         </div>

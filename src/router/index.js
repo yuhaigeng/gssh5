@@ -22,7 +22,7 @@ export default new Router({
       {path: '/detail',component: r => require.ensure([], () => r(require('../page/more/goodsDetails.vue')), 'detail')}, //详细信息
       {path: '/address',component: r => require.ensure([], () => r(require('../page/address/addressManagement.vue')), 'address')}, //地址管理
       {path: '/newEditor',component: r => require.ensure([], () => r(require('../page/address/newEditor.vue')), 'newEditor')}, //新建编辑
-
+      {path: '/search',component: r => require.ensure([], () => r(require('../page/more/search.vue')), 'search')}, //搜索
     ]
   }]
 })
