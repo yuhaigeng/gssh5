@@ -1,6 +1,6 @@
 <template>
    <div class="my">
-        <app-header type="my"></app-header>
+        <app-header type="my" :logined="logined"   v-show="logined"></app-header>
         <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo"></loginState>
         <div  v-cloak class="cont cont1 clearfloat">
         <dl class="float_left " >
@@ -31,6 +31,7 @@ export default {
    name: 'my',
    data() {
        return {
+         logined: false,
          userInfo:{
               faceImgUrl: "zhangshuoinfo.b0.upaiyun.com/2018/8/1535597472",
               firmName: "掌烁测试-朱高飞",
@@ -73,22 +74,22 @@ var dateModule  = {
           icon:'.././static/img/icon_order1.png',
           type:1,
           name:'待发货',
-          linkUrl:'order_management.html?type=0-1',
+          linkUrl:'',
         },{
           icon:'.././static/img/icon_order2.png',
           type:2,
           name:'已配货',
-          linkUrl:'order_management.html?type=1-2',
+          linkUrl:'',
         },{
           icon:'.././static/img/icon_order3.png',
           type:3,
           name:'待支付',
-          linkUrl:'order_management.html?type=2-3',
+          linkUrl:'',
         },{
           icon:'.././static/img/icon_order0.png',
           type:0,
           name:'全部订单',
-          linkUrl:'order_management.html?type=3-',
+          linkUrl:'',
         }
       ],
       //其他列表数据结构
@@ -97,12 +98,12 @@ var dateModule  = {
           icon:'.././static/img/icon_address.png',
           type:null,
           name:'收货地址',
-          linkUrl:'address.html',
+          linkUrl:'address',
         },{
           icon:'.././static/img/icon_collection.png',
           type:null,
           name:'收藏',
-          linkUrl:'often_shop.html',
+          linkUrl:'',
         }
       ]
   }

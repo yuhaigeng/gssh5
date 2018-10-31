@@ -1,7 +1,7 @@
 <template>
      <div v-cloak class="wo_top" :class="{'login':logined}">
         <p class="no_login_text" v-show="!logined">您还没有登录</p>
-        <span class="no_login_btn" v-show="!logined">登录</span>
+        <router-link :to="'login'" tag="span"  class="no_login_btn" v-show="!logined">登录</router-link>
         
         <dl class="wo_top_info clearfloat" v-show="logined && userVipInfo.vip">
             <dt class="float_left">
@@ -33,7 +33,7 @@
 <script>
     export default {
         name:'loginState',
-        props:["userInfo" ,"userVipInfo"],
+        props:["userInfo" ,"userVipInfo",'logined'],
          data() {
              return {
                 // isMask: !1,
@@ -41,7 +41,7 @@
                 // pageSize: common.PAGE_SIZE,
                 // isWx: !1,
                 // urlParm: null,
-                logined: false,
+                // logined: false,
                 // isNewMsg: !1,
                 // ajaxState: "wait",
                 // system: n.system,
@@ -78,6 +78,8 @@
     width: 100%;
     height: 420px;
     position: relative;
+    background: url(../../assets/img/pic_mine_bg.png) center no-repeat;
+    background-size: 100% 100%;
 }
 .no_login_text {
     width: 100%;

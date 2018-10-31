@@ -13,7 +13,7 @@ export default {
 
 <style>
 @import "./common/rest.css";
-
+html{ overflow: auto;}
 [v-cloak] { 
   display: none;
 }

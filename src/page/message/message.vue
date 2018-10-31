@@ -4,7 +4,7 @@
         <div v-cloak class="main-wrap">
           <div class="main message">
             <div class="message_box">
-              <div class="message_item" v-for="item in messages" :key="item">
+              <div class="message_item" v-for="(item,index) in messages" :key="index">
                 <div class="message_item_top clearfloat">
                   <div class="message_tit" v-text="item.msgTitle"></div>
                   <div class="message_time" v-text="item.createTime"></div>
