@@ -1,6 +1,6 @@
 <template>
   <div class="moreGoods">
-    <app-header type="more"></app-header>
+    <app-header :type ="headerMsg"></app-header>
     <h1>more</h1>
     <div class="moreDoogs_main_box clearfloat">
       <div class="moreDoogs_main_box_left_wrap">
@@ -33,12 +33,18 @@
   </div>
 </template>
 <script>
+
   import appHeader from "../../components/public/header.vue";
   import appFooterGoShop from "../../components/footerGoShop.vue";
   export default {
     name: 'more',
     data() {
       return {
+         headerMsg:{
+            type:"common",
+            title:'更多商品',
+            left:'返回'
+         },
         goods: [{
             name: '苹果',
             food: [{

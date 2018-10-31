@@ -28,6 +28,11 @@ export default {
     overflow: hidden;
     clear: both;
 }
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .hidden{display: none;}
 .show{display: block;};
 </style>

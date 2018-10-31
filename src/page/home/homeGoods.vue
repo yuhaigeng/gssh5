@@ -18,7 +18,7 @@
                             <p class="good_price_box">
                                 <span class="good_price_icon">￥</span>
                                 <span class="good_price" v-text="item.gssPrice"></span>
-                                <span v-text=" item.priceUnit"></span>
+                                <span>/&nbsp;{{item.priceUnit}}</span>
                             </p>
                         </div>
                     </dd>
@@ -31,25 +31,10 @@
 <script>
     export default {
         name:"homeGoods",
+        props:['mainActivityList'],
          data() {
              return {
-                mainActivityList: {
-                    activityDetailsList:[
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"}
-                    
-                    ],
-                    activityTitle:"秋季价到-坚果零食盛宴",
-                    goodsNum: 3
-                }
+            //   mainActivityList:this.mainActivityList
              }
          },
     }
@@ -57,6 +42,7 @@
 
 <style scoped>
  .center_wrap {
+     max-width:750px;
     margin-bottom: 20px;
 }
 .index-module {
@@ -97,6 +83,25 @@
     padding: 30px 0;
     border-bottom: 1px solid #E5E5E5;
 }
+.index-module-item dt {
+    position: relative;
+    background: url(../../assets/img/default_huodong_pic.png) center no-repeat;
+    background-size: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.index-module-item .good_box .good_price_box {
+    font-size: 20px;
+    text-align: left;
+}
+.index-module-item .good_box .good_price_icon {
+    color: #f51b44;
+}
+.index-module-item .good_box .good_price {
+    color: #f51b44;
+    letter-spacing: -3px;
+}
+/* 3个商品排列样式 */
 .index-module3 .index-module-item:nth-child(3n+2) {
     width: 250px;
     padding-left: 30px;
@@ -116,13 +121,6 @@
     width: 190px;
     height: 190px;
 }
-.index-module-item dt {
-    position: relative;
-    background: url(../../assets/img/default_huodong_pic.png) center no-repeat;
-    background-size: 100%;
-    overflow: hidden;
-    border-radius: 10px;
-}
 .index-module3 .index-module-item .good_name {
     font-size: 30px;
     color: #333;
@@ -132,18 +130,24 @@
 .index-module3 .index-module-item .good_box {
     padding-top: 10px;
 }
-.index-module-item .good_box .good_price_box {
-    font-size: 20px;
-    text-align: left;
-}
-.index-module-item .good_box .good_price_icon {
-    color: #f51b44;
-}
 .index-module3 .index-module-item dd .good_price {
     font-size: 34px;
 }
-.index-module-item .good_box .good_price {
-    color: #f51b44;
-    letter-spacing: -3px;
+/* 2个商品排列样式 */
+.index-module2 .index-module-item {
+    float: left;
+    width: 345px;
+    font-size: 36px;
+}
+
+.index-module2 .index-module-item dt img{
+    width: 314px;
+    height: 314px;
+}
+.index-module2 .index-module-item .good_box .good_price_box {
+     font-size: 38px;
+}
+.index-module2 .index-module-item:nth-child(2n) {
+    padding-left: 30px;
 }
 </style>

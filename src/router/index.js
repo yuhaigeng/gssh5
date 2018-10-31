@@ -18,7 +18,11 @@ export default new Router({
       {path: '/my',component: r => require.ensure([], () => r(require('../page/my/my.vue')), 'my')},
       {path: '/message',component: r => require.ensure([], () => r(require('../page/message/message.vue')), 'message')},
       {path: '/detail',component: r => require.ensure([], () => r(require('../page/more/goodsDetails.vue')), 'detail')},
-      {path: '/search',component: r => require.ensure([], () => r(require('../page/more/search.vue')), 'search')}
+      {path: '/search',component: r => require.ensure([], () => r(require('../page/more/search.vue')), 'search')},
+      {path: '/login',component: r => require.ensure([],() => r(require('../page/login/login.vue')), 'login')},
+      {path: '/register',component: r => require.ensure([],() => r(require('../page/login/register.vue')), 'register')},
+      
+      {path: '/detail',component: r => require.ensure([], () => r(require('../page/more/goodsDetails.vue')), 'detail')}
     ]
   }]
 })
