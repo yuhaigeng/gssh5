@@ -1,8 +1,8 @@
 <template>
  <div class="detail">
      <div class="header-wrap goodsDetails_header">
-			<div class="header_left header_back sprite icon_delete"></div>
-			<div class="header_right header_collect sprite icon_collect_b"></div>
+			<div class="header_left header_back sprite icon_delete" @click="back"></div>
+			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_b':'icon_collect_a'" @click="changeCollect"></div>
 		</div>
         <div class="main-wrap goods_detaile_wrap" style="height: 1236px; background: #FFFFFF;">
 			<div class="main">
@@ -91,11 +91,32 @@ import '@/common/swiper-3.3.1.min.css'
 export default {
  data() {
  return {
+	 isCollect:true,
      imgList: [
          {img: "http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123009.jpg"},
          {img: "http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123009.jpg"},
          ]
  }
+ },
+ methods:{
+	 back(){
+		 this.$router.go(-1);
+	 },
+	 changeCollect(){
+		 
+		 this.isCollect = !this.isCollect
+		 if(this.isCollect == true){
+			 this.$message({
+          message: '取消收藏',
+		  center: true,
+		});
+		 }else {
+			 this.$message({
+          message: '收藏成功',
+		  center: true,
+		});
+		 }
+	 }
  },
  mounted(){
      var mySwiper = new Swiper('.swiper-container', {
@@ -302,6 +323,9 @@ export default {
 }
 .icon_delete {
 	background-position: -730px -311px;
+}
+.icon_collect_a {
+	background-position: -850px -383px;
 }
 .icon_collect_b {
 	background-position: -850px -288px;

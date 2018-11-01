@@ -13,6 +13,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "element-ui": "^2.4.9",
     "jquery": "^2.2.4",
     "jquey": "0.0.1-security",
     "swiper": "^4.4.1",

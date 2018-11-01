@@ -5,7 +5,7 @@
 				
 			</div>
 			<div class="search">
-				<input type="text" id="search" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="searchEvent"/>
+				<input type="text" id="search" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal"/>
 				<div class="delete sprite delete_b" @click="del()"></div>
 			</div>
 		</div>
@@ -53,6 +53,14 @@
 </template>
 
 <script>
+// 节流函数
+const delay = (function() {
+    let timer = 0;
+    return function(func, delay) {
+      clearTimeout(timer);
+      timer = setTimeout(func, delay);
+    };
+})();
 export default {
  data() {
  return {
@@ -83,28 +91,37 @@ export default {
      ]
  }
  },
+ watch:{
+	 searchVal() {
+		 delay(() => {
+			 this.search();
+		 },300)
+	 }
+ },
  methods:{
-     clearTimer () {
-      if (this.timer) {
-        clearTimeout(this.timer)
-      }
-    },
-    searchEvent (event) {
-      this.clearTimer()
-      console.log(event.timeStamp)
-      this.timer = setTimeout(() => {
-        console.log(event.timeStamp)
-        // console.log(this.lastTime)
-        // if (this.lastTime - event.timeStamp === 0) {
-
-        // this.$http.post('/api/vehicle').then(res => {
-        //   console.log(res.data.data)
-        //   this.changeColor(res.data.data)
+	 search() {
+		 let that = this;
+		//  api.get(url,params{words:that.searchVal}).then(res=>{
+        //     that.results = res.data.data;
         // })
+	 },
 
-        // }
-      }, 2000)
-    },
+    //  clearTimer () {
+    //   if (this.timer) {
+    //     clearTimeout(this.timer)
+    //   }
+    // },
+    // searchEvent (event) {
+    //   this.clearTimer()
+    //   console.log(event.timeStamp)
+    //   this.timer = setTimeout(() => {
+    //     console.log(event.timeStamp)
+    //     this.$http.post('/api/vehicle').then(res => {
+    //       console.log(res.data.data)
+    //       this.changeColor(res.data.data)
+    //     })
+    //   }, 2000)
+    // },
      searchHot(){
             if(this.searchVal.length == ''){
                 this.isHot = false
