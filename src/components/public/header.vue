@@ -7,6 +7,10 @@
             <router-link to="/search">
             <div class="header_right sprite icon_search_a"></div>
             </router-link>
+<<<<<<< HEAD
+=======
+           
+>>>>>>> 8296cdf2eb2476b61e39a0bfdfe11c56195d12f5
         </div>
         <!-- more 头部  标题头部-->
         <div  class="header-wrap"  v-if="type.type == 'common'">
@@ -22,14 +26,14 @@
             <!-- <div class="header_right login_top_right" v-text="'申请服务'" @click="register"></div> -->
         </div>
         <!-- my 头部 两边都有功能按钮的头部 -->
-         <div class="wo_header" v-if="type == 'my'">
+         <div class="wo_header" v-if="type.type == 'common3'">
            <div class="header_left">
-					<dl>
+					<dl @click="goToNext">
 						<dt><img src="../../assets/img/icon_set.png"/></dt>
 						<dd>设置</dd>
 					</dl>
 				</div>
-				<div class="index_tit header_tit">我的</div>
+				<div class="index_tit header_tit" v-text="type.title"></div>
 				<div v-cloak class="header_right">
 					<dl>
 						<dt><img src="../../assets/img/icon_server.png"/></dt>
@@ -37,6 +41,12 @@
 					</dl>
 					<a class="telPhone" ></a>
 				</div>
+        </div>
+        <!-- 点击事件的头部 -->
+         <div class="header-wrap" v-if="type.type == 'common2'">
+            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left" @click=" goBack"></div>
+			<h2 class="index_tit header_tit" v-text="type.title"></h2>
+            <div class="header_right login_top_right" v-text="type.right" @click="goToNext"></div>
         </div>
     </div>
 </template>
@@ -54,10 +64,15 @@
         },
         methods:{
             goBack : function(){
-                window.history.go(-1);
+                if (window.history.length <= 1) {
+                        this.$router.push({path:'/my'})   
+                        return false;
+                } else {
+                    this.$router.go(-1)
+                }
             },
             goToNext:function(){
-
+               return this.$router.push({path:this.type.routerPath , query:{isNew:1}})
             },
             register:function(){
                 console.log('注册')

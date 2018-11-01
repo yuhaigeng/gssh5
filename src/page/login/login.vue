@@ -52,7 +52,7 @@ import alertVue from '../../components/public/alert.vue';
             headerMsg:{
                 type:"common1",
                 title:'登录',
-                jumpFront:"",
+                jumpFront:"my",
                 jumpAfter:'register',
                 right:'申请服务',
                 left:'返回'
