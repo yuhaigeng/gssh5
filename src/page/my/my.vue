@@ -1,7 +1,7 @@
 <template>
    <div class="my">
-        <app-header type="my" :logined="logined"   v-show="logined"></app-header>
-        <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo"></loginState>
+        <app-header :type="headerMsg" :logined="logined"   v-show="logined"></app-header>
+        <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :logined="logined" ></loginState>
         <div  v-cloak class="cont cont1 clearfloat">
         <dl class="float_left " >
             <dt><b>VIP</b></dt>
@@ -31,7 +31,12 @@ export default {
    name: 'my',
    data() {
        return {
-         logined: false,
+          headerMsg:{
+                    type:"common3",
+                    title:'我的',
+                    routerPath:'/setUp',
+                },
+         logined: true,
          userInfo:{
               faceImgUrl: "zhangshuoinfo.b0.upaiyun.com/2018/8/1535597472",
               firmName: "掌烁测试-朱高飞",

@@ -18,7 +18,7 @@
                             <label>详细地址：</label><input type="text" :value="!this.$route.query.isNew ? addressData[index].address :''"  id="edit_county" placeholder="请输入街道地址(无需输入城区)" >
                         </li>
                     </ul>
-                    <div class="address_del" v-show="!this.$route.query.isNew" style="width: 80%;height: 80px;background: #F37C31;color: #FFFFFF;text-align: center;margin: 40px auto;line-height: 80px;border-radius: 10px;font-size: 30px;">
+                    <div class="address_del" v-show="!this.$route.query.isNew" @click="del"  style="width: 80%;height: 80px;background: #F37C31;color: #FFFFFF;text-align: center;margin: 40px auto;line-height: 80px;border-radius: 10px;font-size: 30px;">
                         地址删除
                     </div>
                 </div>
@@ -28,6 +28,8 @@
 
 <script>
 import  addressHeader from "../../components/public/header.vue";
+import {layer} from '../../common/layer.js' //注意路径
+import '@/common/layer.css'
     export default {
         name:'newEditor',
         components:{
@@ -38,7 +40,7 @@ import  addressHeader from "../../components/public/header.vue";
                  headerMsg:{
                     type:"common2",
                     title:'地址管理',
-                     routerPath:'/address',
+                    routerPath:'/address',
                     right:'确定',
                     left:'返回'
                 },
@@ -47,8 +49,20 @@ import  addressHeader from "../../components/public/header.vue";
             }
         },
         mounted:function(){
-        
         },
+        methods:{
+            // 删除地址
+            del:function(){
+               layer.open({
+				    content: '您确定要删除地址吗？',
+				    btn: ['确定', '取消'],
+				    yes: function(index){
+						// pub.address.del();
+						layer.close(index);
+				    }
+				});
+            }
+        }
        
     }
 </script>

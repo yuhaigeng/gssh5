@@ -52,6 +52,9 @@
                 // userVipInfo: t.userVipInfo
              }
          },
+         mounted:function(){
+            console.log(this.logined)
+         },
           computed: {
             getWidth: function() {
                 return this.userVipInfo.firmMonthExp >= this.userVipInfo.monthExp ? "702" : 0 == this.userVipInfo.firmMonthExp ? "0" : (702 * (this.userVipInfo.firmMonthExp / this.userVipInfo.monthExp)).toFixed(2)

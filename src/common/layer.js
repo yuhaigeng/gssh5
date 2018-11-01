@@ -116,3 +116,6 @@ function(a) {
         } ())
     } ()*/
 } (window);
+export{
+    layer
+}

@@ -23,6 +23,12 @@ export default new Router({
       {path: '/address',component: r => require.ensure([], () => r(require('../page/address/addressManagement.vue')), 'address')}, //地址管理
       {path: '/newEditor',component: r => require.ensure([], () => r(require('../page/address/newEditor.vue')), 'newEditor')}, //新建编辑
       {path: '/search',component: r => require.ensure([], () => r(require('../page/more/search.vue')), 'search')}, //搜索
+      {path: '/setUp',component: r => require.ensure([], () => r(require('../page/setUp/setUp.vue')), 'setUp')}, //设置
+      {path: '/company',component: r => require.ensure([], () => r(require('../page/setUp/company.vue')), 'company')}, //公司信息
+      {path: '/revise',component: r => require.ensure([], () => r(require('../page/setUp/revise.vue')), 'revise')}, //需改密码
+     
+
+
     ]
   }]
 })

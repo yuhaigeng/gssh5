@@ -61,7 +61,7 @@ import  addressHeader from "../../components/public/header.vue";
          },
          methods:{
             editor:function(index){
-                 return this.$router.push({path:this.headerMsg.routerPath, query:{isNew:false ,index:index}})
+                 return this.$router.push({path:this.headerMsg.routerPath, query:{isNew:"" ,index:index}})
             }
          }
     }
@@ -136,4 +136,5 @@ import  addressHeader from "../../components/public/header.vue";
 .address_top_phone, .login_top_right {
     text-align: right;
 }
+
 </style>
