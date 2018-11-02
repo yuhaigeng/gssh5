@@ -38,14 +38,35 @@ export default {
                     goodsNum: 3
                 }
        }
-   },
-  components: {
-    appHeader,
-    appFooter,
-    appBanner,
-    alert,
-    homeGoods
-  }
+    },
+    components: {
+        appHeader,
+        appFooter,
+        appBanner,
+        alert,
+        homeGoods
+    },
+    mounted(){
+        this.get_main_page();
+    },
+    methods:{
+        get_main_page:function () {
+            this.$ajax.get(this.HOST, {
+                params:{
+                    method: "main_page_show_three",
+                    websiteNode: "3301"
+                }
+            }).then(result => {
+                // return JSON.parse(JSON.stringify(result));
+                return JSON.stringify(result.data);
+
+                // console.log(data);
+            }).then(data => {
+                console.log(data);
+                
+            });
+        }
+    }
 }
 </script>
 

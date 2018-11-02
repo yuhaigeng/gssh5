@@ -7,14 +7,10 @@
             <router-link to="/search">
             <div class="header_right sprite icon_search_a"></div>
             </router-link>
-<<<<<<< HEAD
-=======
-           
->>>>>>> 8296cdf2eb2476b61e39a0bfdfe11c56195d12f5
         </div>
         <!-- more 头部  标题头部-->
         <div  class="header-wrap"  v-if="type.type == 'common'">
-            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left"></div>
+            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left" @click="goBack"></div>
 			<h2 class="index_tit header_tit" v-text="type.title"></h2>
         </div>
         <!-- login 头部  右侧有功能按钮-->
