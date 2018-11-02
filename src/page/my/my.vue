@@ -36,7 +36,7 @@ export default {
                     title:'我的',
                     routerPath:'/setUp',
                 },
-         logined: true,
+         logined: false,
          userInfo:{
               faceImgUrl: "zhangshuoinfo.b0.upaiyun.com/2018/8/1535597472",
               firmName: "掌烁测试-朱高飞",
