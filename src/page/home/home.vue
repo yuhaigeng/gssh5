@@ -1,8 +1,8 @@
 <template>
    <div class="home">
         <app-header type="home"></app-header>
-        <app-banner class="topHeight"></app-banner>
-        <h1>hello world</h1>
+        <app-banner1 class="topHeight"></app-banner1>
+        <app-banner2></app-banner2>
         <homeGoods :mainActivityList = 'mainActivityList'></homeGoods>
         <homeGoods :mainActivityList = 'mainActivityList'></homeGoods>
         <alert></alert>
@@ -13,7 +13,8 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
-import appBanner from "../../page/home/banner.vue";
+import appBanner1 from "../../page/banner/banner1.vue";
+import appBanner2 from "../../page/banner/banner2.vue";
 import alert from "../../components/public/alert.vue";
 import homeGoods from "./homeGoods.vue";
 export default {
@@ -42,7 +43,8 @@ export default {
   components: {
     appHeader,
     appFooter,
-    appBanner,
+    appBanner1,
+    appBanner2,
     alert,
     homeGoods
   }

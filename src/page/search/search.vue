@@ -1,11 +1,11 @@
 <template>
- <div class="search">
+ <div class="">
      <div class="header-wrap clearfloat">
-			<div class="searchCallback sprite arrow_left">
-				
-			</div>
+		 <router-link to="home">
+			<div class="searchCallback sprite arrow_left"></div>
+			</router-link>
 			<div class="search">
-				<input type="text" id="search" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal"/>
+				<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" v-focus="focusState"/>
 				<div class="delete sprite delete_b" @click="del()"></div>
 			</div>
 		</div>
@@ -13,12 +13,12 @@
 			<div class="search_star" v-if="isHot">
 				<p class="search_tit">热门搜索</p>
 				<ul class="search_item">
-					<li v-for="(item,index) in searchList" :key="index">
+					<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.name)">
                         {{item.name}}
                     </li>
 				</ul>
 			</div>
-			<div class="search_none hidden">
+			<div class="search_none" v-if="isNull">
 				<dl>
 					<dt>
 						<img src="../../assets/img/pic_logo@2x.png"/>
@@ -29,7 +29,7 @@
 					</dd>
 				</dl>
 			</div>
-            <div class="search_resurt">
+            <div class="search_resurt hidden">
 				<div class="search_goods" v-for="(item,index) in goodsList" :key="index">
 					<dl>
 						<dt>
@@ -64,10 +64,12 @@ const delay = (function() {
 export default {
  data() {
  return {
-     isHot: false,
+	 isHot: true,
+	 isNull:false,
+	 focusState:false,
      searchVal:'',
      searchList:[
-         {name:'千禧'},{name:'千禧'},{name:'千禧'},
+         {name:'千禧'},{name:'梨'},{name:'香蕉'},
          {name:'千禧'},{name:'千禧'},{name:'千禧'},
          {name:'千禧'},{name:'千禧'},{name:'千禧'},
          {name:'千禧'},{name:'千禧'},{name:'千禧'},
@@ -99,46 +101,48 @@ export default {
 	 }
  },
  methods:{
-	 search() {
-		 let that = this;
-		//  api.get(url,params{words:that.searchVal}).then(res=>{
-        //     that.results = res.data.data;
+	 
+     clearTimer () {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+    },
+    search (event) {
+      this.clearTimer()
+      this.timer = setTimeout(() => {
+        // this.$http.post('/api/vehicle').then(res => {
+        //   console.log(res.data.data)
+        //   this.changeColor(res.data.data)
         // })
-	 },
-
-    //  clearTimer () {
-    //   if (this.timer) {
-    //     clearTimeout(this.timer)
-    //   }
-    // },
-    // searchEvent (event) {
-    //   this.clearTimer()
-    //   console.log(event.timeStamp)
-    //   this.timer = setTimeout(() => {
-    //     console.log(event.timeStamp)
-    //     this.$http.post('/api/vehicle').then(res => {
-    //       console.log(res.data.data)
-    //       this.changeColor(res.data.data)
-    //     })
-    //   }, 2000)
-    // },
-     searchHot(){
-            if(this.searchVal.length == ''){
-                this.isHot = false
+	  }, 2000)
+	  if(this.searchVal.length != 0){
+				this.isHot = false
+				this.isNull = true
             }else{
-                this.isHot = true
-            }
-        },
+				this.isHot = true
+				this.isNull = false
+			}
+    },
      del(){
-        var $ele = $('#search');
-        $ele.val('').attr("placeholder","请输入商品名称").focus();
-        // this.isHot = true
+		this.searchVal = ''
+		this.focusState = true
+		this.isHot = true
+		this.isNull = false
         },
-        
+        showSearch(index) {
+			this.searchVal = index;
+		}
  },
- mounted() {
-     this.searchHot()
- }
+ directives: {
+    focus: {
+      //根据focusState的状态改变是否聚焦focus
+      update: function (el, value) {    //第二个参数传进来的是个json
+        if (value) {
+          el.focus()
+        }
+      }
+    }
+  }
 }
 </script>
 
@@ -219,6 +223,7 @@ export default {
 .search_star {
 	width: 100%;
 	height: 100%;
+
 	padding: 30px 44px;
 	background: #ebeaea;
 }
