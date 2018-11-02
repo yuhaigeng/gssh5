@@ -31,8 +31,9 @@
 				</div>
 				<button class="login_btn" :class="{'active':isActive}"  @click="login_btn" v-text="'登陆'"></button>
 				<div class="login_bottom" :class="{'hidden':bottomIsHidden}">
-					说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)">《果速送合作协议》</a>
+					说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" @click="agreement">《果速送合作协议》</a>
 				</div>
+                <alertVue :noticeInfoList="noticeInfoList"> </alertVue>
 			</div>
     </div>
 </template>
@@ -68,7 +69,12 @@ import alertVue from '../../components/public/alert.vue';
             isTime:true, //验证码倒计时显示
             bottomIsHidden:false,  // 协议是否显示
             phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
-            msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"]
+            msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
+            noticeInfoList:{
+                    isShow:false,
+                    noticeTitle: "【下单时间调整】",
+                    noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
+                }
             }
         },
         watch:{
@@ -182,7 +188,11 @@ import alertVue from '../../components/public/alert.vue';
 			},
 			blur:function(){
 				this.bottomIsHidden = false;
-			},
+            },
+            agreement:function(){
+                this.noticeInfoList.isShow = true;
+                console.log(1)
+            }
         }
          
     }

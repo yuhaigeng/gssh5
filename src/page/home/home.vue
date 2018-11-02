@@ -1,11 +1,10 @@
 <template>
    <div class="home">
         <app-header type="home"></app-header>
-        <app-banner1 class="topHeight"></app-banner1>
-        <app-banner2></app-banner2>
+        <app-banner class="topHeight"></app-banner>
+        <h1>hello world</h1>
         <homeGoods :mainActivityList = 'mainActivityList'></homeGoods>
         <homeGoods :mainActivityList = 'mainActivityList'></homeGoods>
-        <alert></alert>
         <app-footer></app-footer>
    </div>
 </template>
@@ -13,9 +12,8 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
-import appBanner1 from "../../page/banner/banner1.vue";
-import appBanner2 from "../../page/banner/banner2.vue";
-import alert from "../../components/public/alert.vue";
+import appBanner from "../../page/home/banner.vue";
+
 import homeGoods from "./homeGoods.vue";
 export default {
    name: 'home',
@@ -37,15 +35,27 @@ export default {
                     ],
                     activityTitle:"秋季价到-坚果零食盛宴",
                     goodsNum: 3
-                }
+                },
+                // alertEs:[
+                //      {
+                //     isShow:false,
+                //     noticeTitle: "【公告1】",
+                //     noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
+                // },
+                //  {
+                //     isShow:false,
+                //     noticeTitle: "【下单时间调整】",
+                //     noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
+                // }
+
+                // ]
+                
        }
    },
   components: {
     appHeader,
     appFooter,
-    appBanner1,
-    appBanner2,
-    alert,
+    appBanner,
     homeGoods
   }
 }

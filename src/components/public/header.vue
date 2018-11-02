@@ -7,6 +7,7 @@
             <router-link to="/search">
             <div class="header_right sprite icon_search_a"></div>
             </router-link>
+           
         </div>
         <!-- more 头部  标题头部-->
         <div  class="header-wrap"  v-if="type.type == 'common'">
