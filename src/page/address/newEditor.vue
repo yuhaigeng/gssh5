@@ -44,7 +44,7 @@ import '@/common/layer.css'
                  headerMsg:{
                     type:"common2",
                     title:'地址管理',
-                    routerPath:'/address',
+                    routerPath:"",
                     right:'确定',
                     left:'返回' 
                 },

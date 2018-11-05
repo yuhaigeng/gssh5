@@ -68,7 +68,12 @@
                 }
             },
             goToNext:function(){
-               return this.$router.push({path:this.type.routerPath , query:{isNew:1}})
+                if(this.type.routerPath ){
+                     return this.$router.push({path:this.type.routerPath , query:{isNew:1}})
+                }else{
+                     this.$router.go(-1) 
+                }
+              
             },
             register:function(){
                 console.log('注册')

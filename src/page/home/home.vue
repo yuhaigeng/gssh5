@@ -3,8 +3,8 @@
         <app-header type="home"></app-header>
         <app-banner1 class="topHeight"></app-banner1>
          <app-banner2 ></app-banner2>
-        <homeGoods :mainActivityList = 'mainActivityList'></homeGoods>
-        <homeGoods :mainActivityList = 'mainActivityList'></homeGoods>
+        <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item'></homeGoods>
+        <!-- <homeGoods :mainActivityList = 'mainActivityList'></homeGoods> -->
         <app-footer></app-footer>
    </div>
 </template>
@@ -21,23 +21,8 @@ export default {
    name: 'home',
    data() {
        return {
-           mainActivityList: {
-                    activityDetailsList:[
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"},
-                    {goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/14125/20181010141656.jpg",goodsName:"碧根果.罐装",gssPrice: "13.50",priceUnit: "罐"}
-                    
-                    ],
-                    activityTitle:"秋季价到-坚果零食盛宴",
-                    goodsNum: 3
-                },
+           mainActivityList:null,
+
                 // alertEs:[
                 //      {
                 //     isShow:false,
@@ -63,7 +48,8 @@ export default {
         homeGoods
     },
     mounted(){
-        this.get_main_page();
+      this.get_main_page();
+      this.autoLogin();
     },
     methods:{
         get_main_page:function () {
@@ -72,15 +58,33 @@ export default {
                     method: "main_page_show_three",
                     websiteNode: "3301"
                 }
-            }).then(result => {
+            }).then(resp => {
                 // return JSON.parse(JSON.stringify(result));
-                return JSON.stringify(result.data);
-
-                // console.log(data);
-            }).then(data => {
-                console.log(data);
+                // return JSON.stringify(data.data);
+                  this.mainActivityList = resp.data.data.mainActivityList;
+           
+                // console.log(resp.data);
+            }).catch(err => {
+                // console.log(JSON.parse(data).data.mainActivityList);
+                  console.log('请求失败：'+ err.statusCode);
                 
             });
+        },
+        autoLogin:function(){
+                this.$ajax.get(this.HOST,{
+                    params:{
+                        method:'user_login',
+				        tokenId:''
+                    }
+                }).then(resp =>{
+
+                }).catch(err =>{
+                      console.log('请求失败：'+ err.statusCode);   
+                });   
+
+                
+
+
         }
     }
 }
