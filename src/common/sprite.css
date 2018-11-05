@@ -1,0 +1,257 @@
+.sprite {
+  background-image: url(../../static/img/sprite.png)
+}
+
+.icon_location_a {
+  background-position: -422px -318px
+}
+
+.arrow_left {
+  background-position: 21px -210px
+}
+
+.arrow_left_b {
+  background-position: 21px -280px
+}
+
+.arrow_left_orange {
+  background-position: 21px -352px
+}
+
+.icon_search_a {
+  background-position: -1000px 20px
+}
+
+.icon_voice {
+  background-position: -1084px -444px
+}
+
+.tab_bar_home_a {
+  background-position: -96px -1px
+}
+
+.tab_bar_home_b {
+  background-position: -95px -81px
+}
+
+.tab_bar_more_a {
+  background-position: -264px -1px
+}
+
+.tab_bar_more_b {
+  background-position: -269px -81px
+}
+
+.tab_bar_mine_a {
+  background-position: -422px -1px
+}
+
+.tab_bar_mine_b {
+  background-position: -426px -81px
+}
+
+.tab_bar_Message_a {
+  background-position: -605px -1px
+}
+
+.tab_bar_Message_b {
+  background-position: -603px -81px
+}
+
+.icon_mine_list {
+  background-position: -139px -302px
+}
+
+.icon_mine_quan1 {
+  background-position: -140px -144px
+}
+
+.icon_mine_phone {
+  background-position: -140px -381px
+}
+
+.icon_mine_secrity {
+  background-position: -420px -135px
+}
+
+.icon_mine_sp {
+  background-position: -140px -224px
+}
+
+.icon_mine_location {
+  background-position: -420px -224px
+}
+
+.icon_write {
+  background-position: -988px -340px
+}
+
+.icon_collect_b {
+  background-position: -850px -288px
+}
+
+.icon_collect_a {
+  background-position: -850px -383px
+}
+
+.tag_ji {
+  background-position: 0 0
+}
+
+.tag_cu {
+  background-position: 0 -57px
+}
+
+.tag_re {
+  background-position: 0 -111px
+}
+
+.tag_jian {
+  background-position: 0 -170px
+}
+
+.icon_search_grey {
+  background-position: -1084px -78px
+}
+
+.icon_shoppingcar {
+  background-position: -216px -384px
+}
+
+.icon_phone {
+  background-position: -1084px -265px
+}
+
+.icon_key {
+  background-position: -1084px -134px
+}
+
+.icon_password {
+  background-position: -1084px -196px
+}
+
+.delete_b {
+  background-position: -888px 0
+}
+
+.btn_a {
+  background-position: -889px -100px
+}
+
+.btn_m {
+  background-position: -891px -194px
+}
+
+.icon_delete {
+  background-position: -730px -311px
+}
+
+.icon_delete_b {
+  background-position: -648px -414px
+}
+
+.shoppingcar_circle {
+  background-position: -633px -177px
+}
+
+.sprite_login {
+  background-image: url(../../static/img/sprite_login.png)
+}
+
+.icon_ad {
+  background-position: 20px -48px
+}
+
+.bg_Headline {
+  background-position: -96px -449px
+}
+
+.icon_mine_shangpin {
+  background-position: 25px -220px
+}
+
+.icon_mine_quan {
+  background-position: 25px -312px
+}
+
+.icon_mine_jiang {
+  background-position: 25px -398px
+}
+
+.icon_mine_te {
+  background-position: 25px -137px
+}
+
+.icon_mine_records {
+  background-position: -195px 14px
+}
+
+.icon_mine_detail {
+  background-position: -195px -82px
+}
+
+.icon_mine_wechat {
+  background-position: -230px -256px
+}
+
+.icon_pay_wx {
+  background-position: -140px -360px
+}
+
+.icon_pay_ali {
+  background-position: -138px -172px
+}
+
+.icon_pay_card {
+  background-position: -137px -256px
+}
+
+.icon_chosen {
+  background-position: 20px -489px
+}
+
+;
+
+.btn_exchange {
+  background-position: -312px -198px
+}
+
+.btn_exchange1 {
+  background-position: -343px -198px
+}
+
+.quan_c {
+  background-position: -882px -412px
+}
+
+.quan_b {
+  background-position: -878px -16px
+}
+
+.quan_a {
+  background-position: -879px -222px
+}
+
+.icon_chosen_a {
+  background-position: -368px -280px
+}
+
+.icon_ad2 {
+  background: url(../../static/img/icon_ad@3x.png) 20px center no-repeat
+}
+
+.btn_exchange_a {
+  background-position: -312px -198px
+}
+
+.btn_exchange_b {
+  background-position: -532px -198px
+}
+.main_wo_wrap .arrow_left,
+.score .arrow_left {
+  background-position: -5px -210px
+}
+.sprite,
+.sprite_login {
+  background-repeat: no-repeat
+}
