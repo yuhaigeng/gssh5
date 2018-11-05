@@ -1,24 +1,24 @@
 <template>
      <div class="center_wrap">
-        <div class="index-module" :class="'index-module' +mainActivityList.goodsNum ">
+        <div class="index-module" :class="'index-module' + parseInt(mainActivityList.goodsNum + 1)   ">
             <div class="index-module-title clearfloat">
                 <div class="float_left" v-text="mainActivityList.activityTitle">秋季价到-坚果零食盛宴</div>
                 <div class="float_right">
-                    <a href="">更多</a>
+                    <router-link to="/more" tag="a">更多</router-link>
                 </div>  
             </div>
             <div class="index-module-goods clearfloat">
                 <dl class="index-module-item clearfloat" v-for="(item,index) in  mainActivityList.activityDetailsList" :key="index">
                     <dt>
-                        <img :src="item.goodsLogo" alt="">
+                        <img :src="item.goodsInfo.goodsLogo" alt="">
                     </dt>
                     <dd>
-                        <p class="good_name ellipsis" v-text="item.goodsName"></p>
+                        <p class="good_name ellipsis" v-text="item.goodsInfo.goodsName"></p>
                         <div class="good_box">
                             <p class="good_price_box">
                                 <span class="good_price_icon">￥</span>
-                                <span class="good_price" v-text="item.gssPrice"></span>
-                                <span>/&nbsp;{{item.priceUnit}}</span>
+                                <span class="good_price" v-text="item.goodsInfo.gssPrice"></span>
+                                <span>/&nbsp;{{item.goodsInfo.priceUnit}}</span>
                             </p>
                         </div>
                     </dd>
@@ -36,6 +36,9 @@
              return {
             //   mainActivityList:this.mainActivityList
              }
+         },
+         mounted(){
+              console.log(this.mainActivityList)
          },
     }
 </script>
