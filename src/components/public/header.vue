@@ -7,7 +7,6 @@
             <router-link to="/search">
             <div class="header_right sprite icon_search_a"></div>
             </router-link>
-           
         </div>
         <!-- more 头部  标题头部-->
         <div  class="header-wrap"  v-if="type.type == 'common'">
@@ -69,7 +68,12 @@
                 }
             },
             goToNext:function(){
-               return this.$router.push({path:this.type.routerPath , query:{isNew:1}})
+                if(this.type.routerPath ){
+                     return this.$router.push({path:this.type.routerPath , query:{isNew:1}})
+                }else{
+                     this.$router.go(-1) 
+                }
+              
             },
             register:function(){
                 console.log('注册')
