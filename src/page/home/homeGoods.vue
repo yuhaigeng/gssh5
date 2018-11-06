@@ -120,7 +120,7 @@
     float: left;
     width: 220px;
 }
-.index-module3 .index-module-item dt img {
+.index-module3 .index-module-item dt ,.index-module3 .index-module-item dt img {
     width: 190px;
     height: 190px;
 }
@@ -143,7 +143,7 @@
     font-size: 36px;
 }
 
-.index-module2 .index-module-item dt img{
+.index-module2 .index-module-item dt, .index-module2 .index-module-item dt img{
     width: 314px;
     height: 314px;
 }

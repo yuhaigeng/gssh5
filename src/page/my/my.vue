@@ -27,8 +27,15 @@ import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
 import loginState from "./loginState.vue";
 import personalOptions from "./personalOptions.vue";
+import md5 from 'js-md5';
 export default {
    name: 'my',
+   components: {
+        appHeader,
+        appFooter,
+        loginState,
+        personalOptions,
+   },
    data() {
        return {
             headerMsg:{
@@ -36,37 +43,60 @@ export default {
                 title:'我的',
                 routerPath:'/setUp',
             },
-            logined: false,
+            logined:null,
+            method:['user_logout',"user_personal_msg",'firm_info_update_faceimgurl','firm_vip_info'],
+            firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
+            userBasicParam:{
+                source:'firmId'+ this.firmId,
+                tokenId:localStorage.getItem("tokenId"),
+                sign :md5('firmId'+ this.firmId + "key" + localStorage.getItem("secretKey")).toUpperCase()
+             },
             userInfo:{
-                faceImgUrl: "zhangshuoinfo.b0.upaiyun.com/2018/8/1535597472",
-                firmName: "掌烁测试-朱高飞",
-                linkTel: "18315318515"
+              
             },
-            userVipInfo:{
-                coupons: 0,
-                firmExp: 82.5,
-                firmId: "132",
-                firmMonthExp: 82.5,
-                lastMonthExp: 0,
-                monthExp: 110,
-                needExp: 27.5,
-                surplusScore: 18,
-                upExp: 27.5,
-                vip: -1,
-                vipGrade: 0,
-            },
+            userVipInfo:{},
             orderList:dateModule.orderList,
             otherList:dateModule.otherList,
             title:dateModule.title,
             title1:dateModule.title1,
         }
    },
-  components: {
-    appHeader,
-    appFooter,
-    loginState,
-    personalOptions,
-  }
+   mounted(){
+        this.logined = this.$route.query.isLogin
+        this.personApi()
+        this.firm_vip_info()
+   },
+   methods:{
+       personApi:function(){
+            this.$ajax.get(this.HOST, {
+                    params:$.extend({
+                       method:this.method[1],
+				      firmId:this.firmId
+                    },this.userBasicParam)
+                }).then(resp => {
+                    console.log(resp.data)
+                   this. userInfo = resp.data.data
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+       },
+       firm_vip_info:function(){
+            this.$ajax.get(this.HOST, {
+                    params:{
+                       method:this.method[3],
+				       firmId:this.firmId
+                    }
+                }).then(resp => {
+                    console.log(resp.data)
+                    this.userVipInfo=resp.data.data
+
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+       }
+
+   }
+ 
 }
 var dateModule  = {
       logined:false,//是否登陆

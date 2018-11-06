@@ -41,7 +41,8 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import alertVue from '../../components/public/alert.vue';
-
+import md5 from 'js-md5';
+ 
     export default {
         name:'login',
         components:{
@@ -50,32 +51,34 @@ import alertVue from '../../components/public/alert.vue';
         },
         data() {
             return {
-            headerMsg:{
-                type:"common1",
-                title:'登录',
-                jumpFront:"my",
-                jumpAfter:'register',
-                right:'申请服务',
-                left:'返回'
-            },
-            login : 0,  //短信和账号之间切换
-            tipsMsg:null, //提示文本
-            message:null, // 短信方式
-            account:null, // 账号方式
-            passWord:null, // 密码
-            code:null,     // 验证码
-            isActive:false, //是否激活
-            isHidden:true, //是否显示隐藏
-            bottomIsHidden:false,  // 协议是否显示
-            phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
-            msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
-            count:'',
-            timer:null,
-            noticeInfoList:{
-                    isShow:false,
-                    noticeTitle: "【下单时间调整】",
-                    noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
-                }
+                headerMsg:{
+                    type:"common1",
+                    title:'登录',
+                    jumpFront:"my",
+                    jumpAfter:'register',
+                    right:'申请服务',
+                    left:'返回'
+                },
+                login : 0,  //短信和账号之间切换
+                tipsMsg:null, //提示文本
+                message:null, // 短信方式
+                account:null, // 账号方式
+                passWord:null, // 密码
+                code:null,     // 验证码
+                isActive:false, //是否激活
+                isHidden:true, //是否显示隐藏
+                bottomIsHidden:false,  // 协议是否显示
+                phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
+                msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
+                count:'',
+                timer:null,
+                noticeInfoList:{},
+                method:['user_dynamic_login','user_login'],
+                websiteNode: "3301",
+                parameter:null,
+                descCode:"#HZ-DESC",
+                closeAlert:false,
+              
             }
         },
         watch:{
@@ -165,7 +168,6 @@ import alertVue from '../../components/public/alert.vue';
             },
         },
         mounted(){
-            
         },
         methods:{
             getCode:function(){
@@ -175,21 +177,56 @@ import alertVue from '../../components/public/alert.vue';
 				       mobile: this.message
                     }
                 }).then(resp => {
+                    console.log(resp.data)
 
                 }).catch(err => {
-                    this.$message({
-                    message:  err.statusCode,
-                    center: true,
-                    });
-                    // console.log('请求失败：'+ err.statusCode);
+                    console.log('请求失败：'+ err.statusCode);
+                });
+            },
+            login_up:function(){
+                this.$ajax.get(this.HOST, {
+                    params : $.extend({ 
+                        method:this.method[this.login],
+                        websiteNode:this.websiteNode,
+                        mobile:this.login ? this.account : this.message
+                    }, this.parameter )
+                }).then(resp => {
+                       console.log(resp.data)
+                       this.setData(resp.data)
+                       setTimeout(() =>{  
+                          this.$router.push({path:'/my',query:{isLogin:true}}) 
+                        },500)
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+            },
+            desc_data:function(){
+                 this.$ajax.get(this.HOST, {
+                    params:{ 
+                        method:'gss_desc',
+                        websiteNode:this.websiteNode,
+                        code:this.websiteNode + this.descCode
+                    }
+                }).then(resp => {
+                      resp.data.data.desc =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+                      resp.data.data.closeAlert = this.closeAlert;
+                      this.noticeInfoList = resp.data.data;
+                      console.log(this.noticeInfoList)
+                }).catch(err => {
+                    console.log('请求失败：'+ err.data.statusCode);
                 });
             },
             login_btn:function(e){
                 var target = event.target;
                 var isActive =target.classList.contains("active")
 		   		 if (isActive) {
-                           // pub.login.login();
-                           console.log("登录")
+                    if(this.login == 0){
+                        this.parameter = {smsCode:this.code}
+                    }else{
+                        this.parameter = {password:md5(this.passWord)}
+                    }
+                    this.login_up();
+                        //    console.log("登录")
 		   		}
             },
             get_verify_code:function(){
@@ -217,8 +254,25 @@ import alertVue from '../../components/public/alert.vue';
 				this.bottomIsHidden = false;
             },
             agreement:function(){
-                this.noticeInfoList.isShow = true;
-                console.log(1)
+                this.closeAlert = true
+                 this.desc_data()
+            },
+            setData:function(resp){
+                let user_data={
+                        cuserInfoid:resp.data.cuserInfo.id,
+                        firmInfoid:resp.data.firmInfo.id,
+                        firmName:resp.data.firmInfo.firmName,
+                        linkTel:resp.data.cuserInfo.mobile,
+                        score:resp.data.firmInfo.score,
+                        next:resp.data.firmInfo.next,
+                        userGrade:resp.data.firmInfo.userGrade,
+                        websiteNode:resp.data.firmInfo.websiteNode,
+                        faceImgUrl:resp.data.firmInfo.faceImgUrl,
+                        websiteNodeName:resp.data.firmInfo.websiteNodeName
+                    }
+                    localStorage.setItem("user_data",JSON.stringify(user_data));
+                    localStorage.setItem("tokenId",resp.data.tokenId);
+                    localStorage.setItem("secretKey",resp.data.secretKey);
             }
         }
          

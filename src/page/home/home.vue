@@ -22,7 +22,7 @@ export default {
    data() {
        return {
            mainActivityList:null,
-
+           websiteNode: "3301",
                 // alertEs:[
                 //      {
                 //     isShow:false,
@@ -56,7 +56,7 @@ export default {
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "main_page_show_three",
-                    websiteNode: "3301"
+                    websiteNode:this.websiteNode
                 }
             }).then(resp => {
                 // return JSON.parse(JSON.stringify(result));
