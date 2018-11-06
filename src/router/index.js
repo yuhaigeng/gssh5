@@ -16,7 +16,7 @@ const search =  r => require.ensure([], () => r(require('../page/search/search.v
 const setUp = r => require.ensure([], () => r(require('../page/setUp/setUp.vue')), 'setUp');
 const company =  r => require.ensure([], () => r(require('../page/setUp/company.vue')), 'company');
 const revise = r => require.ensure([], () => r(require('../page/setUp/revise.vue')), 'revise');
-const collect = r => require.ensure([], () => r(require('../page/my/collect.vue')), 'collect');
+const collect = r => require.ensure([], () => r(require('../page/collect/collect.vue')), 'collect');
 const vip = r => require.ensure([], () => r(require('../page/vip/vip.vue')), 'vip');
 const score = r => require.ensure([], () => r(require('../page/score/score.vue')), 'score');
 const scoreRecord = r => require.ensure([], () => r(require('../page/score/childer/scoreRecord.vue')), 'scoreRecord');
