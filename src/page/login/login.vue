@@ -11,11 +11,11 @@
 						<ul v-cloak class="msg_login" v-show="login===0"> 
 							<li class="sprite icon_phone">
 								<input type="text" id="login_phoneNumber1" value="" maxlength="11" placeholder="请输入您的手机号码" v-model="message" autocomplete="on" @focus="focus" @blur="blur"/>
-								<a id="get_verify_code" @click="get_verify_code"  :class="{'hidden':isHidden}" v-html = "isHidden ? '重新获取' : '获取验证码'"></a>
-								<a id="time" :class="{'hidden':isTime}" v-html="!isTime && '60s后重试'" style="background: none; color: #F76A10;"></a>
+								<a id="get_verify_code" @click="get_verify_code" v-html = "'获取验证码'" v-if="isHidden"></a>
+								<a id="time"  v-else>{{count +"秒后重试"}}</a>
 							</li>
 							<li class="sprite icon_key">
-								<input type="text" id="verify_code" name="" placeholder="请输入收到的验证码" maxlength="6" :disabled="isTime" autocomplete="off"  v-model="code" @focus="focus" @blur="blur" />
+								<input type="text" id="verify_code" name="" placeholder="请输入收到的验证码" maxlength="6" :disabled="isHidden" autocomplete="off"  v-model="code" @focus="focus" @blur="blur" />
 							</li>
 						</ul>
 						<ul v-cloak class="count_login" v-show="login===1">
@@ -30,9 +30,10 @@
 					</div>
 				</div>
 				<button class="login_btn" :class="{'active':isActive}"  @click="login_btn" v-text="'登陆'"></button>
-				<div class="login_bottom" :class="{'hidden':bottomIsHidden}">
-					说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)">《果速送合作协议》</a>
+				<div class="login_bottom" v-show = "!bottomIsHidden">
+					说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" @click="agreement">《果速送合作协议》</a>
 				</div>
+                <alertVue :noticeInfoList="noticeInfoList"> </alertVue>
 			</div>
     </div>
 </template>
@@ -64,11 +65,17 @@ import alertVue from '../../components/public/alert.vue';
             passWord:null, // 密码
             code:null,     // 验证码
             isActive:false, //是否激活
-            isHidden:false, //是否显示隐藏
-            isTime:true, //验证码倒计时显示
+            isHidden:true, //是否显示隐藏
             bottomIsHidden:false,  // 协议是否显示
             phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
-            msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"]
+            msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
+            count:'',
+            timer:null,
+            noticeInfoList:{
+                    isShow:false,
+                    noticeTitle: "【下单时间调整】",
+                    noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
+                }
             }
         },
         watch:{
@@ -157,7 +164,26 @@ import alertVue from '../../components/public/alert.vue';
                 }
             },
         },
+        mounted(){
+            
+        },
         methods:{
+            getCode:function(){
+                this.$ajax.get(this.HOST, {
+                    params:{
+                       method:'gss_sms',
+				       mobile: this.message
+                    }
+                }).then(resp => {
+
+                }).catch(err => {
+                    this.$message({
+                    message:  err.statusCode,
+                    center: true,
+                    });
+                    // console.log('请求失败：'+ err.statusCode);
+                });
+            },
             login_btn:function(e){
                 var target = event.target;
                 var isActive =target.classList.contains("active")
@@ -167,22 +193,33 @@ import alertVue from '../../components/public/alert.vue';
 		   		}
             },
             get_verify_code:function(){
-				if(  this.message == '') {
-					alert(this.msgArr[2])
-				} else if (!this.phoneNumberReg.test(this.message)) {
-                    alert(this.msgArr[3])
-				}else{
-                    console.log("倒计时")
-					// pub.i = 59;
-					// pub.login.getCode();
-				}
+                       console.log(this.tipsMsg)
+                   const TIME_COUNT = 60;
+                    if (!this.tipsMsg && this.message) {
+                        this.getCode();
+                        this.count = TIME_COUNT;
+                        this.isHidden = false
+                        this.timer = setInterval(() => {
+                        if (this.count > 0 && this.count <= TIME_COUNT) {
+                            this.count--;
+                        }else{
+                            this.isHidden = true;
+                            clearInterval(this.timer);
+                            this.timer = null;
+                            }
+                         }, 1000)
+                    }
             },
             focus:function(){
 				this.bottomIsHidden = true;
 			},
 			blur:function(){
 				this.bottomIsHidden = false;
-			},
+            },
+            agreement:function(){
+                this.noticeInfoList.isShow = true;
+                console.log(1)
+            }
         }
          
     }
@@ -301,8 +338,5 @@ import alertVue from '../../components/public/alert.vue';
 }
 .login_btn.active {
     background-color: #f37c30;
-}
-.hidden {
-    display: none;
 }
 </style>

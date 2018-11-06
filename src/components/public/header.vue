@@ -10,7 +10,7 @@
         </div>
         <!-- more 头部  标题头部-->
         <div  class="header-wrap"  v-if="type.type == 'common'">
-            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left"></div>
+            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left" @click="goBack"></div>
 			<h2 class="index_tit header_tit" v-text="type.title"></h2>
         </div>
         <!-- login 头部  右侧有功能按钮-->
@@ -68,7 +68,12 @@
                 }
             },
             goToNext:function(){
-               return this.$router.push({path:this.type.routerPath , query:{isNew:1}})
+                if(this.type.routerPath ){
+                     return this.$router.push({path:this.type.routerPath , query:{isNew:1}})
+                }else{
+                     this.$router.go(-1) 
+                }
+              
             },
             register:function(){
                 console.log('注册')

@@ -9,7 +9,7 @@
 		        </li>
 		        <li>
 		            <div class="jifen_jifen"><label>总成长值：</label><input type='text' :value='personInfo.exp' id="business_shop_score" disabled="disabled"></div>
-		            <div class="dengji"><label>会员等级：</label><input type='text' :value='personInfo.userGrade' id="business_shop_grade" disabled="disabled"></div>
+		            <div class="dengji"><label @click="agreement">会员等级：</label><input type='text' :value='personInfo.userGrade' id="business_shop_grade" disabled="disabled"></div>
 		        </li>
 		    </ul>
 		    <ul class="content2">
@@ -27,15 +27,18 @@
 		        </li>
 		    </ul>
 	    </div>
+        <agreementAlert :noticeInfoList="noticeInfoList"> </agreementAlert>
      </div>
 </template>
 
 <script>
 import setHeader from "../../components/public/header.vue";
+import agreementAlert from  "../../components/public/alert.vue"
     export default {
         name:'company',
         components:{
-           setHeader 
+           setHeader ,
+           agreementAlert
         },
          data() {
              return {
@@ -63,10 +66,22 @@ import setHeader from "../../components/public/header.vue";
                         {isMain: 2,mobile: "18315318515",status: 1},
                         {isMain: 2,mobile: "18315318515",status: 1},
                     ]
-                 }
+                 },
+                  noticeInfoList:{
+                    isShow:false,
+                    noticeTitle: "【下单时间调整】",
+                    noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
+                }
              }
          },
          mounted:function(){
+             
+         },
+         methods:{
+              agreement:function(){
+                this.noticeInfoList.isShow = true;
+                console.log(1)
+            }
          }
     }
 </script>

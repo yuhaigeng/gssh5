@@ -4,7 +4,7 @@
         <div v-cloak class="main-wrap">
           <div class="main message">
             <div class="message_box">
-              <div class="message_item" v-for="(item,index) in messages" :key="index">
+              <div class="message_item" v-for="(item,index) in objects" :key="index">
                 <div class="message_item_top clearfloat">
                   <div class="message_tit" v-text="item.msgTitle"></div>
                   <div class="message_time" v-text="item.createTime"></div>
@@ -12,7 +12,7 @@
                 <div class="message_count" v-text="item.messageContent"></div>
               </div>
             </div>
-            <p class="lodemore" v-text=" isLast? '没有更多数据了' :'点击加载更多' "></p>
+            <p class="lodemore" v-text="messages.isLast? '没有更多数据了' :'点击加载更多' " @click="load_more"></p>
             
           </div>
 			</div>
@@ -21,10 +21,18 @@
 </template>
 
 <script>
+var pub ={
+     pageSize: 10,
+     pageNo: 1,
+}
 import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
 export default {
    name: 'message',
+   components: {
+        appHeader,
+        appFooter
+   },
    data() {
        return {
          headerMsg:{
@@ -32,17 +40,45 @@ export default {
             title:'消息',
             left:'返回'
          },
-         isLast:false,
-         messages:[
-           {msgTitle: "#月末有礼#",createTime: "2018-05-29 18:13:41",messageContent: "立减和满赠活动持续火热进行中，更有为您精心准备特惠商品...(产地直销)玉菇.江苏.箱装1.88元/斤，香蕉（金黄焦）.海南.箱装-N 38元/件，库尔勒香梨(特级).新疆.箱装49元/件...机不可失时不再来，快快点击果速送APP开始下单吧！"},
-           {msgTitle: "#月末有礼#",createTime: "2018-05-29 18:13:41",messageContent: "立减和满赠活动持续火热进行中，更有为您精心准备特惠商品...(产地直销)玉菇.江苏.箱装1.88元/斤，香蕉（金黄焦）.海南.箱装-N 38元/件，库尔勒香梨(特级).新疆.箱装49元/件...机不可失时不再来，快快点击果速送APP开始下单吧！"},
-           {msgTitle: "#月末有礼#",createTime: "2018-05-29 18:13:41",messageContent: "立减和满赠活动持续火热进行中，更有为您精心准备特惠商品...(产地直销)玉菇.江苏.箱装1.88元/斤，香蕉（金黄焦）.海南.箱装-N 38元/件，库尔勒香梨(特级).新疆.箱装49元/件...机不可失时不再来，快快点击果速送APP开始下单吧！"},
-         ]
+         messages:[],
+         objects:null
        }
    },
-  components: {
-    appHeader,
-    appFooter
+  mounted(){
+      this.get_meassage();
+  },
+  methods:{
+       get_meassage:function () {
+            this.$ajax.get(this.HOST, {
+                params:{
+                    method: 'mipush_msgrcd_show',
+                    firmId: 132,
+                    pageSize: pub.pageSize,
+                    pageNo: pub.pageNo,
+                }
+            }).then(resp => {
+                if(resp.data.data.pageNo == 1){
+                     this.messages = resp.data.data;
+                     this.objects = resp.data.data.objects
+                }else{
+                    this.messages = resp.data.data;
+                    this.objects =  this.objects.concat(resp.data.data.objects);
+                    console.log( this.messages.isLast);
+                    //  console.log(this.objects);
+                }
+            }).catch(err => {
+                // console.log(JSON.parse(data).data.mainActivityList);
+                  console.log('请求失败：'+ err.statusCode);
+                
+            });
+        },
+        load_more:function(){
+            if (!this.messages.isLast) {
+							pub.pageNo ++ ;
+						this.get_meassage();
+						}
+        }
+
   }
 }
 </script>
@@ -53,9 +89,6 @@ export default {
   width: 100%;
   margin-top: 87px;
   background: #ebeaea;
-}
-.main.message {
-    padding-bottom: 100px;
 }
 .main {
     width: 100%;

@@ -1,5 +1,5 @@
 <template >
-    <div class="alert" v-show="isShow">
+    <div class="alert" v-show="noticeInfoList.isShow">
         <div class="my_bg"></div>
         <div class="logistic_show">
             <div class="logistic_show_header">
@@ -19,18 +19,19 @@
 <script>
     export default {
          name:'alert',
+         props:["noticeInfoList"],
          data() {
              return {
-               isShow:false,
-               noticeInfoList:{
-                   noticeTitle: "【下单时间调整】",
-                   noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
-                   }
+            //    isShow:false,
+            //    noticeInfoList:{
+            //        noticeTitle: "【下单时间调整】",
+            //        noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
+            //        }
              }
          },
          methods:{
              exchange:function(){
-                    this.isShow = false;
+                    this.noticeInfoList.isShow = false;
              }
          }
     }

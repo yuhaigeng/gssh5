@@ -15,6 +15,7 @@
 				</div>
         <div class="moreDoogs_main_box_right">
 					<div class="moreDoogs_main_box_right_box">
+            <router-link to="detail">
             <div v-for="(item,index) in goods" :key="index">
 						<ul class="moreGoods_box_list" v-for="(item1,index) in item.left_name" :key="index">
               <li v-for="(item2,index) in item1.food" :key="index" v-show="name1==item1.name">
@@ -28,7 +29,8 @@
               </li>
 						</ul>
             </div>
-						<p class="lodemore"></p>
+            </router-link>
+						<!-- <p class="lodemore"></p> -->
 					</div>
 					
 				</div>

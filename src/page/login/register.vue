@@ -14,11 +14,11 @@
 							<span class="left">联系人：</span><input type="text" id="shopPeople"  placeholder="请输入联系人" @focus="focus" @blur="blur" />
 						</li>
 						<li>
-							<span class="left">选择省市：</span><input type="text" id="province" placeholder="点击选择省市"  v-model="city" readonly="readonly" @focus="focus" @blur="blur"  />
+							<span class="left">选择省市：</span><input type="text" id="province" placeholder="点击选择省市"  v-model="city" readonly="readonly" @focus="focus" @blur="blur" @click="selCity" />
 									<input type="hidden" id="value1" value="" />
 						</li>
 						<li>
-							<span class="left">选择地址：</span><input type="text" id="street" placeholder="点击选择详细地址"  readonly="readonly" @focus="focus" @blur="blur"/><span class="msg" v-text="streetMsg"></span>
+							<span class="left">选择地址：</span><input type="text" id="street" placeholder="点击选择详细地址"  readonly="readonly" @focus="focus" @blur="blur" @click="selStreet"/><span class="msg" v-show="true" v-text="streetMsg"></span>
 									<input type="hidden" id="value2" value="" />
 						</li>
 						<li>
@@ -28,7 +28,7 @@
 							<span class="left">选择站点：</span><input type="text" name="sel_websit" id="sel_websit" data="" value="" readonly="readonly"  @focus="focus" @blur="blur"/>
 						</li>
 						<li>
-							<span class="left">推荐人ID：</span><input type="text" name="recommend_id" id="recommend_id" placeholder="请输入推荐人ID" data="" value=""  @focus="focus" @blur="blur"/><span class="float_right padding_right24"><img src="../../assets/img/wenhao.png"/></span><div style="clear: both;"></div>
+							<span class="left">推荐人ID：</span><input type="text" name="recommend_id" id="recommend_id" placeholder="请输入推荐人ID" data="" value=""  @focus="focus" @blur="blur"/><span class="float_right padding_right24"  ><img src="../../assets/img/wenhao.png" @click="agreement"/></span><div style="clear: both;"></div>
 						</li>
 						<li>
 							<span class="left">推荐人：</span><input type="text" name="recommend_name" id="recommend_name" placeholder="请输入推荐人店铺名称" data="" value=""  @focus="focus" @blur="blur"/>
@@ -50,20 +50,25 @@
 				</div>
 				<button class="submit_btn" :class="{'hidden':mainHidden}" >提交申请</button>
 			</div>
-			<div class="login_bottom" :class="{'hidden':bottomIsHidden}"> 
-				说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" >《果速送合作协议》</a>
+			<div class="login_bottom" :class="{'hidden':bottomIsHidden}"  > 
+				说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" @click="agreement" >《果速送合作协议》</a>
 			</div>
-			<div class="my_bg" style="visibility: hidden;"></div>
+			<agreementAlert :noticeInfoList="noticeInfoList"> </agreementAlert>
+            <div class="myBg"></div>
         </div>
 </template>
 
 <script>
 import appHeader from "../../components/public/header.vue";
-
+import agreementAlert from  "../../components/public/alert.vue";
+import {LArea} from '../../common/LArea.js' ;
+import {LArea1} from '../../common/LArea1.js';
+import '@/common/LArea.css'
     export default {
         name:'register',
         components:{
-            appHeader
+            appHeader,
+            agreementAlert
             
         },
          data() {
@@ -83,7 +88,48 @@ import appHeader from "../../components/public/header.vue";
                 mainHidden:false,  //注册提交按钮
                 phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
                 bottomIsHidden:false,  //  协议是否显示
-                msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"]
+                msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
+                noticeInfoList:{
+                    isShow:false,
+                    noticeTitle: "【下单时间调整】",
+                    noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
+                },
+                dataCity:[
+                    { 
+                        cities:[ 
+                            {
+                            cities: [ {id: "330101", name: "市辖区", cityName: "杭州市", provinceName: "浙江省", code: "330101"}
+                        ,{id: "330102", name: "上城区", cityName: "杭州市", provinceName: "浙江省", code: "330102"}
+                        ,{id: "330103", name: "下城区", cityName: "杭州市", provinceName: "浙江省", code: "330103"}
+                        ,{id: "330104", name: "江干区", cityName: "杭州市", provinceName: "浙江省", code: "330104"}
+                        ,{id: "330105", name: "拱墅区", cityName: "杭州市", provinceName: "浙江省", code: "330105"}
+                        ,{id: "330106", name: "西湖区", cityName: "杭州市", provinceName: "浙江省", code: "330106"}
+                        ,{id: "330108", name: "滨江区", cityName: "杭州市", provinceName: "浙江省", code: "330108"}
+                        ,{id: "330109", name: "萧山区", cityName: "杭州市", provinceName: "浙江省", code: "330109"}
+                        ,{id: "330110", name: "余杭区", cityName: "杭州市", provinceName: "浙江省", code: "330110"}
+                        ,{id: "330122", name: "桐庐县", cityName: "杭州市", provinceName: "浙江省", code: "330122"}
+                        ,{id: "330127", name: "淳安县", cityName: "杭州市", provinceName: "浙江省", code: "330127"}
+                        ,{id: "330182", name: "建德市", cityName: "杭州市", provinceName: "浙江省", code: "330182"}
+                        ,{id: "330183", name: "富阳市", cityName: "杭州市", provinceName: "浙江省", code: "330183"}
+                        ,{id: "330185", name: "临安市", cityName: "杭州市", provinceName: "浙江省", code: "330185"}
+                        ], name: "杭州市",
+                            provinceName: "浙江省"} ],
+                        
+                       name: "浙江省"}
+                     
+                ],
+              
+                streets:[
+                        ,{id: "18", countyName: "下城区", streetId: 0, name: "武林街道", cityName: "杭州市",code: "330103001",provinceName: "浙江省"}
+                        ,{id: "19", countyName: "下城区", streetId: 0, name: "天水街道", cityName: "杭州市",code: "330103002",provinceName: "浙江省"}
+                        ,{id: "20", countyName: "下城区", streetId: 0, name: "朝晖街道", cityName: "杭州市",code: "330103003",provinceName: "浙江省"}
+                        ,{id: "21", countyName: "下城区", streetId: 0, name: "潮鸣街道", cityName: "杭州市",code: "330103004",provinceName: "浙江省"}
+                        ,{id: "22", countyName: "下城区", streetId: 0, name: "长庆街道", cityName: "杭州市",code: "330103005",provinceName: "浙江省"}
+                        ,{id: "23", countyName: "下城区", streetId: 0, name: "石桥街道", cityName: "杭州市",code: "330103006",provinceName: "浙江省"}
+                        ,{id: "24", countyName: "下城区", streetId: 0, name: "东新街道", cityName: "杭州市",code: "330103007",provinceName: "浙江省"}
+                        ,{id: "25", countyName: "下城区", streetId: 0, name: "文晖街道", cityName: "杭州市",code: "330103008",provinceName: "浙江省"}
+                        ]
+                                            
              }
          },
          watch:{
@@ -111,23 +157,56 @@ import appHeader from "../../components/public/header.vue";
                     }
 				},
          },
+         mounted:function(){
+                 var areal = new LArea();
+                areal.init({
+                    'trigger': "#province",
+                    'valueTo': "#value1",
+                    'keys': {
+                        id: "code",
+                        name: "name"
+                    },
+                    'type': 1,
+                    'data': this. dataCity
+                }),
+              areal.value = [0, 0, 0]
+
+             var areal2 = new LArea1();
+                areal2.init({
+                    'trigger': "#street",
+                    'valueTo': "#value2",
+                    'keys': {
+                        id: "code",
+                        name: "name"
+                    },
+                    'type': 1,
+                    'data': this.streets
+                }),
+               areal2.value = [0, 0, 0]
+         },
          methods:{
-            street:function(){
-					console.log(this.city)
-					if(this.city){
-						this.streetMsg=null
-						 document.getElementsByClassName("my_bg")[0].style.visibility="visible";
-					}else{
-						this.streetMsg ="请先选择省市！！"
-						
-					}
-            },
             focus:function(){
 				this.bottomIsHidden = true;
 			},
 			blur:function(){
 				this.bottomIsHidden = false;
-			},
+            },
+            agreement:function(){
+                this.noticeInfoList.isShow = true;
+                console.log(1)
+            },
+            selCity:function(){
+                document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩
+            },
+            selStreet:function(){
+                if(this.city){
+                    this.streetMag = null;
+                     document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩
+                }else{
+                     this.streetMag = "请先选择城市!!";
+                    
+                }
+            }
          }
     }
 </script>
@@ -257,5 +336,18 @@ import appHeader from "../../components/public/header.vue";
 }
 .apply_service_main .msg {
     color: red;
+}
+.myBg{
+    visibility: hidden;
+    width:100%;
+    height:100%;
+    background-color: #000;
+    position: fixed;
+    top:0;
+    left:0;
+    opacity: 0.3;
+    filter: Alpha(opacity=30);
+    z-index:6;
+    overflow: hidden;
 }
 </style>

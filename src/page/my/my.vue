@@ -31,37 +31,35 @@ export default {
    name: 'my',
    data() {
        return {
-          headerMsg:{
-                    type:"common3",
-                    title:'我的',
-                    routerPath:'/setUp',
-                },
-         logined: true,
-         userInfo:{
-              faceImgUrl: "zhangshuoinfo.b0.upaiyun.com/2018/8/1535597472",
-              firmName: "掌烁测试-朱高飞",
-              linkTel: "18315318515"
-
-         },
-         userVipInfo:{
-            coupons: 0,
-            firmExp: 82.5,
-            firmId: "132",
-            firmMonthExp: 82.5,
-            lastMonthExp: 0,
-            monthExp: 110,
-            needExp: 27.5,
-            surplusScore: 18,
-            upExp: 27.5,
-            vip: -1,
-            vipGrade: 0,
-         },
-          orderList:dateModule.orderList,
-          otherList:dateModule.otherList,
-          title:dateModule.title,
-          title1:dateModule.title1,
-         
-       }
+            headerMsg:{
+                type:"common3",
+                title:'我的',
+                routerPath:'/setUp',
+            },
+            logined: false,
+            userInfo:{
+                faceImgUrl: "zhangshuoinfo.b0.upaiyun.com/2018/8/1535597472",
+                firmName: "掌烁测试-朱高飞",
+                linkTel: "18315318515"
+            },
+            userVipInfo:{
+                coupons: 0,
+                firmExp: 82.5,
+                firmId: "132",
+                firmMonthExp: 82.5,
+                lastMonthExp: 0,
+                monthExp: 110,
+                needExp: 27.5,
+                surplusScore: 18,
+                upExp: 27.5,
+                vip: -1,
+                vipGrade: 0,
+            },
+            orderList:dateModule.orderList,
+            otherList:dateModule.otherList,
+            title:dateModule.title,
+            title1:dateModule.title1,
+        }
    },
   components: {
     appHeader,
