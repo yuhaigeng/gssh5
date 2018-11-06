@@ -52,8 +52,10 @@ export default {
             showlicenseImg: false,
             imgBaseUrl:'',
             isLast:false,
+            pageSize:'10',
+            pageNo:'1',
             goodsList:[],
-            scoreGoods_desc:{}//商品详情注意事项
+            scoreGoods_desc:{},//商品详情注意事项
         }
     },
     components: {
@@ -70,8 +72,8 @@ export default {
                 params:{
                     method: "score_goods_show",
                     websiteNode: "3301",
-                    pageSize:'10',
-				    pageNo:'1'
+                    pageSize:this.pageSize,
+				    pageNo:this.pageNo
                 }
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
