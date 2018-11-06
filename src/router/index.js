@@ -26,9 +26,7 @@ export default new Router({
       {path: '/setUp',component: r => require.ensure([], () => r(require('../page/setUp/setUp.vue')), 'setUp')}, //设置
       {path: '/company',component: r => require.ensure([], () => r(require('../page/setUp/company.vue')), 'company')}, //公司信息
       {path: '/revise',component: r => require.ensure([], () => r(require('../page/setUp/revise.vue')), 'revise')}, //需改密码
-      {path: '/collect',component: r => require.ensure([],() => r(require('../page/my/collect.vue')), 'collect')}, //收藏
-
-
+      {path: '/collect',component: r => require.ensure([],() => r(require('../page/collect/collect.vue')), 'collect')}, //收藏
     ]
   }]
 })

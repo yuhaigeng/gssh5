@@ -1,33 +1,38 @@
 <template>
   <div class="moreGoods">
     <app-header :type ="headerMsg"></app-header>
-    <h1>more</h1>
-    <div class="moreDoogs_main_box clearfloat">
-      <div class="moreDoogs_main_box_left_wrap">
-        <ul class="moreDoogs_main_box_left">
-          <li v-for="(item,index) in goods" :key="index" :class="{isSelected:index == itemIndex}" @click="menuClick(item.name,index)">
-            {{item.name}}
-          </li>
-        </ul>
-      </div>
-      <div class="moreDoogs_main_box_right">
-        <div class="moreDoogs_main_box_right_box">
-          <router-link to="detail">
-          <ul class="moreGoods_box_list" v-for="(item,index) in goods" :key="index">
-            <li v-for="(food,index) in item.food" v-show="name==item.name" :key="index">
-              <dl class="moreGoods_goods_detaile clearfloat">
-              <dt><img :src="food.img" alt=""></dt>
+    <div class="moreDoogs_main_wrap">
+      <div class="moreDoogs_main_top">
+				<ul class="moreDoogs_main_top_list">
+					<li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.tit,index)" v-text="item.tit"></li>
+          </ul>
+          </div>
+          <div class="moreDoogs_main_box clearfloat">
+				<div class="moreDoogs_main_box_left_wrap">
+					<ul class="moreDoogs_main_box_left" v-for="(item,index) in goods" :key="index">
+						<li v-for="(item1,index) in item.left_name" :class="{isSelected:index == isSelected}" :key="index" v-show="name==item.tit" v-text="item1.name" @click="leftNav(item1.name,index)"></li>
+					</ul>
+				</div>
+        <div class="moreDoogs_main_box_right">
+					<div class="moreDoogs_main_box_right_box">
+            <div v-for="(item,index) in goods" :key="index">
+						<ul class="moreGoods_box_list" v-for="(item1,index) in item.left_name" :key="index">
+              <li v-for="(item2,index) in item1.food" :key="index" v-show="name1==item1.name">
+                <dl class="moreGoods_goods_detaile clearfloat">
+              <dt><img :src="item2.img" alt=""></dt>
               <dd>
-                <h3 class="moreGoods_goods_name">{{food.name}}</h3>
-                <p class="moreGoods_goods_text">{{food.con}}</p>
+                <h3 class="moreGoods_goods_name">{{item2.name}}</h3>
+                <p class="moreGoods_goods_text">{{item2.con}}</p>
               </dd>
             </dl>
-            </li>
-          </ul>
-          </router-link>
-          <p class="lodemore"></p>
+              </li>
+						</ul>
+            </div>
+						<p class="lodemore"></p>
+					</div>
+					
+				</div>
         </div>
-      </div>
     </div>
     <app-footer-go-shop></app-footer-go-shop>
   </div>
@@ -45,21 +50,47 @@
             title:'更多商品',
             left:'返回'
          },
-        goods: [{
-            name: '苹果',
-            food: [{
-              img: 'http://img.guoss.cn/gss_img_root/img_goods/14424/20181019130326.jpg',name:'苹果',con:'新鲜又好吃的大苹果'
-            }]
-          },
-          {
+         goods:[
+           {
+             tit:'进口水果',
+             left_name:[
+               {
+                 name:'苹果',
+                 food:[{
+                   img: 'http://img.guoss.cn/gss_img_root/img_goods/14424/20181019130326.jpg',name:'苹果',con:'新鲜又好吃的大苹果'
+                 }]
+               },
+                {
             name: '香蕉',
             food: [{
               img: 'http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123017.jpg',name:'香蕉',con:'新鲜又好吃的香蕉'
             }]
           }
-        ],
+             ]
+           },
+           {
+             tit:'精品优选',
+             left_name:[
+               {
+                 name:'梨',
+                 food:[{
+                   img: 'http://img.guoss.cn/gss_img_root/img_goods/14424/20181019130326.jpg',name:'梨',con:'新鲜又好吃的大苹果'
+                 }]
+               },
+                {
+            name: '橘子',
+            food: [{
+              img: 'http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123017.jpg',name:'香蕉',con:'新鲜又好吃的香蕉'
+            }]
+          }
+             ]
+           },
+         ],
         name: 'food',
-        itemIndex: 0
+        isSelected:0,
+        isTop:0,
+        isShow:0,
+        name1: ''
       }
     },
     components: {
@@ -67,14 +98,59 @@
       appFooterGoShop
     },
     methods: {
-      menuClick(name, index) {
-        this.name = name
-        this.itemIndex = index
-      }
-    }
+     topNav(name,index) {
+       this.isTop = index
+       this.name = name
+     },
+     leftNav(name1,index) {
+       this.isSelected = index
+       this.name1 = name1
+     }
+    },
   }
 </script>
 <style scoped>
+.moreDoogs_main_wrap {
+	background: #EBEAEA;
+	width: 750px;
+	position: absolute;
+  margin-top: 87px;
+}
+
+.moreDoogs_main_top {
+	height: 90px;
+	background: #ebeaea;
+	width: 750px;
+	position: fixed;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	z-index: 6;
+}
+
+.moreDoogs_main_top_list {
+	padding: 11px 0;
+	width: auto;
+}
+
+.moreDoogs_main_top_list li {
+	width: 140px;
+	height: 64px;
+	background: #FFFFFF;
+	float: left;
+	line-height: 64px;
+	text-align: center;
+	color: #999;
+	font-size: 28px;
+	border: 2px solid #dddddd;
+	border-radius: 34px;
+	margin-left: 24px;
+	display: inline-block;
+}
+
+ .topClass {
+	border-color: rgb(234, 90, 42) !important;
+	color: rgb(234, 90, 42) !important;
+}
 .moreGoods_goods_detaile {
 	height: 220px;
 }
