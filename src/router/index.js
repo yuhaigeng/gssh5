@@ -21,6 +21,7 @@ const vip = r => require.ensure([], () => r(require('../page/vip/vip.vue')), 'vi
 const score = r => require.ensure([], () => r(require('../page/score/score.vue')), 'score');
 const scoreRecord = r => require.ensure([], () => r(require('../page/score/childer/scoreRecord.vue')), 'scoreRecord');
 const goodsList = r => require.ensure([], () => r(require('../page/score/childer/goodsList.vue')), 'goodsList');
+const good = r => require.ensure([], () => r(require('../page/score/childer/childern/good.vue')), 'good');
 
 Vue.use(Router)
 
@@ -62,6 +63,12 @@ export default new Router({
           { //果币商品
             path: 'goodsList',
             component: goodsList,
+            children:[
+              { //果币商品
+                path: 'good',
+                component: good,
+              },
+            ]
           },
         ]
       }, //果币商城
