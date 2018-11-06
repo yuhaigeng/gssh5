@@ -85,4 +85,14 @@ html{ overflow: auto;}
     background: #FFF;
     margin-bottom: 10px
 }
+.footer-wrap {
+    width: 100%;
+    height: 98px;
+    background: #FFF;
+    position: fixed;
+    border-top: 1px solid #bababa;
+    left: 0;
+    bottom: 0;
+    z-index: 6
+}
 </style>

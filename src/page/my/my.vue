@@ -136,7 +136,7 @@ var dateModule  = {
           icon:'.././static/img/icon_collection.png',
           type:null,
           name:'收藏',
-          linkUrl:'',
+          linkUrl:'collect',
         }
       ]
   }

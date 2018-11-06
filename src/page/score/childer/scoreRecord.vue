@@ -2,17 +2,17 @@
     <div class="scoreRecord">
         <div class="header-wrap score_table">
 			<div class="header_left header_back sprite arrow_left_orange" @click="goBack"></div>
-			<div class="index_tit header_tit" v-text="(type == '0' ? '果币明细' : '兑换记录')"></div>
+			<div class="index_tit header_tit" v-text="dataPage[type].tit"></div>
 			<div class="header_right login_top_right" id="">筛选</div>
 			<input class="header_right login_top_right" id="date" type="text" name=""  value=""  readonly="readonly" style="-webkit-user-select:none;-webkit-touch-callout:none;" />
 			<input type="hidden" name="" id="value_date" value="" />
 		</div>
         <div class="main-wrap">
 			<div class="main score_table">
-				<div class="score_table_box">
-					<s-table :titleList='titleList' :tableDate='dataList'></s-table>
+				<div class="score_table_box" v-if="dataList.length">
+					<s-table :titleList='dataPage[type].subtitle' :tableDate='dataList'></s-table>
 				</div>
-				<p class="lodemore" v-text="!dataList.length ? '暂无数据' : (isLast ? '没有更多数据了' : '点击加载更多')"></p>
+				<p class="lodemore" v-text="!dataList.length ? '暂无数据' : (isLast ? '没有更多数据了' : '点击加载更多')" @click="getMore()"></p>
 			</div>
 		</div>
 		<div class="order_refund">		
@@ -31,39 +31,20 @@ export default {
         return {
             type:'',
             isLast:false,
-            dataList:[{
-                    createTime:"2018-10-18 16:50:40",
-                    id:"220013",
-                    incDnc:2,
-                    note:"抽奖消耗果币",
-                    orderCode:"17240",
-                    score:20,
-                    scoreFrom:"抽奖消耗",
-                    shopEntity:132,
-                    shopEntityName:"",
-                    websiteName:"",
-                    websiteNode:"3301"
-                },
-                {
-                    createTime:"2018-10-18 16:50:40",
-                    id:"220013",
-                    incDnc:1,
-                    note:"抽奖消耗果币",
-                    orderCode:"17240",
-                    score:20,
-                    scoreFrom:"抽奖消耗",
-                    shopEntity:132,
-                    shopEntityName:"",
-                    websiteName:"",
-                    websiteNode:"3301"
-                },],
-            titleList:[{
-                title:"途径",
+            dataList:[],
+            dataPage:[{
+                tit:"果币明细",
+                port:"score_details",
+                subtitle:[{title:"途径"},{title:"果币"},{title:"操作时间"}]
             },{
-                title:"果币",
-            },{
-                title:"操作时间"
+                tit:"兑换记录",
+                port:"score_use_rcd",
+                subtitle:[{title:"兑换物品"},{title:"消费果币"},{title:"兑换时间"}]
             }],
+            pageSize:'10',
+            pageNo:'1',
+            time:null,
+            incDnc:null,
         }
     },
     async beforeMount(){
@@ -76,7 +57,40 @@ export default {
     components: {
         sTable,
     },
+    mounted(){
+        this.get_record_list();
+    },
     methods:{
+        get_record_list:function () {
+            this.$ajax.get(this.HOST, {
+                params:{
+                    method: this.dataPage[this.type].port,
+                    firmId: "132",
+                    pageSize:this.pageSize,
+                    pageNo:this.pageNo,
+                    scoreUseRcdTime:this.time,
+                    scoreDetailsTime:this.time,
+                    incDnc:this.incDnc
+                }
+            }).then(result => {
+                // return JSON.parse(JSON.stringify(result));
+                return result.data;
+
+                // console.log(data);
+            }).then(data => {
+                console.log(data);
+                if (data.statusCode == 100000) {
+                    this.isLast = data.data.isLast;
+                   if (data.data.pageNo == 1) {
+                       this.dataList = data.data.objects;
+                   } else {
+                       this.dataList = this.dataList.concat(data.data.objects);
+                   }
+                } else {
+                    console.log(data.statusStr);
+                }
+            });
+        },
         goBack : function(){
             if (window.history.length <= 1) {
                     this.$router.push({path:'/my'})   
@@ -85,6 +99,12 @@ export default {
                 this.$router.go(-1)
             }
         },
+        getMore:function () {
+            if (!this.isLast) {
+                this.pageNo = this.pageNo+1 ;
+                this.get_record_list();
+            } 
+        }
     }
 }
 </script>
