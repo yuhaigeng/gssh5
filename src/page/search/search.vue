@@ -10,15 +10,15 @@
 			</div>
 		</div>
         <div class="main-wrap">
-			<div class="search_star" v-if="isHot">
+			<div class="search_star" v-if="!searchVal">
 				<p class="search_tit">热门搜索</p>
 				<ul class="search_item">
-					<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.name)">
-                        {{item.name}}
+					<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.keyword)">
+                        {{item.keyword}}
                     </li>
 				</ul>
 			</div>
-			<div class="search_none" v-if="isNull">
+			<div class="search_none" v-if="!goodsList.length && searchVal && state == 3">
 				<dl>
 					<dt>
 						<img src="../../assets/img/pic_logo@2x.png"/>
@@ -29,17 +29,17 @@
 					</dd>
 				</dl>
 			</div>
-            <div class="search_resurt hidden">
+            <div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
 				<div class="search_goods" v-for="(item,index) in goodsList" :key="index">
 					<dl>
 						<dt>
-							<img :src="item.img"/>
+							<img :src="item.goodsLogo"/>
 						</dt>
 						<dd>
-							<h3 class="moreGoods_goods_name">{{item.tit}}</h3>
-							<p class="moreGoods_goods_text">{{item.det}}</p>
+							<h3 class="moreGoods_goods_name">{{item.goodsName}}</h3>
+							<p class="moreGoods_goods_text">{{item.goodsShows}}</p>
 							<p class="moreGoods_goods_price">
-								<span class="fontColor">1212</span>元/箱 &nbsp; &nbsp;约<span>121</span>元/斤
+								<span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}
 							</p>
 							<div class="moreGoods_goods_icon">
 											
@@ -64,33 +64,18 @@ const delay = (function() {
 export default {
  data() {
  return {
-	 isHot: true,
-	 isNull:false,
 	 focusState:false,
      searchVal:'',
-     searchList:[
-         {name:'千禧'},{name:'梨'},{name:'香蕉'},
-         {name:'千禧'},{name:'千禧'},{name:'千禧'},
-         {name:'千禧'},{name:'千禧'},{name:'千禧'},
-         {name:'千禧'},{name:'千禧'},{name:'千禧'},
-     ],
-     goodsList:[
-         {
-             img:'http://img.guoss.cn/gss_img_root/img_goods/14826/20181025144850.jpg',
-             tit:'橙子',
-             det:'口感酸甜',
-         },
-         {
-             img:'http://img.guoss.cn/gss_img_root/img_goods/14424/20181019130326.jpg',
-             tit:'苹果',
-             det:'口感酸甜',
-         },
-         {
-             img:'http://img.guoss.cn/gss_img_root/img_goods/14364/20181016151331.jpg',
-             tit:'香蕉',
-             det:'口感酸甜',
-         },
-     ]
+	 searchList:[],
+	 goodsList:[],
+	 state:1,//1,2,3
+    //  goodsList:[
+    //      {
+    //          img:'http://img.guoss.cn/gss_img_root/img_goods/14826/20181025144850.jpg',
+    //          tit:'橙子',
+    //          det:'口感酸甜',
+    //      },
+    //  ]
  }
  },
  watch:{
@@ -101,6 +86,45 @@ export default {
 	 }
  },
  methods:{
+	 get_goods_hot:function(){
+	 	this.$ajax.get(this.HOST, {
+			params:{
+				method: "goods_show_hot",
+			}
+		}).then(resp => {
+			// return JSON.parse(JSON.stringify(result));
+			// return JSON.stringify(data.data);
+				this.searchList = resp.data.data;
+				console.log(this.searchList)
+		
+			console.log(resp.data);
+		}).catch(err => {
+			// console.log(JSON.parse(data).data.mainActivityList);
+				console.log('请求失败：'+ err.statusCode);
+			
+		});
+	 },
+	 get_goods_name2:function() {
+		 this.state = 2;
+		 this.$ajax.get(this.HOST, {
+			params:{
+				method: "goods_show_name2",
+				websiteNode: 3301,
+				goodsName:this.searchVal
+			}
+		}).then(resp => {
+			// return JSON.parse(JSON.stringify(result));
+			// return JSON.stringify(data.data);
+				this.goodsList = resp.data.data;
+				console.log(this.goodsList)
+				this.state = 3;
+			console.log(resp.data);
+		}).catch(err => {
+			// console.log(JSON.parse(data).data.mainActivityList);
+			console.log('请求失败：'+ err.statusCode);
+			this.state = 3;
+		});
+	 },
 	 
      clearTimer () {
       if (this.timer) {
@@ -108,30 +132,26 @@ export default {
       }
     },
     search (event) {
-      this.clearTimer()
-      this.timer = setTimeout(() => {
-        // this.$http.post('/api/vehicle').then(res => {
-        //   console.log(res.data.data)
-        //   this.changeColor(res.data.data)
-        // })
-	  }, 2000)
-	  if(this.searchVal.length != 0){
-				this.isHot = false
-				this.isNull = true
-            }else{
-				this.isHot = true
-				this.isNull = false
+		console.log(event);
+		if(event) {
+			if(this.searchVal.length != 0){
+				
+				this.get_goods_name2() 
 			}
+		}
+		
     },
      del(){
 		this.searchVal = ''
-		this.focusState = true
-		this.isHot = true
-		this.isNull = false
-        },
-        showSearch(index) {
-			this.searchVal = index;
-		}
+		this.goodsList = []
+	},
+	showSearch(index) {
+		this.searchVal = index;
+		this.get_goods_name2() 
+	}
+ },
+ mounted(){
+	 this.get_goods_hot()
  },
  directives: {
     focus: {

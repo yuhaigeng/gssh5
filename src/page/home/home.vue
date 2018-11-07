@@ -56,7 +56,7 @@ export default {
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "main_page_show_three",
-                    websiteNode: "3301"
+                    websiteNode: 3301
                 }
             }).then(resp => {
                 // return JSON.parse(JSON.stringify(result));

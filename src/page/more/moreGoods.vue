@@ -4,13 +4,13 @@
     <div class="moreDoogs_main_wrap">
       <div class="moreDoogs_main_top">
 				<ul class="moreDoogs_main_top_list">
-					<li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.tit,index)" v-text="item.tit"></li>
+					<li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.typeCode,item.typeName,index)" v-text="item.typeName" ref="scroll"></li>
           </ul>
           </div>
           <div class="moreDoogs_main_box clearfloat">
 				<div class="moreDoogs_main_box_left_wrap">
 					<ul class="moreDoogs_main_box_left" v-for="(item,index) in goods" :key="index">
-						<li v-for="(item1,index) in item.left_name" :class="{isSelected:index == isSelected}" :key="index" v-show="name==item.tit" v-text="item1.name" @click="leftNav(item1.name,index)"></li>
+						<li v-for="(item1,index) in left_name" :class="{isSelected:index == isSelected}" :key="index" v-show="name==item.typeName" v-text="item1.typeName" @click="leftNav(item1.typeName,index)"></li>
 					</ul>
 				</div>
         <div class="moreDoogs_main_box_right">
@@ -52,55 +52,120 @@
             title:'更多商品',
             left:'返回'
          },
-         goods:[
-           {
-             tit:'进口水果',
-             left_name:[
-               {
-                 name:'苹果',
-                 food:[{
-                   img: 'http://img.guoss.cn/gss_img_root/img_goods/14424/20181019130326.jpg',name:'苹果',con:'新鲜又好吃的大苹果'
-                 }]
-               },
-                {
-            name: '香蕉',
-            food: [{
-              img: 'http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123017.jpg',name:'香蕉',con:'新鲜又好吃的香蕉'
-            }]
-          }
-             ]
-           },
-           {
-             tit:'精品优选',
-             left_name:[
-               {
-                 name:'梨',
-                 food:[{
-                   img: 'http://img.guoss.cn/gss_img_root/img_goods/14424/20181019130326.jpg',name:'梨',con:'新鲜又好吃的大苹果'
-                 }]
-               },
-                {
-            name: '橘子',
-            food: [{
-              img: 'http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123017.jpg',name:'香蕉',con:'新鲜又好吃的香蕉'
-            }]
-          }
-             ]
-           },
-         ],
+         goods:[],
+         left_name:[],
+         goodsList:[],
+         typeCode:null,
+         
+        //  goods:[
+        //    {
+        //      tit:'进口水果',
+        //      left_name:[
+        //        {
+        //          name:'苹果',
+        //          food:[{
+        //            img: 'http://img.guoss.cn/gss_img_root/img_goods/14424/20181019130326.jpg',name:'苹果',con:'新鲜又好吃的大苹果'
+        //          }]
+        //        },
+        //         {
+        //     name: '香蕉',
+        //     food: [{
+        //       img: 'http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123017.jpg',name:'香蕉',con:'新鲜又好吃的香蕉'
+        //     }]
+        //   }
+        //      ]
+        //    },
+        //  ],
         name: 'food',
         isSelected:0,
         isTop:0,
         isShow:0,
-        name1: ''
+        name1: '',
       }
     },
     components: {
       appHeader,
       appFooterGoShop
     },
+    mounted() {
+      this.goods_first_nav()
+      this.goods_second_nav()
+      this.goods_info_nav()
+      this.topScroll()
+    },
     methods: {
-     topNav(name,index) {
+      goods_first_nav:function () {
+            this.$ajax.get(this.HOST, {
+                params:{
+                    method: "goods_first_type",
+                    firmId: 132,
+                    websiteNode: "3301",
+                }
+            }).then(resp => {
+                // return JSON.parse(JSON.stringify(result));
+                // return JSON.stringify(data.data);
+                  this.goods = resp.data.data;
+           
+                console.log(resp.data);
+            }).catch(err => {
+                // console.log(JSON.parse(data).data.goods);
+                  console.log('请求失败：'+ err.statusCode);
+                
+            });
+        },
+        goods_second_nav:function () {
+            this.$ajax.get(this.HOST, {
+                params:{
+                    method: "goods_second_type",
+                    firmId: 132,
+                    websiteNode: "3301",
+                    typeCode: 68
+                    
+                }
+            }).then(resp => {
+                // return JSON.parse(JSON.stringify(result));
+                // return JSON.stringify(data.data);
+                  this.left_name = resp.data.data;
+                  console.log(this.left_name)
+           
+                console.log(resp.data);
+            }).catch(err => {
+                console.log(JSON.parse(data).data);
+                  console.log('请求失败：'+ err.statusCode);
+                
+            });
+        },
+        goods_info_nav:function () {
+            this.$ajax.get(this.HOST, {
+                params:{
+                    method: "goods_info_show_fou",
+                    firmId: 132,
+                    websiteNode: "3301",
+                    typeCode: 6801,
+                    pageNo: 1,
+                    pageSize: 10,
+                    _: 1541569453207
+                }
+            }).then(resp => {
+                // return JSON.parse(JSON.stringify(result));
+                // return JSON.stringify(data.data);
+                  this.goodsList = resp.data.data;
+                  console.log(this.goodsList)
+           
+                console.log(resp.data);
+            }).catch(err => {
+                console.log(JSON.parse(data).data);
+                  console.log('请求失败：'+ err.statusCode);
+                
+            });
+        },
+
+        topScroll(){
+         
+        },
+
+     topNav(typeCode,name,index) {
+       this.typeCode = typeCode
        this.isTop = index
        this.name = name
      },
@@ -118,27 +183,27 @@
 	position: absolute;
   margin-top: 87px;
 }
-
 .moreDoogs_main_top {
 	height: 90px;
 	background: #ebeaea;
-	width: 750px;
-	position: fixed;
+	width: 266%;
 	overflow-x: scroll;
 	overflow-y: hidden;
 	z-index: 6;
 }
 
 .moreDoogs_main_top_list {
+  height: 90px;
 	padding: 11px 0;
 	width: auto;
+  box-sizing: border-box;
 }
 
 .moreDoogs_main_top_list li {
+  float: left;
 	width: 140px;
 	height: 64px;
 	background: #FFFFFF;
-	float: left;
 	line-height: 64px;
 	text-align: center;
 	color: #999;

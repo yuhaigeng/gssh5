@@ -16,7 +16,7 @@
 		                            <div class="often_shop_goods_top clearfloat">
 					 					<p class="often_shop_goods_tit">{{item.tit}}</p>
 					 					<p class="often_shop_goods_icon">
-										 	<img class="icon_cu" src="img/tag_cu@2x.png"/>
+										 	<img class="icon_cu" src="../../assets/img/tag_te@2x.png"/>
 					 					</p>
 					 				</div>
 		                            <p class="often_shop_show">{{item.det}}</p>
@@ -26,11 +26,11 @@
 					 					</div>
 					 					<div class="os_Num">
 					 						<button class="goods_Number_min">
-					 							<img src="img/btn_m@2x.png"/>
+					 							<img src="../../assets/img/btn_m@2x.png"/>
 					 						</button>
 					 						<span class="goodsNumber fontColor">0</span>
 					 						<button class="goods_Number_max">
-					 						    <img src="img/btn_a@2x.png"/>
+					 						    <img src="../../assets/img/btn_a@2x.png"/>
 					 					    </button>
 					 					</div>
 					 				</div>
@@ -83,6 +83,14 @@ export default {
 </script>
 
 <style scoped>
+.search_goods .fontColor {
+	color: #eb5c2b;
+	font-size: 28px;
+}
+.goodsNumber {
+	padding: 0 10px;
+	font-size: 24px
+}
 .main-wrap {
 	max-width: 750px;
 	width: 100%;
