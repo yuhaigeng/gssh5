@@ -29,27 +29,33 @@
                     </dd>
                 </dl>
             </router-link>
-            <dl data = "score_coupon.html">
-                <dt class="sprite_login icon_mine_quan"></dt>
-                <dd>
-                    <a href="javascript:void(0)">果币兑换优惠劵</a>
-                    <a href="javascript:void(0)" class="sprite arrow_left"></a>
-                </dd>
-            </dl>
-            <dl data = "score_activity.html">
-                <dt class="sprite_login icon_mine_jiang"></dt>
-                <dd>
-                    <a href="javascript:void(0)">果币抽奖</a>
-                    <a href="javascript:void(0)" class="sprite arrow_left"></a>
-                </dd>
-            </dl>
-            <dl data = "" class="hidden">
+            <router-link to="/score/exchangeCoupon" >
+                <dl>
+                    <dt class="sprite_login icon_mine_quan"></dt>
+                    <dd>
+                        <a href="javascript:void(0)">果币兑换优惠劵</a>
+                        <a href="javascript:void(0)" class="sprite arrow_left"></a>
+                    </dd>
+                </dl>
+            </router-link>
+            <router-link to="/score/scoreGame" >
+                <dl>
+                    <dt class="sprite_login icon_mine_jiang"></dt>
+                    <dd>
+                        <a href="javascript:void(0)">果币抽奖</a>
+                        <a href="javascript:void(0)" class="sprite arrow_left"></a>
+                    </dd>
+                </dl>
+            </router-link>
+            
+            
+            <!-- <dl data = "" class="hidden">
                 <dt class="sprite_login icon_mine_te"></dt>
                 <dd>
                     <a href="javascript:void(0)">果币特权</a>
                     <a href="javascript:void(0)" class="sprite arrow_left"></a>
                 </dd>
-            </dl>
+            </dl> -->
         </div>
     </div>
     <transition name="fade">

@@ -10,7 +10,7 @@ const message = r => require.ensure([], () => r(require('../page/message/message
 const login = r => require.ensure([], () => r(require('../page/login/login.vue')), 'login');
 const register = r => require.ensure([], () => r(require('../page/login/register.vue')), 'register');
 const detail = r => require.ensure([], () => r(require('../page/goodsDetails/goodsDetails.vue')), 'detail');
-const address = r => r => require.ensure([], () => r(require('../page/address/addressManagement.vue')), 'address');
+const address = r => require.ensure([], () => r(require('../page/address/addressManagement.vue')), 'address');
 const newEditor = r => require.ensure([], () => r(require('../page/address/newEditor.vue')), 'newEditor');
 const search =  r => require.ensure([], () => r(require('../page/search/search.vue')), 'search');
 const setUp = r => require.ensure([], () => r(require('../page/setUp/setUp.vue')), 'setUp');
@@ -22,6 +22,8 @@ const score = r => require.ensure([], () => r(require('../page/score/score.vue')
 const scoreRecord = r => require.ensure([], () => r(require('../page/score/childer/scoreRecord.vue')), 'scoreRecord');
 const goodsList = r => require.ensure([], () => r(require('../page/score/childer/goodsList.vue')), 'goodsList');
 const good = r => require.ensure([], () => r(require('../page/score/childer/childern/good.vue')), 'good');
+const exchangeCoupon = r => require.ensure([], () => r(require('../page/score/childer/exchangeCoupon.vue')), 'exchangeCoupon');
+const scoreGame = r => require.ensure([], () => r(require('../page/score/childer/scoreLuckDraw.vue')), 'scoreGame');
 
 Vue.use(Router)
 
@@ -70,12 +72,17 @@ export default new Router({
               },
             ]
           },
+          {//兑换优惠卷
+            path: 'exchangeCoupon',
+            component: exchangeCoupon,
+          },
+          {
+            path: 'scoreGame',
+            component: scoreGame,
+          }
         ]
       }, //果币商城
-      { //果币记录
-        path: 'record:type',
-        component: scoreRecord,
-      },
+      
     ]
   }]
 })
