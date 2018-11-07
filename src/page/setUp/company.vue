@@ -1,10 +1,12 @@
 <template>
-     <div>
-       <setHeader :type="headerMsg"></setHeader>
-         <div class="main-wrap business_main_wrap">
+     <div >
+       <setHeader :type="headerMsg">
+            <div class="header_right login_top_right" slot="sure" v-text="'保存'" @click="keep"></div>
+       </setHeader>
+         <div class="main-wrap business_main_wrap" v-cloak>
 	    	<ul class="content1">
 		        <li>
-		            <div><label>名称：</label><input type="text" :value="personInfo.firmName" id="business_shop_name" ></div>
+		            <div><label>名称：</label><input type="text" v-model="firmName" id="business_shop_name" ></div>
 		            <div><label>ID：</label><input type='text' :value="'NO'+personInfo.id" id="business_shop_id" disabled="disabled"></div>
 		        </li>
 		        <li>
@@ -13,10 +15,10 @@
 		        </li>
 		    </ul>
 		    <ul class="content2">
-		        <li><label>地址：</label><input type='text' id="business_shop_address" :value='personInfo.address'></li>
-		        <li><label>营业执照：</label><input type='text' id="business_shop_card" :value='personInfo.saleCard'></li>
+		        <li><label>地址：</label><input type='text' id="business_shop_address"  v-model="address"></li>
+		        <li><label>营业执照：</label><input type='text' id="business_shop_card"  v-model="saleCard"></li>
 		        <li><label>联系电话：</label><input type='text' id="business_shop_tel" :value='personInfo.linkTel' disabled="disabled"></li>
-		        <li><label>联系人：</label><input type='text' id="business_shop_man" :value='personInfo.linkMan'></li>
+		        <li><label>联系人：</label><input type='text' id="business_shop_man"  v-model="linkMan"></li>
 		        <li><label>合同协议：</label><input type='text' value='' disabled="disabled"></li>
 		        <li><label>认证状态：</label><input type='text' id="business_shop_authStatus" :value='authStatus[personInfo.authStatus]' disabled="disabled"></li>
 		    </ul>
@@ -34,6 +36,7 @@
 <script>
 import setHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue"
+import md5 from 'js-md5';
     export default {
         name:'company',
         components:{
@@ -48,39 +51,95 @@ import agreementAlert from  "../../components/public/alert.vue"
                     right:'保存',
                     left:'返回'
                 },
-                 isMain:{"1":"主账号：","2":"副账号："},
-			     status:{"1":"启用","2":"禁用"},
-			     authStatus:{"0":'待认证',"-1":'未通过',"1":'已认证'},
-                 personInfo:{
-                    firmName: "掌烁测试-朱高飞",
-                    id: "132",
-                    exp: 81.5,
-                    userGrade: "LV1",
-                    address: "滨江区建业路510号华业大厦1306",
-                    saleCard: "Xcf200833881",
-                    linkTel: "18315318515",
-                    linkMan: "朱高飞",
-                    authStatus: 1,
-                    cuserInfoList:[
-                        {isMain: 1,mobile: "18315318516",status: 1},
-                        {isMain: 2,mobile: "18315318515",status: 1},
-                        {isMain: 2,mobile: "18315318515",status: 1},
-                    ]
-                 },
-                  noticeInfoList:{
-                    isShow:false,
-                    noticeTitle: "【下单时间调整】",
-                    noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
-                }
+                firmId:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
+                userBasicParam:{
+                    source:'firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid,
+                    tokenId:localStorage.getItem("tokenId"),
+                    sign :md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
+                },
+                userId:JSON.parse(localStorage.getItem('user_data')).cuserInfoid,
+                firmName:null,
+                linkMan:null,
+                saleCard:null,
+                address:null,
+                isMain:{"1":"主账号：","2":"副账号："},
+                status:{"1":"启用","2":"禁用"},
+                authStatus:{"0":'待认证',"-1":'未通过',"1":'已认证'},
+                personInfo:{},
+                noticeInfoList:{},
+                websiteNode:'3301',
+                closeAlert:false,
              }
          },
          mounted:function(){
-             
+             this.business()
          },
          methods:{
-              agreement:function(){
-                this.noticeInfoList.isShow = true;
-                console.log(1)
+             business:function(){
+                this.$ajax.get(this.HOST, {
+                    params:$.extend({
+                        method:'firm_info_show',
+                        firmId: this.firmId,
+                    },this.userBasicParam)
+                }).then(resp => {
+                    console.log(resp.data.data)
+                    this.personInfo = resp.data.data
+                    this.firmName = this.personInfo.firmName
+                    this.linkMan = this.personInfo.linkMan
+                    this.saleCard = this.personInfo.saleCard
+                    this.address = this.personInfo.address
+
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+             },
+             save:function(){
+                this.$ajax.get(this.HOST, {
+                    params:$.extend({
+                        method:'firm_info_update',
+                         firmId:this.firmId,
+                        userId:this.userId,
+                        firmName:this.firmName,
+                        linkMan:this.linkMan,
+                        saleCard:this.saleCard,
+                        address:this.address,
+                    },this.userBasicParam)
+                }).then(resp => {
+                    console.log(resp.data)
+                    if(resp.data.statusCode != 100000){
+                             this.$message({
+                                message: resp.data.statusStr,
+                                center: true,
+                            });
+                    }
+                }).catch(err => {
+                    console.log(err.data)
+                });
+             },
+             desc_data:function(){
+                 this.$ajax.get(this.HOST, {
+                    params:{ 
+                        method:'gss_desc',
+                        websiteNode:this.websiteNode,
+                        code:this.websiteNode + '#HYDJ-DESC'
+                    }
+                }).then(resp => {
+                      resp.data.data.desc =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+                      resp.data.data.closeAlert = this.closeAlert;
+                      this.noticeInfoList = resp.data.data;
+                      console.log(this.noticeInfoList)
+                }).catch(err => {
+                    console.log('请求失败：'+ err.data.statusCode);
+                });
+            },
+            agreement:function(){
+               this.closeAlert = true;
+               this.desc_data()
+            },
+            keep:function(){
+                    this.save()
+                    // this.$router.push({path:"/my"}) 
+
             }
          }
     }

@@ -1,7 +1,7 @@
 <template>
  <div class="score">
     <div class="header-wrap">
-        <div class="header_left header_back sprite arrow_left_b"></div>
+        <div class="header_left header_back sprite arrow_left_b" @click="goBack"></div>
         <div class="index_tit header_tit">
             果币商城
         </div>
@@ -115,7 +115,10 @@ export default {
                 }
                 console.log(this.score_info)
             });
-        }
+        },
+         goBack:function(){
+                    this.$router.go(-1)
+            },
     }
 }
 </script>

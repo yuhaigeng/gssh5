@@ -44,7 +44,7 @@ export default new Router({
         path: '/address',
         component: address
       }, //地址管理
-      {path: '/newEditor',newEditor}, //新建编辑
+      {path: '/newEditor',component:newEditor}, //新建编辑
       { path: '/search', component: search}, //搜索
       { path: '/setUp', component: setUp}, //设置
       { path: '/company', component: company}, //公司信息

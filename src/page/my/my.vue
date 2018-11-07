@@ -3,18 +3,18 @@
         <app-header :type="headerMsg" :logined="logined"   v-show="logined"></app-header>
         <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :logined="logined" ></loginState>
         <div  v-cloak class="cont cont1 clearfloat">
-        <dl class="float_left " >
+        <router-link to="vip" tag="dl"  class="float_left " >
             <dt><b>VIP</b></dt>
             <dd>服务</dd>
-        </dl>
+        </router-link>
         <dl class="float_left" >
             <dt><b v-text='userVipInfo.coupons || 0'></b><span>张</span></dt>
             <dd>优惠券</dd>
         </dl>
-        <dl class="float_left" >
+        <router-link to="score" tag="dl" class="float_left" >
             <dt><b v-text='userVipInfo.surplusScore || 0'></b><span>个</span></dt>
             <dd>果币商城</dd>
-        </dl>
+        </router-link>
         </div>
         <personalOptions :orderList="orderList" :title ="title" ></personalOptions>
         <personalOptions :orderList="otherList" :title ="title1"></personalOptions>
@@ -43,17 +43,15 @@ export default {
                 title:'我的',
                 routerPath:'/setUp',
             },
-            logined:null,
-            method:['user_logout',"user_personal_msg",'firm_info_update_faceimgurl','firm_vip_info'],
+            logined:localStorage.getItem("user_data") ? true : false,
+            method:["user_personal_msg","firm_vip_info"],
             firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
             userBasicParam:{
                 source:'firmId'+ this.firmId,
                 tokenId:localStorage.getItem("tokenId"),
                 sign :md5('firmId'+ this.firmId + "key" + localStorage.getItem("secretKey")).toUpperCase()
              },
-            userInfo:{
-              
-            },
+            userInfo:{},
             userVipInfo:{},
             orderList:dateModule.orderList,
             otherList:dateModule.otherList,
@@ -62,38 +60,38 @@ export default {
         }
    },
    mounted(){
-        this.logined = this.$route.query.isLogin
-        this.personApi()
-        this.firm_vip_info()
+             this.personApi()
+             this.firm_vip_info()
    },
    methods:{
        personApi:function(){
             this.$ajax.get(this.HOST, {
                     params:$.extend({
-                       method:this.method[1],
+                       method:this.method[0],
 				      firmId:this.firmId
                     },this.userBasicParam)
-                }).then(resp => {
-                    console.log(resp.data)
-                   this. userInfo = resp.data.data
-                }).catch(err => {
-                    console.log('请求失败：'+ err.statusCode);
-                });
+            }).then(resp => {
+                console.log(resp.data)
+                this. userInfo = resp.data.data
+            }).catch(err => {
+                console.log('请求失败：'+ err.statusCode);
+            });
        },
        firm_vip_info:function(){
             this.$ajax.get(this.HOST, {
                     params:{
-                       method:this.method[3],
+                       method:this.method[1],
 				       firmId:this.firmId
                     }
-                }).then(resp => {
-                    console.log(resp.data)
-                    this.userVipInfo=resp.data.data
+            }).then(resp => {
+                console.log(resp.data)
+                this.userVipInfo=resp.data.data
 
-                }).catch(err => {
-                    console.log('请求失败：'+ err.statusCode);
-                });
-       }
+            }).catch(err => {
+                console.log('请求失败：'+ err.statusCode);
+            });
+       },
+    
 
    }
  

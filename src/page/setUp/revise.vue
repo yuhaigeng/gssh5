@@ -14,7 +14,7 @@
                         <label>新设密码：</label><input type='text' value="" v-model='newPassword'  placeholder="请输入新密码">
                     </li>
                     <li class="queren">
-                        <label>确认密码：</label><input type='text' value="" v-model="newPassWord" placeholder="确认新密码">
+                        <label>确认密码：</label><input type='text' value="" v-model="confirmPassword" placeholder="确认新密码">
                     </li>
                 </ul>
                 <div class="chang_password_save_wrap">
@@ -27,6 +27,7 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
+import md5 from 'js-md5';
     export default {
         name:'revise',
         components:{
@@ -39,27 +40,56 @@ import setHeader from "../../components/public/header.vue";
                     title:'修改密码',
                     left:'返回'
                 },
+                firmId:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
+                userBasicParam:{
+                    source:'firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid,
+                    tokenId:localStorage.getItem("tokenId"),
+                    sign :md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
+                },
                 oldPassword:null,
                 newPassword:null,
-                newPassWord:null,
+                confirmPassword:null,
              }
          },
          methods:{
+             changePassword:function(){
+                this.$ajax.get(this.HOST, {
+                    params:$.extend({
+                        method:'user_update_pwd',
+                        oldPassword:md5(this.oldPassword),
+                        newPassword:md5(this.newPassword),
+                        confirmPassword:md5(this.confirmPassword),
+                    },this.userBasicParam)
+                }).then(resp => {
+                    console.log(resp.data.data)
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+             },
             save:function(){
-                console.log(this.oldPassword)
-                 console.log(this.newPassword)
-                  console.log(this.newPassWord)
-
-                if(this.oldPassword == ""){
-                    alert(1)
-                }else if(this.newPassword == ""){
-                    alert(2)
-                }else if(this.newPassWord == ""){
-                    alert(3)
-                }else if(this.newPassword != this.newPassWord){
-                     alert(4)
+                if(this.oldPassword == null){
+                    this.$message({
+                        message: '请输入旧密码',
+                        center: true,
+                    });
+                }else if(this.newPassword ==  null){
+                     this.$message({
+                        message: '请输新密码',
+                        center: true,
+                    });
+                }else if(this.confirmPassword ==  null){
+                    this.$message({
+                        message: '请再次输入密码',
+                        center: true,
+                    });
+                }else if(this.newPassword != this.confirmPassword){
+                     this.$message({
+                        message: '密码不一致，请重新输入',
+                        center: true,
+                    });
                 }else{
-                  
+                    this.changePassword();
+                     this.$router.push({path:"/my"})  
                 }
             }
          }
