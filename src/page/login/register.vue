@@ -287,14 +287,26 @@ import '@/common/LArea.css'
                 console.log(this.street)
             },
             submitBtn:function(){
-                if(this.firmName == ''){
-				
-				} else if (this.address == '') {
-				
-				} else if (this.shopPhone == '') {
-					
-				} else if (this.linkMan == '') {
-					
+                if(this.firmName == null){
+                    this.$message({
+                        message: '请输入店铺名字',
+                        center: true,
+                    });
+				} else if (this.address == null) {
+                    this.$message({
+                        message: '请输入地址',
+                        center: true,
+                    });
+				} else if (this.shopPhone == null) {
+					this.$message({
+                        message: '请输入电话',
+                        center: true,
+                    });
+				} else if (this.linkMan == null) {
+					this.$message({
+                        message: '请输入联系人',
+                        center: true,
+                    });
 				} else{
 					 this.rgister()
 				}

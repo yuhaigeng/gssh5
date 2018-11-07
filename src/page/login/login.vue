@@ -194,7 +194,7 @@ import md5 from 'js-md5';
                        console.log(resp.data)
                        this.setData(resp.data)
                        setTimeout(() =>{  
-                          this.$router.push({path:'/my',query:{isLogin:true}}) 
+                          this.$router.push({path:'/my'}) 
                         },500)
                 }).catch(err => {
                     console.log('请求失败：'+ err.statusCode);

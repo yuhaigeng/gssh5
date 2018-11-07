@@ -19,7 +19,7 @@
                             </dd>
                         </dl>
                         <div class="address_bottom">
-                            <button class="address_bottom_left" v-text="item.isDefault == 1 ?'默认' :'设为默认'" :id="item.id"></button>
+                            <button class="address_bottom_left" v-text="item.isDefault == 1 ?'默认' :'设为默认'" :id="item.id" @click="setDefault(item.isDefault,item.id)"></button>
                             <button class="address_bottom_right" @click="editor(index)">编辑</button>
                         </div>
                     </li>
@@ -32,6 +32,7 @@
 
 <script>
 import  addressHeader from "../../components/public/header.vue";
+import md5 from 'js-md5';
     export default {
         name:'addressManagement',
         components:{
@@ -46,23 +47,64 @@ import  addressHeader from "../../components/public/header.vue";
                     right:'新增地址',
                     left:'返回'
                 },
-                addresses:[
-                    {address: "水印林语",allAddr: "浙江省杭州市富阳市水印林语",receiverName: "测试朱高飞",isDefault: 1,receiverMobile: "18315318515",id: "4909" ,countyAddr: "杭州市富阳市"},
-                    {address: "义桥镇御景蓝湾27-1-1001",allAddr: "浙江省杭州市市辖区义桥镇御景蓝湾27-1-1001",id: "2190",isDefault: 0,receiverMobile: "18315318515",receiverName: "测试朱高飞",countyAddr: "杭州市市辖区"},
-                    {address: "迎春北苑",allAddr: "浙江省杭州市滨江区迎春北苑",id: "4298",isDefault: -1,receiverMobile: "18315318515",receiverName: "测试朱高飞",countyAddr: "杭州市滨江区"}
-                ],
+                firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
+                userBasicParam:{
+                    source:'firmId'+ this.firmId,
+                    tokenId:localStorage.getItem("tokenId"),
+                    sign :md5('firmId'+ this.firmId + "key" + localStorage.getItem("secretKey")).toUpperCase()
+                },
+                addresses:null,
+                addressId:null,
                 isManage:true,
                 
              }
          },
          mounted:function(){
-            sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
-
+                this.addressShow();
          },
          methods:{
+             addressShow:function(){
+                 this.$ajax.get(this.HOST, {
+                    params:$.extend({
+                        method:'user_address_show',
+                        firmId:this.firmId,
+                    },this. userBasicParam)
+                }).then(resp => {
+                    console.log(resp.data.data)
+                    this.addresses = resp.data.data
+                    sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
+
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+             },
+             default_data:function(){
+                this.$ajax.get(this.HOST, {
+                    params:$.extend({
+                        method:'user_address_default',
+                        firmId:this.firmId,
+                        addressId:this.addressId,
+                    },this. userBasicParam)
+                }).then(resp => {
+                    console.log(resp.data.data)
+                    this.addresses = resp.data.data
+                    sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
+                    this.addressShow()
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+             },
+           
             editor:function(index){
                  return this.$router.push({path:this.headerMsg.routerPath, query:{isNew:"" ,index:index}})
-            }
+            },
+            setDefault:function(ele,id){
+                    if(ele != 1){
+                         this.addressId = id;
+                          this.default_data();
+                    }
+            },
+
          }
     }
 </script>
