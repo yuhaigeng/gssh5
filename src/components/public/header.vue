@@ -42,7 +42,8 @@
          <div class="header-wrap" v-if="type.type == 'common2'">
             <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left" @click=" goBack"></div>
 			<h2 class="index_tit header_tit" v-text="type.title"></h2>
-            <div class="header_right login_top_right" v-text="type.right" @click="goToNext"></div>
+            <div class="header_right login_top_right" v-if="this.type.routerPath" v-text="type.right" @click="goToNext"></div>
+            <slot v-else name="sure"></slot>
         </div>
     </div>
 </template>

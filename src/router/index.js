@@ -10,7 +10,7 @@ const message = r => require.ensure([], () => r(require('../page/message/message
 const login = r => require.ensure([], () => r(require('../page/login/login.vue')), 'login');
 const register = r => require.ensure([], () => r(require('../page/login/register.vue')), 'register');
 const detail = r => require.ensure([], () => r(require('../page/goodsDetails/goodsDetails.vue')), 'detail');
-const address = r => r => require.ensure([], () => r(require('../page/address/addressManagement.vue')), 'address');
+const address = r => require.ensure([], () => r(require('../page/address/addressManagement.vue')), 'address');
 const newEditor = r => require.ensure([], () => r(require('../page/address/newEditor.vue')), 'newEditor');
 const search =  r => require.ensure([], () => r(require('../page/search/search.vue')), 'search');
 const setUp = r => require.ensure([], () => r(require('../page/setUp/setUp.vue')), 'setUp');
@@ -21,6 +21,9 @@ const vip = r => require.ensure([], () => r(require('../page/vip/vip.vue')), 'vi
 const score = r => require.ensure([], () => r(require('../page/score/score.vue')), 'score');
 const scoreRecord = r => require.ensure([], () => r(require('../page/score/childer/scoreRecord.vue')), 'scoreRecord');
 const goodsList = r => require.ensure([], () => r(require('../page/score/childer/goodsList.vue')), 'goodsList');
+const good = r => require.ensure([], () => r(require('../page/score/childer/childern/good.vue')), 'good');
+const exchangeCoupon = r => require.ensure([], () => r(require('../page/score/childer/exchangeCoupon.vue')), 'exchangeCoupon');
+const scoreGame = r => require.ensure([], () => r(require('../page/score/childer/scoreLuckDraw.vue')), 'scoreGame');
 
 Vue.use(Router)
 
@@ -41,7 +44,7 @@ export default new Router({
         path: '/address',
         component: address
       }, //地址管理
-      {path: '/newEditor',newEditor}, //新建编辑
+      {path: '/newEditor',component:newEditor}, //新建编辑
       { path: '/search', component: search}, //搜索
       { path: '/setUp', component: setUp}, //设置
       { path: '/company', component: company}, //公司信息
@@ -62,13 +65,24 @@ export default new Router({
           { //果币商品
             path: 'goodsList',
             component: goodsList,
+            children:[
+              { //果币商品
+                path: 'good',
+                component: good,
+              },
+            ]
           },
+          {//兑换优惠卷
+            path: 'exchangeCoupon',
+            component: exchangeCoupon,
+          },
+          {
+            path: 'scoreGame',
+            component: scoreGame,
+          }
         ]
       }, //果币商城
-      { //果币记录
-        path: 'record:type',
-        component: scoreRecord,
-      },
+      
     ]
   }]
 })

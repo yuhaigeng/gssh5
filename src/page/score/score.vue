@@ -1,13 +1,13 @@
 <template>
  <div class="score">
     <div class="header-wrap">
-        <div class="header_left header_back sprite arrow_left_b"></div>
+        <div class="header_left header_back sprite arrow_left_b" @click="goBack"></div>
         <div class="index_tit header_tit">
             果币商城
         </div>
     </div>
     <div class="main_top">
-        <div class="now_score">&nbsp;</div>
+        <div class="now_score" v-html="'&nbsp;'+score_info.surplusScore"></div>
         <div class="now_score_show">可用果币</div>
         <!--<div class="score_msg">
             总积分<span class="font"></span>击败了<span></span>商家
@@ -29,27 +29,33 @@
                     </dd>
                 </dl>
             </router-link>
-            <dl data = "score_coupon.html">
-                <dt class="sprite_login icon_mine_quan"></dt>
-                <dd>
-                    <a href="javascript:void(0)">果币兑换优惠劵</a>
-                    <a href="javascript:void(0)" class="sprite arrow_left"></a>
-                </dd>
-            </dl>
-            <dl data = "score_activity.html">
-                <dt class="sprite_login icon_mine_jiang"></dt>
-                <dd>
-                    <a href="javascript:void(0)">果币抽奖</a>
-                    <a href="javascript:void(0)" class="sprite arrow_left"></a>
-                </dd>
-            </dl>
-            <dl data = "" class="hidden">
+            <router-link to="/score/exchangeCoupon" >
+                <dl>
+                    <dt class="sprite_login icon_mine_quan"></dt>
+                    <dd>
+                        <a href="javascript:void(0)">果币兑换优惠劵</a>
+                        <a href="javascript:void(0)" class="sprite arrow_left"></a>
+                    </dd>
+                </dl>
+            </router-link>
+            <router-link to="/score/scoreGame" >
+                <dl>
+                    <dt class="sprite_login icon_mine_jiang"></dt>
+                    <dd>
+                        <a href="javascript:void(0)">果币抽奖</a>
+                        <a href="javascript:void(0)" class="sprite arrow_left"></a>
+                    </dd>
+                </dl>
+            </router-link>
+            
+            
+            <!-- <dl data = "" class="hidden">
                 <dt class="sprite_login icon_mine_te"></dt>
                 <dd>
                     <a href="javascript:void(0)">果币特权</a>
                     <a href="javascript:void(0)" class="sprite arrow_left"></a>
                 </dd>
-            </dl>
+            </dl> -->
         </div>
     </div>
     <transition name="fade">
@@ -76,33 +82,43 @@ export default {
             licenseImg: null,
             showlicenseImg: false,
             imgBaseUrl:'',
+            score_info:{
+                surplusScore:0
+            }
         }
     },
     components: {
         appHeader,
     },
-    method(){
+    mounted(){
+        console.log('mounted')
         this.get_firm_score_info();
     },
     methods:{
         get_firm_score_info:function(){
             this.$ajax.get(this.HOST, {
                 params:{
-                    method: "score_goods_show",
-                    websiteNode: "3301",
-                    pageSize:'10',
-				    pageNo:'1'
+                    method: "firm_score_info",
+                    firmId: "132",
                 }
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
-                return JSON.stringify(result.data);
+                return result.data;
 
                 // console.log(data);
             }).then(data => {
                 console.log(data);
-                
+                if (data.statusCode == 100000) {
+                    this.score_info = data.data;
+                } else {
+                    console.log(data.statusStr);
+                }
+                console.log(this.score_info)
             });
-        }
+        },
+         goBack:function(){
+                    this.$router.go(-1)
+            },
     }
 }
 </script>
@@ -127,7 +143,8 @@ export default {
     height: 333px;
     background: #f76a10;
     text-align: center;
-    color: #FFF
+    color: #FFF;
+    margin-top: 87px;
 }
 
 .score .now_score {

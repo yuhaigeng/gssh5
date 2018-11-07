@@ -1,6 +1,6 @@
 <template>
      <div class="center_wrap">
-        <div class="index-module" :class="'index-module' + parseInt(mainActivityList.goodsNum + 1)   ">
+        <div class="index-module" :class="'index-module' + mainActivityList.goodsNum   ">
             <div class="index-module-title clearfloat">
                 <div class="float_left" v-text="mainActivityList.activityTitle">秋季价到-坚果零食盛宴</div>
                 <div class="float_right">
@@ -120,12 +120,16 @@
     float: left;
     width: 220px;
 }
+.index-module3 .index-module-item dt  {
+    width: 190px;
+    height: 190px;
+}
 .index-module3 .index-module-item dt img {
     width: 190px;
     height: 190px;
 }
 .index-module3 .index-module-item .good_name {
-    font-size: 30px;
+    font-size: 36px;
     color: #333;
     padding-top: 14px;
     height: 62px;
@@ -143,14 +147,25 @@
     font-size: 36px;
 }
 
+.index-module2 .index-module-item dt,
 .index-module2 .index-module-item dt img{
     width: 314px;
     height: 314px;
 }
-.index-module2 .index-module-item .good_box .good_price_box {
+.index-module2 .index-module-item .good_box .good_price_box .good_price {
      font-size: 38px;
 }
 .index-module2 .index-module-item:nth-child(2n) {
     padding-left: 30px;
 }
+.index-module1 .index-module-item{padding-top: 18px;}
+.index-module1 .index-module-item:nth-child(1){padding-top: 0;margin-top: -12px;}
+.index-module1 .index-module-item:nth-last-child(1){padding-bottom: 0;border-bottom: none;}
+.index-module1 .index-module-item dt,.index-module1 .index-module-item dd{float: left;}
+.index-module1 .index-module-item dt{width: 200px;height: 200px;top: 12px;}
+.index-module1 .index-module-item dt img {width: 200px; height: 200px;}
+.index-module1 .index-module-item dd{padding-left: 30px;width: 490px;}
+.index-module1 .good_name,.index-module1 .good_describe{width: 490px;}
+.index-module1 .index-module-item dd .good_price{font-size: 48px;}
+.index-module1 .good_name {font-size: 36px;}
 </style>

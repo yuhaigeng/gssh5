@@ -1,13 +1,13 @@
 <template >
-    <div class="alert" v-show="noticeInfoList.isShow">
+    <div class="alert" v-show="noticeInfoList.closeAlert" >
         <div class="my_bg"></div>
         <div class="logistic_show">
             <div class="logistic_show_header">
-                <h3 class="logistic_show_title" v-text="noticeInfoList.noticeTitle"></h3>
+                <h3 class="logistic_show_title" v-text="noticeInfoList.title"></h3>
                 <span class="logistic_back" @click="exchange"></span>
             </div>
             <div class="logistic_show_main">
-                <div class="logistic_show_text" v-text="noticeInfoList.noticeContent" >
+                <div class="logistic_show_text" v-html="noticeInfoList.desc" >
                    
                 </div>
             </div>
@@ -29,9 +29,12 @@
             //        }
              }
          },
+          mounted(){
+              console.log(this.closeAlert)
+        },
          methods:{
              exchange:function(){
-                    this.noticeInfoList.isShow = false;
+                    this.noticeInfoList.closeAlert = false;
              }
          }
     }

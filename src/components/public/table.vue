@@ -4,9 +4,9 @@
             <li class="table_tit_item" v-for="(item,index) in titleList" :key="index" v-text="item.title"></li>
         </ul>
         <ul class="table_list" v-for="(item,index) in tableDate" :key="index">
-            <li v-text="item.scoreFrom"></li>
+            <li v-text="item.scoreFrom ? item.scoreFrom : item.goodsName"></li>
             <li v-text="((item.incDnc == undefined) ? item.score : (item.incDnc == 1 ? '+'+item.score : '-'+item.score))"></li>
-            <li v-text="item.createTime"></li>
+            <li v-text="item.createTime ? item.createTime : item.useTime"></li>
         </ul>
     </div>
 </template>

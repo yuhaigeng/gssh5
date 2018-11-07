@@ -9,7 +9,7 @@
 				   	<div class="set_box hidden">
 					  	<div class="set_item">通用</div>
 				   	</div>
-					<div class="signOut">
+					<div class="signOut" @click="login_out">
 						退出登陆
 					</div>
 				</div>
@@ -19,6 +19,7 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
+import md5 from 'js-md5';
     export default {
         name:'setUp',
         components:{
@@ -36,10 +37,33 @@ import setHeader from "../../components/public/header.vue";
                     right:'',
                     left:'返回'
                 },
+                source:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
+                tokenId:localStorage.getItem("tokenId"),
+                sign :md5( this.source + "key" + localStorage.getItem("secretKey")).toUpperCase()
              }
          },
+         mounted(){
+             console.log( JSON.parse(localStorage.getItem("user_data")).firmInfoid)
+             console.log(localStorage.getItem("tokenId"))
+         },
          methods:{
-            
+            login_out:function(){
+                 this.$ajax.get(this.HOST, {
+                    params :{ 
+                        method:'user_logout',
+                        source :this.source,
+                        sign : this.sign,
+                        tokenId :this.tokenId
+                    }
+                }).then(resp => {
+                       console.log(resp.data)
+                        localStorage.clear();
+                        this.$router.push({path:'/my',query:{isLogin:false}}) 
+                      
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+            }
               
          }
     }

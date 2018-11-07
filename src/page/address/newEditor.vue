@@ -1,6 +1,8 @@
 <template>
      <div>
-         <addressHeader :type="headerMsg"></addressHeader>
+         <addressHeader :type="headerMsg">
+            <div class="header_right login_top_right" slot="sure" v-text="'确定'" @click="submit"></div>
+         </addressHeader>
             <div class="main-wrap address_edit_box">
                 <div class="edit_box">
                     <ul class="edit_main">
@@ -11,7 +13,7 @@
                             <label>联系电话：</label><input type="text"   maxlength="11" v-model="phone" id="edit_phone" class="edit_phone" placeholder="请输入联系电话"   ><span class="msg" v-text="tipsMsg"></span>
                         </li>
                         <li class="clearfloat">
-                            <label>选择省市：</label><input type="text" id="province"  v-model="city" placeholder="点击选择省市" readonly="readonly" @click="selCity"/>
+                            <label>选择省市：</label><input type="text" id="province"  v-model="city" placeholder="点击选择省市" readonly="readonly" @click="selCity" @input = "cityValue"/>
                                 <input type="hidden" id="value1" value="" />
                         </li>
                         <li>
@@ -32,6 +34,7 @@ import  addressHeader from "../../components/public/header.vue";
 import {layer} from '../../common/layer.js'; //注意路径
 import {LArea} from '../../common/LArea.js' ;
 import {LArea1} from '../../common/LArea1.js';
+import md5 from 'js-md5';
 import '@/common/LArea.css';
 import '@/common/layer.css'
     export default {
@@ -48,6 +51,7 @@ import '@/common/layer.css'
                     right:'确定',
                     left:'返回' 
                 },
+                websiteNode:'3301',
                 addressData:JSON.parse(sessionStorage.getItem("addresses")),
                 index: this.$route.query.index,
                 phone:null,
@@ -56,30 +60,15 @@ import '@/common/layer.css'
                 street:null,
                 phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式,
                 tipsMsg:null, //提示文本
-                 dataCity:[
-                    { 
-                        cities:[ 
-                            {
-                            cities: [ {id: "330101", name: "市辖区", cityName: "杭州市", provinceName: "浙江省", code: "330101"}
-                        ,{id: "330102", name: "上城区", cityName: "杭州市", provinceName: "浙江省", code: "330102"}
-                        ,{id: "330103", name: "下城区", cityName: "杭州市", provinceName: "浙江省", code: "330103"}
-                        ,{id: "330104", name: "江干区", cityName: "杭州市", provinceName: "浙江省", code: "330104"}
-                        ,{id: "330105", name: "拱墅区", cityName: "杭州市", provinceName: "浙江省", code: "330105"}
-                        ,{id: "330106", name: "西湖区", cityName: "杭州市", provinceName: "浙江省", code: "330106"}
-                        ,{id: "330108", name: "滨江区", cityName: "杭州市", provinceName: "浙江省", code: "330108"}
-                        ,{id: "330109", name: "萧山区", cityName: "杭州市", provinceName: "浙江省", code: "330109"}
-                        ,{id: "330110", name: "余杭区", cityName: "杭州市", provinceName: "浙江省", code: "330110"}
-                        ,{id: "330122", name: "桐庐县", cityName: "杭州市", provinceName: "浙江省", code: "330122"}
-                        ,{id: "330127", name: "淳安县", cityName: "杭州市", provinceName: "浙江省", code: "330127"}
-                        ,{id: "330182", name: "建德市", cityName: "杭州市", provinceName: "浙江省", code: "330182"}
-                        ,{id: "330183", name: "富阳市", cityName: "杭州市", provinceName: "浙江省", code: "330183"}
-                        ,{id: "330185", name: "临安市", cityName: "杭州市", provinceName: "浙江省", code: "330185"}
-                        ], name: "杭州市",
-                            provinceName: "浙江省"} ],
-                        
-                       name: "浙江省"}
-                     
-                ],
+                countyId:null,
+                firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
+                userBasicParam:{
+                    source:'firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid,
+                    tokenId:localStorage.getItem("tokenId"),
+                    sign :md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
+                },
+                addressId:null
+                
             }
         },
         watch:{
@@ -107,39 +96,119 @@ import '@/common/layer.css'
             }
         },
         mounted:function(){
+             this.cityApi()
+            
                 if( !this.$route.query.isNew ){
                     [ this.phone ,this.person,this.city, this.street] = [ this.addressData[this.index].receiverMobile, this.addressData[this.index].receiverName ,this.addressData[this.index].countyAddr,this.addressData[this.index].address]
+                     this.addressId = this.addressData[this.index].id
+                     this.countyId=  this.addressData[this.index].countyId
                 }else{
-                   [ this.phone ,this.person,this.city, this.street] = [""]
+                   [this.phone ,this.person,this.city, this.street] = [""]
+                    
+                    this.addressId = "";
                 }
-                var areal = new LArea();
-                areal.init({
-                    'trigger': "#province",
-                    'valueTo': "#value1",
-                    'keys': {
-                        id: "code",
-                        name: "name"
-                    },
-                    'type': 1,
-                    'data': this. dataCity
-                }),
-              areal.value = [0, 0, 0]
+               
         },
         methods:{
+            update:function(){
+                this.$ajax.get(this.HOST, {
+                        params:$.extend({
+                            method:'user_address_update',
+                            firmId:this.firmId,
+                            addressId:this.addressId,
+                            receiverName:this.person,
+                            receiverMobile:this.phone,
+                            countyId:this.countyId,
+                            address:this.street,
+                        },this.userBasicParam)
+                }).then(resp => {
+                    console.log(resp.data)
+                    // this. userInfo = resp.data.data
+                }).catch(err => {
+                    console.log('请求失败：'+ err.statusCode);
+                });
+            },
+            cityApi:function(){
+                this.$ajax.get(this.HOST, {
+                    params:{ 
+                       method:'get_pcc',
+                       websiteNode:this.websiteNode,
+                    }
+                }).then(resp => {
+                    //   console.log(resp.data.data)
+                      this.newLArea(resp.data.data)
+                }).catch(err => {
+                    console.log('请求失败：'+ err.data.statusCode);
+                });
+            },
+            delApi:function(){
+                 this.$ajax.get(this.HOST, {
+                    params:$.extend({ 
+                      method:'user_address_del',
+				      addressId:this.addressId,
+                    },this.userBasicParam)
+                }).then(resp => {
+                      console.log(resp.data.data)
+                }).catch(err => {
+                    console.log('请求失败：'+ err.data.statusCode);
+                });
+            },
             // 删除地址
             del:function(){
                layer.open({
 				    content: '您确定要删除地址吗？',
 				    btn: ['确定', '取消'],
-				    yes: function(index){
-						// pub.address.del();
-						layer.close(index);
+				    yes:index => {
+						this.delApi();
+                        layer.close(index);
+                         this.$router.go(-1) 
+                       
 				    }
 				});
             },
              selCity:function(){
                 document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩
             },
+            newLArea:function(LAreaData){
+                var area1 = new LArea();
+                area1.init({
+                    'trigger': '#province', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
+                    'valueTo': '#value1', //选择完毕后id属性输出到该位置
+                    'keys': {
+                        id: 'code',
+                        name: 'name'
+                    }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
+                    'type': 1, //数据源类型
+                    'data': LAreaData, //数据源
+                });
+                area1.value=[0,0,0];//控制初始位置，注意：该方法并不会影响到input的value
+            },
+             cityValue:function(){
+                    if( $("#value1").val()){
+                     const a  = $("#value1").val().split(",");
+                     console.log(a)
+                        this.countyId = a[2]
+                    }
+
+                console.log(this.countyId )
+            },
+            submit:function(){
+                if( this.person == ""){
+                         alert ("person !!!")
+                }else if (this.phone == ""){
+                         alert ("phone !!!")
+                }else if(this.city == ""){
+                         alert ("city !!!")
+                }else if(this.street == ""){
+                         alert ("street !!!")
+                }else{
+                    this.update()
+                    this.$router.go(-1) 
+                }
+                         
+                
+                
+            }
         }
        
     }

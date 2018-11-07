@@ -1,27 +1,29 @@
 <template>
-    <div class="score_goods"> 
+    <div class="score_goods_list"> 
         <app-header :type ="headerMsg"></app-header>
         <div class="score_goods_main_wrap">
             <div class="main">
                 <ul class="product clearfloat" v-if="goodsList.length">
-                    <li v-for="(item,index) in goodsList" :key="index">
-                        <dl>
-							<dt>
-								<img :src="item.goodsLogo"/>
-							</dt>
-							<dd>
-								<p class="name" v-text="item.goodsName"></p>
-								<p class="describe" v-text="item.sizeDesc"></p>
-								<p class="info">
-									<span v-text="item.score"></span>
-									<span class="font22" v-text="'币'"></span>
-									<del class="original_price" v-text="'￥'+item.gssPrice"></del>
-								</p>
-							</dd>
-						</dl>
+                    <li v-for="(item,index) in goodsList" :key="index" @click="goGoods(index)">
+                        <!-- <router-link :to="{path: '/score/goodsList/good',query:{id:item.id}}" tag="dl"> -->
+                            <dl>
+                                <dt>
+                                    <img :src="item.goodsLogo"/>
+                                </dt>
+                                <dd>
+                                    <p class="name" v-text="item.goodsName"></p>
+                                    <p class="describe" v-text="item.sizeDesc"></p>
+                                    <p class="info">
+                                        <span v-text="item.score"></span>
+                                        <span class="font22" v-text="'币'"></span>
+                                        <del class="original_price" v-text="'￥'+item.gssPrice"></del>
+                                    </p>
+                                </dd>
+                            </dl>
+                        <!-- </router-link> -->
                     </li>
                 </ul>
-                <p class="lodemore" v-text="!goodsList.length ? '暂无商品' : (isLast ? '没有更多数据了' : '点击加载更多')"></p>
+                <p class="lodemore" v-text="!goodsList.length ? '暂无商品' : (isLast ? '没有更多数据了' : '点击加载更多')" @click="getMore()"></p>
             </div>
         </div>
         <transition name="fade">
@@ -50,22 +52,19 @@ export default {
             showlicenseImg: false,
             imgBaseUrl:'',
             isLast:false,
-            goodsList:[{
-                goodsLogo:"http://img.guoss.cn/gss_img_root/img_goods/3242/20170719085915.jpg",
-                goodsName:"水果超市背心袋（中）",
-                gssPrice:'1.2',
-                sizeDesc:'中号26号，100个/件',
-                score:'40'
-
-            }],
-
+            pageSize:'10',
+            pageNo:'1',
+            goodsList:[],
+            scoreGoods_desc:{},//商品详情注意事项
         }
     },
     components: {
         appHeader,
     },
-    method(){
+    mounted(){
+        console.log('mounted')
         this.get_score_goodsList();
+        this.get_gss_desc();
     },
     methods:{
         get_score_goodsList:function(){
@@ -73,25 +72,68 @@ export default {
                 params:{
                     method: "score_goods_show",
                     websiteNode: "3301",
-                    pageSize:'10',
-				    pageNo:'1'
+                    pageSize:this.pageSize,
+				    pageNo:this.pageNo
                 }
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
-                return JSON.stringify(result.data);
+                return result.data;
 
                 // console.log(data);
             }).then(data => {
                 console.log(data);
-                
+                if (data.statusCode == 100000) {
+                    
+                    this.isLast = data.data.isLast;
+                    if (data.data.pageNo == 1) {
+                        this.goodsList = data.data.objects;
+                    } else {
+                        this.goodsList = this.goodsList.concat(data.data.objects);
+                    }
+                } else {
+                    console.log(data.statusStr)
+                }
             });
+        },
+        get_gss_desc:function () {
+            this.$ajax.get(this.HOST, {
+                params:{
+                    method: "gss_desc",
+                    websiteNode: "3301",
+                    code:'3301#JFSP-DESC',
+                }
+            }).then(result => {
+                // return JSON.parse(JSON.stringify(result));
+                return result.data;
+
+                // console.log(data);
+            }).then(data => {
+                console.log(data);
+                if (data.statusCode == 100000) {
+                    this.scoreGoods_desc = data.data;
+                    localStorage.setItem("scoreGoods_desc",JSON.stringify(data.data))
+                } else {
+                    console.log(data.statusStr)
+                }
+            });
+        },
+        goGoods:function (index) {
+            const id = this.goodsList[index].id;
+            localStorage.setItem("scoreGoods",JSON.stringify(this.goodsList[index]))
+            this.$router.push({path:'/score/goodsList/good',query:{id:id}})
+        },
+        getMore:function () {
+            if (!this.isLast) {
+                this.pageNo = this.pageNo+1 ;
+                this.get_score_goodsList();
+            } 
         }
     }
 }
 </script>
 
 <style scoped>
-.score_goods{
+.score_goods_list{
     position: absolute;
     top: 0;
     left: 0;
@@ -130,7 +172,7 @@ export default {
 }
 
 .product dl dt {
-    background: url(../../../..//static/img/pic_logo@2x.png) center no-repeat;
+    background: url(../../../../static/img/pic_logo@2x.png) center no-repeat;
     position: relative
 }
 

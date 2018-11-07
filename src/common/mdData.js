@@ -209,3 +209,6 @@ function mdData(obj){
     obj1.sign = md5(str1).toUpperCase();
     return obj1;
 }
+export{
+    md5
+}

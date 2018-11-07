@@ -9,10 +9,10 @@
                 <input class="login_type1 " type="file" accept="image/*" name="" id="file" value="" />
             </dt>
             <dd class="float_left" :class="{'active':userVipInfo.vip > 0}">
-                <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName"></span> <span class="user_vip_icon" :class="'vip'+userVipInfo.vipGrade"   ></span> <span class="user_vip_msg" v-text="'上个月成长值为'+userVipInfo.lastMonthExp"></span></p>
+                <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class="'vip'+userVipInfo.vipGrade"   ></router-link> <span class="user_vip_msg" v-text="'上个月成长值为'+userVipInfo.lastMonthExp"></span></p>
                 <p><span class="user_phone" v-text="userInfo.linkTel"></span></p>
             </dd>
-            <dd class="my_details float_right"></dd>
+            <router-link to="company" tag="dd" class="my_details float_right"></router-link>
         </dl>
         <div class="wo_top_growInfo" v-show="logined && userVipInfo.vip">
             <div class="growInfo_pointer">
