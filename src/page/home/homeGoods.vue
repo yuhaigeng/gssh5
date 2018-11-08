@@ -4,8 +4,9 @@
             <div class="float_left" v-text="mainActivityList.activityTitle">秋季价到-坚果零食盛宴</div>
             <div class="float_right">
                 <a href="javascript:void(0);" v-text="'更多'" @click="goMore(mainActivityList)"></a>
-            </div>  
+            </div>
         </div>
+         
         <div class="index-module-goods clearfloat">
             <dl class="index-module-item clearfloat" v-for="(item,index) in  mainActivityList.activityDetailsList" :key="index" @click="goDetails(item)">
                 <dt>

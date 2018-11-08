@@ -46,6 +46,7 @@ export default {
            noticeInfoList:[],
            centerList:[],
            noticeInfo:null,
+              
        }
     },
     components: {
