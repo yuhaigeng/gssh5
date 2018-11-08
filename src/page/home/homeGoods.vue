@@ -4,7 +4,7 @@
             <div class="index-module-title clearfloat">
                 <div class="float_left" v-text="mainActivityList.activityTitle">秋季价到-坚果零食盛宴</div>
                 <div class="float_right">
-                    <router-link to="/more" tag="a">更多</router-link>
+                    <a to="{path:'/more',query:{typeCode:}" @click="jumpUrl(mainActivityList.linkUrl)">更多</a>
                 </div>  
             </div>
             <div class="index-module-goods clearfloat">
@@ -34,12 +34,22 @@
         props:['mainActivityList'],
          data() {
              return {
+                     }
             //   mainActivityList:this.mainActivityList
-             }
+            // typeCode:
+            
          },
          mounted(){
-              console.log(this.mainActivityList)
+              console.log(this.mainActivityList.linkUrl.substr(this.mainActivityList.linkUrl.length-4)) 
          },
+         methods:{
+                jumpUrl:function(num){
+                    let code = num.substr(num.length-4)
+                    return this.$router.push({path:'/more' , query:{typeCode:code}})
+                }
+
+
+         }
     }
 </script>
 

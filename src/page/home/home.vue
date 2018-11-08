@@ -23,20 +23,7 @@ export default {
        return {
            mainActivityList:null,
            websiteNode: "3301",
-                // alertEs:[
-                //      {
-                //     isShow:false,
-                //     noticeTitle: "【公告1】",
-                //     noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
-                // },
-                //  {
-                //     isShow:false,
-                //     noticeTitle: "【下单时间调整】",
-                //     noticeContent: "即日起杭州站下单时间为：下午14:00至晚间24:00"
-                // }
-
-                // ]
-                
+              
        }
     },
     components: {
