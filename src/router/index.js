@@ -39,7 +39,7 @@ export default new Router({
       { path: '/message', component: message}, // 消息
       { path: '/login', component: login},   //登录
       { path: '/register', component: register}, //注册
-      { path: '/detail', component: detail}, //详细信息
+      { path: '/detail/:id', component: detail}, //详细信息
       {
         path: '/address',
         component: address

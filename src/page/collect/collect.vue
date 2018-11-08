@@ -4,32 +4,33 @@
      <div class="main-wrap often_shop_main_wrap">
 			<div class="main">
 				<ul>
-					<li class="line-wrapper" v-for="(item,index) in goodsList" :key="index">
+					
+					<li class="line-wrapper"  v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item.goodsInfoId)">
                         <mt-cell-swipe
-            :right="rightButtons">
+            :right="rightButtons(index)" @click="del(item.goodsInfoId)">
 			        	<div class="line-scroll-wrapper clearfloat">
 			                <dl class="line-normal-wrapper clearfloat">
 		                         <dt class="line-normal-avatar-wrapper">
-		                         	<img :src="item.img"/>
+		                         	<img :src="item.goodsInfo.goodsLogo"/>
 		                         </dt>
 		                         <dd class="line-normal-info-wrapper">
 		                            <div class="often_shop_goods_top clearfloat">
-					 					<p class="often_shop_goods_tit">{{item.tit}}</p>
+					 					<p class="often_shop_goods_tit">{{item.goodsInfo.goodsName}}</p>
 					 					<p class="often_shop_goods_icon">
 										 	<img class="icon_cu" src="../../assets/img/tag_te@2x.png"/>
 					 					</p>
 					 				</div>
-		                            <p class="often_shop_show">{{item.det}}</p>
+		                            <p class="often_shop_show">{{item.goodsInfo.goodsShows}}</p>
 					 				<div class="often_shop_NumPir">
 					 					<div class="os_pir">
-					 						<span class="often_shop_color">{{item.price}}</span>元/箱&nbsp;&nbsp;<span>{{item.aa}}</span>'
+					 						<span class="often_shop_color">{{item.goodsInfo.gssPrice}}</span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<span>{{item.goodsInfo.priceDesc}}</span>'
 					 					</div>
 					 					<div class="os_Num">
-					 						<button class="goods_Number_min">
+					 						<button class="goods_Number_min" v-if="num > 0" @click="goodsNumber_min(index)">
 					 							<img src="../../assets/img/btn_m@2x.png"/>
 					 						</button>
-					 						<span class="goodsNumber fontColor">0</span>
-					 						<button class="goods_Number_max">
+					 						<span class="goodsNumber fontColor" v-if="num > 0">{{num}}</span>
+					 						<button class="goods_Number_max" @click="goodsNumber_max(index)">
 					 						    <img src="../../assets/img/btn_a@2x.png"/>
 					 					    </button>
 					 					</div>
@@ -39,6 +40,7 @@
 			            </div>
                         </mt-cell-swipe>
 			         </li>
+					 
 				</ul>
 			</div>
             
@@ -51,33 +53,106 @@ import appHeader from "../../components/public/header.vue";
 import { CellSwipe } from 'mint-ui';
 export default {
  data() {
- return {
-     headerMsg:{
-            type:"common",
-            title:'常购商品',
-            left:'返回'
-         },
-        goodsList:[{img:'http://img.guoss.cn/gss_img_root/img_goods/13459/20180921115645.jpg',tit:'香蕉',det:'这是香蕉',price:'65',aa:'20'},
-        {img:'http://img.guoss.cn/gss_img_root/img_goods/13459/20180921115645.jpg',tit:'香蕉',det:'这是香蕉',price:'65',aa:'20'}
-        ]
- }
+	return {
+		headerMsg:{
+			type:"common",
+			title:'常购商品',
+			left:'返回'
+		},
+		collectList:[],
+		num:0,
+		goodID:'',
+		isLast:false,
+		pageSize:'10',
+        pageNo:'1',
+ 	}
  },
  components: {
     appHeader,
   },
   created(){
-      this.rightButtons = [
-                {
-                    content: '删除',
-                    style: { background: 'red', color: '#fff',width:'200px',fontSize:'24px',textAlign:'center',lineHeight:'200px'},
-                    handler: () => deleteSection(item.id)
-                }
-      ]
+	  var _this = this;
+      this.rightButtons = function(index){
+		  return [
+			{
+				data:index,
+				content: '删除',
+				style: { background: 'red', color: '#fff',width:'200px',fontSize:'24px',textAlign:'center',lineHeight:'200px'},
+				handler: function(index){
+					console.log(_this.collectList);
+					_this.goodID = _this.collectList[this.data].goodsInfoId;
+					_this.get_goods_collect_del(this.data);
+				}
+			}
+		]
+	  }
   },
   methods:{
-      deleteSection(sid){
-          console.log(111)
-      }
+	  get_goods_collected:function () {
+		this.$ajax.get(this.HOST, {
+			params:{
+				method: "goods_collection",
+				pageNo: this.pageNo,
+				pageSize: this.pageSize,
+				firmId: 132,
+				userId: 1881
+			}
+		}).then(resp => {
+			// return JSON.parse(JSON.stringify(result));
+			// return JSON.stringify(data.data);
+			// console.log(resp.data);
+			if (resp.data.statusCode == 100000) {
+				this.isLast = resp.data.data.isLast;
+				if (resp.data.data.pageNo == 1) {
+					this.collectList = resp.data.data.objects;
+				} else {
+					this.collectList = this.collectList.concat(resp.data.data.objects);
+				}
+			} else {
+				console.log(data.statusStr);
+			}
+		}).catch(err => {
+			// console.log(JSON.parse(data).data.mainActivityList);
+			   console.log('请求失败：'+ err.statusCode);
+		});
+	},
+
+	get_goods_collect_del:function (index) {
+		this.$ajax.get(this.HOST, {
+			params:{
+				method: "goods_collection_del",
+				userId: 1881,
+				goodsId: this.goodID
+			}
+		}).then(resp => {
+			// return JSON.parse(JSON.stringify(result));
+			// return JSON.stringify(data.data);
+			// console.log(resp.data);
+		
+			if (resp.data.statusCode == 100000) {
+				const arr = this.collectList;
+				const arr1 = arr.splice(index, 1);
+				this.collectList =arr;
+			} else {
+				console.log(data.statusStr);
+			}
+		}).catch(err => {
+			// console.log(JSON.parse(data).data.mainActivityList);
+			   console.log('请求失败：'+ err.statusCode);
+		});
+	},
+	goodsNumber_max(index) {
+		 this.num++
+	 },
+	 goodsNumber_min(index) {
+		 this.num--
+	 },
+	 toDetail(id) {
+		this.$router.push({ path:'detail/'+id })
+	}
+  },
+  mounted() {
+	  this.get_goods_collected()
   }
 }
 </script>
@@ -105,7 +180,6 @@ export default {
 }
 .line-wrapper {
 	width: 100%;
-	height: 200px;
 	overflow: hidden;
     -webkit-transition: all 0.2s;
     transition: all 0.2s;

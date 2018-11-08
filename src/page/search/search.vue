@@ -30,7 +30,7 @@
 				</dl>
 			</div>
             <div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
-				<div class="search_goods" v-for="(item,index) in goodsList" :key="index">
+				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item.id)">
 					<dl>
 						<dt>
 							<img :src="item.goodsLogo"/>
@@ -68,14 +68,7 @@ export default {
      searchVal:'',
 	 searchList:[],
 	 goodsList:[],
-	 state:1,//1,2,3
-    //  goodsList:[
-    //      {
-    //          img:'http://img.guoss.cn/gss_img_root/img_goods/14826/20181025144850.jpg',
-    //          tit:'橙子',
-    //          det:'口感酸甜',
-    //      },
-    //  ]
+	 state:1,//1 未请求,2 请求中,3 请求完毕
  }
  },
  watch:{
@@ -95,9 +88,7 @@ export default {
 			// return JSON.parse(JSON.stringify(result));
 			// return JSON.stringify(data.data);
 				this.searchList = resp.data.data;
-				console.log(this.searchList)
-		
-			console.log(resp.data);
+				// console.log(resp.data);
 		}).catch(err => {
 			// console.log(JSON.parse(data).data.mainActivityList);
 				console.log('请求失败：'+ err.statusCode);
@@ -116,38 +107,36 @@ export default {
 			// return JSON.parse(JSON.stringify(result));
 			// return JSON.stringify(data.data);
 				this.goodsList = resp.data.data;
-				console.log(this.goodsList)
 				this.state = 3;
-			console.log(resp.data);
+				// console.log(resp.data);
 		}).catch(err => {
 			// console.log(JSON.parse(data).data.mainActivityList);
 			console.log('请求失败：'+ err.statusCode);
 			this.state = 3;
 		});
 	 },
-	 
      clearTimer () {
       if (this.timer) {
         clearTimeout(this.timer)
       }
     },
     search (event) {
-		console.log(event);
 		if(event) {
 			if(this.searchVal.length != 0){
-				
 				this.get_goods_name2() 
 			}
 		}
-		
     },
-     del(){
+     del() {
 		this.searchVal = ''
 		this.goodsList = []
 	},
 	showSearch(index) {
 		this.searchVal = index;
 		this.get_goods_name2() 
+	},
+	toDetail(id) {
+		this.$router.push({ path:'detail/'+id })
 	}
  },
  mounted(){
@@ -295,68 +284,19 @@ export default {
 	overflow: auto;
 }
 
-.search_goods {
-	padding-top: 20px;
-}
-
-.search_goods dl {
-	width: 100%;
-	height: 257px;
-	background: #FFF;
-	border-bottom: 1px solid #e7e7e7;
-	padding-top: 2px;
-}
-
-.search_goods dl dt,
+.search_goods{padding-top: 20px;}
+.search_goods dl{width: 100%;height: 257px;background: #FFF;border-bottom: 1px solid #e7e7e7;padding-top:2px ;}
+.search_goods dl dt,.search_goods dl dd{float: left;}
+.search_goods dl dt{width: 276px;height: 256px;}
+.search_goods dl dt img{width: 250px;height: 250px;}
 .search_goods dl dd {
-	float: left;
+    width: 474px;
 }
-
-.search_goods dl dt {
-	width: 276px;
-	height: 256px;
-}
-
-.search_goods dl dt img {
-	width: 250px;
-	height: 250px;
-}
-
-/* .search_goods dl dd {
-	width: 474px;
-} */
-
-.search_goods .moreGoods_goods_name {
-	font-size: 30px;
-	color: #000000;
-	height: 56px;
-	line-height: 56px;
-	font-weight: 500;
-}
-
-.search_goods .moreGoods_goods_text {
-	height: 100px;
-	font-size: 24px;
-	line-height: 36px;
-	color: #999999;
-	padding-right: 70px;
-}
-
-.search_goods .moreGoods_goods_price {
-	height: 50px;
-	line-height: 50px;
-	font-size: 24px;
-	color: #999999;
-}
-
-.search_goods .fontColor {
-	color: #eb5c2b;
-	font-size: 28px;
-}
-
-.search_goods .moreGoods_goods_icon {
-	height: 50px;
-}
+.search_goods .moreGoods_goods_name{font-size: 30px;color: #000000;height: 56px;line-height: 56px;font-weight: 500;}
+.search_goods .moreGoods_goods_text{height: 100px;font-size: 24px;line-height: 36px;color: #999999;padding-right: 70px;}
+.search_goods .moreGoods_goods_price{height: 50px;line-height: 50px;font-size: 24px;color: #999999;}
+.search_goods .fontColor{color: #eb5c2b;font-size: 28px;}
+.search_goods .moreGoods_goods_icon{height: 50px;}
 .searchCallback {
 	width: 84px;
 	height: 87px;

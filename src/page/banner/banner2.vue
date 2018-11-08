@@ -42,13 +42,13 @@ export default {
         background-image: url(../../assets/img/sprite.png);
         background-repeat: no-repeat;
     }
+    .icon_voice {
+        background-position: -1084px -444px;
+    }
     .gonggao-wrap {
         width: 100%;
         height: 50px;
         overflow: hidden;
-    }
-    .icon_voice {
-        background-position: -1084px -444px;
     }
     .gonggao li {
         text-indent: 70px;

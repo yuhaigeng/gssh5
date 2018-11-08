@@ -9,8 +9,8 @@
 				<div class="goodsDetails_img_box">
                     <div class="swiper-container">
 					<div class="swiper-wrapper">
-                        <div class="swiper-slide" v-for="(item,index) in imgList" :key="index">
-                        <img :src="item.img" alt="">
+                        <div class="swiper-slide">
+                        <img :src="detailList.goodsLogo" alt="">
                         </div>
 					</div>
 					<!-- 如果需要分页器 -->
@@ -19,7 +19,7 @@
 				</div>
                 <div class="goodsDetails_box1">
 					<div class="goodsDetails_box1_top clearfloat">
-						<h3 class="goodsDetails_box1_title">香蕉</h3>
+						<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}</h3>
 						<div class="goodsDetails_box1_ionc">
 							
 						</div>
@@ -27,84 +27,111 @@
 					<ul class="goodsDetails_box1_center">
 						<li class="clearfloat goodsDetails_box1_center_li1">
 							<div class="goodsDetails_text">
-								这香蕉很黄
+								{{detailList.goodsShows}}
 							</div>
-							<!-- <div class="moreGoods_goods_number clearfloat">
-								<span class="goodsNumber_min">
-									<img src="img/btn_m@2x.png"/>
+							<div class="moreGoods_goods_number clearfloat">
+								<span class="goodsNumber_min" v-if="num > 0" @click="goodsNumber_min">
+									<img src="../../assets/img/btn_m@2x.png"/>
 								</span>
-								<span class="goodsNumber fontColor">5</span>
-								<span class="goodsNumber_max">
-									<img src="img/btn_a@2x.png"/>
+								<span class="goodsNumber fontColor" v-if="num > 0">{{num}}</span>
+								<span class="goodsNumber_max" @click="goodsNumber_max">
+									<img src="../../assets/img/btn_a@2x.png"/>
 								</span>
-							</div> -->
+							</div>
 						</li>
 						<li class="clearfloat">
 							<div class="goodsDetails_box_left goodsDetails_Unit_Price">
-								单价：
+								单价：<span class="color_f27c32">{{detailList.gssPrice}}</span>元/箱
 							</div>
 							<div class="goodsDetails_box_right goodsDetails_Total_Price">
-								总价:
+								总价: {{detailList.gssPrice}}元/箱
 							</div>
 						</li>
 						<li class="clearfloat">
 							<div class="goodsDetails_box_left goodsDetails_Place">
-								产地：
+								产地：{{detailList.sourceCityName}}
 							</div>
 							<div class="goodsDetails_box_right goodsDetails_Standrd">
-								规格：
-							</div>
-						</li>
-						<li class="clearfloat">
-							<div class="goodsDetails_box_left goodsDetails_kucun">
-								库存：
-							</div>
-							<div class="goodsDetails_box_right">
-								
+								规格：{{detailList.sizeDesc}}
 							</div>
 						</li>
 					</ul>
 				</div>
 				<div class="goodsDetails_box2">
 					<h4><span></span>&nbsp;&nbsp;商品详情</h4>
-					<div class="goodsDetails_box2_">
-						<div class="goods_area">
-						<p>产地：安徽</p>
-						</div>
-						<div class="goods_standard">
-						<p>规格：哇热噶热爱过</p>
-						</div>
-						<div class="goods_feature">
-						<p>特征：热啊赫然好热刚好然而gear 然而干哈而过热爱和个人规划</p>
-						</div>
+					<div class="goodsDetails_box2_" v-html="detailList.goodsContext">
 					</div>
 					
 				</div>
 			</div>
         </div>
+		<app-footer-go-shop></app-footer-go-shop>
  </div>
 </template>
 
 <script>
 import Swiper from 'swiper'
 import '@/common/swiper-3.3.1.min.css'
+import appFooterGoShop from "../../components/footerGoShop.vue";
 export default {
+	name:'goodsDetail',
  data() {
  return {
 	 isCollect:true,
-     imgList: [
-         {img: "http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123009.jpg"},
-         {img: "http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123009.jpg"},
-         ]
+	 detailList:[],
+	 num:0,
+	 collectList:[]
  }
  },
+ components: {
+	 appFooterGoShop
+ },
+ created:function() {
+	 this.getOrder()
+ },
  methods:{
+	 getOrder() {
+		 this.Id = this.$route.params.id
+	 },
+	 get_goods_detail:function () {
+		this.$ajax.get(this.HOST, {
+			params:{
+				method: "goods_get_by_id_two",
+				goodsId: this.Id
+			}
+		}).then(resp => {
+			// return JSON.parse(JSON.stringify(result));
+			// return JSON.stringify(data.data);
+				this.detailList = resp.data.data;
+			// console.log(resp.data);
+		}).catch(err => {
+			// console.log(JSON.parse(data).data.mainActivityList);
+			   console.log('请求失败：'+ err.statusCode);
+		});
+	},
+	get_goods_collectAdd:function () {
+		this.$ajax.get(this.HOST, {
+			params:{
+				method: "goods_collection_add",
+				goodsId: this.Id,
+				firmId: 132,
+				userId: 1881
+			}
+		}).then(resp => {
+			// return JSON.parse(JSON.stringify(result));
+			// return JSON.stringify(data.data);
+			// console.log(resp.data);
+		}).catch(err => {
+			// console.log(JSON.parse(data).data.mainActivityList);
+			   console.log('请求失败：'+ err.statusCode);
+		});
+	},
 	 back(){
 		 this.$router.go(-1);
 	 },
 	 changeCollect(){
-		 
 		 this.isCollect = !this.isCollect
+		 this.get_goods_collectAdd()
 		 if(this.isCollect == true){
 			 this.$message({
           message: '取消收藏',
@@ -116,22 +143,33 @@ export default {
 		  center: true,
 		});
 		 }
+	 },
+	 goodsNumber_max() {
+		 this.num++
+	 },
+	 goodsNumber_min() {
+		 this.num--
 	 }
  },
  mounted(){
+	 this.get_goods_detail()
      var mySwiper = new Swiper('.swiper-container', {
-                loop: true,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                    autoplayDisableOnInteraction: false
-                },
-            })
+		loop: true,
+		pagination: {
+			el: '.swiper-pagination',
+			clickable: true,
+			autoplayDisableOnInteraction: false
+            },
+        })
  }
 }
 </script>
 
 <style scoped>
+.fontColor{margin: 0 10px;}
+.color_f27c32 {
+	color: #f27c32
+}
 .goodsDetails_img_box {
 	width: 100%;
 	height: 600px;
@@ -196,8 +234,7 @@ export default {
 	border-radius: 50%;
 	background: #30A1F2
 }
-
-.goodsDetails_box2_ p {
+.goodsDetails_box2_ {
 	padding: 0 24px;
 	margin-bottom: 5px;
 	line-height: 40px;
