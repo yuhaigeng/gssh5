@@ -15,7 +15,8 @@
         </div>
         <!-- login 头部  右侧有功能按钮-->
        <div class="header-wrap" v-if="type.type == 'common1'">
-           <router-link :to="type.jumpFront" tag="div" class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left"></router-link>
+           <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left" @click="goBack"></div>
+           <!-- <router-link :to="type.jumpFront" tag="div" class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left"></router-link> -->
             <!-- <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="'返回'"></div> -->
 			<h2 class="index_tit header_tit" v-text="type.title"></h2>
             <router-link :to="type.jumpAfter" tag="div" class="header_right login_top_right" v-text="type.right"></router-link>
