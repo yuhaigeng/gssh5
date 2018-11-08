@@ -1,45 +1,56 @@
 <template>
-     <div class="center_wrap">
-        <div class="index-module" :class="'index-module' + mainActivityList.goodsNum   ">
-            <div class="index-module-title clearfloat">
-                <div class="float_left" v-text="mainActivityList.activityTitle">秋季价到-坚果零食盛宴</div>
-                <div class="float_right">
-                    <router-link to="/more" tag="a">更多</router-link>
-                </div>  
-            </div>
-            <div class="index-module-goods clearfloat">
-                <dl class="index-module-item clearfloat" v-for="(item,index) in  mainActivityList.activityDetailsList" :key="index">
-                    <dt>
-                        <img :src="item.goodsInfo.goodsLogo" alt="">
-                    </dt>
-                    <dd>
-                        <p class="good_name ellipsis" v-text="item.goodsInfo.goodsName"></p>
-                        <div class="good_box">
-                            <p class="good_price_box">
-                                <span class="good_price_icon">￥</span>
-                                <span class="good_price" v-text="item.goodsInfo.gssPrice"></span>
-                                <span>/&nbsp;{{item.goodsInfo.priceUnit}}</span>
-                            </p>
-                        </div>
-                    </dd>
-                </dl>
+    <div class="index-module" :class="'index-module' + mainActivityList.goodsNum   ">
+        <div class="index-module-title clearfloat">
+            <div class="float_left" v-text="mainActivityList.activityTitle">秋季价到-坚果零食盛宴</div>
+            <div class="float_right">
+                <a href="javascript:void(0);" v-text="'更多'" @click="goMore(mainActivityList)"></a>
             </div>
         </div>
-     </div>
+         
+        <div class="index-module-goods clearfloat">
+            <dl class="index-module-item clearfloat" v-for="(item,index) in  mainActivityList.activityDetailsList" :key="index" @click="goDetails(item)">
+                <dt>
+                    <img :src="item.goodsInfo.goodsLogo" alt="">
+                </dt>
+                <dd>
+                    <p class="good_name ellipsis" v-text="item.goodsInfo.goodsName"></p>
+                    <div class="good_box">
+                        <p class="good_price_box">
+                            <span class="good_price_icon">￥</span>
+                            <span class="good_price" v-text="item.goodsInfo.gssPrice"></span>
+                            <span>/&nbsp;{{item.goodsInfo.priceUnit}}</span>
+                        </p>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+    </div>
 </template>
 
 <script>
     export default {
         name:"homeGoods",
         props:['mainActivityList'],
-         data() {
+        data() {
              return {
-            //   mainActivityList:this.mainActivityList
+
              }
-         },
-         mounted(){
-              console.log(this.mainActivityList)
-         },
+        },
+        mounted(){
+            console.log(this.mainActivityList)
+        },
+        methods:{
+            goDetails:function(item){
+                console.log(item)
+                const id = item.id;
+                this.$router.push({path:'/detail',query:{id:id}})
+            },
+            goMore:function (item) {
+                const code = item.linkUrl.trim().split('&')[1];
+                
+                this.$router.push({path:'/more',query:{typeCode:code}})
+            }
+        }
     }
 </script>
 

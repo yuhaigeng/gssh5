@@ -18,6 +18,10 @@ const company =  r => require.ensure([], () => r(require('../page/setUp/company.
 const revise = r => require.ensure([], () => r(require('../page/setUp/revise.vue')), 'revise');
 const collect = r => require.ensure([], () => r(require('../page/collect/collect.vue')), 'collect');
 const vip = r => require.ensure([], () => r(require('../page/vip/vip.vue')), 'vip');
+
+const coupon = r => require.ensure([], () => r(require('../page/coupon/coupon.vue')), 'coupon');
+const vipCoupon = r => require.ensure([], () => r(require('../page/coupon/vipCoupon.vue')), 'vipCoupon');
+
 const score = r => require.ensure([], () => r(require('../page/score/score.vue')), 'score');
 const scoreRecord = r => require.ensure([], () => r(require('../page/score/childer/scoreRecord.vue')), 'scoreRecord');
 const goodsList = r => require.ensure([], () => r(require('../page/score/childer/goodsList.vue')), 'goodsList');
@@ -25,6 +29,7 @@ const good = r => require.ensure([], () => r(require('../page/score/childer/chil
 const exchangeCoupon = r => require.ensure([], () => r(require('../page/score/childer/exchangeCoupon.vue')), 'exchangeCoupon');
 const scoreGame = r => require.ensure([], () => r(require('../page/score/childer/scoreLuckDraw.vue')), 'scoreGame');
 
+const onlineCoupon = r => require.ensure([], () => r(require('../page/coupon/onlineCoupon.vue')), 'onlineCoupon');
 Vue.use(Router)
 
 export default new Router({
@@ -53,6 +58,18 @@ export default new Router({
       { //vip
         path: '/vip',
         component: vip
+      }, 
+      { //vipCoupon
+        path: '/vipCoupon',
+        component: vipCoupon
+      },
+      { //优惠卷
+        path: '/coupon',
+        component: coupon
+      }, 
+      { //在线领取优惠卷
+        path: '/onlineCoupon',
+        component: onlineCoupon
       },
       { //果币商城
         path: '/score', 

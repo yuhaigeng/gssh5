@@ -1,42 +1,87 @@
 <template>
   <div class="moreGoods">
-    <app-header :type ="headerMsg"></app-header>
-    <div class="moreDoogs_main_wrap">
-      <div class="moreDoogs_main_top">
-				<ul class="moreDoogs_main_top_list">
-					<li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.typeCode,item.typeName,index)" v-text="item.typeName" ref="scroll"></li>
+      <app-header :type ="headerMsg"></app-header>
+      <div class="moreDoogs_main_wrap">
+        <div class="moreDoogs_main_top" >
+          <ul class="moreDoogs_main_top_list" v-bind:style="{width:getTopWidth}"  >
+            <li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
           </ul>
-          </div>
-          <div class="moreDoogs_main_box clearfloat">
-				<div class="moreDoogs_main_box_left_wrap">
-					<ul class="moreDoogs_main_box_left" v-for="(item,index) in goods" :key="index">
-						<li v-for="(item1,index) in left_name" :class="{isSelected:index == isSelected}" :key="index" v-show="name==item.typeName" v-text="item1.typeName" @click="leftNav(item1.typeName,index)"></li>
-					</ul>
-				</div>
-        <div class="moreDoogs_main_box_right">
-					<div class="moreDoogs_main_box_right_box">
-            <router-link to="detail">
-            <div v-for="(item,index) in goods" :key="index">
-						<ul class="moreGoods_box_list" v-for="(item1,index) in item.left_name" :key="index">
-              <li v-for="(item2,index) in item1.food" :key="index" v-show="name1==item1.name">
-                <dl class="moreGoods_goods_detaile clearfloat">
-              <dt><img :src="item2.img" alt=""></dt>
-              <dd>
-                <h3 class="moreGoods_goods_name">{{item2.name}}</h3>
-                <p class="moreGoods_goods_text">{{item2.con}}</p>
-              </dd>
-            </dl>
-              </li>
-						</ul>
-            </div>
-            </router-link>
-						<!-- <p class="lodemore"></p> -->
-					</div>
-					
-				</div>
         </div>
-    </div>
-    <app-footer-go-shop></app-footer-go-shop>
+        <div class="moreDoogs_main_box clearfloat">
+          <div class="moreDoogs_main_box_left_wrap" v-bind:style="{height:getLeftWidth}">
+            <ul class="moreDoogs_main_box_left" >
+              <li v-for="(item,index) in left_name" :class="{isSelected:index == isSelected}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
+            </ul>
+          </div>
+          <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftWidth}">
+            <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftWidth}">
+              <ul class="moreGoods_box_list">
+                <li v-for="(item,index) in listObj " :key="index" >
+                  <dl class="moreGoods_goods_detaile clearfloat">
+                    <dt>
+                      <img :src="item.goodsLogo" alt="">
+                      <span v-if="item.vipGrade > 0" :class = "'icon_vip'+ item.vipGrade"></span>
+                    </dt>
+                    <dd>
+                       <h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
+                       <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
+                       <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
+					               <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
+                        </p>
+                        <p class="moreGoods_goods_price" v-else>
+                               <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
+                        </p>
+                       <div class="moreGoods_goods_num">
+                            <div class="moreGoods_goods_icon">
+                              <span v-if="item.isSale" class = "icon_cu"></span>
+                               <span v-if="item.isNew" class = "icon_ji"></span>
+                               <span v-if="item.isRecommend"   class = "icon_jian"></span>
+                               <span v-if="item.isHot" class = "icon_re"></span>
+                            </div>
+                            <div class="moreGoods_goods_number clearfloat" v-if="item.vipGrade > 0">
+                                <div  v-if="item.state == 1">
+                                      <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" style="color:red;text-align:center;width:100px;height:64px;line-height:64px;display:inline-block;font-size: 24px;">已售罄</b>
+                                      <div class="component" v-else>
+                                            <span v-if="goodNum != 0">
+                                                  <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                                  <span class="goodsNumber fontColor" v-text="goodNum"></span>
+                                            </span>
+                                            <span v-else>
+                                                  <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                                  <span class="goodsNumber fontColor hidden"></span>
+                                            </span>
+                                      </div>
+                                </div>
+                                <div v-else>
+                                          <b v-if="item.state == 2"   style="color:red;text-align:center;width:100px;height:64px;line-height:64px;display:inline-block;font-size: 24px;">不是VIP</b>
+                                          <b v-if="item.state == 3"  style="color:red;text-align:center;width:100px;height:64px;line-height:64px;display:inline-block;font-size: 24px;">等级不足</b>
+                                </div>
+                            </div>
+                            <div class="moreGoods_goods_number clearfloat" v-else>
+                                <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" style="color:red;text-align:center;width:100px;height:64px;line-height:64px;display:inline-block;font-size: 24px;">已售罄</b>
+                                <div class="component" v-else>
+                                      <span v-if="goodNum != 0"> 
+                                            <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                            <span class="goodsNumber fontColor" v-text="goodNum"></span>
+                                      </span>
+                                      <span v-else>
+                                          <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                          <span class="goodsNumber fontColor hidden"></span>
+                                      </span> 
+                                      <span class="goodsNumber_max"><img src="../../assets/img/btn_a@2x.png"/></span>
+                                </div>
+                            </div>   
+                       </div>
+                    </dd>
+                  </dl>
+                </li>
+              </ul>
+              <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+            </div>
+				  </div>
+        </div>
+      </div>
+      <app-footer-go-shop></app-footer-go-shop>
   </div>
 </template>
 <script>
@@ -52,35 +97,22 @@
             title:'更多商品',
             left:'返回'
          },
+         pageNo: '1',
+         pageSize: '10',
+         websiteNode: "3301",
+         firmId:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
          goods:[],
          left_name:[],
-         goodsList:[],
+         goodsList:null,
+         listObj:[],
          typeCode:null,
-         
-        //  goods:[
-        //    {
-        //      tit:'进口水果',
-        //      left_name:[
-        //        {
-        //          name:'苹果',
-        //          food:[{
-        //            img: 'http://img.guoss.cn/gss_img_root/img_goods/14424/20181019130326.jpg',name:'苹果',con:'新鲜又好吃的大苹果'
-        //          }]
-        //        },
-        //         {
-        //     name: '香蕉',
-        //     food: [{
-        //       img: 'http://img.guoss.cn/gss_img_root/img_goods/10050/20180716123017.jpg',name:'香蕉',con:'新鲜又好吃的香蕉'
-        //     }]
-        //   }
-        //      ]
-        //    },
-        //  ],
-        name: 'food',
-        isSelected:0,
-        isTop:0,
-        isShow:0,
-        name1: '',
+         goodsType:null,
+         isSelected:0,
+         isTop:0,
+         isShow:0,
+         goodNum:1,//本地存储的数量
+         isLast:false,
+       
       }
     },
     components: {
@@ -88,25 +120,50 @@
       appFooterGoShop
     },
     mounted() {
-      this.goods_first_nav()
-      this.goods_second_nav()
-      this.goods_info_nav()
-      this.topScroll()
+      if(this.$route.query.typeCode){
+        this.goodsType = this.$route.query.typeCode
+        this.goods_first_nav()
+      }else{
+        this.goods_first_nav()
+      }
+      console.log(this.$route.query.typeCode)
+      // this.goods_second_nav()
+      // this.goods_info_nav()
+    },
+    computed:{
+        getTopWidth:function(){
+          return  (this.goods.length * 164) + 24 +'px'
+        },
+        getLeftWidth:function(){
+          let a = $("body").height();
+          let b = $(".header-wrap").height() ? $(".header-wrap").height() : 87 ;
+          let c = $(".moreDoogs_main_top").height() ?  $(".moreDoogs_main_top").height():90;
+          let d = $(".footer-wrap").height() ?  $(".footer-wrap").height() :98; 
+          let e = a-b-c-d
+          console.log(e)
+           console.log(a)
+            console.log(b)
+             console.log(c)
+              console.log(d)
+
+         return e + 'px';
+         
+        }
     },
     methods: {
       goods_first_nav:function () {
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "goods_first_type",
-                    firmId: 132,
-                    websiteNode: "3301",
+                    firmId: this.firmId,
+                    websiteNode:this. websiteNode,
                 }
             }).then(resp => {
-                // return JSON.parse(JSON.stringify(result));
-                // return JSON.stringify(data.data);
                   this.goods = resp.data.data;
-           
-                console.log(resp.data);
+                  console.log(this.goods)
+                  this.typeCode = this.goods[0].typeCode
+                  this.goods_second_nav()
+                  console.log(resp.data);
             }).catch(err => {
                 // console.log(JSON.parse(data).data.goods);
                   console.log('请求失败：'+ err.statusCode);
@@ -117,21 +174,19 @@
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "goods_second_type",
-                    firmId: 132,
-                    websiteNode: "3301",
-                    typeCode: 68
+                    firmId:this.firmId,
+                    websiteNode:this.websiteNode,
+                    typeCode: this.typeCode
                     
                 }
             }).then(resp => {
-                // return JSON.parse(JSON.stringify(result));
-                // return JSON.stringify(data.data);
-                  this.left_name = resp.data.data;
-                  console.log(this.left_name)
-           
+                   this.left_name = resp.data.data;
+                   console.log(resp.data.data)
+                   this.goodsType =  this.left_name[0].typeCode
+                   this.goods_info_nav()
                 console.log(resp.data);
             }).catch(err => {
-                console.log(JSON.parse(data).data);
-                  console.log('请求失败：'+ err.statusCode);
+                  // console.log('请求失败：'+ err.statusCode);
                 
             });
         },
@@ -139,41 +194,60 @@
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "goods_info_show_fou",
-                    firmId: 132,
-                    websiteNode: "3301",
-                    typeCode: 6801,
-                    pageNo: 1,
-                    pageSize: 10,
-                    _: 1541569453207
+                    firmId:this.firmId,
+                    websiteNode: this.websiteNode,
+                    typeCode:this.goodsType,
+                    pageNo: this.pageNo,
+                    pageSize: this.pageSize,
                 }
             }).then(resp => {
-                // return JSON.parse(JSON.stringify(result));
-                // return JSON.stringify(data.data);
-                  this.goodsList = resp.data.data;
-                  console.log(this.goodsList)
-           
-                console.log(resp.data);
+                    if( this.pageNo == 1){
+                         this.goodsList = resp.data.data.page;
+                         this.listObj =  this.goodsList.objects
+                         this.isLast = this.goodsList.isLast
+                    }else{
+                         this.goodsList = resp.data.data.page
+                         this.listObj =  this.listObj.concat(this.goodsList.objects)
+                         this.isLast  = this.goodsList.isLast
+                    }
+                  console.log(resp.data.data.page)  
             }).catch(err => {
                 console.log(JSON.parse(data).data);
                   console.log('请求失败：'+ err.statusCode);
                 
             });
         },
-
-        topScroll(){
-         
-        },
-
-     topNav(typeCode,name,index) {
-       this.typeCode = typeCode
-       this.isTop = index
-       this.name = name
+     topNav(typeCode,index) {
+        this.typeCode = typeCode
+        this.isTop = index
+        this.goods_second_nav()
+        var $ele=$(".moreDoogs_main_top_list li").eq(index);
+        if ($ele.get(0).offsetLeft > 200) {
+          $('.moreDoogs_main_top').scrollLeft($ele.get(0).offsetLeft-200)
+        }else{
+          $('.moreDoogs_main_top').scrollLeft(0)
+        }
      },
-     leftNav(name1,index) {
-       this.isSelected = index
-       this.name1 = name1
+     leftNav(typeCode,index) {
+        this.pageNo = '1'
+        this.goodsType = typeCode
+        this.isSelected =  index
+        this.goods_info_nav()
+        $(".moreDoogs_main_box_right").scrollTop(0)
+        var $ele=$(".moreDoogs_main_box_left li").eq(index);
+        if ($ele.get(0).offsetTop>200) {
+				    $('.moreDoogs_main_box_left_wrap').scrollTop($ele.get(0).offsetTop-200)
+			  }else{
+				    $('.moreDoogs_main_box_left_wrap').scrollTop(0)
+			}
+     },
+     loadMore:function(){
+        if(!this.isLast){
+            this.pageNo ++
+            this.goods_info_nav()
+        }
      }
-    },
+    }
   }
 </script>
 <style scoped>
@@ -184,9 +258,10 @@
   margin-top: 87px;
 }
 .moreDoogs_main_top {
+  position: fixed;
 	height: 90px;
 	background: #ebeaea;
-	width: 266%;
+	width:750px;
 	overflow-x: scroll;
 	overflow-y: hidden;
 	z-index: 6;
@@ -251,8 +326,8 @@
     background: rgb(255, 255, 255)
   }
   .moreDoogs_main_box {
-    width: 100%;
     margin-top: 90px;
+    width: 100%;
     position: relative;
   }
   .moreDoogs_main_box_left_wrap,
@@ -355,5 +430,9 @@
 	padding-left: 20px;
 	background: #FFF;
 	position: relative;
+}
+.component{
+  text-align: right;
+  padding-right: 10px;
 }
 </style>

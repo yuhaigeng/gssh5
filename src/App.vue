@@ -1,7 +1,14 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+  <div>
+		<transition name="router-fade" mode="out-in">
+			<keep-alive>
+			    <router-view v-if="$route.meta.keepAlive"></router-view>
+			</keep-alive>
+    	</transition>
+    	<transition name="router-fade" mode="out-in">
+			<router-view v-if="!$route.meta.keepAlive"></router-view>
+		</transition>	
+    </div>
 </template>
 
 <script>
@@ -13,6 +20,24 @@ export default {
 
 <style>
 @import "./common/rest.css";
+@keyframes backOpacity{
+   0%   { opacity: 1 }
+   25%  { opacity: .5 }
+   50%  { opacity: 1 }
+   75%  { opacity: .5 }
+   100% { opacity: 1 }
+}
+
+.animation_opactiy{
+    animation: backOpacity 2s ease-in-out infinite;
+}
+.router-fade-enter-active, .router-fade-leave-active {
+    transition: opacity .3s;
+}
+.router-fade-enter, .router-fade-leave-active {
+    opacity: 0;
+}
+
 html{ overflow: auto;}
 [v-cloak] { 
   display: none;

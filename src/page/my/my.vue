@@ -7,10 +7,10 @@
             <dt><b>VIP</b></dt>
             <dd>服务</dd>
         </router-link>
-        <dl class="float_left" >
+        <router-link to="onlineCoupon" tag="dl"  class="float_left " >
             <dt><b v-text='userVipInfo.coupons || 0'></b><span>张</span></dt>
             <dd>优惠券</dd>
-        </dl>
+        </router-link>
         <router-link to="score" tag="dl" class="float_left" >
             <dt><b v-text='userVipInfo.surplusScore || 0'></b><span>个</span></dt>
             <dd>果币商城</dd>

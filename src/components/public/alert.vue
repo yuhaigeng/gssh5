@@ -1,15 +1,13 @@
 <template >
-    <div class="alert" v-show="noticeInfoList.closeAlert" >
+    <div class="alert">
         <div class="my_bg"></div>
         <div class="logistic_show">
             <div class="logistic_show_header">
-                <h3 class="logistic_show_title" v-text="noticeInfoList.title"></h3>
+                <h3 class="logistic_show_title" v-text="noticeInfoList.noticeTitle"></h3>
                 <span class="logistic_back" @click="exchange"></span>
             </div>
             <div class="logistic_show_main">
-                <div class="logistic_show_text" v-html="noticeInfoList.desc" >
-                   
-                </div>
+                <div class="logistic_show_text" v-html="(noticeInfoList.noticeContent.toString()).replace(/\r\n/g, '<br/>')" ></div>
             </div>
             <div class="logistic_show_footer">by:果速送平台</div>
         </div>
@@ -34,7 +32,7 @@
         },
          methods:{
              exchange:function(){
-                    this.noticeInfoList.closeAlert = false;
+                this.$emit('listenClose',true)
              }
          }
     }
