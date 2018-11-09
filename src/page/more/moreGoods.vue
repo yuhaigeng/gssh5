@@ -25,53 +25,57 @@
                     <dd>
                        <h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
                        <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
-                       <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
-					               <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
-                        </p>
-                        <p class="moreGoods_goods_price" v-else>
-                               <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
-                        </p>
-                       <div class="moreGoods_goods_num">
-                            <div class="moreGoods_goods_icon">
-                              <span v-if="item.isSale" class = "icon_cu"></span>
-                               <span v-if="item.isNew" class = "icon_ji"></span>
-                               <span v-if="item.isRecommend"   class = "icon_jian"></span>
-                               <span v-if="item.isHot" class = "icon_re"></span>
-                            </div>
-                            <div class="moreGoods_goods_number clearfloat" v-if="item.vipGrade > 0">
-                                <div  v-if="item.state == 1">
-                                      <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" style="color:red;text-align:center;width:100px;height:64px;line-height:64px;display:inline-block;font-size: 24px;">已售罄</b>
-                                      <div class="component" v-else>
-                                            <span v-if="goodNum != 0">
-                                                  <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
-                                                  <span class="goodsNumber fontColor" v-text="goodNum"></span>
-                                            </span>
-                                            <span v-else>
-                                                  <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
-                                                  <span class="goodsNumber fontColor hidden"></span>
-                                            </span>
-                                      </div>
-                                </div>
-                                <div v-else>
-                                          <b v-if="item.state == 2"   style="color:red;text-align:center;width:100px;height:64px;line-height:64px;display:inline-block;font-size: 24px;">不是VIP</b>
-                                          <b v-if="item.state == 3"  style="color:red;text-align:center;width:100px;height:64px;line-height:64px;display:inline-block;font-size: 24px;">等级不足</b>
-                                </div>
-                            </div>
-                            <div class="moreGoods_goods_number clearfloat" v-else>
-                                <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" style="color:red;text-align:center;width:100px;height:64px;line-height:64px;display:inline-block;font-size: 24px;">已售罄</b>
-                                <div class="component" v-else>
-                                      <span v-if="goodNum != 0"> 
-                                            <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
-                                            <span class="goodsNumber fontColor" v-text="goodNum"></span>
-                                      </span>
-                                      <span v-else>
-                                          <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
-                                          <span class="goodsNumber fontColor hidden"></span>
-                                      </span> 
-                                      <span class="goodsNumber_max"><img src="../../assets/img/btn_a@2x.png"/></span>
-                                </div>
-                            </div>   
-                       </div>
+                      <div v-if="logined">
+                        <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
+                          <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
+                          </p>
+                          <p class="moreGoods_goods_price" v-else>
+                                <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
+                          </p>
+                        <div class="moreGoods_goods_num">
+                              <div class="moreGoods_goods_icon">
+                                <span v-if="item.isSale" class = "icon_cu"></span>
+                                <span v-if="item.isNew" class = "icon_ji"></span>
+                                <span v-if="item.isRecommend"   class = "icon_jian"></span>
+                                <span v-if="item.isHot" class = "icon_re"></span>
+                              </div>
+                              <div class="moreGoods_goods_number clearfloat" v-if="item.vipGrade > 0">
+                                  <div  v-if="item.state == 1">
+                                        <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" class='bStyle' >已售罄</b>
+                                        <div class="component" v-else>
+                                              <span v-if="goodNum != 0">
+                                                    <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                                    <span class="goodsNumber fontColor" v-text="goodNum"></span>
+                                              </span>
+                                              <span v-else>
+                                                    <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                                    <span class="goodsNumber fontColor hidden"></span>
+                                              </span>
+                                        </div>
+                                  </div>
+                                  <div v-else>
+                                            <b v-if="item.state == 2"  class='bStyle'  >不是VIP</b>
+                                            <b v-if="item.state == 3"  class='bStyle' >等级不足</b>
+                                  </div>
+                              </div>
+                              <div class="moreGoods_goods_number clearfloat" v-else>
+                                  <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" class='bStyle' >已售罄</b>
+                                  <div class="component" v-else>
+                                        <span v-if="goodNum != 0"> 
+                                              <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                              <span class="goodsNumber fontColor" v-text="goodNum"></span>
+                                        </span>
+                                        <span v-else>
+                                            <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                            <span class="goodsNumber fontColor hidden"></span>
+                                        </span> 
+                                        <span class="goodsNumber_max"><img src="../../assets/img/btn_a@2x.png"/></span>
+                                  </div>
+                              </div>   
+                        </div>
+                      </div>
+                      <div v-else>
+                      </div>
                     </dd>
                   </dl>
                 </li>
@@ -97,10 +101,11 @@
             title:'更多商品',
             left:'返回'
          },
+         logined:localStorage.getItem("user_data") ? true : false,
          pageNo: '1',
          pageSize: '10',
          websiteNode: "3301",
-         firmId:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
+         firmId:JSON.parse(localStorage.getItem("user_data")) ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
          goods:[],
          left_name:[],
          goodsList:null,
@@ -122,10 +127,11 @@
     mounted() {
       if(this.$route.query.typeCode){
         this.goodsType = this.$route.query.typeCode
-        this.goods_first_nav()
       }else{
-        this.goods_first_nav()
+        
       }
+
+      this.goods_first_nav()
       console.log(this.$route.query.typeCode)
       // this.goods_second_nav()
       // this.goods_info_nav()
@@ -139,13 +145,7 @@
           let b = $(".header-wrap").height() ? $(".header-wrap").height() : 87 ;
           let c = $(".moreDoogs_main_top").height() ?  $(".moreDoogs_main_top").height():90;
           let d = $(".footer-wrap").height() ?  $(".footer-wrap").height() :98; 
-          let e = a-b-c-d
-          console.log(e)
-           console.log(a)
-            console.log(b)
-             console.log(c)
-              console.log(d)
-
+          let e = a-b-c-d;
          return e + 'px';
          
         }
@@ -161,6 +161,7 @@
             }).then(resp => {
                   this.goods = resp.data.data;
                   console.log(this.goods)
+
                   this.typeCode = this.goods[0].typeCode
                   this.goods_second_nav()
                   console.log(resp.data);
@@ -221,6 +222,7 @@
         this.typeCode = typeCode
         this.isTop = index
         this.goods_second_nav()
+         $(".moreDoogs_main_box_right").scrollTop(0)
         var $ele=$(".moreDoogs_main_top_list li").eq(index);
         if ($ele.get(0).offsetLeft > 200) {
           $('.moreDoogs_main_top').scrollLeft($ele.get(0).offsetLeft-200)
@@ -434,5 +436,14 @@
 .component{
   text-align: right;
   padding-right: 10px;
+}
+.bStyle{
+    color:red;
+    text-align:center;
+    width:100px;
+    height:64px;
+    line-height:64px;
+    display:inline-block;
+    font-size: 24px;
 }
 </style>

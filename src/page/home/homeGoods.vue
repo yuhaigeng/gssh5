@@ -41,7 +41,7 @@
         props:['mainActivityList','isLogin'],
         data() {
              return {
-
+                 logined:localStorage.getItem("user_data") ? true : false,
              }
         },
         methods:{

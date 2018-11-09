@@ -29,7 +29,7 @@
 		        </li>
 		    </ul>
 	    </div>
-        <agreementAlert :noticeInfoList="noticeInfoList"> </agreementAlert>
+        <agreementAlert :noticeInfoList="noticeInfoList"  v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
      </div>
 </template>
 
@@ -66,9 +66,8 @@ import md5 from 'js-md5';
                 status:{"1":"启用","2":"禁用"},
                 authStatus:{"0":'待认证',"-1":'未通过',"1":'已认证'},
                 personInfo:{},
-                noticeInfoList:{},
+                noticeInfoList:null,
                 websiteNode:'3301',
-                closeAlert:false,
              }
          },
          mounted:function(){
@@ -124,8 +123,8 @@ import md5 from 'js-md5';
                         code:this.websiteNode + '#HYDJ-DESC'
                     }
                 }).then(resp => {
-                      resp.data.data.desc =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                      resp.data.data.closeAlert = this.closeAlert;
+                      resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+                      resp.data.data.noticeTitle =  resp.data.data.title;
                       this.noticeInfoList = resp.data.data;
                       console.log(this.noticeInfoList)
                 }).catch(err => {
@@ -133,8 +132,10 @@ import md5 from 'js-md5';
                 });
             },
             agreement:function(){
-               this.closeAlert = true;
                this.desc_data()
+            },
+            closeAlert:function(){
+                this.noticeInfoList = null;
             },
             keep:function(){
                     this.save()
