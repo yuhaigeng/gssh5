@@ -4,7 +4,7 @@
             <addressHeader :type="headerMsg"></addressHeader>
             <div class="main-wrap address_box">
                 <ul class="address_main">
-                    <li v-for="(item,index) in addresses" :key="index">
+                    <li v-for="(item,index) in addresses" :key="index" @click="goBack(item)">
                         <dl class="address_top clearfloat" >
                             <dt :class="item.isDefault == 1 && 'icon_chosen'">
                             </dt>
@@ -73,7 +73,6 @@ import md5 from 'js-md5';
                     console.log(resp.data.data)
                     this.addresses = resp.data.data
                     sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
-
                 }).catch(err => {
                     console.log('请求失败：'+ err.statusCode);
                 });
@@ -104,6 +103,11 @@ import md5 from 'js-md5';
                           this.default_data();
                     }
             },
+            goBack:function(item){
+                if(this.$route.query.isBack){
+                    this.$router.push({path:'orderSettlement', query:{data:item}})
+                }
+            }
 
          }
     }

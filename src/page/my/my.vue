@@ -60,8 +60,11 @@ export default {
         }
    },
    mounted(){
-             this.personApi()
+       if(localStorage.getItem("user_data")){
+                 this.personApi()
              this.firm_vip_info()
+       }
+            
    },
    methods:{
        personApi:function(){

@@ -7,7 +7,7 @@
                 <span class="logistic_back" @click="exchange"></span>
             </div>
             <div class="logistic_show_main">
-                <div class="logistic_show_text" v-html="(noticeInfoList.noticeContent.toString()).replace(/\r\n/g, '<br/>')" ></div>
+                <div class="logistic_show_text" v-html="noticeInfoList.noticeContent"></div>
             </div>
             <div class="logistic_show_footer">by:果速送平台</div>
         </div>
@@ -28,7 +28,7 @@
              }
          },
           mounted(){
-              console.log(this.closeAlert)
+            //   console.log(this.noticeInfoList)
         },
          methods:{
              exchange:function(){

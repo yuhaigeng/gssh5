@@ -25,6 +25,7 @@
 </template>
 <script>
 import sTable from "../../../components/public/table.vue";
+import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../common/common.js";
 export default {
     name:'scoreRecord',
     data() {
@@ -58,20 +59,30 @@ export default {
         sTable,
     },
     mounted(){
-        this.get_record_list();
+        if (getIsLogin()) {
+            
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+            }
+            this.get_record_list();
+        }
     },
     methods:{
         get_record_list:function () {
+            const obj = Object.assign({
+                method: this.dataPage[this.type].port,
+                pageSize:this.pageSize,
+                pageNo:this.pageNo,
+                scoreUseRcdTime:this.time,
+                scoreDetailsTime:this.time,
+                incDnc:this.incDnc
+            },this.userBasicParam)
             this.$ajax.get(this.HOST, {
-                params:{
-                    method: this.dataPage[this.type].port,
-                    firmId: "132",
-                    pageSize:this.pageSize,
-                    pageNo:this.pageNo,
-                    scoreUseRcdTime:this.time,
-                    scoreDetailsTime:this.time,
-                    incDnc:this.incDnc
-                }
+                params:obj
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
                 return result.data;

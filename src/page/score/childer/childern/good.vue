@@ -49,6 +49,7 @@ import appHeader from "../../../../components/public/header.vue";
 import banner from "../../../banner/goodsBanner.vue";
 import BScroll from 'better-scroll'
 import '@/common/layer.css'
+import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../../common/common.js";
 export default {
     name:'scoreGoods',
     data() {
@@ -84,18 +85,24 @@ export default {
     },
     mounted(){
         console.log('mounted')
+        if (getIsLogin()) {
+            
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+            }
+        }
         if (localStorage.getItem('scoreGoods')) {
             this.scoreGoods = JSON.parse(localStorage.getItem('scoreGoods'))
             const list = this.scoreGoods.goodsPics.split('@');
                 list.pop();
             this.bannerDate = list;
-        } else {
-            
         }
         if (localStorage.getItem('scoreGoods_desc')) {
             this.scoreGoods_desc = JSON.parse(localStorage.getItem('scoreGoods_desc'))
-        } else {
-            
         }
         this.get_scoregoods_details();
         this.$nextTick(() => {
@@ -112,7 +119,7 @@ export default {
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "scoregoods_details",
-                    firmId: '132',
+                    firmId: this.userBasicParam.firmId,
                     goodsId: this.id
                 }
             }).then(result => {
@@ -129,15 +136,23 @@ export default {
             });
         },
         exchange:function () {
+            const _this = this;
             if (this.state == 0) {
-                this.exchange_api();
+                layer.open({
+                    content: '兑换后不能退换，确定兑换？',
+                    btn: ['确定', '取消'],
+                    yes: function(index){
+                        _this.exchange_api();
+                        layer.close(index);
+                    }
+                });
             }
         },
         exchange_api:function () {
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "exchange_scoregoods",
-                    firmId: '132',
+                    firmId: this.userBasicParam.firmId,
                     goodsId: this.id
                 }
             }).then(result => {

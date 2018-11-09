@@ -2,13 +2,11 @@
  <div class="score">
     <div class="header-wrap">
         <div class="header_left header_back sprite arrow_left_b" @click="goBack"></div>
-        <div class="index_tit header_tit">
-            果币商城
-        </div>
+        <div class="index_tit header_tit" v-text="'果币商城'"></div>
     </div>
     <div class="main_top">
         <div class="now_score" v-html="'&nbsp;'+score_info.surplusScore"></div>
-        <div class="now_score_show">可用果币</div>
+        <div class="now_score_show" v-text="'可用果币'"></div>
         <!--<div class="score_msg">
             总积分<span class="font"></span>击败了<span></span>商家
         </div>-->
@@ -24,7 +22,7 @@
                 <dl>
                     <dt class="sprite_login icon_mine_shangpin"></dt>
                     <dd>
-                        <a href="javascript:void(0)">果币兑换商品</a>
+                        <a href="javascript:void(0)" v-text="'果币兑换商品'"></a>
                         <a href="javascript:void(0)" class="sprite arrow_left"></a>
                     </dd>
                 </dl>
@@ -33,7 +31,7 @@
                 <dl>
                     <dt class="sprite_login icon_mine_quan"></dt>
                     <dd>
-                        <a href="javascript:void(0)">果币兑换优惠劵</a>
+                        <a href="javascript:void(0)" v-text="'果币兑换优惠劵'"></a>
                         <a href="javascript:void(0)" class="sprite arrow_left"></a>
                     </dd>
                 </dl>
@@ -42,13 +40,11 @@
                 <dl>
                     <dt class="sprite_login icon_mine_jiang"></dt>
                     <dd>
-                        <a href="javascript:void(0)">果币抽奖</a>
+                        <a href="javascript:void(0)" v-text="'果币抽奖'"></a>
                         <a href="javascript:void(0)" class="sprite arrow_left"></a>
                     </dd>
                 </dl>
             </router-link>
-            
-            
             <!-- <dl data = "" class="hidden">
                 <dt class="sprite_login icon_mine_te"></dt>
                 <dd>
@@ -71,6 +67,7 @@
 
 <script>
 import appHeader from "../../components/public/header.vue";
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     data() {
         return {
@@ -91,21 +88,26 @@ export default {
         appHeader,
     },
     mounted(){
-        console.log('mounted')
-        this.get_firm_score_info();
+        if (getIsLogin()) {
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+            }
+            this.get_firm_score_info();
+        }
     },
     methods:{
         get_firm_score_info:function(){
+            const obj = Object.assign({
+                method: "firm_score_info",
+            },this.userBasicParam)
             this.$ajax.get(this.HOST, {
-                params:{
-                    method: "firm_score_info",
-                    firmId: "132",
-                }
+                params:obj
             }).then(result => {
-                // return JSON.parse(JSON.stringify(result));
                 return result.data;
-
-                // console.log(data);
             }).then(data => {
                 console.log(data);
                 if (data.statusCode == 100000) {
@@ -116,9 +118,9 @@ export default {
                 console.log(this.score_info)
             });
         },
-         goBack:function(){
-                    this.$router.go(-1)
-            },
+        goBack:function(){
+            this.$router.go(-1)
+        },
     }
 }
 </script>

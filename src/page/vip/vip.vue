@@ -99,6 +99,7 @@
 
 <script>
 import appHeader from "../../components/public/header.vue";
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
    name: 'vip',
    data() {
@@ -159,6 +160,18 @@ export default {
             }
             return isTrue;
         },
+    },
+    mounted(){
+        if (getIsLogin()) {
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+            }
+            this.get_coupon_list();
+        }
     }
 }
 

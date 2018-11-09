@@ -16,7 +16,9 @@
 				<dd>我</dd>
 			</router-link>
 			<router-link :to="'message'" tag="dl">
-				<dt class="sprite tab_bar_Message_a"></dt>
+				<dt class="sprite tab_bar_Message_a">
+					<span class="new_msg" v-if="isNew"></span>
+				</dt>
 				<dd>消息</dd>
 			</router-link>
 		</div>
@@ -27,6 +29,7 @@
 <script>
 export default {
    name: 'footer_',
+   props:['isNew'],
    data() {
        return {}
    },
@@ -61,4 +64,7 @@ export default {
 .router-link-active .tab_bar_more_a{background-position:-269px -81px;}
 .router-link-active .tab_bar_mine_a{background-position:-426px -81px;}
 .router-link-active .tab_bar_Message_a{background-position:-603px -81px;}
+
+.new_msg{width:10px;height:10px;background:red;border-radius:5px;display: inline-block;position:relative;left: 10px;}
+
 </style>

@@ -24,6 +24,7 @@
 </template>
 <script>
 import appHeader from "../../components/public/header.vue";
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     name:'onloneCoupon',
     data(){
@@ -47,20 +48,28 @@ export default {
     },
     mounted(){
         console.log('mounted')
-        //this.get_coupon_kindList();
-        this.get_coupon_list();
+         if (getIsLogin()) {
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+            }
+            this.get_coupon_list();
+        }
+        //this.get_coupon_list();
     },
     methods : {
         get_coupon_list(){
-            
+            const obj = Object.assign({
+                method: "online_coupon_list",
+                websiteNode:this.websiteNode,
+                pageNum:this.pageNum,
+                pageSize:this.pageSize
+            },this.userBasicParam)
             this.$ajax.get(this.HOST, {
-                params:{
-                    method: "online_coupon_list",
-                    firmId:'132',
-                    websiteNode:this.websiteNode,
-                    pageNum:this.pageNum,
-                    pageSize:this.pageSize
-                }
+                params:obj
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
                 return result.data;
@@ -89,12 +98,12 @@ export default {
         },
         exchange(index){
             const id = this.couponList[index].id; 
+            const obj = Object.assign({
+                method: "get_coupon",
+                couponId:id
+            },this.userBasicParam)
             this.$ajax.get(this.HOST, {
-                params:{
-                    method: "get_coupon",
-                    firmId:'132',
-                    couponId:id
-                }
+                params:obj
             }).then(result => {
                 return result.data;
             }).then(data => {

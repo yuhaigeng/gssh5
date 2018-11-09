@@ -52,6 +52,7 @@ export default {
             showlicenseImg: false,
             imgBaseUrl:'',
             isLast:false,
+            websiteNode:'3301',
             pageSize:'10',
             pageNo:'1',
             goodsList:[],
@@ -64,14 +65,17 @@ export default {
     mounted(){
         console.log('mounted')
         this.get_score_goodsList();
-        this.get_gss_desc();
+        if ( !localStorage.getItem("scoreGoods_desc") ) {
+            this.get_gss_desc();
+        }
+        
     },
     methods:{
         get_score_goodsList:function(){
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "score_goods_show",
-                    websiteNode: "3301",
+                    websiteNode: this.websiteNode,
                     pageSize:this.pageSize,
 				    pageNo:this.pageNo
                 }
@@ -99,13 +103,12 @@ export default {
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "gss_desc",
-                    websiteNode: "3301",
-                    code:'3301#JFSP-DESC',
+                    websiteNode: this.websiteNode,
+                    code:this.websiteNode+'#JFSP-DESC',
                 }
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
                 return result.data;
-
                 // console.log(data);
             }).then(data => {
                 console.log(data);

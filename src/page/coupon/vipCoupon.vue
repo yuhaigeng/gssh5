@@ -31,6 +31,7 @@
 </template>
 <script>
 import appHeader from "../../components/public/header.vue";
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     name:'onloneCoupon',
     data(){
@@ -66,23 +67,32 @@ export default {
         appHeader,
     },
     mounted(){
+        console.log('mounted')
         if (this.$route.query.type) {
             this.type = this.$route.query.type;
         } else {
             this.type = 1;
         }
-        console.log('mounted')
-        this.get_coupon_list();
+        if (getIsLogin()) {
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+            }
+            this.get_coupon_list();
+        }
     },
     methods : {
         //优惠卷列表
         get_coupon_list(){
+            const obj = Object.assign({
+                method: "vip_cou_tem_list",
+                type:this.type
+            },this.userBasicParam)
             this.$ajax.get(this.HOST, {
-                params:{
-                    method: "vip_cou_tem_list",
-                    firmId:'132',
-                    type:this.type
-                }
+                params:obj
             }).then(result => {
                 return result.data;
             }).then(data => {
@@ -101,12 +111,12 @@ export default {
         },
         //领取优惠券
         get_coupon:function (id) {
+            const obj = Object.assign({
+                method: "get_vip_cou_tem",
+                vipTempId:id
+            },this.userBasicParam)
             this.$ajax.get(this.HOST, {
-                params:{
-                    method: "get_vip_cou_tem",
-                    firmId:'132',
-                    vipTempId:id
-                }
+                params:obj
             }).then(result => {
                 return result.data;
             }).then(data => {
