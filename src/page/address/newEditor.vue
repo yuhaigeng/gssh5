@@ -97,7 +97,6 @@ import '@/common/layer.css'
         },
         mounted:function(){
              this.cityApi()
-            
                 if( !this.$route.query.isNew ){
                     [ this.phone ,this.person,this.city, this.street] = [ this.addressData[this.index].receiverMobile, this.addressData[this.index].receiverName ,this.addressData[this.index].countyAddr,this.addressData[this.index].address]
                      this.addressId = this.addressData[this.index].id

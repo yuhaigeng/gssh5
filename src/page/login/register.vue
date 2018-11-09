@@ -53,7 +53,7 @@
 			<div class="login_bottom" :class="{'hidden':bottomIsHidden}"  > 
 				说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" @click="agreement(0)" >《果速送合作协议》</a>
 			</div>
-			<agreementAlert :noticeInfoList="noticeInfoList"> </agreementAlert>
+			<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
             <div class="myBg"></div>
         </div>
 </template>
@@ -105,9 +105,8 @@ import '@/common/LArea.css'
                     '3302':'宁波站'
                 },
                 websiteNode:'3301',
-                noticeInfoList:{},
+                noticeInfoList:null,
                 descCode:null,
-                closeAlert:false,
                 area2:new LArea1(),
                 streetData :{},
                 
@@ -151,8 +150,8 @@ import '@/common/LArea.css'
                         code:this.websiteNode + this.descCode
                     }
                 }).then(resp => {
-                      resp.data.data.desc =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                      resp.data.data.closeAlert = this.closeAlert;
+                      resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+                      resp.data.data.noticeTitle =  resp.data.data.title;
                       this.noticeInfoList = resp.data.data;
                       console.log(this.noticeInfoList)
                 }).catch(err => {
@@ -218,14 +217,15 @@ import '@/common/LArea.css'
             },
             agreement:function(num){
                 if(num == 0){
-                    this.closeAlert = true;
                     this.descCode = "#HZ-DESC";
                     this.desc_data()
                 }else{
-                    this.closeAlert = true;
                     this.descCode = "#TJR-DESC";
                     this.desc_data()
                 }
+            },
+             closeAlert:function(){
+                this.noticeInfoList = null;
             },
             selCity:function(){
                 document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩

@@ -33,7 +33,7 @@
 				<div class="login_bottom" v-show = "!bottomIsHidden">
 					说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" @click="agreement">《果速送合作协议》</a>
 				</div>
-                <alertVue :noticeInfoList="noticeInfoList"> </alertVue>
+                <alertVue :noticeInfoList="noticeInfoList"  v-if="noticeInfoList" v-on:listenClose = "closeAlert"> </alertVue>
 			</div>
     </div>
 </template>
@@ -72,12 +72,12 @@ import md5 from 'js-md5';
                 msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
                 count:'',
                 timer:null,
-                noticeInfoList:{},
+                noticeInfoList:null,
                 method:['user_dynamic_login','user_login'],
                 websiteNode: "3301",
                 parameter:null,
                 descCode:"#HZ-DESC",
-                closeAlert:false,
+                // closeAlert:false,
               
             }
         },
@@ -184,6 +184,7 @@ import md5 from 'js-md5';
                 });
             },
             login_up:function(){
+                // Object.assign()
                 this.$ajax.get(this.HOST, {
                     params : $.extend({ 
                         method:this.method[this.login],
@@ -208,10 +209,11 @@ import md5 from 'js-md5';
                         code:this.websiteNode + this.descCode
                     }
                 }).then(resp => {
-                      resp.data.data.desc =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                      resp.data.data.closeAlert = this.closeAlert;
+                      resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+                       resp.data.data.noticeTitle =  resp.data.data.title;
+                    //   resp.data.data.closeAlert = this.closeAlert;
                       this.noticeInfoList = resp.data.data;
-                      console.log(this.noticeInfoList)
+                    //   console.log(this.noticeInfoList)
                 }).catch(err => {
                     console.log('请求失败：'+ err.data.statusCode);
                 });
@@ -254,8 +256,12 @@ import md5 from 'js-md5';
 				this.bottomIsHidden = false;
             },
             agreement:function(){
-                this.closeAlert = true
+                // // this.closeAlert = true
+                //  this.$emit('listenIndex', true )
                  this.desc_data()
+            },
+            closeAlert:function(){
+                this.noticeInfoList = null;
             },
             setData:function(resp){
                 let user_data={

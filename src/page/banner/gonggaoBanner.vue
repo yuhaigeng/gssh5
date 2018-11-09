@@ -34,9 +34,6 @@ export default {
     })
  },
  methods:{
-     alert:function (item) {
-         console.log(item)
-     },
      getIndex:function(index){
          console.log(index)
          this.$emit('listenIndex',index)

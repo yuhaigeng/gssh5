@@ -102,7 +102,9 @@ export default {
         },
         showalert:function (data) {
             console.log(data)
-            this.noticeInfo = this.noticeInfoList[data];
+            this.noticeInfoList[data].noticeContent = (this.noticeInfoList[data].noticeContent.toString()).replace(/\r\n/g, '<br/>')
+            this.noticeInfo = this.noticeInfoList[data]
+            console.log( this.noticeInfo)
         },
         closeAlert:function (data) {
             console.log(data);

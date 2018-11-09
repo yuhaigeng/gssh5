@@ -14,12 +14,14 @@
                 </dt>
                 <dd>
                     <p class="good_name ellipsis" v-text="item.goodsInfo.goodsName"></p>
-                    <div class="good_box">
+                    <div class="good_box" v-if="logined">
                         <p class="good_price_box">
                             <span class="good_price_icon">￥</span>
                             <span class="good_price" v-text="item.goodsInfo.gssPrice"></span>
                             <span>/&nbsp;{{item.goodsInfo.priceUnit}}</span>
                         </p>
+                    </div>
+                    <div class="good_box" v-else>
                     </div>
                 </dd>
             </dl>
@@ -33,7 +35,7 @@
         props:['mainActivityList'],
         data() {
              return {
-
+                 logined:localStorage.getItem("user_data") ? true : false,
              }
         },
         mounted(){

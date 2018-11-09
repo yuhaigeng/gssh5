@@ -30,6 +30,10 @@ const exchangeCoupon = r => require.ensure([], () => r(require('../page/score/ch
 const scoreGame = r => require.ensure([], () => r(require('../page/score/childer/scoreLuckDraw.vue')), 'scoreGame');
 
 const onlineCoupon = r => require.ensure([], () => r(require('../page/coupon/onlineCoupon.vue')), 'onlineCoupon');
+
+const orderSettlement = r => require.ensure([], () => r(require('../page/order/orderSettlement.vue')), 'orderSettlement');
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -99,7 +103,7 @@ export default new Router({
           }
         ]
       }, //果币商城
-      
+      { path: '/orderSettlement', component: orderSettlement} //订单结算
     ]
   }]
 })
