@@ -2,7 +2,7 @@
  <div class="detail">
      <div class="header-wrap goodsDetails_header">
 			<div class="header_left header_back sprite icon_delete" @click="back"></div>
-			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_b':'icon_collect_a'" @click="changeCollect"></div>
+			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_a':'icon_collect_b'" @click="changeCollect"></div>
 		</div>
         <div class="main-wrap goods_detaile_wrap" style="height: 1236px; background: #FFFFFF;">
 			<div class="main">
@@ -77,7 +77,7 @@ export default {
 	name:'goodsDetail',
  data() {
  return {
-	 isCollect:true,
+	 isCollect:localStorage.getItem("isColle"),
 	 detailList:[],
 	 num:0,
 	 collectList:[]
@@ -97,15 +97,19 @@ export default {
 		this.$ajax.get(this.HOST, {
 			params:{
 				method: "goods_get_by_id_two",
-				goodsId: this.Id
+				goodsId: this.Id,
+				userId: 1881
 			}
 		}).then(resp => {
 			// return JSON.parse(JSON.stringify(result));
 			// return JSON.stringify(data.data);
 				this.detailList = resp.data.data;
-			// console.log(resp.data);
+				if (resp.data.statusCode == 100000) {
+				let a = resp.data.data.isColl > 0 ? true : false;
+				this.isCollect = a
+				localStorage.setItem("isColle",a)
+				}
 		}).catch(err => {
-			// console.log(JSON.parse(data).data.mainActivityList);
 			   console.log('请求失败：'+ err.statusCode);
 		});
 	},
@@ -121,6 +125,30 @@ export default {
 			// return JSON.parse(JSON.stringify(result));
 			// return JSON.stringify(data.data);
 			// console.log(resp.data);
+			this.isColl = true
+		}).catch(err => {
+			// console.log(JSON.parse(data).data.mainActivityList);
+			   console.log('请求失败：'+ err.statusCode);
+		});
+	},
+	get_goods_collect_del:function (index) {
+		this.$ajax.get(this.HOST, {
+			params:{
+				method: "goods_collection_del",
+				userId: 1881,
+				goodsId: this.Id
+			}
+		}).then(resp => {
+			// return JSON.parse(JSON.stringify(result));
+			// return JSON.stringify(data.data);
+			// console.log(resp.data);
+			if (resp.data.statusCode == 100000) {
+				const arr = this.collectList;
+				const arr1 = arr.splice(index, 1);
+				this.collectList =arr;
+			} else {
+				console.log(data.statusStr);
+			}
 		}).catch(err => {
 			// console.log(JSON.parse(data).data.mainActivityList);
 			   console.log('请求失败：'+ err.statusCode);
@@ -131,14 +159,15 @@ export default {
 	 },
 	 changeCollect(){
 		 this.isCollect = !this.isCollect
-		 this.get_goods_collectAdd()
-		 if(this.isCollect == true){
-			 this.$message({
+		 if(this.isCollect == false){
+			this.get_goods_collect_del();
+			this.$message({
           message: '取消收藏',
 		  center: true,
 		});
 		 }else {
-			 this.$message({
+			this.get_goods_collectAdd()
+			this.$message({
           message: '收藏成功',
 		  center: true,
 		});
@@ -152,15 +181,15 @@ export default {
 	 }
  },
  mounted(){
-	 this.get_goods_detail()
-     var mySwiper = new Swiper('.swiper-container', {
+	this.get_goods_detail()
+    var mySwiper = new Swiper('.swiper-container', {
 		loop: true,
 		pagination: {
 			el: '.swiper-pagination',
 			clickable: true,
 			autoplayDisableOnInteraction: false
-            },
-        })
+        },
+    })
  }
 }
 </script>

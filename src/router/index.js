@@ -30,6 +30,8 @@ const exchangeCoupon = r => require.ensure([], () => r(require('../page/score/ch
 const scoreGame = r => require.ensure([], () => r(require('../page/score/childer/scoreLuckDraw.vue')), 'scoreGame');
 
 const onlineCoupon = r => require.ensure([], () => r(require('../page/coupon/onlineCoupon.vue')), 'onlineCoupon');
+
+const orderManagement = r => require.ensure([], () => r(require('../page/order/orderManagement.vue')), 'orderManagement');
 Vue.use(Router)
 
 export default new Router({
@@ -55,6 +57,7 @@ export default new Router({
       { path: '/company', component: company}, //公司信息
       { path: '/revise', component: revise}, //需改密码
       { path: '/collect', component: collect}, //收藏
+      { path: '/orderManagement/:type', component: orderManagement}, //订单管理
       { //vip
         path: '/vip',
         component: vip

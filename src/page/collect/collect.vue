@@ -4,10 +4,8 @@
      <div class="main-wrap often_shop_main_wrap">
 			<div class="main">
 				<ul>
-					
 					<li class="line-wrapper"  v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item.goodsInfoId)">
-                        <mt-cell-swipe
-            :right="rightButtons(index)" @click="del(item.goodsInfoId)">
+                        <mt-cell-swipe :right="rightButtons(index)">
 			        	<div class="line-scroll-wrapper clearfloat">
 			                <dl class="line-normal-wrapper clearfloat">
 		                         <dt class="line-normal-avatar-wrapper">
@@ -40,10 +38,9 @@
 			            </div>
                         </mt-cell-swipe>
 			         </li>
-					 
 				</ul>
 			</div>
-            
+            <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
 		</div>
  </div>
 </template>
@@ -79,7 +76,7 @@ export default {
 				content: '删除',
 				style: { background: 'red', color: '#fff',width:'200px',fontSize:'24px',textAlign:'center',lineHeight:'200px'},
 				handler: function(index){
-					console.log(_this.collectList);
+					// console.log(_this.collectList);
 					_this.goodID = _this.collectList[this.data].goodsInfoId;
 					_this.get_goods_collect_del(this.data);
 				}
@@ -94,7 +91,7 @@ export default {
 				method: "goods_collection",
 				pageNo: this.pageNo,
 				pageSize: this.pageSize,
-				firmId: 132,
+				firmId: this.firmInfoid,
 				userId: 1881
 			}
 		}).then(resp => {
@@ -128,7 +125,6 @@ export default {
 			// return JSON.parse(JSON.stringify(result));
 			// return JSON.stringify(data.data);
 			// console.log(resp.data);
-		
 			if (resp.data.statusCode == 100000) {
 				const arr = this.collectList;
 				const arr1 = arr.splice(index, 1);
@@ -149,8 +145,14 @@ export default {
 	 },
 	 toDetail(id) {
 		this.$router.push({ path:'detail/'+id })
-	}
-  },
+	},
+	loadMore:function(){
+        if(!this.isLast){
+            this.pageNo ++
+            this.get_goods_collected()
+        }
+	 },
+  	},
   mounted() {
 	  this.get_goods_collected()
   }
