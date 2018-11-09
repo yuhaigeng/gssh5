@@ -19,6 +19,9 @@ Vue.prototype.$ajax = axios //修改Vue的原型属性
 Vue.prototype.HOST = '/api'
 Vue.config.productionTip = false
 
+import md5 from 'js-md5';
+Vue.prototype.$md5 = md5;
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

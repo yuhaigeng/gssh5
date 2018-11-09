@@ -28,6 +28,7 @@
 import appHeader from "../../../components/public/header.vue";
 import {layer} from "../../../common/layer.js"
 import '@/common/layer.css'
+import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../common/common.js";
 export default {
     name:'exchangeCoupon',
     data() {
@@ -40,6 +41,7 @@ export default {
             licenseImg: null,
             showlicenseImg: false,
             imgBaseUrl:'',
+            websiteNode:'3301',
             isLast:false,
             pageSize:'10',
             pageNo:'1',
@@ -51,21 +53,30 @@ export default {
         appHeader,
     },
     mounted(){
-        console.log('mounted')
-        this.get_coupon_kindList();
-        //this.get_gss_desc();
+         console.log('mounted')
+        if (getIsLogin()) {
+            
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+            }
+            this.get_coupon_kindList();
+        }
     },
     methods:{
         //优惠卷列表
         get_coupon_kindList:function(){
-            this.$ajax.get(this.HOST, {
-                params:{
+            const obj = Object.assign({
                     method: "coupon_kind",
-                    websiteNode: "3301",
+                    websiteNode: this.websiteNode,
                     pageSize:this.pageSize,
                     pageNo:this.pageNo,
-                    firmId:'132'
-                }
+                },this.userBasicParam)
+            this.$ajax.get(this.HOST, {
+                params:obj
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
                 return result.data;
@@ -88,13 +99,13 @@ export default {
         },
         //果币兑换优惠卷
         exchange_coupon:function(id){
-             this.$ajax.get(this.HOST, {
-                params:{
+            const obj = Object.assign({
                     method: "exchange_coupon",
-                    websiteNode: "3301",
+                    websiteNode: this.websiteNode,
                     couponKindId:id,
-                    firmId:'132'
-                }
+                },this.userBasicParam)
+            this.$ajax.get(this.HOST, {
+                params:obj
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
                 return result.data;

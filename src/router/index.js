@@ -37,8 +37,17 @@ export default new Router({
     path: '/',
     component: App,
     children: [
-      {path: '',redirect:'/home',},
-      { path: '/home', component: home},      //主页
+      {
+        path: '',
+        redirect:'/home',
+      },
+      { 
+        path: '/home',
+        component: home,
+        meta: {
+          keepAlive: false // 需要被缓存
+        }
+      },      //主页
       { path: '/more', component: more}, //更多商品
       { path: '/my', component: my},              //个人中心
       { path: '/message', component: message}, // 消息

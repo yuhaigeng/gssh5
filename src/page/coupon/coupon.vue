@@ -23,6 +23,7 @@
 </template>
 <script>
 import appHeader from "../../components/public/header.vue";
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     name:'couponList',
     data(){
@@ -45,18 +46,26 @@ export default {
     },
     mounted(){
         console.log('mounted')
+        if (getIsLogin()) {
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+            }
+            this.get_coupon_list();
+        }
         //this.get_coupon_kindList();
-        this.get_coupon_list();
+        
     },
     methods : {
         get_coupon_list(){
-            
+            const obj = Object.assign({
+                method: "coupon_info_show"
+            }.this.userBasicParam)
             this.$ajax.get(this.HOST, {
-                params:{
-                    method: "coupon_info_show",
-                    
-                    firmId:'132'
-                }
+                params:obj
             }).then(result => {
                 // return JSON.parse(JSON.stringify(result));
                 return result.data;
