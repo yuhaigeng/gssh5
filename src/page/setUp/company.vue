@@ -7,7 +7,7 @@
 	    	<ul class="content1">
 		        <li>
 		            <div><label>名称：</label><input type="text" v-model="firmName" id="business_shop_name" ></div>
-		            <div><label>ID：</label><input type='text' :value="'NO'+personInfo.id" id="business_shop_id" disabled="disabled"></div>
+		            <div><label>ID：</label><input type='text' :value="'NO.'+personInfo.id" id="business_shop_id" disabled="disabled"></div>
 		        </li>
 		        <li>
 		            <div class="jifen_jifen"><label>总成长值：</label><input type='text' :value='personInfo.exp' id="business_shop_score" disabled="disabled"></div>
@@ -46,9 +46,8 @@ import md5 from 'js-md5';
          data() {
              return {
                 headerMsg:{
-                    type:"common2",
+                    type:"common",
                     title:'企业信息',
-                    right:'保存',
                     left:'返回'
                 },
                 firmId:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
@@ -116,7 +115,7 @@ import md5 from 'js-md5';
                 });
              },
              desc_data:function(){
-                 this.$ajax.get(this.HOST, {
+                this.$ajax.get(this.HOST, {
                     params:{ 
                         method:'gss_desc',
                         websiteNode:this.websiteNode,
@@ -125,6 +124,7 @@ import md5 from 'js-md5';
                 }).then(resp => {
                       resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
                       resp.data.data.noticeTitle =  resp.data.data.title;
+                      resp.data.data.alertType = 1;
                       this.noticeInfoList = resp.data.data;
                       console.log(this.noticeInfoList)
                 }).catch(err => {

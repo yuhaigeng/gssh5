@@ -1,7 +1,7 @@
 <template>
     <div class="index-module" :class="'index-module' + mainActivityList.goodsNum   ">
         <div class="index-module-title clearfloat">
-            <div class="float_left" v-text="mainActivityList.activityTitle">秋季价到-坚果零食盛宴</div>
+            <div class="float_left" v-text="mainActivityList.activityTitle"></div>
             <div class="float_right">
                 <a href="javascript:void(0);" v-text="'更多'" @click="goMore(mainActivityList)"></a>
             </div>

@@ -22,6 +22,14 @@ Vue.config.productionTip = false
 import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;
 
+
+import { pageNo , pageSize , websiteDate , websideNode } from "./config/env.js";
+
+Vue.prototype.pageNo = pageNo;
+Vue.prototype.pageSize = pageSize;
+Vue.prototype.websideNode = websideNode;
+Vue.prototype.websiteDate = websiteDate;
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

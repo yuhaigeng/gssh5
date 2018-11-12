@@ -20,7 +20,7 @@
                         </dl>
                         <div class="address_bottom">
                             <button class="address_bottom_left" v-text="item.isDefault == 1 ?'默认' :'设为默认'" :id="item.id" @click="setDefault(item.isDefault,item.id)"></button>
-                            <button class="address_bottom_right" @click="editor(index)">编辑</button>
+                            <button class="address_bottom_right" @click="editor(item)">编辑</button>
                         </div>
                     </li>
                 </ul>
@@ -41,9 +41,9 @@ import md5 from 'js-md5';
          data() {
              return {
                 headerMsg:{
-                    type:"common2",
+                    type:"common",
                     title:'地址管理',
-                    routerPath:'/newEditor',
+                    jumpAfter:'/newEditor',
                     right:'新增地址',
                     left:'返回'
                 },
@@ -94,8 +94,9 @@ import md5 from 'js-md5';
                 });
              },
            
-            editor:function(index){
-                 return this.$router.push({path:this.headerMsg.routerPath, query:{isNew:"" ,index:index}})
+            editor:function(item){
+                  this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true}})
+                  sessionStorage.setItem('editorAddress',JSON.stringify(item));
             },
             setDefault:function(ele,id){
                     if(ele != 1){
@@ -105,7 +106,10 @@ import md5 from 'js-md5';
             },
             goBack:function(item){
                 if(this.$route.query.isBack){
-                    this.$router.push({path:'orderSettlement', query:{data:item}})
+                    console.log(item)
+                    sessionStorage.setItem('data',JSON.stringify(item))
+                     this.$router.go(-1)
+                    // this.$router.push({path:'orderSettlement', query:{data:item}})
                 }
             }
 

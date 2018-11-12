@@ -36,7 +36,7 @@ import md5 from 'js-md5';
          data() {
              return {
                  headerMsg:{
-                    type:"common2",
+                    type:"common",
                     title:'修改密码',
                     left:'返回'
                 },

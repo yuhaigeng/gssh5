@@ -32,9 +32,8 @@ import md5 from 'js-md5';
                     {name:'登陆密码',routerUrl:"revise"}
                  ],
                  headerMsg:{
-                    type:"common2",
+                    type:"common",
                     title:'设置',
-                    right:'',
                     left:'返回'
                 },
                 source:JSON.parse(localStorage.getItem("user_data")).firmInfoid,

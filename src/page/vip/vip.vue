@@ -106,6 +106,7 @@ export default {
        return {
             headerMsg:{
                 type:"common",
+                left:'返回',
                 title:'VIP服务',
             },
             logined: true,
@@ -142,9 +143,9 @@ export default {
             }else{
                 if (this.userVipInfo.firmMonthExp == 0) {
                     return '0'
-                }else{			      		
+                }else{
                     var coefficient = this.userVipInfo.firmMonthExp / this.userVipInfo.monthExp
-                    return (coefficient * 690).toFixed(2); 
+                    return (coefficient * 690).toFixed(2);
                 }
             }
         },
@@ -156,7 +157,7 @@ export default {
                         isTrue = false;
                         break;
                     }
-                }	
+                }
             }
             return isTrue;
         },
@@ -166,11 +167,11 @@ export default {
             const userInfo = JSON.parse(getUserData());
             this.userBasicParam = {
                 firmId : userInfo.firmInfoid,
-				source : 'firmId'+userInfo.firmInfoid,
-				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-				tokenId : getTokenId()
+                source : 'firmId'+userInfo.firmInfoid,
+                sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+                tokenId : getTokenId()
             }
-            this.get_coupon_list();
+            // this.get_coupon_list();
         }
     }
 }
