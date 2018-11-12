@@ -1,6 +1,9 @@
 <template>
   <div class="moreGoods">
-      <app-header :type ="headerMsg"></app-header>
+      <app-header :type ="headerMsg">
+
+        
+      </app-header>
       <div class="moreDoogs_main_wrap">
         <div class="moreDoogs_main_top" >
           <ul class="moreDoogs_main_top_list" v-bind:style="{width:getTopWidth}"  >

@@ -1,58 +1,43 @@
 <template>
-    <div>
         <!-- home 头部  带图片的头部-->
-        <div   class="header-wrap" v-if="type == 'home'">
-            <div class="header_left index_header_left sprite icon_location_a"></div>
-            <h1 class="index_tit header_tit"><img src="../../assets/img/top_logo@2x.png" alt="" /></h1>
-            <router-link to="/search">
-            <div class="header_right sprite icon_search_a"></div>
-            </router-link>
+        <div class="header-wrap" :class="type.type == 'my' && 'my-header'">
+            <!-- 左  -->
+            <div class="header_left">
+                <!-- home -->
+                <slot name="homeleft"></slot>
+                <!-- 返回 -->
+                <div class="common_back " v-if="type.type == 'common'" v-text="type.left ? type.left :'' " @click="goBack"></div>
+                 <!-- my -->
+                <slot name="myLeft"></slot>
+            </div>
+            <!-- 中 -->
+            <h2 class="header_tit">
+                <!-- home  -->
+                <slot name="homeLogo"></slot>
+                <!-- 标题 -->
+                <div v-text="type.title"></div>
+            </h2>
+            <!-- 右 -->
+             <div class="header_right">
+                  <!-- 搜索 -->
+                 <router-link to="/search" v-if="type.type == 'home'" tag="div" class="icon_search_a"></router-link>
+                 <!-- 跳转路由 -->
+                 <router-link :to="type.jumpAfter" tag="div" v-if="type.jumpAfter" v-text="type.right"></router-link>
+                 <!-- 弹框 -->
+                 <slot name="commonAlert"></slot>
+                 <!-- my -->
+                 <slot name="myRight"></slot>
+                 <!-- 确认按钮 -->
+                 <slot name="sure"></slot>
+
+             </div>
         </div>
-        <!-- more 头部  标题头部-->
-        <div  class="header-wrap"  v-if="type.type == 'common'">
-            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left" @click="goBack"></div>
-			<h2 class="index_tit header_tit" v-text="type.title"></h2>
-        </div>
-        <!-- login 头部  右侧有功能按钮-->
-       <div class="header-wrap" v-if="type.type == 'common1'">
-           <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left" @click="goBack"></div>
-           <!-- <router-link :to="type.jumpFront" tag="div" class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left"></router-link> -->
-            <!-- <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="'返回'"></div> -->
-			<h2 class="index_tit header_tit" v-text="type.title"></h2>
-            <router-link :to="type.jumpAfter" tag="div" class="header_right login_top_right" v-text="type.right"></router-link>
-            <!-- <div class="header_right login_top_right" v-text="'申请服务'" @click="register"></div> -->
-        </div>
-        <!-- my 头部 两边都有功能按钮的头部 -->
-         <div class="wo_header" v-if="type.type == 'common3'">
-           <div class="header_left">
-					<dl @click="goToNext">
-						<dt><img src="../../assets/img/icon_set.png"/></dt>
-						<dd>设置</dd>
-					</dl>
-				</div>
-				<div class="index_tit header_tit" v-text="type.title"></div>
-				<div v-cloak class="header_right">
-					<dl>
-						<dt><img src="../../assets/img/icon_server.png"/></dt>
-						<dd>人工客服</dd>
-					</dl>
-					<a class="telPhone" ></a>
-				</div>
-        </div>
-        <!-- 点击事件的头部 -->
-         <div class="header-wrap" v-if="type.type == 'common2'">
-            <div class="header_left moreDoogs_header_left sprite arrow_left_orange" v-text="type.left" @click=" goBack"></div>
-			<h2 class="index_tit header_tit" v-text="type.title"></h2>
-            <div class="header_right login_top_right" v-if="this.type.routerPath" v-text="type.right" @click="goToNext"></div>
-            <slot v-else name="sure"></slot>
-        </div>
-    </div>
 </template>
 
 <script>
 
     export default {
-    
+
         name: 'app-header',
         props: ["type"],
         data() {
@@ -62,26 +47,21 @@
         },
         methods:{
             goBack : function(){
-                if (window.history.length <= 1) {
-                        this.$router.push({path:'/my'})   
-                        return false;
-                } else {
                     this.$router.go(-1)
-                }
             },
             goToNext:function(){
                 if(this.type.routerPath ){
                      return this.$router.push({path:this.type.routerPath , query:{isNew:1}})
                 }else{
-                     this.$router.go(-1) 
+                     this.$router.go(-1)
                 }
-              
+
             },
             register:function(){
                 console.log('注册')
             }
         }
-    
+
     }
 </script>
 
@@ -103,66 +83,29 @@
     .header_tit{width: 100%;height: 87px;font-size: 36px;line-height: 87px;position: relative;text-align: center;}
 
     .index_header_left{text-indent: 80px;width: 180px;}
-    .header_right{right: 0;}
+    .header_right{right: 0;  text-align: right;padding-right: 20px;}
     .login_top_right {
     text-align: right;
     padding-right: 20px;
 }
-    /* .jump_search{background: url(../../assets/img/icon_search_a@2x.png) no-repeat 70px center;} */
-    .index_tit img{width: 30%;}
-
-
-    .sprite{background-image:url(../../assets/img/sprite.png);background-repeat:no-repeat ;}
-    .icon_location_a{background-position:-422px -318px;}/*21.16*/
-
-
-    .arrow_left{background-position:21px -210px;}
-    .arrow_left_b{background-position:21px -280px;}/*0.9*/
-    .arrow_left_orange{background-position:21px -352px;text-indent: 55px;}/*0.9*/
-
-
-    .icon_search_a{background-position:-1000px 20px;}/*85,20*/
-
-
-    .icon_voice{background-position:-1084px -444px;}
-
-
-    /* .empty{width: 100%;height: 87px;} */
-
-
-    /* my 样式 */
-     .wo_header{
-        border: none;
-        position: absolute;
-        background: 0 0;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 87px;
-        z-index: 3;
-        /* background-color: #f37d33;
-        box-shadow:0px 10px 10px #f37d33;  */
-     }
-    .wo_header .header_left {
-        text-align: left;
-        padding-left: 24px;
-        z-index: 210;
+    /* 新加样式 */
+    .icon_search_a {
+        width:100%;
+        height:100%;
+        background-position: -1000px 20px;
+        background-image: url(../../assets/img/sprite.png);
+        background-repeat: no-repeat;
     }
-    .wo_header .header_left, .wo_header .header_right {
-        line-height: 36px;
-        padding-top: 7px;
-        font-size: 20px;
-    }
-    .wo_header div {
-        color: #FFF;
-    }
-    .wo_header .header_left dl, .wo_header .header_right dl {
-        text-align: center;
-        display: inline-block;
-    }
-    .wo_header .header_right {
-        text-align: right;
-        padding-right: 24px;
-    }
-
+   .common_back{
+        background-image: url(../../assets/img/sprite.png);
+        background-position: 21px -352px;
+        background-repeat: no-repeat;
+        text-indent: 55px;
+        z-index: 100;
+   }
+   .my-header{
+       background:none;
+       border:none;
+       color: #fff;
+   }
 </style>

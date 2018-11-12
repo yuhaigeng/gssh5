@@ -1,6 +1,8 @@
 <template>
      <div class="register">
-        <app-header :type = "headerMsg"></app-header>
+        <app-header :type = "headerMsg">
+            <div slot="commonAlert" @click="agreement(0)">合作协议</div>
+        </app-header>
         <div class="main-wrap login_main-wrap">
 				<div class="main">
 					<ul class="apply_service_main" :class="{'hidden':mainHidden}">
@@ -74,11 +76,8 @@ import '@/common/LArea.css'
          data() {
              return {
                 headerMsg:{
-                    type:"common1",
+                    type:"common",
                     title:'申请服务',
-                    jumpFront:"login",
-                    jumpAfter:'',
-                    right:'合作协议',
                     left:'返回'
                 },
                 firmName:null, //店铺名称
@@ -152,6 +151,7 @@ import '@/common/LArea.css'
                 }).then(resp => {
                       resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
                       resp.data.data.noticeTitle =  resp.data.data.title;
+                      resp.data.data.alertType = 1;
                       this.noticeInfoList = resp.data.data;
                       console.log(this.noticeInfoList)
                 }).catch(err => {

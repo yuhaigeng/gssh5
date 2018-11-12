@@ -20,7 +20,7 @@
                             <label>详细地址：</label><input type="text"   id="edit_county" v-model="street" placeholder="请输入街道地址(无需输入城区)" >
                         </li>
                     </ul>
-                    <div class="address_del" v-show="!this.$route.query.isNew" @click="del"  >
+                    <div class="address_del" v-show="this.$route.query.isEdit" @click="del"  >
                         地址删除
                     </div>
                 </div>
@@ -45,15 +45,13 @@ import '@/common/layer.css'
         data() {
             return {
                  headerMsg:{
-                    type:"common2",
+                    type:"common",
                     title:'地址管理',
-                    routerPath:"",
                     right:'确定',
                     left:'返回' 
                 },
                 websiteNode:'3301',
-                addressData:JSON.parse(sessionStorage.getItem("addresses")),
-                index: this.$route.query.index,
+                addressData:JSON.parse(sessionStorage.getItem("editorAddress")),
                 phone:null,
                 person:null,
                 city:null,
@@ -97,16 +95,15 @@ import '@/common/layer.css'
         },
         mounted:function(){
              this.cityApi()
-                if( !this.$route.query.isNew ){
-                    [ this.phone ,this.person,this.city, this.street] = [ this.addressData[this.index].receiverMobile, this.addressData[this.index].receiverName ,this.addressData[this.index].countyAddr,this.addressData[this.index].address]
-                     this.addressId = this.addressData[this.index].id
-                     this.countyId=  this.addressData[this.index].countyId
-                }else{
-                   [this.phone ,this.person,this.city, this.street] = [""]
-                    
-                    this.addressId = "";
+             console.log(this.$route.query.isEdit)
+                if( this.$route.query.isEdit ){
+                    this.phone = this.addressData.receiverMobile
+                    this.person = this.addressData.receiverName 
+                    this.city = this.addressData.countyAddr
+                    this.street =  this.addressData.address
+                    this.addressId = this.addressData.id
+                    this.countyId=  this.addressData.countyId
                 }
-               
         },
         methods:{
             update:function(){

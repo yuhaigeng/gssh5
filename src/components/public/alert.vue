@@ -1,15 +1,15 @@
 <template >
     <div class="alert">
         <div class="my_bg"></div>
-        <div class="logistic_show">
+        <div class="logistic_show" :class="noticeInfoList.alertType == '1' && 'logistic_show1'">
             <div class="logistic_show_header">
                 <h3 class="logistic_show_title" v-text="noticeInfoList.noticeTitle"></h3>
                 <span class="logistic_back" @click="exchange"></span>
             </div>
-            <div class="logistic_show_main">
+            <div class="logistic_show_main" :class="noticeInfoList.alertType == '1' && 'logistic_show_main1'">
                 <div class="logistic_show_text" v-html="noticeInfoList.noticeContent"></div>
             </div>
-            <div class="logistic_show_footer">by:果速送平台</div>
+            <div class="logistic_show_footer" :class="noticeInfoList.alertType == '1' && 'logistic_show_footer1'">by:果速送平台</div>
         </div>
     </div>
 </template>
@@ -50,6 +50,11 @@
         margin-left: -300px;
         margin-top: -345px;
         border-radius: 10px;
+    }
+    .logistic_show1{
+        height: 70%;
+        top: 15%;
+        margin-top: 0px;
     }
     .logistic_show_header {
         height: 100px;
@@ -104,5 +109,11 @@
         z-index: 999;
         filter: Alpha(opacity=30);
         overflow: hidden;
+    }
+    .logistic_show_footer1{
+        height: 10%;
+    }
+    .logistic_show_main1{
+        height: 80%;
     }
 </style>
