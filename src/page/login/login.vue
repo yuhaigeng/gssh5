@@ -52,9 +52,8 @@ import md5 from 'js-md5';
         data() {
             return {
                 headerMsg:{
-                    type:"common1",
-                    title:'登录',
-                    jumpFront:"my",
+                    type:"common",
+                    title:'登陆',
                     jumpAfter:'register',
                     right:'申请服务',
                     left:'返回'
@@ -210,10 +209,9 @@ import md5 from 'js-md5';
                     }
                 }).then(resp => {
                       resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                       resp.data.data.noticeTitle =  resp.data.data.title;
-                    //   resp.data.data.closeAlert = this.closeAlert;
+                      resp.data.data.noticeTitle =  resp.data.data.title;
+                      resp.data.data.alertType = 1;
                       this.noticeInfoList = resp.data.data;
-                    //   console.log(this.noticeInfoList)
                 }).catch(err => {
                     console.log('请求失败：'+ err.data.statusCode);
                 });

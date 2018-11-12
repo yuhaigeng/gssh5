@@ -1,17 +1,32 @@
 <template>
    <div class="my">
-        <app-header :type="headerMsg" :logined="logined"   v-show="logined"></app-header>
+        <app-header :type="headerMsg"   v-show="logined">
+            <div   class='my-head'   slot="myLeft">
+                <router-link to="/setUp" tag="dl">
+                    <dt><img src="../../assets/img/icon_set.png"/></dt>
+                    <dd>设置</dd>
+                </router-link>
+            </div>
+            <div class='my-head' slot="myRight">
+                <dl>
+                    <dt><img src="../../assets/img/icon_server.png"/></dt>
+                    <dd>人工客服</dd>
+                </dl>
+                <a class="telPhone"></a>
+            </div>
+
+        </app-header>
         <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :logined="logined" ></loginState>
         <div  v-cloak class="cont cont1 clearfloat">
-        <router-link to="vip" tag="dl"  class="float_left " >
+        <router-link :to="logined ? 'vip' : 'login'" tag="dl"  class="float_left " >
             <dt><b>VIP</b></dt>
             <dd>服务</dd>
         </router-link>
-        <router-link to="onlineCoupon" tag="dl"  class="float_left " >
+        <router-link :to="logined ?'onlineCoupon' : 'login'" tag="dl"  class="float_left " >
             <dt><b v-text='userVipInfo.coupons || 0'></b><span>张</span></dt>
             <dd>优惠券</dd>
         </router-link>
-        <router-link to="score" tag="dl" class="float_left" >
+        <router-link :to=" logined ? 'score' :'login'" tag="dl" class="float_left" >
             <dt><b v-text='userVipInfo.surplusScore || 0'></b><span>个</span></dt>
             <dd>果币商城</dd>
         </router-link>
@@ -39,7 +54,7 @@ export default {
    data() {
        return {
             headerMsg:{
-                type:"common3",
+                type:"my",
                 title:'我的',
                 routerPath:'/setUp',
             },
@@ -173,5 +188,34 @@ var dateModule  = {
 .cont1 dl dt span {
     font-size: 24px;
     color: #F51B44;
+}
+.my-head{
+    padding-top:10px; 
+    height: 87px;
+}
+.my-head  dl{
+    text-align: center;
+    display: inline-block;
+    color: #fff;
+}
+.my-head dt{
+    width:80px;
+    height:44px;
+    text-align: center;
+}
+.my-head dt img{
+    vertical-align:top;
+    text-align: center;
+}
+.my-head dd{
+    line-height: 36px;
+    font-size: 20px;
+}
+.my-head a.telPhone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 </style>

@@ -1,6 +1,9 @@
 <template>
    <div class="home">
-        <app-header type="home"></app-header>
+        <app-header :type="headerMsg">
+            <div slot="homeleft" class="icon_location_a" v-text="websitData[websiteNode]"></div>
+            <div slot="homeLogo"><img  src="../../assets/img/top_logo@2x.png" alt="" /></div>
+        </app-header>
         <div class="main-wrap index-wrap">
 		    <div class="main">
                 <div id="banner-wrap">
@@ -11,7 +14,7 @@
                 </div>
                 <div class="index-advertisement-wrap">
                     <div class="index-advertisement">
-                        
+
                     </div>
                 </div>
                 <div class="center_wrap">
@@ -41,8 +44,15 @@ export default {
    name: 'home',
    data() {
        return {
+           websitData:{
+                "3201":"南京站",
+                "3301":"杭州站",
+                '3302':'宁波站'
+            },
+           websiteNode:'3301',
+           logined:localStorage.getItem("user_data") ? true : false,
            mainActivityList:[],
-           websiteNode: "3301",  
+           websiteNode: "3301",
            topList:[],
            noticeInfoList:[],
            centerList:[],
@@ -50,6 +60,10 @@ export default {
            tokenId:null,
            isLogin:getIsLogin(),
            isNew:false,//表示是否有新消息
+            headerMsg:{
+                type:"home",
+
+         },
        }
     },
     components: {
@@ -61,11 +75,11 @@ export default {
         homeGoods
     },
     //生命周期总结
-    // beforecreate : 举个栗子：可以在这加个loading事件 
-    // created ：在这结束loading，还做一些初始化，实现函数自执行 
+    // beforecreate : 举个栗子：可以在这加个loading事件
+    // created ：在这结束loading，还做一些初始化，实现函数自执行
     // mounted ： 在这发起后端请求，拿回数据，配合路由钩子做一些事情
     // beforeDestroy： 你确认删除XX吗？ destroyed ：当前组件已被删除，清空相关内容
-    //el 和 data 并未初始化 
+    //el 和 data 并未初始化
     beforecreated(){
 
     },
@@ -73,13 +87,13 @@ export default {
     created(){
 
     },
-    //完成了 el 和 data 初始化 
+    //完成了 el 和 data 初始化
     beforeMount(){
 
     },
     //完成挂载
     mounted(){
-        
+
         this.get_main_page();
         if (getIsLogin()) {
             this.tokenId = getTokenId();
@@ -126,7 +140,7 @@ export default {
                 }
             })
         },
-        
+
         //自动登陆
         autoLogin:function(){
             this.$ajax.get('/api',{
@@ -161,7 +175,7 @@ export default {
 					localStorage.setItem("openid",openid);
                     console.log(data.statusStr)
                 }
-                
+
             });
         },
         //显示关闭弹框
@@ -208,5 +222,15 @@ export default {
     .index-bottom-text{padding: 0 22px;}
     .index-bottom-box:after{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}
     .index-bottom-box:before{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}
+    /* 头部样式 */
+    .icon_location_a {
+        width:100%;
+        height:100%;
+        background-image: url(../../assets/img/sprite.png);
+        background-repeat: no-repeat;
+        background-position: -422px -318px;
+        text-indent: 80px;
+        width: 180px;
+    }
 
 </style>

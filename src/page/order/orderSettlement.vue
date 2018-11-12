@@ -73,7 +73,7 @@ import md5 from 'js-md5';
                     type:"common",
                     title: '订单结算' ,
                 },
-                addressInfo:this.$route.query.data ? this.$route.query.data:{receiverName: "朱高飞",receiverName: "邹",allAddr: "浙江省杭州市下城区31232131",receiverMobile: "12312321322"},
+                addressInfo:JSON.parse(sessionStorage.getItem("data")) ? JSON.parse(sessionStorage.getItem("data")):{receiverName: "朱高飞",receiverName: "邹",allAddr: "浙江省杭州市下城区31232131",receiverMobile: "12312321322"},
                 websiteNode:'3301',
                 descCode:"#PS-DESC",
                 noticeInfoList:null,
@@ -136,7 +136,7 @@ import md5 from 'js-md5';
         },
         mounted(){
         
-            console.log( this.addressInfo)
+            console.log()
         },
         methods:{
              desc_data:function(){
