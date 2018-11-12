@@ -92,6 +92,7 @@
 
   import appHeader from "../../components/public/header.vue";
   import appFooterGoShop from "../../components/footerGoShop.vue";
+  import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
   export default {
     name: 'more',
     data() {
@@ -101,10 +102,10 @@
             title:'更多商品',
             left:'返回'
          },
-         logined:localStorage.getItem("user_data") ? true : false,
-         pageNo: '1',
-         pageSize: '10',
-         websiteNode: "3301",
+         logined:false,
+         pageNo: this.pageNo,
+         pageSize: this.pageSize,
+         websiteNode: this.websiteNode,
          firmId:JSON.parse(localStorage.getItem("user_data")) ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
          goods:[],
          left_name:[],
@@ -117,6 +118,8 @@
          isShow:0,
          goodNum:1,//本地存储的数量
          isLast:false,
+         goShopCart:[],//本地购物车
+         systemMoney:-1,//系统参数配置中配置的起售金额
        
       }
     },
@@ -130,7 +133,14 @@
       }else{
         
       }
+      // 数据初始化
+      this.logined = getIsLogin();
 
+      if ( localStorage.getItem('system') ) {
+        this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
+      } else {
+        
+      }
       this.goods_first_nav()
       console.log(this.$route.query.typeCode)
       // this.goods_second_nav()
@@ -156,7 +166,7 @@
                 params:{
                     method: "goods_first_type",
                     firmId: this.firmId,
-                    websiteNode:this. websiteNode,
+                    websiteNode:this.websiteNode,
                 }
             }).then(resp => {
                   this.goods = resp.data.data;

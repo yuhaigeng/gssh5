@@ -24,7 +24,8 @@
 
 <script>
 export default {
-   name: 'footer_',
+   name : 'footer_',
+   props : ['goShopCart','systemMoney'],
    data() {
        return {}
    },

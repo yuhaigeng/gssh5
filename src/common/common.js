@@ -13,7 +13,7 @@ const getSystem = function (params) {
         console.log(data)
         if (data.statusCode == 100000) {
             //return data.data;
-            sessionStorage.setItem("system", JSON.stringify(data.data))
+            localStorage.setItem("system", JSON.stringify(data.data))
         } else {
             console.log(data.statusStr)
         }
@@ -87,6 +87,7 @@ const getIsApp = function () {
     var ua = navigator.userAgent.toLowerCase();
     return ua.match(/gss_app/i) == 'gss_app';
 };
+
 export{
     getSystem,
     getMessage,
