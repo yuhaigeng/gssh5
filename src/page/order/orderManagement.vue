@@ -6,20 +6,26 @@
 	</ul>
     <div class="main-wrap order_management_wrap">
         <div class="main">
-            <ul class="order_management_main" v-for="(i, index) in ordersList" :key="index">
+            <ul class="order_management_main" v-for="(i, index) in ordersList" :key="index" @click="toOrderDetail(i.orderCode,i.orderStatus)">
                 <li class="order_list">
                     <div class="order_list_top clearfloat">
                         <div class="order_list_num">
                             订单编号：{{i.orderCode}}
                         </div>
-                        <div class="order_list_state" v-if="orderStatus == 1">
+                        <div class="order_list_state" v-if="i.orderStatus == 1 || i.orderStatus == ''">
                             待发货
                         </div>
-                        <div class="order_list_state" v-if="orderStatus == 2">
+                        <div class="order_list_state" v-if="i.orderStatus == 2 || i.orderStatus == ''">
                             已配货
                         </div>
-                        <div class="order_list_state" v-if="orderStatus == 3">
+                        <div class="order_list_state" v-if="i.orderStatus == 3 || i.orderStatus == ''">
                             待支付
+                        </div>
+                        <div class="order_list_state" v-if="i.orderStatus == 4 || i.orderStatus == ''">
+                            已支付
+                        </div>
+                        <div class="order_list_state" v-if="i.orderStatus == -1 || i.orderStatus == ''">
+                            已作废
                         </div>
                     </div>
                     <div class="order_list_details">
@@ -40,14 +46,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="order_list_close" v-if="orderStatus == 1">
+                    <div class="order_list_close" v-if="i.orderStatus == 1 || i.orderStatus == ''">
                         <dl class="order_list_close clearfloat"><dt style="color: #2f83ff;">实际金额按照实际称重计算为准</dt><dd>取消订单</dd></dl>
                     </div>
-                    <div class="order_list_close" v-if="orderStatus == 2">
+                    <div class="order_list_close" v-if="i.orderStatus == 2 || i.orderStatus == ''">
                         <dl class="order_list_close" style="color: #2f83ff;">实际金额按照实际称重计算为准</dl>
                     </div>
-                    <div class="order_list_close" v-if="orderStatus == 3">
+                    <div class="order_list_close" v-if="i.orderStatus == 3 || i.orderStatus == ''">
                         <dl class="order_list_close clearfloat"><dt style="color: #d05351;">为避免耽误您再次下单,请尽快支付</dt><dd style="background:#f47c30;color:#FFF;border-color: #FFF;">立即支付</dd></dl>
+                    </div>
+                    <div class="order_list_close" v-if="i.orderStatus == 4 || i.orderStatus == ''">
+                        <dl class="order_list_close order_suc_">交易成功!</dl>
+                    </div>
+                    <div class="order_list_close" v-if="i.orderStatus == -1 || i.orderStatus == ''">
+                        <dl class="order_list_close">关闭交易</dl>
                     </div>
                 </li>
             </ul>
@@ -85,7 +97,7 @@ export default {
       appHeader
     },
     created() {
-        this.type = this.$route.params.type
+        this.type = this.$route.query.type
         this.navIndex = this.type - 1
         this.orderStatus = this.type
         if(this.orderStatus >= 4) {
@@ -132,10 +144,13 @@ export default {
             this.get_goods_order()
         },
         loadMore:function(){
-        if(!this.isLast){
-            this.pageNo ++
-            this.get_goods_order()
+            if(!this.isLast){
+                this.pageNo ++
+                this.get_goods_order()
             }
+        },
+        toOrderDetail(code,orderStatus) {
+		    this.$router.push({ path:'orderDetails/',query:{code:code,orderStatus:orderStatus} })
         }
     },
     mounted() {

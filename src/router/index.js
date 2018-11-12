@@ -33,7 +33,7 @@ const onlineCoupon = r => require.ensure([], () => r(require('../page/coupon/onl
 
 const orderManagement = r => require.ensure([], () => r(require('../page/order/orderManagement.vue')), 'orderManagement');
 const orderSettlement = r => require.ensure([], () => r(require('../page/order/orderSettlement.vue')), 'orderSettlement');
-
+const orderDetails = r => require.ensure([], () => r(require('../page/order/orderDetails.vue')), 'orderDetails');
 
 Vue.use(Router)
 
@@ -69,7 +69,6 @@ export default new Router({
       { path: '/company', component: company}, //公司信息
       { path: '/revise', component: revise}, //需改密码
       { path: '/collect', component: collect}, //收藏
-      { path: '/orderManagement/:type', component: orderManagement}, //订单管理
       { //vip
         path: '/vip',
         component: vip
@@ -114,6 +113,8 @@ export default new Router({
           }
         ]
       }, //果币商城
+      { path: '/orderManagement', component: orderManagement}, //订单管理
+      { path: '/orderDetails', component: orderDetails}, //订单详情
       { path: '/orderSettlement', component: orderSettlement} //订单结算
     ]
   }]

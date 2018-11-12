@@ -105,22 +105,22 @@ var dateModule  = {
           icon:'.././static/img/icon_order1.png',
           type:1,
           name:'待发货',
-          linkUrl:'orderManagement/1',
+          linkUrl:'orderManagement',
         },{
           icon:'.././static/img/icon_order2.png',
           type:2,
           name:'已配货',
-          linkUrl:'orderManagement/2',
+          linkUrl:'orderManagement',
         },{
           icon:'.././static/img/icon_order3.png',
           type:3,
           name:'待支付',
-          linkUrl:'orderManagement/3',
+          linkUrl:'orderManagement',
         },{
           icon:'.././static/img/icon_order0.png',
-          type:0,
+          type:4,
           name:'全部订单',
-          linkUrl:'orderManagement/4',
+          linkUrl:'orderManagement',
         }
       ],
       //其他列表数据结构
