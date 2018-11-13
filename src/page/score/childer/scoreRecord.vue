@@ -1,12 +1,8 @@
 <template>
     <div class="scoreRecord">
-        <div class="header-wrap score_table">
-			<div class="header_left header_back sprite arrow_left_orange" @click="goBack"></div>
-			<div class="index_tit header_tit" v-text="dataPage[type].tit"></div>
-			<div class="header_right login_top_right" >筛选</div>
-			<input class="header_right login_top_right" id="date" type="text" name="" @click="openPicker(type)"  value=""  readonly="readonly" style="-webkit-user-select:none;-webkit-touch-callout:none;" />
-			<input type="hidden" name="" id="value_date" value="" />
-		</div>
+        <app-header :type="headerMsg">
+            <div class="header_right login_top_right" slot="sure" v-text="'筛选'" @click="openPicker(type)"></div>
+        </app-header>
         <div class="main-wrap">
 			<div class="main score_table">
 				<div class="score_table_box" v-if="dataList.length">
@@ -32,6 +28,7 @@
     </div>
 </template>
 <script>
+import appHeader from "../../../components/public/header.vue";
 import sTable from "../../../components/public/table.vue";
 import vuePickers from 'vue-pickers';
 
@@ -40,6 +37,11 @@ export default {
     name:'scoreRecord',
     data() {
         return {
+            headerMsg:{
+                type:"common",
+                title:null,
+                left:'返回' 
+            },
             type:'',
             isLast:false,
             dataList:[],
@@ -69,11 +71,13 @@ export default {
 			this.type = '0'
 		}else{
 			this.type = this.$route.query.type
-		}
+        }
+        this.headerMsg.title = this.dataPage[this.type].tit
     },
     components: {
         sTable,
-        vuePickers
+        vuePickers,
+        appHeader
     },
     mounted(){
         if (getIsLogin()) {
