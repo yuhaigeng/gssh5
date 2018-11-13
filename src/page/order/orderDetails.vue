@@ -142,21 +142,22 @@ export default {
     data() {
         return {
             headerMsg:{
-            type:"common",
-            title:'订单详情',
-            left:'返回'
-        },
-        orderDetailList:[],
-        orderDetailsList:[],
-        orderStatus: ''
+				type:"common",
+				title:'订单详情',
+				left:'返回'
+        	},
+			orderDetailList:[],
+			orderDetailsList:[],
+			orderStatus: '',
+			tokenId:localStorage.getItem("tokenId"),
         }
     },
     components: {
-    appHeader,
+    	appHeader
   	},
   	created:function() {
-      this.Code = this.$route.query.code
-      this.orderStatus = this.$route.query.orderStatus
+    	this.Code = this.$route.query.code
+    	this.orderStatus = this.$route.query.orderStatus
   	},
   	methods: {
         get_order_detail:function () {
@@ -164,6 +165,7 @@ export default {
 			params:{
 				method: "order_details_fou",
 				orderCode: this.Code,
+				tokenId: this.tokenId
 				}
 			}).then(resp => {
                 this.orderDetailList = resp.data.data.orderInfo;
@@ -174,7 +176,7 @@ export default {
 		},
   	},
   	mounted() {
-      this.get_order_detail()
+    	this.get_order_detail()
   	}
 }
 </script>

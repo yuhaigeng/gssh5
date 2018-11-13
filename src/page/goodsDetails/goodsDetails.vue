@@ -4,18 +4,10 @@
 			<div class="header_left header_back sprite icon_delete" @click="back"></div>
 			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_a':'icon_collect_b'" @click="changeCollect"></div>
 	</div>
-	<div class="main-wrap goods_detaile_wrap" style="height: 1236px; background: #FFFFFF;">
+	<div class="main-wrap goods_detaile_wrap">
 		<div class="main">
 			<div class="goodsDetails_img_box">
-				<div class="swiper-container">
-					<div class="swiper-wrapper">
-						<div class="swiper-slide">
-						<img :src="detailList.goodsLogo" alt="">
-						</div>
-					</div>
-					<!-- 如果需要分页器 -->
-					<div class="swiper-pagination"></div>
-				</div>
+				<goodsBanner :imgList = "detailList" v-if="detailList.length"></goodsBanner>
 			</div>
 			<div class="goodsDetails_box1">
 				<div class="goodsDetails_box1_top clearfloat">
@@ -69,18 +61,24 @@
 import Swiper from 'swiper'
 import '@/common/swiper-3.3.1.min.css'
 import appFooterGoShop from "../../components/footerGoShop.vue";
+import goodsBanner from "../../page/banner/goodsBanner.vue";
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {
  		return {
-	 	isCollect:localStorage.getItem("isColle"),
-	 	detailList:[],
-	 	buyNum:0,
-	 	collectList:[]
+			isCollect: localStorage.getItem("isColle"),
+			detailList: [],
+			buyNum: 0,
+			collectList: [],
+			userId: JSON.parse(localStorage.getItem("user_data")).cuserInfoid,
+			firmId: getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
  		}
- 	},
+	},
+	props:['imgList'],
  	components: {
-	 	appFooterGoShop
+		appFooterGoShop,
+		goodsBanner
  	},
 	created:function() {
 		this.getOrder()
@@ -105,10 +103,11 @@ export default {
 				params:{
 					method: "goods_get_by_id_two",
 					goodsId: this.Id,
-					userId: 1881
+					userId: this.userId
 				}
 			}).then(resp => {
 					this.detailList = resp.data.data;
+					console.log(this.detailList)
 					if (resp.data.statusCode == 100000) {
 					let a = resp.data.data.isColl > 0 ? true : false;
 					this.isCollect = a
@@ -123,8 +122,8 @@ export default {
 				params:{
 					method: "goods_collection_add",
 					goodsId: this.Id,
-					firmId: 132,
-					userId: 1881
+					firmId: this.firmId,
+					userId: this.userId
 				}
 			}).then(resp => {
 				this.isColl = true
@@ -136,7 +135,7 @@ export default {
 			this.$ajax.get(this.HOST, {
 				params:{
 					method: "goods_collection_del",
-					userId: 1881,
+					userId: this.userId,
 					goodsId: this.Id
 				}
 			}).then(resp => {
@@ -159,15 +158,15 @@ export default {
 			if(this.isCollect == false){
 				this.get_goods_collect_del();
 				this.$message({
-			message: '取消收藏',
-			center: true,
-			});
+				message: '取消收藏',
+				center: true,
+			})
 			}else {
 				this.get_goods_collectAdd()
 				this.$message({
-			message: '收藏成功',
-			center: true,
-			});
+				message: '收藏成功',
+				center: true,
+			})
 			}
 		},
 	}

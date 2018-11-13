@@ -106,10 +106,10 @@
             left:'返回'
          },
          logined:false,
-         pageNo: 1,
-         pageSize: 10,
-         websiteNode: "3301",
-         firmId:JSON.parse(localStorage.getItem("user_data")) ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
+         pageNo: this.pageNo,
+         pageSize: this.pageSize,
+         websiteNode: this.websiteDate.code,
+         firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
          goods:[],
          left_name:[],
          goodsList:null,
@@ -301,7 +301,6 @@
 	border: 2px solid #dddddd;
 	border-radius: 34px;
 	margin-left: 24px;
-	display: inline-block;
 }
 
  .topClass {

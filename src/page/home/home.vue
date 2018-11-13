@@ -1,7 +1,7 @@
 <template>
    <div class="home">
         <app-header :type="headerMsg">
-            <div slot="homeleft" class="icon_location_a" v-text="websitData[websiteNode]"></div>
+            <div slot="homeleft" class="icon_location_a" v-text="websiteNodeName"></div>
             <div slot="homeLogo"><img  src="../../assets/img/top_logo@2x.png" alt="" /></div>
         </app-header>
         <div class="main-wrap index-wrap">
@@ -21,7 +21,7 @@
                     <div class="center">
                         <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin'></homeGoods>
                         <div class="index-bottom">
-                            <span class="index-bottom-box"><span class="index-bottom-text" v-text="'已经到底了'"></span></span>
+                            <span class="index-bottom-box"><span class="index-bottom-text" v-text="'已经到底了'" @click="click()"></span></span>
                         </div>
                     </div>
                 </div>
@@ -44,26 +44,19 @@ export default {
    name: 'home',
    data() {
        return {
-           websitData:{
-                "3201":"南京站",
-                "3301":"杭州站",
-                '3302':'宁波站'
-            },
-           websiteNode:'3301',
-           logined:localStorage.getItem("user_data") ? true : false,
-           mainActivityList:[],
-           websiteNode: "3301",
-           topList:[],
-           noticeInfoList:[],
-           centerList:[],
-           noticeInfo:null,
-           tokenId:null,
-           isLogin:getIsLogin(),
-           isNew:false,//表示是否有新消息
+            mainActivityList:[],
+            topList:[],
+            noticeInfoList:[],
+            centerList:[],
+            noticeInfo:null,
+            tokenId:null,
+            isLogin:getIsLogin(),
+            websiteNodeName:this.websiteDate.name,
+            websiteNode:this.websiteDate.code,
+            isNew:false,//表示是否有新消息
             headerMsg:{
                 type:"home",
-
-         },
+            },
        }
     },
     components: {
@@ -93,7 +86,7 @@ export default {
     },
     //完成挂载
     mounted(){
-
+        console.log(this.websiteDate)
         this.get_main_page();
         if (getIsLogin()) {
             this.tokenId = getTokenId();
@@ -116,6 +109,15 @@ export default {
         }
     },
     methods:{
+        click:function () {
+            this.$toast({
+                message : 'hello world',
+                position: 'top',//top boottom middle
+                duration: 5000,//延时多久消失
+                //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+                //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+            })
+        },
         //获取首页数据
         get_main_page:function () {
             this.$ajax.get('/api', {
@@ -206,18 +208,10 @@ export default {
         background: url(../../assets/img/pic_logo@2x.png) center no-repeat;
         background-size: auto
     }
-    .swiper-wrapper,.swiper-slide{width: 100%;height: 100%;}
-    .swiper-slide img{width: 100%;height: 100%;}
     .gonggao-wrap{width: 100%;height: 50px;overflow: hidden;}
     .gonggao-wrap.sprite{background-color: #FFFFFF}
     .index-wrap .center_wrap{margin-bottom: 20px;}
-    .center_tit{width: 750px;height: 50px;background: #F66B0C;color: #FFF;text-indent: 24px;line-height: 50px;font-size: 30px;font-weight: normal;}
-    .center_goodes{width: 100%;background: #FFFFFF;}
-    .center_goodes dl{width: 250px;padding-top: 24px;text-align: center;border-right:1px solid #d9d9d9 ;border-bottom: 1px solid #D9D9D9;float: left;}
-    .center_goodes dt img{width: 210px;height: 210px;}
-    .center_goodes dd{width: 100%;text-align: center;line-height: 43px;white-space: nowrap;overflow: hidden;font-size: 24px;color: #666;padding: 0 15px;text-overflow: ellipsis;}
-    .center_goodes dd.clearfloat{padding: 0 10px;}
-    .index_goods_icon{float: left;vertical-align: middle;}
+    
     .index-bottom{text-align: center;font-size: 28px;color: #ccc;line-height: 64px;padding-top: 20px;background: #E5E5E5;}
     .index-bottom-text{padding: 0 22px;}
     .index-bottom-box:after{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}

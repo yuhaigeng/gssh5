@@ -71,7 +71,9 @@
 
 <script>
 import appHeader from "../../components/public/header.vue";
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
+    name: 'order_management',
     data() {
         return {
             headerMsg:{
@@ -87,8 +89,10 @@ export default {
             ],
             navIndex:0,
             isLast:false,
-            pageSize:'10',
-            pageNo:'1',
+            pageNo: this.pageNo,
+            pageSize: this.pageSize,
+            websiteNode: this.websiteNode,
+            firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
             orderStatus:1,
             ordersList:[],
         }
@@ -102,11 +106,11 @@ export default {
         this.navIndex = this.type - 1
         this.orderStatus = this.type
         if(this.orderStatus >= 4) {
-                this.orderStatus = ''
-            }else {
-                // 重置pageNo
-                this.pageNo = 1
-            }
+            this.orderStatus = ''
+        }else {
+            // 重置pageNo
+            this.pageNo = 1
+        }
     },
     mounted() {
         this.get_goods_order()
@@ -119,7 +123,7 @@ export default {
                     method: "orders_manage2",
                     pageNo: this.pageNo,
                     pageSize: this.pageSize,
-                    firmId: 132,
+                    firmId: this.firmId,
                     orderStatus: this.orderStatus
                 }
             }).then(resp => {

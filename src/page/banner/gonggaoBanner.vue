@@ -10,35 +10,34 @@ import Swiper from 'swiper'
 import '@/common/swiper.min.css'
 export default {
 
- data() {
-    return {
-        
-    }
- },
- props:['imgList'],
- mounted(){
-     const _this = this;
-     var mySwiper = new Swiper('.gonggao', {
-        direction: 'vertical',
-        autoplay:{
-            delay: 5000,
-        },
-        loop: true,
-        height:'50',
-        on:{
-            click:function () {
-                const index = this.realIndex;
-                _this.getIndex(index)
-            }
+    data() {
+        return {
+            
         }
-    })
- },
- methods:{
-     getIndex:function(index){
-         console.log(index)
-         this.$emit('listenIndex',index)
-     }
- }
+    },
+    props:['imgList'],
+    mounted(){
+        const _this = this;
+        var mySwiper = new Swiper('.gonggao', {
+            direction: 'vertical',
+            autoplay:{
+                delay: 5000,
+            },
+            loop: true,
+            height:'50',
+            on:{
+                click:function () {
+                    const index = this.realIndex;
+                    _this.getIndex(index)
+                }
+            }
+        })
+    },
+    methods:{
+        getIndex:function(index){
+            this.$emit('listenIndex',index)
+        }
+    }
 }
 </script>
 

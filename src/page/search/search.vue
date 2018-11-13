@@ -1,133 +1,124 @@
 <template>
  <div class="">
      <div class="header-wrap clearfloat">
-		 <router-link to="home">
+		<router-link to="home">
 			<div class="searchCallback sprite arrow_left"></div>
-			</router-link>
-			<div class="search">
-				<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" v-focus="focusState"/>
-				<div class="delete sprite delete_b" @click="del()"></div>
-			</div>
+		</router-link>
+		<div class="search">
+			<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" v-focus="focusState"/>
+			<div class="delete sprite delete_b" @click="del()"></div>
 		</div>
-        <div class="main-wrap">
-			<div class="search_star" v-if="!searchVal">
-				<p class="search_tit">热门搜索</p>
-				<ul class="search_item">
-					<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.keyword)">
-                        {{item.keyword}}
-                    </li>
-				</ul>
-			</div>
-			<div class="search_none" v-if="!goodsList.length && searchVal && state == 3">
+	</div>
+	<div class="main-wrap">
+		<div class="search_star" v-if="!searchVal">
+			<p class="search_tit">热门搜索</p>
+			<ul class="search_item">
+				<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.keyword)">
+					{{item.keyword}}
+				</li>
+			</ul>
+		</div>
+		<div class="search_none" v-if="!goodsList.length && searchVal && state == 3">
+			<dl>
+				<dt>
+					<img src="../../assets/img/pic_logo@2x.png"/>
+				</dt>
+				<dd>
+					<p>非常抱歉，暂时没有您需要的水果！</p>
+					<p>400-0169-682</p>
+				</dd>
+			</dl>
+		</div>
+		<div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
+			<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item.id)">
 				<dl>
 					<dt>
-						<img src="../../assets/img/pic_logo@2x.png"/>
+						<img :src="item.goodsLogo"/>
 					</dt>
 					<dd>
-						<p>非常抱歉，暂时没有您需要的水果！</p>
-						<p>400-0169-682</p>
+						<h3 class="moreGoods_goods_name">{{item.goodsName}}</h3>
+						<p class="moreGoods_goods_text">{{item.goodsShows}}</p>
+						<p class="moreGoods_goods_price">
+							<span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}
+						</p>
+						<div class="moreGoods_goods_icon"></div>
 					</dd>
 				</dl>
 			</div>
-            <div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
-				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item.id)">
-					<dl>
-						<dt>
-							<img :src="item.goodsLogo"/>
-						</dt>
-						<dd>
-							<h3 class="moreGoods_goods_name">{{item.goodsName}}</h3>
-							<p class="moreGoods_goods_text">{{item.goodsShows}}</p>
-							<p class="moreGoods_goods_price">
-								<span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}
-							</p>
-							<div class="moreGoods_goods_icon">
-											
-							</div>
-						</dd>
-					</dl>
-				</div>
-			</div>
-        </div>
+		</div>
+	</div>
  </div>
 </template>
 
 <script>
+import { getSystem , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 // 节流函数
 const delay = (function() {
     let timer = 0;
-    return function(func, delay) {
-      clearTimeout(timer);
-      timer = setTimeout(func, delay);
-    };
+		return function(func, delay) {
+			clearTimeout(timer);
+			timer = setTimeout(func, delay);
+		};
 })();
 export default {
  data() {
- return {
-	 focusState:false,
-     searchVal:'',
-	 searchList:[],
-	 goodsList:[],
-	 state:1,//1 未请求,2 请求中,3 请求完毕
- }
+	return {
+		focusState:false,
+		searchVal:'',
+		searchList:[],
+		goodsList:[],
+		state:1,//1 未请求,2 请求中,3 请求完毕
+		websiteNode: this.websiteDate.code
+	}
  },
  watch:{
-	 searchVal() {
-		 delay(() => {
-			 this.search();
-		 },300)
-	 }
+	searchVal() {
+		delay(() => {
+			this.search();
+		},300)
+	}
  },
  methods:{
-	 get_goods_hot:function(){
+	get_goods_hot:function(){
 	 	this.$ajax.get(this.HOST, {
 			params:{
 				method: "goods_show_hot",
 			}
 		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
-				this.searchList = resp.data.data;
-				// console.log(resp.data);
+			this.searchList = resp.data.data;
 		}).catch(err => {
-			// console.log(JSON.parse(data).data.mainActivityList);
-				console.log('请求失败：'+ err.statusCode);
-			
+			console.log('请求失败：'+ err.statusCode);
 		});
-	 },
-	 get_goods_name2:function() {
+	},
+	get_goods_name2:function() {
 		 this.state = 2;
 		 this.$ajax.get(this.HOST, {
 			params:{
 				method: "goods_show_name2",
-				websiteNode: 3301,
+				websiteNode: this.websiteNode,
 				goodsName:this.searchVal
 			}
 		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
 				this.goodsList = resp.data.data;
 				this.state = 3;
-				// console.log(resp.data);
 		}).catch(err => {
-			// console.log(JSON.parse(data).data.mainActivityList);
 			console.log('请求失败：'+ err.statusCode);
 			this.state = 3;
 		});
-	 },
-     clearTimer () {
+	},
+    clearTimer() {
       if (this.timer) {
         clearTimeout(this.timer)
       }
     },
-    search (event) {
+    search(event) {
 		if(event) {
 			if(this.searchVal.length != 0){
 				this.get_goods_name2() 
 			}
 		}
     },
-     del() {
+    del() {
 		this.searchVal = ''
 		this.goodsList = []
 	},
@@ -139,13 +130,13 @@ export default {
 		this.$router.push({ path:'detail/'+id })
 	}
  },
- mounted(){
+ mounted() {
 	 this.get_goods_hot()
  },
  directives: {
     focus: {
       //根据focusState的状态改变是否聚焦focus
-      update: function (el, value) {    //第二个参数传进来的是个json
+      update: function (el, value) {  //第二个参数传进来的是个json
         if (value) {
           el.focus()
         }
@@ -252,7 +243,6 @@ export default {
 	border-radius: 32px;
 	line-height: 64px;
     margin: 15px 0 15px 30px;
-	display: inline;
 }
 
 .search_item li:nth-child(3n+1) {

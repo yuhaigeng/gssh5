@@ -48,6 +48,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import { CellSwipe } from 'mint-ui';
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
  data() {
 	return {
@@ -60,8 +61,9 @@ export default {
 		buyNum:1,
 		goodID:'',
 		isLast:false,
-		pageSize:'10',
-        pageNo:'1',
+		pageNo: this.pageNo,
+		pageSize: this.pageSize,
+		userId: JSON.parse(localStorage.getItem("user_data")).cuserInfoid
  	}
  },
  components: {
@@ -94,12 +96,9 @@ export default {
 				pageNo: this.pageNo,
 				pageSize: this.pageSize,
 				firmId: this.firmInfoid,
-				userId: 1881
+				userId: this.userId
 			}
 		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
-			// console.log(resp.data);
 			if (resp.data.statusCode == 100000) {
 				this.isLast = resp.data.data.isLast;
 				if (resp.data.data.pageNo == 1) {
@@ -119,7 +118,7 @@ export default {
 		this.$ajax.get(this.HOST, {
 			params:{
 				method: "goods_collection_del",
-				userId: 1881,
+				userId: this.userId,
 				goodsId: this.goodID
 			}
 		}).then(resp => {
