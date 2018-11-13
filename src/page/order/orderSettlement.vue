@@ -20,18 +20,18 @@
                                 <span class="arrows sprite arrow_left"></span>
                     </router-link>
 					<ul class="order_goods_box">
-                        <li v-for="(item,index) in goods" :key="index"> 
-                        	<div class="order_goods_top clearfloat"> 
-                        		<b class="goods_name" v-text="item.name"></b> 
-                        		<span class="goods_num" v-text="'X' + item.sum"></span> 
-                        	</div> 
-                        	<div class="order_goods_bottom clearfloat"> 
-                         		<p class="goods_Price"> 
+                        <li v-for="(item,index) in goods" :key="index">
+                        	<div class="order_goods_top clearfloat">
+                        		<b class="goods_name" v-text="item.name"></b>
+                        		<span class="goods_num" v-text="'X' + item.sum"></span>
+                        	</div>
+                        	<div class="order_goods_bottom clearfloat">
+                         		<p class="goods_Price">
                          			<span v-text="item.gssPrice"></span>{{'元/'+item.priceUnit+'&nbsp;&nbsp;'}}<span v-text="item.price"></span>{{"元/"+item.wholePriceSize}}
-                         		</p> 
-                         		<span class="goods_subtotal" v-text="'合计：￥'+(parseFloat(item.price)*parseInt(item.sum)).toFixed(2)"></span> 
-                         	</div> 
-                         </li> 
+                         		</p>
+                         		<span class="goods_subtotal" v-text="'合计：￥'+(parseFloat(item.price)*parseInt(item.sum)).toFixed(2)"></span>
+                         	</div>
+                         </li>
 					</ul>
 					<div class="remark">
 						备注：<input type="text" name="" id="remark" value="" v-model="customRequest" placeholder="选填，您想对商家说些什么" />
@@ -135,13 +135,13 @@ import md5 from 'js-md5';
 
         },
         mounted(){
-        
+
             console.log()
         },
         methods:{
              desc_data:function(){
                  this.$ajax.get(this.HOST, {
-                    params:{ 
+                    params:{
                         method:'gss_desc',
                         websiteNode:this.websiteNode,
                         code:this.websiteNode + this.descCode
@@ -157,7 +157,7 @@ import md5 from 'js-md5';
             },
             orderSubmit:function(){
                  this.$ajax.get(this.HOST, {
-                    params:$.extend({ 
+                    params:Object.assign({
                         method:'order_submit',
                         userId:this.userId,
                         firmId:this.firmId,
@@ -320,7 +320,7 @@ import md5 from 'js-md5';
 .footer-wrap{
     margin: 0 auto;
     max-width: 750px;
-}   
+}
 .footer .order_footer_left {
     width: 492px;
     background: #FFF;

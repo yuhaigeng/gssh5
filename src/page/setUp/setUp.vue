@@ -19,11 +19,10 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
-import md5 from 'js-md5';
     export default {
         name:'setUp',
         components:{
-          setHeader 
+          setHeader
         },
          data() {
              return {
@@ -38,7 +37,7 @@ import md5 from 'js-md5';
                 },
                 source:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
                 tokenId:localStorage.getItem("tokenId"),
-                sign :md5( this.source + "key" + localStorage.getItem("secretKey")).toUpperCase()
+                sign :this.$md5( this.source + "key" + localStorage.getItem("secretKey")).toUpperCase()
              }
          },
          mounted(){
@@ -48,7 +47,7 @@ import md5 from 'js-md5';
          methods:{
             login_out:function(){
                  this.$ajax.get(this.HOST, {
-                    params :{ 
+                    params :{
                         method:'user_logout',
                         source :this.source,
                         sign : this.sign,
@@ -57,13 +56,13 @@ import md5 from 'js-md5';
                 }).then(resp => {
                        console.log(resp.data)
                         localStorage.clear();
-                        this.$router.push({path:'/my',query:{isLogin:false}}) 
-                      
+                        this.$router.push({path:'/my',query:{isLogin:false}})
+
                 }).catch(err => {
                     console.log('请求失败：'+ err.statusCode);
                 });
             }
-              
+
          }
     }
 </script>

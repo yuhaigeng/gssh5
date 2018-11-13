@@ -1,9 +1,9 @@
 <template>
-     <div v-cloak class="wo_top" :class="{'login':logined}">
-        <p class="no_login_text" v-show="!logined">您还没有登录</p>
-        <router-link :to="'login'" tag="span"  class="no_login_btn" v-show="!logined">登录</router-link>
-        
-        <dl class="wo_top_info clearfloat" v-show="logined && userVipInfo.vip">
+     <div v-cloak class="wo_top" :class="{'login':isLogin}">
+        <p class="no_login_text" v-show="!isLogin">您还没有登录</p>
+        <router-link :to="'login'" tag="span"  class="no_login_btn" v-show="!isLogin">登录</router-link>
+
+        <dl class="wo_top_info clearfloat" v-show="isLogin && userVipInfo.vip">
             <dt class="float_left">
                 <img v-show="userInfo.faceImgUrl" class="user_faceImg" :src="'http://'+userInfo.faceImgUrl"/>
                 <input class="login_type1 " type="file" accept="image/*" name="" id="file" value="" />
@@ -14,7 +14,7 @@
             </dd>
             <router-link to="company" tag="dd" class="my_details float_right"></router-link>
         </dl>
-        <div class="wo_top_growInfo" v-show="logined && userVipInfo.vip">
+        <div class="wo_top_growInfo" v-show="isLogin && userVipInfo.vip">
             <div class="growInfo_pointer">
                 <span v-text="'当月成长值'+userVipInfo.firmMonthExp" v-bind:style="{marginLeft:getMarginleft,left:getLeft}"></span>
             </div>
@@ -33,27 +33,13 @@
 <script>
     export default {
         name:'loginState',
-        props:["userInfo" ,"userVipInfo",'logined'],
+        props:["userInfo" ,"userVipInfo",'isLogin'],
          data() {
              return {
-                // isMask: !1,
-                // pageNo: common.PAGE_INDEX,
-                // pageSize: common.PAGE_SIZE,
-                // isWx: !1,
-                // urlParm: null,
-                // logined: false,
-                // isNewMsg: !1,
-                // ajaxState: "wait",
-                // system: n.system,
-                // orderList: t.orderList,
-                // otherList: t.otherList,
-                // userInfo: n.logined ? common.user_data() : {},
-                // fonterNav: t.fonterNav,
-                // userVipInfo: t.userVipInfo
              }
          },
          mounted:function(){
-            console.log(this.logined)
+            console.log(this.isLogin)
          },
           computed: {
             getWidth: function() {
@@ -61,7 +47,7 @@
             },
             getMarginleft: function() {
                 return  "-85px"
-               
+
             },
             getLeft: function() {
                 return 617 < this.getWidth ? "557px" : this.getWidth < 85 ? "85px" : this.getWidth + "px"

@@ -1,8 +1,6 @@
 <template>
   <div class="moreGoods">
       <app-header :type ="headerMsg">
-
-        
       </app-header>
       <div class="moreDoogs_main_wrap">
         <div class="moreDoogs_main_top" >
@@ -11,74 +9,74 @@
           </ul>
         </div>
         <div class="moreDoogs_main_box clearfloat">
-          <div class="moreDoogs_main_box_left_wrap" v-bind:style="{height:getLeftWidth}">
+          <div class="moreDoogs_main_box_left_wrap" v-bind:style="{height:getLeftHeight}">
             <ul class="moreDoogs_main_box_left" >
               <li v-for="(item,index) in left_name" :class="{isSelected:index == isSelected}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
             </ul>
           </div>
-          <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftWidth}">
-            <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftWidth}">
+          <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}">
+            <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
               <ul class="moreGoods_box_list">
-                <li v-for="(item,index) in listObj " :key="index" >
+                <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item.id)" >
                   <dl class="moreGoods_goods_detaile clearfloat">
                     <dt>
-                      <img :src="item.goodsLogo" alt="">
+                      <img v-lazy="item.goodsLogo" alt="">
                       <span v-if="item.vipGrade > 0" :class = "'icon_vip'+ item.vipGrade"></span>
                     </dt>
                     <dd>
                        <h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
                        <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
-                      <div v-if="logined">
-                        <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
-                          <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
-                          </p>
-                          <p class="moreGoods_goods_price" v-else>
-                                <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
-                          </p>
-                        <div class="moreGoods_goods_num">
-                              <div class="moreGoods_goods_icon">
-                                <span v-if="item.isSale" class = "icon_cu"></span>
-                                <span v-if="item.isNew" class = "icon_ji"></span>
-                                <span v-if="item.isRecommend"   class = "icon_jian"></span>
-                                <span v-if="item.isHot" class = "icon_re"></span>
-                              </div>
-                              <div class="moreGoods_goods_number clearfloat" v-if="item.vipGrade > 0">
-                                  <div  v-if="item.state == 1">
-                                        <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" class='bStyle' >已售罄</b>
-                                        <div class="component" v-else>
-                                              <span v-if="goodNum != 0">
-                                                    <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
-                                                    <span class="goodsNumber fontColor" v-text="goodNum"></span>
-                                              </span>
-                                              <span v-else>
-                                                    <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
-                                                    <span class="goodsNumber fontColor hidden"></span>
-                                              </span>
-                                        </div>
-                                  </div>
-                                  <div v-else>
-                                            <b v-if="item.state == 2"  class='bStyle'  >不是VIP</b>
-                                            <b v-if="item.state == 3"  class='bStyle' >等级不足</b>
-                                  </div>
-                              </div>
-                              <div class="moreGoods_goods_number clearfloat" v-else>
-                                  <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" class='bStyle' >已售罄</b>
-                                  <div class="component" v-else>
-                                        <span v-if="goodNum != 0"> 
-                                              <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
-                                              <span class="goodsNumber fontColor" v-text="goodNum"></span>
-                                        </span>
-                                        <span v-else>
-                                            <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
-                                            <span class="goodsNumber fontColor hidden"></span>
-                                        </span> 
-                                        <span class="goodsNumber_max"><img src="../../assets/img/btn_a@2x.png"/></span>
-                                  </div>
-                              </div>   
-                        </div>
-                      </div>
-                      <div v-else>
-                      </div>
+                       <div v-if="logined">
+                          <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
+                            <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
+                            </p>
+                            <p class="moreGoods_goods_price" v-else>
+                                  <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
+                            </p>
+                          <div class="moreGoods_goods_num">
+                                <div class="moreGoods_goods_icon">
+                                  <span v-if="item.isSale" class = "icon_cu"></span>
+                                  <span v-if="item.isNew" class = "icon_ji"></span>
+                                  <span v-if="item.isRecommend"   class = "icon_jian"></span>
+                                  <span v-if="item.isHot" class = "icon_re"></span>
+                                </div>
+                                <div class="moreGoods_goods_number clearfloat" v-if="item.vipGrade > 0">
+                                    <div  v-if="item.state == 1">
+                                          <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" class='bStyle' >已售罄</b>
+                                          <div class="component" v-else>
+                                                <span v-if="goodNum != 0">
+                                                      <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                                      <span class="goodsNumber fontColor" v-text="goodNum"></span>
+                                                </span>
+                                                <span v-else>
+                                                      <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                                      <span class="goodsNumber fontColor hidden"></span>
+                                                </span>
+                                          </div>
+                                    </div>
+                                    <div v-else>
+                                              <b v-if="item.state == 2"  class='bStyle'  >不是VIP</b>
+                                              <b v-if="item.state == 3"  class='bStyle' >等级不足</b>
+                                    </div>
+                                </div>
+                                <div class="moreGoods_goods_number clearfloat" v-else>
+                                    <b  v-if="(parseInt(item.initNum) - parseInt(item.saleNum)) <= 0" class='bStyle' >已售罄</b>
+                                    <div class="component" v-else>
+                                          <span v-if="goodNum != 0">
+                                                <span class="goodsNumber_min"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                                <span class="goodsNumber fontColor" v-text="goodNum"></span>
+                                          </span>
+                                          <span v-else>
+                                              <span class="goodsNumber_min hidden"><img src="../../assets/img/btn_m@2x.png"/></span>
+                                              <span class="goodsNumber fontColor hidden"></span>
+                                          </span>
+                                          <span class="goodsNumber_max"><img src="../../assets/img/btn_a@2x.png"/></span>
+                                    </div>
+                                </div>
+                          </div>
+                       </div>
+                       <div v-else>
+                       </div>
                     </dd>
                   </dl>
                 </li>
@@ -108,7 +106,7 @@
          logined:false,
          pageNo: this.pageNo,
          pageSize: this.pageSize,
-         websiteNode: this.websiteNode,
+         websiteNode:this.websiteDate.code,
          firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
          goods:[],
          left_name:[],
@@ -123,7 +121,7 @@
          isLast:false,
          goShopCart:[],//本地购物车
          systemMoney:-1,//系统参数配置中配置的起售金额
-       
+
       }
     },
     components: {
@@ -134,7 +132,7 @@
       if(this.$route.query.typeCode){
         this.goodsType = this.$route.query.typeCode
       }else{
-        
+
       }
       // 数据初始化
       this.logined = getIsLogin();
@@ -142,25 +140,29 @@
       if ( localStorage.getItem('system') ) {
         this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
       } else {
-        
+
       }
       this.goods_first_nav()
-      console.log(this.$route.query.typeCode)
-      // this.goods_second_nav()
-      // this.goods_info_nav()
+      console.log(this.getUserData)
     },
     computed:{
+        // 获取宽度
         getTopWidth:function(){
           return  (this.goods.length * 164) + 24 +'px'
         },
-        getLeftWidth:function(){
-          let a = $("body").height();
-          let b = $(".header-wrap").height() ? $(".header-wrap").height() : 87 ;
-          let c = $(".moreDoogs_main_top").height() ?  $(".moreDoogs_main_top").height():90;
-          let d = $(".footer-wrap").height() ?  $(".footer-wrap").height() :98; 
+        // 获取高度
+        getLeftHeight:function(){
+          const  bodyHeight  =  document.querySelector("body");
+          const  wrapHeight  =  document.querySelector(".header-wrap");
+          const  topHeight   =  document.querySelector('.moreDoogs_main_top');
+          const  footerHeight =  document.querySelector(".footer-wrap");
+          let a = parseInt(window.getComputedStyle(bodyHeight).height);
+          let b =   wrapHeight ? parseInt(window.getComputedStyle(wrapHeight).height) : 87 ;
+          let c = topHeight ? parseInt(window.getComputedStyle(topHeight).height):90;
+          let d =  footerHeight ? parseInt(window.getComputedStyle(footerHeight).height):98;
           let e = a-b-c-d;
          return e + 'px';
-         
+
         }
     },
     methods: {
@@ -173,15 +175,13 @@
                 }
             }).then(resp => {
                   this.goods = resp.data.data;
-                  console.log(this.goods)
-
                   this.typeCode = this.goods[0].typeCode
                   this.goods_second_nav()
                   console.log(resp.data);
             }).catch(err => {
                 // console.log(JSON.parse(data).data.goods);
                   console.log('请求失败：'+ err.statusCode);
-                
+
             });
         },
         goods_second_nav:function () {
@@ -191,17 +191,18 @@
                     firmId:this.firmId,
                     websiteNode:this.websiteNode,
                     typeCode: this.typeCode
-                    
+
                 }
             }).then(resp => {
                    this.left_name = resp.data.data;
                    console.log(resp.data.data)
                    this.goodsType =  this.left_name[0].typeCode
+                   this.isSelected = 0;
                    this.goods_info_nav()
                 console.log(resp.data);
             }).catch(err => {
                   // console.log('请求失败：'+ err.statusCode);
-                
+
             });
         },
         goods_info_nav:function () {
@@ -224,44 +225,53 @@
                          this.listObj =  this.listObj.concat(this.goodsList.objects)
                          this.isLast  = this.goodsList.isLast
                     }
-                  console.log(resp.data.data.page)  
+                  console.log(resp.data.data.page)
             }).catch(err => {
                 console.log(JSON.parse(data).data);
                   console.log('请求失败：'+ err.statusCode);
-                
+
             });
         },
-     topNav(typeCode,index) {
-        this.typeCode = typeCode
-        this.isTop = index
-        this.goods_second_nav()
-         $(".moreDoogs_main_box_right").scrollTop(0)
-        var $ele=$(".moreDoogs_main_top_list li").eq(index);
-        if ($ele.get(0).offsetLeft > 200) {
-          $('.moreDoogs_main_top').scrollLeft($ele.get(0).offsetLeft-200)
-        }else{
-          $('.moreDoogs_main_top').scrollLeft(0)
-        }
-     },
-     leftNav(typeCode,index) {
-        this.pageNo = '1'
-        this.goodsType = typeCode
-        this.isSelected =  index
-        this.goods_info_nav()
-        $(".moreDoogs_main_box_right").scrollTop(0)
-        var $ele=$(".moreDoogs_main_box_left li").eq(index);
-        if ($ele.get(0).offsetTop>200) {
-				    $('.moreDoogs_main_box_left_wrap').scrollTop($ele.get(0).offsetTop-200)
-			  }else{
-				    $('.moreDoogs_main_box_left_wrap').scrollTop(0)
-			}
-     },
-     loadMore:function(){
-        if(!this.isLast){
-            this.pageNo ++
+        topNav(typeCode,index) {
+          let rightTop = document.querySelector(".moreDoogs_main_box_right")
+          let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
+          let topLeft = document.querySelector(".moreDoogs_main_top")
+            this.typeCode = typeCode;
+            this.isTop = index;
+            this.goods_second_nav()
+            rightTop.scrollTop = 0;
+            wrapTop.scrollTop = 0;
+            let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[index]
+            if (ele.offsetLeft > 200) {
+              topLeft.scrollLeft = ele.offsetLeft-200
+            }else{
+              topLeft.scrollLeft = 0
+            }
+        },
+        leftNav(typeCode,index) {
+          let rightTop = document.querySelector(".moreDoogs_main_box_right")
+          let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
+            this.pageNo = '1'
+            this.goodsType = typeCode
+            this.isSelected =  index
             this.goods_info_nav()
-        }
-     }
+            rightTop.scrollTop = 0;
+            let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[index]
+            if (ele.offsetTop>200) {
+              wrapTop.scrollTop = ele.offsetTop-200
+            }else{
+              wrapTop.scrollTop = 0
+          }
+        },
+        loadMore:function(){
+            if(!this.isLast){
+                this.pageNo ++
+                this.goods_info_nav()
+            }
+        },
+        toDetail(id) {
+          this.$router.push({ path:'detail/'+id })
+        },
     }
   }
 </script>
@@ -301,7 +311,6 @@
 	border: 2px solid #dddddd;
 	border-radius: 34px;
 	margin-left: 24px;
-	display: inline-block;
 }
 
  .topClass {

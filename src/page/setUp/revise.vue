@@ -1,6 +1,6 @@
 <template>
      <div>
-        <setHeader :type="headerMsg"></setHeader> 
+        <setHeader :type="headerMsg"></setHeader>
          <div class="main-wrap chang_password_main_wrap">
             <div class="main">
                 <ul class="chang_password_content">
@@ -27,11 +27,10 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
-import md5 from 'js-md5';
     export default {
         name:'revise',
         components:{
-           setHeader 
+           setHeader
         },
          data() {
              return {
@@ -44,7 +43,7 @@ import md5 from 'js-md5';
                 userBasicParam:{
                     source:'firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid,
                     tokenId:localStorage.getItem("tokenId"),
-                    sign :md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
+                    sign :this.$md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
                 },
                 oldPassword:null,
                 newPassword:null,
@@ -54,7 +53,7 @@ import md5 from 'js-md5';
          methods:{
              changePassword:function(){
                 this.$ajax.get(this.HOST, {
-                    params:$.extend({
+                    params:Object.assign({
                         method:'user_update_pwd',
                         oldPassword:md5(this.oldPassword),
                         newPassword:md5(this.newPassword),
@@ -89,7 +88,7 @@ import md5 from 'js-md5';
                     });
                 }else{
                     this.changePassword();
-                     this.$router.push({path:"/my"})  
+                     this.$router.push({path:"/my"})
                 }
             }
          }
@@ -104,7 +103,7 @@ import md5 from 'js-md5';
 .chang_password_content {
     width: 100%;
     background: #fff;
-    
+
 }
 .chang_password_content li {
     width: 728px;
