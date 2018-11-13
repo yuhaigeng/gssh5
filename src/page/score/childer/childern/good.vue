@@ -44,11 +44,9 @@
 
 <script>
 
-import {layer} from "../../../../common/layer.js"
 import appHeader from "../../../../components/public/header.vue";
 import banner from "../../../banner/goodsBanner.vue";
 import BScroll from 'better-scroll'
-import '@/common/layer.css'
 import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../../common/common.js";
 export default {
     name:'scoreGoods',
@@ -100,6 +98,7 @@ export default {
             const list = this.scoreGoods.goodsPics.split('@');
                 list.pop();
             this.bannerDate = list;
+            console.log(list)
         }
         if (localStorage.getItem('scoreGoods_desc')) {
             this.scoreGoods_desc = JSON.parse(localStorage.getItem('scoreGoods_desc'))
@@ -138,13 +137,11 @@ export default {
         exchange:function () {
             const _this = this;
             if (this.state == 0) {
-                layer.open({
-                    content: '兑换后不能退换，确定兑换？',
-                    btn: ['确定', '取消'],
-                    yes: function(index){
-                        _this.exchange_api();
-                        layer.close(index);
-                    }
+                
+                this.$messagebox.confirm('兑换后不能退换，确定兑换？','').then(action => {
+                    _this.exchange_api();
+                }).catch((e) => {
+                    console.log(e)
                 });
             }
         },
@@ -162,9 +159,11 @@ export default {
                 // console.log(data);
             }).then(data => {
                 if (data.statusCode == 100000) {
-                    layer.open({
-                        content: '兑换成功',
-                        btn: '确定'
+                    
+                    this.$messagebox.alert('兑换成功','').then(action => {
+                        console.log('1')
+                    }).catch((e) => {
+                        console.log(e)
                     });
                     this.state = data.data.status;
                 } else {
@@ -176,7 +175,6 @@ export default {
 }
 </script>
 <style scoped>
-@import url(../../../../common/layer.css);
 .score_goods{
     position: fixed;
     top: 0;

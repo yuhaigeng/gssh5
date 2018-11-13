@@ -26,8 +26,6 @@
 
 <script>
 import appHeader from "../../../components/public/header.vue";
-import {layer} from "../../../common/layer.js"
-import '@/common/layer.css'
 import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../common/common.js";
 export default {
     name:'exchangeCoupon',
@@ -41,10 +39,10 @@ export default {
             licenseImg: null,
             showlicenseImg: false,
             imgBaseUrl:'',
-            websiteNode:'3301',
+            websiteNode:this.websiteDate['code'],
             isLast:false,
-            pageSize:'10',
-            pageNo:'1',
+            pageSize:this.pageSize,
+            pageNo:this.pageNo,
             couponList:[],
             couponBtn:["立即兑换","果币不足","已兑换","已兑换","已兑完"]
         }
@@ -114,19 +112,21 @@ export default {
             }).then(data => {
                 console.log(data);
                 if (data.statusCode == 100000) {
-                    layer.open({
-                        content: '兑换成功',
-                        btn: '确定'
+                    this.$messagebox.alert('兑换成功','').then(action => {
+                        console.log('1')
+                    }).catch((e) => {
+                        console.log(e)
                     });
+                    
                 } else if (data.statusCode == 100619) {
-                    layer.open({
-                        className:'alert_pop',
-                        content: data.statusStr,
-                        type:1,
-                        time: 2 ,
-                        anim:false,
-                        shade: false
-                    });
+                    
+                    this.$toast({
+                        message : data.statusStr,
+                        position: 'middle',//top boottom middle
+                        duration: 2000,//延时多久消失
+                        //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+                        //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+                    })
                 } else {
                     console.log(data.statusStr)
                 }
@@ -143,15 +143,11 @@ export default {
             const _this = this;
             const id = this.couponList[i].id;
             if (this.couponList[i].flag == 0) {
-                layer.open({
-                    content: '是否兑换优惠卷？',
-                    btn: ['确定', '取消'],
-                    yes: function(index){
-                        _this.exchange_coupon(id);
-                        layer.close(index);
-                        //console.log(-parseInt($(".header-wrap").css("margin-left")))
-                        //$(".order_refund").show().css("margin-left",$(".header-wrap").css("margin-left"))
-                    }
+                
+                this.$messagebox.confirm('是否兑换优惠卷？','').then(action => {
+                    _this.exchange_coupon(id);
+                }).catch((e) => {
+                    console.log(e)
                 });
             } else {
                 

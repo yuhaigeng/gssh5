@@ -37,9 +37,9 @@ export default {
             couponList:[],
             textList:['','单笔订单实付满','单品订单实付满','单类订单实付满'],
             couponClass : ['',"quan_c","quan_b","quan_a"],
-            websiteNode:'3301',
-            pageNum:'1',
-            pageSize:'10',
+            websiteNode:this.websiteDate['code'],
+            pageNum:this.pageNo,
+            pageSize:this.pageSize,
             couponBtn:['领取','已领取']
         }
     },
