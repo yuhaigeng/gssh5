@@ -109,7 +109,7 @@
          pageNo: this.pageNo,
          pageSize: this.pageSize,
          websiteNode: this.websiteNode,
-         firmId:JSON.parse(localStorage.getItem("user_data")) ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
+         firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
          goods:[],
          left_name:[],
          goodsList:null,

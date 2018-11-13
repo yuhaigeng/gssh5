@@ -9,7 +9,7 @@
  * 
  */
 
-const websideNode = 3301;
+const websideNode = '3301'
 const pageNo = 1;
 const pageSize = 10;
 const project_Env = false;
@@ -46,17 +46,16 @@ const appId = (project_Env) => {
   if (project_Env) {
     return websiteAllDate[websideNode].appId[1];
   } else {
-    return appIdObj[websideNode].appId[0];
+    return websiteAllDate[websideNode].appId[0];
   }
 }
 //站点数据
 const websiteDate = {
-    code:websideNode,
-    name:websiteAllDate[websideNode],
-    appId : appId,
+    code: websideNode,
+    name: websiteAllDate[websideNode].name,
+    appId: appId(),
 }
 export{
-    websideNode,
     pageNo,
     pageSize,
     websiteDate,

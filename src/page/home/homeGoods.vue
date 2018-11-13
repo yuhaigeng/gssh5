@@ -9,8 +9,8 @@
          
         <div class="index-module-goods clearfloat">
             <dl class="index-module-item clearfloat" v-for="(item,index) in  mainActivityList.activityDetailsList" :key="index" @click="goDetails(item)">
-                <dt>
-                    <img :src="item.goodsInfo.goodsLogo" alt="">
+                <dt> 
+                    <img v-lazy="item.goodsInfo.goodsLogo" alt="">
                 </dt>
                 <dd>
                     <p class="good_name ellipsis" v-text="item.goodsInfo.goodsName"></p>
