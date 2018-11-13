@@ -1,6 +1,6 @@
 <template>
    <div>
-       <div class="empty1"></div>   
+       <div class="empty1"></div>
        <div class="footer-wrap">
 		<div class="footer1">
 			<router-link :to="'home'" tag="dl" >
@@ -15,7 +15,7 @@
 				<dt class="sprite tab_bar_mine_a"></dt>
 				<dd>我</dd>
 			</router-link>
-			<router-link :to="logined ? 'message' : 'login'" tag="dl">
+			<router-link :to="isLogin ? 'message' : 'login'" tag="dl">
 				<dt class="sprite tab_bar_Message_a">
 					<span class="new_msg" v-if="isNew"></span>
 				</dt>
@@ -29,9 +29,11 @@
 <script>
 export default {
    name: 'footer_',
-   props:['isNew'],
+   props:['isNew','isLogin'],
    data() {
-       return { logined:localStorage.getItem("user_data") ? true : false,}
+       return {
+        //  logined:localStorage.getItem("user_data") ? true : false,
+       }
    },
   components: {}
 }

@@ -8,7 +8,7 @@
                         <!-- <router-link :to="{path: '/score/goodsList/good',query:{id:item.id}}" tag="dl"> -->
                             <dl>
                                 <dt>
-                                    <img :src="item.goodsLogo"/>
+                                    <img v-lazy="item.goodsLogo"/>
                                 </dt>
                                 <dd>
                                     <p class="name" v-text="item.goodsName"></p>
@@ -28,7 +28,7 @@
         </div>
         <transition name="fade">
             <section class="license_container" v-if="showlicenseImg" @click="showlicenseImg = false">
-                <img :src="imgBaseUrl + licenseImg">
+                <img v-lazy="imgBaseUrl + licenseImg">
             </section>
         </transition>
         <transition name="router-slid" mode="out-in">
@@ -52,9 +52,9 @@ export default {
             showlicenseImg: false,
             imgBaseUrl:'',
             isLast:false,
-            websiteNode:'3301',
-            pageSize:'10',
-            pageNo:'1',
+            websiteNode:this.websiteDate['code'],
+            pageSize:this.pageSize,
+            pageNo:this.pageNo,
             goodsList:[],
             scoreGoods_desc:{},//商品详情注意事项
         }
@@ -63,7 +63,6 @@ export default {
         appHeader,
     },
     mounted(){
-        console.log('mounted')
         this.get_score_goodsList();
         if ( !localStorage.getItem("scoreGoods_desc") ) {
             this.get_gss_desc();

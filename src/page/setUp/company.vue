@@ -35,8 +35,7 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
-import agreementAlert from  "../../components/public/alert.vue"
-import md5 from 'js-md5';
+import agreementAlert from  "../../components/public/alert.vue";
     export default {
         name:'company',
         components:{
@@ -54,7 +53,7 @@ import md5 from 'js-md5';
                 userBasicParam:{
                     source:'firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid,
                     tokenId:localStorage.getItem("tokenId"),
-                    sign :md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
+                    sign :this.$md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
                 },
                 userId:JSON.parse(localStorage.getItem('user_data')).cuserInfoid,
                 firmName:null,
@@ -75,7 +74,7 @@ import md5 from 'js-md5';
          methods:{
              business:function(){
                 this.$ajax.get(this.HOST, {
-                    params:$.extend({
+                    params:Object.assign({
                         method:'firm_info_show',
                         firmId: this.firmId,
                     },this.userBasicParam)
@@ -93,7 +92,7 @@ import md5 from 'js-md5';
              },
              save:function(){
                 this.$ajax.get(this.HOST, {
-                    params:$.extend({
+                    params:Object.assign({
                         method:'firm_info_update',
                          firmId:this.firmId,
                         userId:this.userId,
@@ -116,7 +115,7 @@ import md5 from 'js-md5';
              },
              desc_data:function(){
                 this.$ajax.get(this.HOST, {
-                    params:{ 
+                    params:{
                         method:'gss_desc',
                         websiteNode:this.websiteNode,
                         code:this.websiteNode + '#HYDJ-DESC'
@@ -138,9 +137,7 @@ import md5 from 'js-md5';
                 this.noticeInfoList = null;
             },
             keep:function(){
-                    this.save()
-                    // this.$router.push({path:"/my"}) 
-
+                this.save()
             }
          }
     }
@@ -149,7 +146,7 @@ import md5 from 'js-md5';
 <style scoped>
 .main-wrap{
   max-width: 750px;
-  margin-top: 107px;  
+  margin-top: 107px;
 }
 .business_main_wrap {
     height: 1244px;

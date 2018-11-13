@@ -75,8 +75,9 @@ export default {
                 left:'返回'
             },
             isLast:false,
-            pageSize:'10',
-            pageNo:'1',
+            pageSize:this.pageSize,
+            pageNo:this.pageNo,
+            websiteNode:this.websiteDate['code'],
             couponList:[],
 
         }
@@ -94,7 +95,7 @@ export default {
             this.$ajax.get(this.HOST, {
                 params:{
                     method: "draw_prizes_activity",
-                    websiteNode: "3301",
+                    websiteNode: this.websiteNode,
                     firmId:'132'
                 }
             }).then(result => {

@@ -13,20 +13,17 @@
               </div>
             </div>
             <p class="lodemore" v-text="messages.isLast? '没有更多数据了' :'点击加载更多' " @click="load_more"></p>
-            
+
           </div>
 			</div>
-        <app-footer></app-footer>
+        <app-footer :logined="logined"></app-footer>
    </div>
 </template>
 
 <script>
-var pub ={
-     pageSize: 10,
-     pageNo: 1,
-}
 import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
    name: 'message',
    components: {
@@ -40,9 +37,10 @@ export default {
             title:'消息',
             left:'返回'
          },
-         messages:[],
-         objects:null
-        
+         messages:{},
+         objects:[],
+         logined:getIsLogin()
+
        }
    },
   mounted(){
@@ -54,8 +52,8 @@ export default {
                 params:{
                     method: 'mipush_msgrcd_show',
                     firmId: 132,
-                    pageSize: pub.pageSize,
-                    pageNo: pub.pageNo,
+                    pageSize: this.pageSize,
+                    pageNo:this.pageNo,
                 }
             }).then(resp => {
                 if(resp.data.data.pageNo == 1){
@@ -70,13 +68,13 @@ export default {
             }).catch(err => {
                 // console.log(JSON.parse(data).data.mainActivityList);
                   console.log('请求失败：'+ err.statusCode);
-                
+
             });
         },
         load_more:function(){
             if (!this.messages.isLast) {
-							pub.pageNo ++ ;
-						this.get_meassage();
+							this.pageNo ++ ;
+						  this.get_meassage();
 						}
         }
 

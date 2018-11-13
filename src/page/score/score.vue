@@ -133,6 +133,8 @@ export default {
     right: 0;
     left: 0;
     height: 100%;
+    max-width: 750px;
+    margin: 0 auto;
 }
 .score .header-wrap {
     background: #f76a10;
