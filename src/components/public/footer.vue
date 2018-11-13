@@ -15,7 +15,7 @@
 				<dt class="sprite tab_bar_mine_a"></dt>
 				<dd>我</dd>
 			</router-link>
-			<router-link :to="logined ? 'message' : 'login'" tag="dl">
+			<router-link :to="isLogin ? 'message' : 'login'" tag="dl">
 				<dt class="sprite tab_bar_Message_a">
 					<span class="new_msg" v-if="isNew"></span>
 				</dt>
@@ -29,7 +29,7 @@
 <script>
 export default {
    name: 'footer_',
-   props:['isNew','logined'],
+   props:['isNew','isLogin'],
    data() {
        return {
         //  logined:localStorage.getItem("user_data") ? true : false,

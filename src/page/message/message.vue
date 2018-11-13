@@ -21,12 +21,9 @@
 </template>
 
 <script>
-var pub ={
-     pageSize: '10',
-     pageNo: '1',
-}
 import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
    name: 'message',
    components: {
@@ -42,7 +39,7 @@ export default {
          },
          messages:{},
          objects:[],
-         logined:localStorage.getItem("user_data") ? true : false,
+         logined:getIsLogin()
 
        }
    },
@@ -55,8 +52,8 @@ export default {
                 params:{
                     method: 'mipush_msgrcd_show',
                     firmId: 132,
-                    pageSize: pub.pageSize,
-                    pageNo: pub.pageNo,
+                    pageSize: this.pageSize,
+                    pageNo:this.pageNo,
                 }
             }).then(resp => {
                 if(resp.data.data.pageNo == 1){
@@ -76,7 +73,7 @@ export default {
         },
         load_more:function(){
             if (!this.messages.isLast) {
-							pub.pageNo ++ ;
+							this.pageNo ++ ;
 						  this.get_meassage();
 						}
         }

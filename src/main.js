@@ -12,6 +12,7 @@ import axios from 'axios' //引入axios
 
 import Mint from 'mint-ui';
 import 'mint-ui/lib/style.css'
+import './common/coverMint.css'
 Vue.use(Mint);
 
 Vue.prototype.$ajax = axios //修改Vue的原型属性
@@ -24,12 +25,15 @@ Vue.prototype.$md5 = md5;
 
 
 import { pageNo , pageSize , websiteDate , websideNode } from "./config/env.js";
-
+console.log(websiteDate)
 Vue.prototype.pageNo = pageNo;
 Vue.prototype.pageSize = pageSize;
-Vue.prototype.websideNode = websideNode;
 Vue.prototype.websiteDate = websiteDate;
 
+import Vuelazyload from "vue-lazyload"
+Vue.use(Vuelazyload,{
+  loading:require('./assets/img/default_huodong_pic.png')
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

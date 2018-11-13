@@ -17,7 +17,7 @@
           <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}">
             <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
               <ul class="moreGoods_box_list">
-                <li v-for="(item,index) in listObj " :key="index" >
+                <li v-for="(item,index) in listObj " :key="index"  >
                   <dl class="moreGoods_goods_detaile clearfloat">
                     <dt>
                       <img :src="item.goodsLogo" alt="">
@@ -104,10 +104,10 @@
             left:'返回'
          },
          logined:false,
-         pageNo: '1',
-         pageSize: '10',
-         websiteNode:'3301',
-         firmId:JSON.parse(localStorage.getItem("user_data")) ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
+         pageNo: this.pageNo,
+         pageSize: this.pageSize,
+         websiteNode:this.websiteDate.code,
+         firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
          goods:[],
          left_name:[],
          goodsList:null,
@@ -143,9 +143,7 @@
 
       }
       this.goods_first_nav()
-      console.log(this.$route.query.typeCode)
-      // this.goods_second_nav()
-      // this.goods_info_nav()
+      console.log(this.getUserData)
     },
     computed:{
         // 获取宽度

@@ -1,6 +1,6 @@
 <template>
    <div class="my">
-        <app-header :type="headerMsg"   v-show="logined">
+        <app-header :type="headerMsg"   v-show="isLogin">
             <div   class='my-head'   slot="myLeft">
                 <router-link to="/setUp" tag="dl">
                     <dt><img src="../../assets/img/icon_set.png"/></dt>
@@ -16,24 +16,24 @@
             </div>
 
         </app-header>
-        <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :logined="logined" ></loginState>
+        <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin="isLogin" ></loginState>
         <div  v-cloak class="cont cont1 clearfloat">
-        <router-link :to="logined ? 'vip' : 'login'" tag="dl"  class="float_left " >
+        <router-link :to="isLogin ? 'vip' : 'login'" tag="dl"  class="float_left " >
             <dt><b>VIP</b></dt>
             <dd>服务</dd>
         </router-link>
-        <router-link :to="logined ?'onlineCoupon' : 'login'" tag="dl"  class="float_left " >
+        <router-link :to="isLogin ?'onlineCoupon' : 'login'" tag="dl"  class="float_left " >
             <dt><b v-text='userVipInfo.coupons || 0'></b><span>张</span></dt>
             <dd>优惠券</dd>
         </router-link>
-        <router-link :to=" logined ? 'score' :'login'" tag="dl" class="float_left" >
+        <router-link :to=" isLogin ? 'score' :'login'" tag="dl" class="float_left" >
             <dt><b v-text='userVipInfo.surplusScore || 0'></b><span>个</span></dt>
             <dd>果币商城</dd>
         </router-link>
         </div>
         <personalOptions :orderList="orderList" :title ="title" ></personalOptions>
         <personalOptions :orderList="otherList" :title ="title1"></personalOptions>
-        <app-footer :logined="logined"></app-footer>
+        <app-footer :isLogin="isLogin"></app-footer>
    </div>
 </template>
 
@@ -42,6 +42,7 @@ import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
 import loginState from "./loginState.vue";
 import personalOptions from "./personalOptions.vue";
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
    name: 'my',
    components: {
@@ -57,7 +58,7 @@ export default {
                 title:'我的',
                 routerPath:'/setUp',
             },
-            logined:localStorage.getItem("user_data") ? true : false,
+            isLogin:getIsLogin(),
             method:["user_personal_msg","firm_vip_info"],
             firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
             userBasicParam:{
@@ -111,7 +112,7 @@ export default {
    }
 }
 var dateModule  = {
-      logined:false,//是否登陆
+      isLogin:false,//是否登陆
       title:"我的订单",
       title1:"其他",
       orderList:[//订单列表数据结构
