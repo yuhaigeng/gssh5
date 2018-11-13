@@ -33,7 +33,7 @@
         </div>
         <personalOptions :orderList="orderList" :title ="title" ></personalOptions>
         <personalOptions :orderList="otherList" :title ="title1"></personalOptions>
-        <app-footer></app-footer>
+        <app-footer :logined="logined"></app-footer>
    </div>
 </template>
 
@@ -42,7 +42,6 @@ import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
 import loginState from "./loginState.vue";
 import personalOptions from "./personalOptions.vue";
-import md5 from 'js-md5';
 export default {
    name: 'my',
    components: {
@@ -64,7 +63,7 @@ export default {
             userBasicParam:{
                 source:'firmId'+ this.firmId,
                 tokenId:localStorage.getItem("tokenId"),
-                sign :md5('firmId'+ this.firmId + "key" + localStorage.getItem("secretKey")).toUpperCase()
+                sign :this.$md5('firmId'+ this.firmId + "key" + localStorage.getItem("secretKey")).toUpperCase()
              },
             userInfo:{},
             userVipInfo:{},
@@ -79,7 +78,7 @@ export default {
                  this.personApi()
              this.firm_vip_info()
        }
-            
+
    },
    methods:{
        personApi:function(){
@@ -190,7 +189,7 @@ var dateModule  = {
     color: #F51B44;
 }
 .my-head{
-    padding-top:10px; 
+    padding-top:10px;
     height: 87px;
 }
 .my-head  dl{

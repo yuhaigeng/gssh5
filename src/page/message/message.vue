@@ -13,17 +13,17 @@
               </div>
             </div>
             <p class="lodemore" v-text="messages.isLast? '没有更多数据了' :'点击加载更多' " @click="load_more"></p>
-            
+
           </div>
 			</div>
-        <app-footer></app-footer>
+        <app-footer :logined="logined"></app-footer>
    </div>
 </template>
 
 <script>
 var pub ={
-     pageSize: 10,
-     pageNo: 1,
+     pageSize: '10',
+     pageNo: '1',
 }
 import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
@@ -40,9 +40,10 @@ export default {
             title:'消息',
             left:'返回'
          },
-         messages:[],
-         objects:null
-        
+         messages:{},
+         objects:[],
+         logined:localStorage.getItem("user_data") ? true : false,
+
        }
    },
   mounted(){
@@ -70,13 +71,13 @@ export default {
             }).catch(err => {
                 // console.log(JSON.parse(data).data.mainActivityList);
                   console.log('请求失败：'+ err.statusCode);
-                
+
             });
         },
         load_more:function(){
             if (!this.messages.isLast) {
 							pub.pageNo ++ ;
-						this.get_meassage();
+						  this.get_meassage();
 						}
         }
 

@@ -1,61 +1,59 @@
 <template>
     <div class="index-module" :class="'index-module' + mainActivityList.goodsNum   ">
-        <div class="index-module-title clearfloat">
-            <div class="float_left" v-text="mainActivityList.activityTitle"></div>
-            <div class="float_right">
-                <a href="javascript:void(0);" v-text="'更多'" @click="goMore(mainActivityList)"></a>
+      <div class="index-module-title clearfloat">
+          <div class="float_left" v-text="mainActivityList.activityTitle"></div>
+          <div class="float_right">
+              <a href="javascript:void(0);" v-text="'更多'" @click="goMore(mainActivityList)"></a>
+          </div>
+      </div>
+      <div class="index-module-goods clearfloat">
+        <dl class="index-module-item clearfloat" v-for="(item,index) in  mainActivityList.activityDetailsList" :key="index" @click="goDetails(item)">
+          <dt>
+              <img :src="item.goodsInfo.goodsLogo" alt="">
+          </dt>
+          <dd>
+            <p class="good_name ellipsis" v-text="item.goodsInfo.goodsName"></p>
+            <p class="good_describe ellipsis" v-if="mainActivityList.goodsNum != 3" v-text="item.goodsInfo.goodsShows"></p>
+            <p class="good_tag"><span v-if="item.noteTable && mainActivityList.goodsNum != 3" v-text="item.noteTable"></span></p>
+            <div class="good_box" v-if="isLogin">
+                <div :class="{'float_left':mainActivityList.goodsNum != 3}">
+                    <p class="del" v-if="mainActivityList.goodsNum != 3"><del v-text="(item.goodsInfo.nomalPrice ? '¥'+item.goodsInfo.nomalPrice : '' )"></del></p>
+                    <p class="good_price_box" >
+                        <span class="good_price_icon">￥</span>
+                        <span class="good_price" v-text="item.goodsInfo.gssPrice"></span>
+                        <span>/&nbsp;{{item.goodsInfo.priceUnit}}</span>
+                    </p>
+                </div>
+                <div class="float_right" v-if="mainActivityList.goodsNum != 3">
+                    <span class="button">立即购买</span>
+                </div>
             </div>
-        </div>
-         
-        <div class="index-module-goods clearfloat">
-            <dl class="index-module-item clearfloat" v-for="(item,index) in  mainActivityList.activityDetailsList" :key="index" @click="goDetails(item)">
-                <dt>
-                    <img :src="item.goodsInfo.goodsLogo" alt="">
-                </dt>
-                <dd>
-                    <p class="good_name ellipsis" v-text="item.goodsInfo.goodsName"></p>
-                    <p class="good_describe ellipsis" v-if="mainActivityList.goodsNum != 3" v-text="item.goodsInfo.goodsShows"></p>
-                    <p class="good_tag"><span v-if="item.noteTable && mainActivityList.goodsNum != 3" v-text="item.noteTable"></span></p>
-                    <div class="good_box" v-if="isLogin">
-                        <div :class="{'float_left':mainActivityList.goodsNum != 3}">
-                            <p class="del" v-if="mainActivityList.goodsNum != 3"><del v-text="(item.goodsInfo.nomalPrice ? '¥'+item.goodsInfo.nomalPrice : '' )"></del></p>
-                            <p class="good_price_box" >
-                                <span class="good_price_icon">￥</span>
-                                <span class="good_price" v-text="item.goodsInfo.gssPrice"></span>
-                                <span>/&nbsp;{{item.goodsInfo.priceUnit}}</span>
-                            </p>
-                        </div>
-                        <div class="float_right" v-if="mainActivityList.goodsNum != 3">
-                            <span class="button">立即购买</span>
-                        </div>
-                    </div>
-                </dd>
-            </dl>
-        </div>
+          </dd>
+        </dl>
+      </div>
     </div>
 </template>
 
 <script>
-    export default {
-        name:"homeGoods",
-        props:['mainActivityList','isLogin'],
-        data() {
-             return {
-                 logined:localStorage.getItem("user_data") ? true : false,
-             }
+  export default {
+    name:"homeGoods",
+    props:['mainActivityList','isLogin'],
+    data() {
+          return {
+              logined:localStorage.getItem("user_data") ? true : false,
+          }
+    },
+    methods:{
+        goDetails:function(item){
+            const id = item.goodsId;
+            this.$router.push({path:'/detail/'+id})
         },
-        methods:{
-            goDetails:function(item){
-                const id = item.goodsId;
-                this.$router.push({path:'/detail/'+id})
-            },
-            goMore:function (item) {
-                const code = item.linkUrl.trim().split('&')[1];
-                
-                this.$router.push({path:'/more',query:{typeCode:code}})
-            }
+        goMore:function (item) {
+            const code = item.linkUrl.trim().split('&')[1];
+            this.$router.push({path:'/more',query:{typeCode:code}})
         }
     }
+  }
 </script>
 
 <style scoped>

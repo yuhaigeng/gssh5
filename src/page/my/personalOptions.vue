@@ -2,7 +2,6 @@
      	<div class="cont cont2">
             <div class="cont_tit" v-text="title"></div>
             <div class="cont_order_box clearfloat">
-                <!-- <router-link :to="{path:item.linkUrl,query:{type:item.type}}" tag="dl" v-for = "(item,index) in orderList" :key="index"> -->
                 <router-link :to="logined ? item.linkUrl : 'login'"   tag="dl" v-for = "(item,index) in orderList" :key="index">
                     <dt><img :src="item.icon"/></dt>
                     <dd v-text="item.name"></dd>

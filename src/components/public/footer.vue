@@ -1,6 +1,6 @@
 <template>
    <div>
-       <div class="empty1"></div>   
+       <div class="empty1"></div>
        <div class="footer-wrap">
 		<div class="footer1">
 			<router-link :to="'home'" tag="dl" >
@@ -29,9 +29,11 @@
 <script>
 export default {
    name: 'footer_',
-   props:['isNew'],
+   props:['isNew','logined'],
    data() {
-       return { logined:localStorage.getItem("user_data") ? true : false,}
+       return {
+        //  logined:localStorage.getItem("user_data") ? true : false,
+       }
    },
   components: {}
 }
