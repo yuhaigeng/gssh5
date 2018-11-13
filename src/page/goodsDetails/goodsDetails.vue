@@ -7,7 +7,7 @@
 	<div class="main-wrap goods_detaile_wrap">
 		<div class="main">
 			<div class="goodsDetails_img_box">
-				<goodsBanner :imgList = "detailList" v-if="detailList.length"></goodsBanner>
+				<goodsBanner :imgList = "bannerDate" v-if="bannerDate.length"></goodsBanner>
 			</div>
 			<div class="goodsDetails_box1">
 				<div class="goodsDetails_box1_top clearfloat">
@@ -31,10 +31,12 @@
 					</li>
 					<li class="clearfloat">
 						<div class="goodsDetails_box_left">
-							单价：<span class="color_f27c32">{{detailList.gssPrice}}</span>元/箱
+							单价：<span v-if="logined"><span class="color_f27c32">{{detailList.gssPrice}}</span>元/箱</span>
+							<span v-else></span>
 						</div>
 						<div class="goodsDetails_box_right">
-							总价: {{detailList.gssPrice}}元/箱
+							总价: <span v-if="logined">{{detailList.gssPrice}}元/箱</span>
+							<span v-else></span>
 						</div>
 					</li>
 					<li class="clearfloat">
@@ -68,14 +70,15 @@ export default {
  	data() {
  		return {
 			isCollect: localStorage.getItem("isColle"),
+			logined:getIsLogin(),
 			detailList: [],
 			buyNum: 0,
+			bannerDate:[],
 			collectList: [],
-			userId: JSON.parse(localStorage.getItem("user_data")).cuserInfoid,
+			userId: getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).cuserInfoid : "",
 			firmId: getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
  		}
 	},
-	props:['imgList'],
  	components: {
 		appFooterGoShop,
 		goodsBanner
@@ -106,13 +109,15 @@ export default {
 					userId: this.userId
 				}
 			}).then(resp => {
-					this.detailList = resp.data.data;
-					console.log(this.detailList)
-					if (resp.data.statusCode == 100000) {
-					let a = resp.data.data.isColl > 0 ? true : false;
-					this.isCollect = a
-					localStorage.setItem("isColle",a)
-					}
+				this.detailList = resp.data.data;
+				const list = this.detailList.goodsPics.split('@');
+					list.pop();
+				this.bannerDate = list;
+				if (resp.data.statusCode == 100000) {
+				let a = resp.data.data.isColl > 0 ? true : false;
+				this.isCollect = a
+				localStorage.setItem("isColle",a)
+				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
