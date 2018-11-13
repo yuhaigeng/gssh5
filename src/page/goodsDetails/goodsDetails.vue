@@ -3,69 +3,65 @@
      <div class="header-wrap goodsDetails_header">
 			<div class="header_left header_back sprite icon_delete" @click="back"></div>
 			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_a':'icon_collect_b'" @click="changeCollect"></div>
-		</div>
-        <div class="main-wrap goods_detaile_wrap" style="height: 1236px; background: #FFFFFF;">
-			<div class="main">
-				<div class="goodsDetails_img_box">
-                    <div class="swiper-container">
+	</div>
+	<div class="main-wrap goods_detaile_wrap" style="height: 1236px; background: #FFFFFF;">
+		<div class="main">
+			<div class="goodsDetails_img_box">
+				<div class="swiper-container">
 					<div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                        <img :src="detailList.goodsLogo" alt="">
-                        </div>
+						<div class="swiper-slide">
+						<img :src="detailList.goodsLogo" alt="">
+						</div>
 					</div>
 					<!-- 如果需要分页器 -->
 					<div class="swiper-pagination"></div>
-                    </div>
-				</div>
-                <div class="goodsDetails_box1">
-					<div class="goodsDetails_box1_top clearfloat">
-						<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}</h3>
-						<div class="goodsDetails_box1_ionc">
-							
-						</div>
-					</div>
-					<ul class="goodsDetails_box1_center">
-						<li class="clearfloat goodsDetails_box1_center_li1">
-							<div class="goodsDetails_text">
-								{{detailList.goodsShows}}
-							</div>
-							<div class="moreGoods_goods_number clearfloat">
-								<span class="goodsNumber_min" v-if="num > 0" @click="goodsNumber_min">
-									<img src="../../assets/img/btn_m@2x.png"/>
-								</span>
-								<span class="goodsNumber fontColor" v-if="num > 0">{{num}}</span>
-								<span class="goodsNumber_max" @click="goodsNumber_max">
-									<img src="../../assets/img/btn_a@2x.png"/>
-								</span>
-							</div>
-						</li>
-						<li class="clearfloat">
-							<div class="goodsDetails_box_left goodsDetails_Unit_Price">
-								单价：<span class="color_f27c32">{{detailList.gssPrice}}</span>元/箱
-							</div>
-							<div class="goodsDetails_box_right goodsDetails_Total_Price">
-								总价: {{detailList.gssPrice}}元/箱
-							</div>
-						</li>
-						<li class="clearfloat">
-							<div class="goodsDetails_box_left goodsDetails_Place">
-								产地：{{detailList.sourceCityName}}
-							</div>
-							<div class="goodsDetails_box_right goodsDetails_Standrd">
-								规格：{{detailList.sizeDesc}}
-							</div>
-						</li>
-					</ul>
-				</div>
-				<div class="goodsDetails_box2">
-					<h4><span></span>&nbsp;&nbsp;商品详情</h4>
-					<div class="goodsDetails_box2_" v-html="detailList.goodsContext">
-					</div>
-					
 				</div>
 			</div>
-        </div>
-		<app-footer-go-shop></app-footer-go-shop>
+			<div class="goodsDetails_box1">
+				<div class="goodsDetails_box1_top clearfloat">
+					<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}</h3>
+					<div class="goodsDetails_box1_ionc"></div>
+				</div>
+				<ul class="goodsDetails_box1_center">
+					<li class="clearfloat goodsDetails_box1_center_li1">
+						<div class="goodsDetails_text">
+							{{detailList.goodsShows}}
+						</div>
+						<div class="moreGoods_goods_number clearfloat">
+							<span class="goodsNumber_min" v-if="buyNum > 0">
+								<img src="../../assets/img/btn_m@2x.png"/>
+							</span>
+							<span class="goodsNumber fontColor" v-if="buyNum > 0">{{buyNum}}</span>
+							<span class="goodsNumber_max">
+								<img src="../../assets/img/btn_a@2x.png"/>
+							</span>
+						</div>
+					</li>
+					<li class="clearfloat">
+						<div class="goodsDetails_box_left">
+							单价：<span class="color_f27c32">{{detailList.gssPrice}}</span>元/箱
+						</div>
+						<div class="goodsDetails_box_right">
+							总价: {{detailList.gssPrice}}元/箱
+						</div>
+					</li>
+					<li class="clearfloat">
+						<div class="goodsDetails_box_left">
+							产地：{{detailList.sourceCityName}}
+						</div>
+						<div class="goodsDetails_box_right">
+							规格：{{detailList.sizeDesc}}
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="goodsDetails_box2">
+				<h4><span></span>&nbsp;&nbsp;商品详情</h4>
+				<div class="goodsDetails_box2_" v-html="detailList.goodsContext"></div>
+			</div>
+		</div>
+    </div>
+	<app-footer-go-shop></app-footer-go-shop>
  </div>
 </template>
 
@@ -75,122 +71,106 @@ import '@/common/swiper-3.3.1.min.css'
 import appFooterGoShop from "../../components/footerGoShop.vue";
 export default {
 	name:'goodsDetail',
- data() {
- return {
-	 isCollect:localStorage.getItem("isColle"),
-	 detailList:[],
-	 num:0,
-	 collectList:[]
- }
- },
- components: {
-	 appFooterGoShop
- },
- created:function() {
-	 this.getOrder()
- },
- methods:{
-	 getOrder() {
-		 this.Id = this.$route.params.id
-	 },
-	 get_goods_detail:function () {
-		this.$ajax.get(this.HOST, {
-			params:{
-				method: "goods_get_by_id_two",
-				goodsId: this.Id,
-				userId: 1881
-			}
-		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
-				this.detailList = resp.data.data;
-				if (resp.data.statusCode == 100000) {
-				let a = resp.data.data.isColl > 0 ? true : false;
-				this.isCollect = a
-				localStorage.setItem("isColle",a)
+ 	data() {
+ 		return {
+	 	isCollect:localStorage.getItem("isColle"),
+	 	detailList:[],
+	 	buyNum:0,
+	 	collectList:[]
+ 		}
+ 	},
+ 	components: {
+	 	appFooterGoShop
+ 	},
+	created:function() {
+		this.getOrder()
+ 	},
+	mounted(){
+		this.get_goods_detail()
+		var mySwiper = new Swiper('.swiper-container', {
+			loop: true,
+			pagination: {
+				el: '.swiper-pagination',
+				clickable: true,
+				autoplayDisableOnInteraction: false
+			},
+		})
+	},
+	methods:{
+		getOrder() {
+			this.Id = this.$route.params.id
+		},
+		get_goods_detail:function () {
+			this.$ajax.get(this.HOST, {
+				params:{
+					method: "goods_get_by_id_two",
+					goodsId: this.Id,
+					userId: 1881
 				}
-		}).catch(err => {
-			   console.log('请求失败：'+ err.statusCode);
-		});
-	},
-	get_goods_collectAdd:function () {
-		this.$ajax.get(this.HOST, {
-			params:{
-				method: "goods_collection_add",
-				goodsId: this.Id,
-				firmId: 132,
-				userId: 1881
+			}).then(resp => {
+					this.detailList = resp.data.data;
+					if (resp.data.statusCode == 100000) {
+					let a = resp.data.data.isColl > 0 ? true : false;
+					this.isCollect = a
+					localStorage.setItem("isColle",a)
+					}
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+		},
+		get_goods_collectAdd:function () {
+			this.$ajax.get(this.HOST, {
+				params:{
+					method: "goods_collection_add",
+					goodsId: this.Id,
+					firmId: 132,
+					userId: 1881
+				}
+			}).then(resp => {
+				this.isColl = true
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+		},
+		get_goods_collect_del:function (index) {
+			this.$ajax.get(this.HOST, {
+				params:{
+					method: "goods_collection_del",
+					userId: 1881,
+					goodsId: this.Id
+				}
+			}).then(resp => {
+				if (resp.data.statusCode == 100000) {
+					const arr = this.collectList;
+					const arr1 = arr.splice(index, 1);
+					this.collectList = arr1;
+				} else {
+					console.log(data.statusStr);
+				}
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+		},
+		back(){
+			this.$router.go(-1);
+		},
+		changeCollect(){
+			this.isCollect = !this.isCollect
+			if(this.isCollect == false){
+				this.get_goods_collect_del();
+				this.$message({
+			message: '取消收藏',
+			center: true,
+			});
+			}else {
+				this.get_goods_collectAdd()
+				this.$message({
+			message: '收藏成功',
+			center: true,
+			});
 			}
-		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
-			// console.log(resp.data);
-			this.isColl = true
-		}).catch(err => {
-			// console.log(JSON.parse(data).data.mainActivityList);
-			   console.log('请求失败：'+ err.statusCode);
-		});
-	},
-	get_goods_collect_del:function (index) {
-		this.$ajax.get(this.HOST, {
-			params:{
-				method: "goods_collection_del",
-				userId: 1881,
-				goodsId: this.Id
-			}
-		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
-			// console.log(resp.data);
-			if (resp.data.statusCode == 100000) {
-				const arr = this.collectList;
-				const arr1 = arr.splice(index, 1);
-				this.collectList =arr;
-			} else {
-				console.log(data.statusStr);
-			}
-		}).catch(err => {
-			// console.log(JSON.parse(data).data.mainActivityList);
-			   console.log('请求失败：'+ err.statusCode);
-		});
-	},
-	 back(){
-		 this.$router.go(-1);
-	 },
-	 changeCollect(){
-		 this.isCollect = !this.isCollect
-		 if(this.isCollect == false){
-			this.get_goods_collect_del();
-			this.$message({
-          message: '取消收藏',
-		  center: true,
-		});
-		 }else {
-			this.get_goods_collectAdd()
-			this.$message({
-          message: '收藏成功',
-		  center: true,
-		});
-		 }
-	 },
-	 goodsNumber_max() {
-		 this.num++
-	 },
-	 goodsNumber_min() {
-		 this.num--
-	 }
- },
- mounted(){
-	this.get_goods_detail()
-    var mySwiper = new Swiper('.swiper-container', {
-		loop: true,
-		pagination: {
-			el: '.swiper-pagination',
-			clickable: true,
-			autoplayDisableOnInteraction: false
-        },
-    })
- }
+		},
+	}
 }
 </script>
 

@@ -75,86 +75,90 @@ export default {
     data() {
         return {
             headerMsg:{
-            type:"common",
-            title:'订单管理',
-            left:'返回'
-        },
-        orderNav:[
-             {tit:'待发货'},
-             {tit:'已配货'},
-             {tit:'待支付'},
-             {tit:'全部'}
-        ],
-        navIndex:0,
-        isLast:false,
-		pageSize:'10',
-        pageNo:'1',
-        orderStatus:1,
-        ordersList:[],
+                type:"common",
+                title:'订单管理',
+                left:'返回'
+            },
+            orderNav:[
+                {tit:'待发货'},
+                {tit:'已配货'},
+                {tit:'待支付'},
+                {tit:'全部'}
+            ],
+            navIndex:0,
+            isLast:false,
+            pageSize:'10',
+            pageNo:'1',
+            orderStatus:1,
+            ordersList:[],
         }
     },
     components: {
-      appHeader
+        appHeader
     },
     created() {
+        // 接收上个页面传过来的值
         this.type = this.$route.query.type
         this.navIndex = this.type - 1
         this.orderStatus = this.type
         if(this.orderStatus >= 4) {
                 this.orderStatus = ''
             }else {
+                // 重置pageNo
                 this.pageNo = 1
             }
     },
+    mounted() {
+        this.get_goods_order()
+    },
     methods: {
+        // 请求数据
         get_goods_order:function () {
-		this.$ajax.get(this.HOST, {
-			params:{
-				method: "orders_manage2",
-				pageNo: this.pageNo,
-				pageSize: this.pageSize,
-                firmId: 132,
-                orderStatus: this.orderStatus
-			}
-		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
-			if (resp.data.statusCode == 100000) {
-                this.isLast = resp.data.data.isLast;
-				if (resp.data.data.pageNo == 1) {
-					this.ordersList = resp.data.data.objects;
-				} else {
-					this.ordersList = this.ordersList.concat(resp.data.data.objects);
+            this.$ajax.get(this.HOST, {
+                params:{
+                    method: "orders_manage2",
+                    pageNo: this.pageNo,
+                    pageSize: this.pageSize,
+                    firmId: 132,
+                    orderStatus: this.orderStatus
                 }
-			} else {
-				console.log(data.statusStr);
-			}
-		}).catch(err => {
-			   console.log('请求失败：'+ err.statusCode);
-		});
-	},
+            }).then(resp => {
+                if (resp.data.statusCode == 100000) {
+                    this.isLast = resp.data.data.isLast;
+                    if (resp.data.data.pageNo == 1) {
+                        this.ordersList = resp.data.data.objects;
+                    } else {
+                        this.ordersList = this.ordersList.concat(resp.data.data.objects);
+                    }
+                } else {
+                    console.log(data.statusStr);
+                }
+            }).catch(err => {
+                console.log('请求失败：'+ err.statusCode);
+            });
+	    },
         navTop(index) {
             this.navIndex = index
             this.orderStatus = index + 1
             if(this.orderStatus >= 4) {
                 this.orderStatus = ''
             }else {
+                // 重置pageNo
                 this.pageNo = 1
             }
             this.get_goods_order()
         },
+        //加载更多
         loadMore:function(){
             if(!this.isLast){
                 this.pageNo ++
                 this.get_goods_order()
             }
         },
+        //路由传值给详情页面
         toOrderDetail(code,orderStatus) {
 		    this.$router.push({ path:'orderDetails/',query:{code:code,orderStatus:orderStatus} })
         }
-    },
-    mounted() {
-        this.get_goods_order()
     }
 }
 </script>

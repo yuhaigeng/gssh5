@@ -106,9 +106,9 @@
             left:'返回'
          },
          logined:false,
-         pageNo: this.pageNo,
-         pageSize: this.pageSize,
-         websiteNode: this.websiteNode,
+         pageNo: 1,
+         pageSize: 10,
+         websiteNode: "3301",
          firmId:JSON.parse(localStorage.getItem("user_data")) ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
          goods:[],
          left_name:[],

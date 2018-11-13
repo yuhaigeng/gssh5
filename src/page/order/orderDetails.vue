@@ -15,16 +15,16 @@
                 <dl class="clearfloat">
                     <dt>下单时间：</dt><dd>{{orderDetailList.createTime}}</dd>
                 </dl>
-                <dl class="clearfloat" v-if="orderStatus == 1">
+                <dl class="clearfloat" v-if="orderStatus == 1 || orderStatus == -1">
                     <dt>预计配送：</dt><dd>{{orderDetailList.preSendTime}}</dd>
                 </dl>
-                <dl class="clearfloat">
+                <dl class="clearfloat" v-if="orderStatus == 2 || orderStatus == 3 || orderStatus == 4">
                     <dt>配货时间：</dt><dd>{{orderDetailList.readyGoodsTime}}</dd>
                 </dl>
-                <dl class="clearfloat" v-if="orderStatus == 3">
+                <dl class="clearfloat" v-if="orderStatus == 3 || orderStatus == 4">
                     <dt>配送时间：</dt><dd>{{orderDetailList.sendTime}}</dd>
                 </dl>
-                <dl class="clearfloat">
+                <dl class="clearfloat"  v-if="orderStatus == 1 || orderStatus == 2">
                     <dt>&nbsp;</dt><dd>(请保持电话畅通)</dd>
                 </dl>
             </div>
@@ -56,12 +56,12 @@
                         <dd></dd>
                         <dd class="order_details_goods_right">总价：{{item.costMoney}}元</dd>
                     </dl>
-                    <div class="order_details_goods_ clearfloat" v-if="orderStatus == 3">
-                        <dl class="odg_left clearfloat">
+                    <div class="order_details_goods_ clearfloat" v-if="orderStatus == 3 || orderStatus == 4">
+                        <dl class="clearfloat">
                             <dt>实际总重:</dt>
                             <dd><span class="color_f27c32">{{item.afterWholePriceSize}}斤</span></dd>
                         </dl>
-                        <dl class="odg_right clearfloat">
+                        <dl class="clearfloat">
                             <dt>实际总价:</dt>
                             <dd><span class="color_f27c32">{{item.afterCostMoney}}元</span></dd>
                         </dl>
@@ -78,25 +78,24 @@
                     <button class="logistic_show" data-type="#PS-DESC">配送说明</button>
             </div>
             <!--优惠券-->
-            <div class="order_details_coupon_box1 conpon_item_box conpon_item_box_coupon clearfloat" v-if="orderStatus == 3" data-type='1' >
+            <div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='1' >
                 <dl class="order_details_coupon clearfloat">
                     <dt>优惠券:（单选）</dt>
                     <dd class="order_coupon_price"></dd>
                 </dl>
             </div>
-            <div class="order_details_coupon_box1 conpon_item_box conpon_item_box_goodCoupon clearfloat" v-if="orderStatus == 3" data-type='2' >
+            <div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='2' >
                 <dl class="order_details_coupon clearfloat">
                     <dt>商品券:（可多选）</dt>
                     <dd class="order_coupon_price"></dd>
                 </dl>
             </div>
-            <div class="order_details_coupon_box1 conpon_item_box conpon_item_box_typeCoupon clearfloat" v-if="orderStatus == 3" data-type='3'>
+            <div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='3'>
                 <dl class="order_details_coupon clearfloat">
                     <dt>商品类目券:（可多选）</dt>
                     <dd class="order_coupon_price"></dd>
                 </dl>
             </div>
-            
             <div class="order_details_coupon_box11" v-if="orderStatus == 3">
                 点击去支付后，不能重新选择优惠券，请谨慎操作！
             </div>
@@ -109,7 +108,7 @@
                 <p>(实际金额按照收货时实际称重结算)</p>
             </div>
             <!--订单金额详情-->
-					<div class="order_details_money_details" v-if="orderStatus == 2 || orderStatus == 3">
+					<div class="order_details_money_details" v-if="orderStatus == 2 || orderStatus == 3 || orderStatus == 4">
 						<dl class="clearfloat">
 							<dt>订单总金额:</dt>
 							<dd><span class="color_f27c32">{{orderDetailList.goodsMoney}}</span>元</dd>
@@ -129,6 +128,9 @@
 					</div>
             <div class="order_details_cancel" v-if="orderStatus == 1">
 				取消订单
+			</div>
+			<div class="order_details_cancel" v-if="orderStatus == -1">
+				删除订单
 			</div>
         </div>
  </div>
@@ -151,31 +153,29 @@ export default {
     },
     components: {
     appHeader,
-  },
-  created:function() {
+  	},
+  	created:function() {
       this.Code = this.$route.query.code
       this.orderStatus = this.$route.query.orderStatus
-  },
-  methods: {
+  	},
+  	methods: {
         get_order_detail:function () {
 		this.$ajax.get(this.HOST, {
 			params:{
 				method: "order_details_fou",
 				orderCode: this.Code,
-			}
-		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
+				}
+			}).then(resp => {
                 this.orderDetailList = resp.data.data.orderInfo;
                 this.orderDetailsList = resp.data.data.orderInfo.orderDetailsList;
-		}).catch(err => {
+			}).catch(err => {
 			   console.log('请求失败：'+ err.statusCode);
-		});
-	},
-  },
-  mounted() {
+			});
+		},
+  	},
+  	mounted() {
       this.get_order_detail()
-  }
+  	}
 }
 </script>
 
@@ -308,7 +308,6 @@ export default {
 	padding: 0 24px;
 	background: #fffdda;
 	color: #999997;
-	display: none;
 }
 
 .order_details_goods .order_details_goods_ dl {
@@ -490,4 +489,76 @@ export default {
 	outline: none;
 	margin-bottom: 0;
 }
+/*优惠卷*/
+.coupon_main_wrap {
+	height: auto;
+}
+
+.select_coupon {
+	display: none;
+}
+
+.select_coupon .coupon_main_ .title {
+	font-size: 30px;
+	color: #666666;
+	padding-top: 10px;
+	padding-bottom: 34px;
+}
+
+.select_coupon .coupon_main_unAvailable {
+	color: #9a9a9a;
+}
+
+.select_coupon .coupon_main_available .coupon_status1.active {
+	background: #fff url('../../assets/img/coupon_active.png') no-repeat right top;
+}
+
+.select_coupon .coupon_main_unAvailable .coupon_status1 dt {
+	color: #9A9A9A;
+}
+
+.select_coupon .select_coupon_top {
+	width: 100%;
+	height: 80px;
+	line-height: 80px;
+	background: #FFF url(../../assets/img/bg_num_b.png) no-repeat 96% center;
+	font-size: 24px;
+	padding: 0 24px;
+	margin-top: 30px;
+}
+
+.select_coupon .select_coupon_top.active {
+	background-image: url(../../assets/img/bg_num_a.png);
+}
+
+.select_coupon .coupon_main_ .title {
+	font-size: 30px;
+	color: #666666;
+	padding-top: 10px;
+	padding-bottom: 34px;
+}
+
+.order_coupon_header_right {
+	display: none;
+}
+
+.conpon_item_box .order_details_coupon {
+	width: 100%;
+}
+
+.conpon_item_box .order_details_coupon dd {
+	float: right;
+	min-width: 100px;
+	background: url(../../assets/img/arrow_right.png) no-repeat right center;
+	padding-right: 44px;
+	height: 80px;
+	position: relative;
+	right: -20px;
+	color: #f50909;
+}
+
+.order_details_coupon_box11 {
+	color: #f50909;
+}
+
 </style>
