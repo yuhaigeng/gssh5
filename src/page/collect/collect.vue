@@ -6,38 +6,38 @@
 				<ul>
 					<li class="line-wrapper"  v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item.goodsInfoId)">
                         <mt-cell-swipe :right="rightButtons(index)">
-			        	<div class="line-scroll-wrapper clearfloat">
-			                <dl class="line-normal-wrapper clearfloat">
-		                         <dt class="line-normal-avatar-wrapper">
-		                         	<img :src="item.goodsInfo.goodsLogo"/>
-		                         </dt>
-		                         <dd class="line-normal-info-wrapper">
-		                            <div class="often_shop_goods_top clearfloat">
-					 					<p class="often_shop_goods_tit">{{item.goodsInfo.goodsName}}</p>
-					 					<p class="often_shop_goods_icon">
-										 	<img class="icon_cu" src="../../assets/img/tag_te@2x.png"/>
-					 					</p>
-					 				</div>
-		                            <p class="often_shop_show">{{item.goodsInfo.goodsShows}}</p>
-					 				<div class="often_shop_NumPir">
-					 					<div class="os_pir">
-					 						<span class="often_shop_color">{{item.goodsInfo.gssPrice}}</span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<span>{{item.goodsInfo.priceDesc}}</span>'
-					 					</div>
-					 					<div class="os_Num">
-					 						<button class="goods_Number_min" v-if="num > 0" @click="goodsNumber_min(index)">
-					 							<img src="../../assets/img/btn_m@2x.png"/>
-					 						</button>
-					 						<span class="goodsNumber fontColor" v-if="num > 0">{{num}}</span>
-					 						<button class="goods_Number_max" @click="goodsNumber_max(index)">
-					 						    <img src="../../assets/img/btn_a@2x.png"/>
-					 					    </button>
-					 					</div>
-					 				</div>
-		                         </dd>
-			                </dl>
-			            </div>
+							<div class="line-scroll-wrapper clearfloat">
+								<dl class="line-normal-wrapper clearfloat">
+									<dt class="line-normal-avatar-wrapper">
+										<img :src="item.goodsInfo.goodsLogo"/>
+									</dt>
+									<dd class="line-normal-info-wrapper">
+										<div class="often_shop_goods_top clearfloat">
+											<p class="often_shop_goods_tit">{{item.goodsInfo.goodsName}}</p>
+											<p class="often_shop_goods_icon">
+												<img class="icon_cu" src="../../assets/img/tag_te@2x.png"/>
+											</p>
+										</div>
+										<p class="often_shop_show">{{item.goodsInfo.goodsShows}}</p>
+										<div class="often_shop_NumPir">
+											<div class="os_pir">
+												<span class="often_shop_color">{{item.goodsInfo.gssPrice}}</span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<span>{{item.goodsInfo.priceDesc}}</span>'
+											</div>
+											<div class="os_Num">
+												<button class="goods_Number_min" v-if="buyNum > 0">
+													<img src="../../assets/img/btn_m@2x.png"/>
+												</button>
+												<span class="goodsNumber fontColor" v-if="buyNum > 0">{{buyNum}}</span>
+												<button class="goods_Number_max">
+													<img src="../../assets/img/btn_a@2x.png"/>
+												</button>
+											</div>
+										</div>
+									</dd>
+								</dl>
+							</div>
                         </mt-cell-swipe>
-			         </li>
+			        </li>
 				</ul>
 			</div>
             <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
@@ -48,6 +48,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import { CellSwipe } from 'mint-ui';
+import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
  data() {
 	return {
@@ -57,11 +58,12 @@ export default {
 			left:'返回'
 		},
 		collectList:[],
-		num:0,
+		buyNum:1,
 		goodID:'',
 		isLast:false,
-		pageSize:'10',
-        pageNo:'1',
+		pageNo: this.pageNo,
+		pageSize: this.pageSize,
+		userId: JSON.parse(localStorage.getItem("user_data")).cuserInfoid
  	}
  },
  components: {
@@ -76,13 +78,15 @@ export default {
 				content: '删除',
 				style: { background: 'red', color: '#fff',width:'200px',fontSize:'24px',textAlign:'center',lineHeight:'200px'},
 				handler: function(index){
-					// console.log(_this.collectList);
 					_this.goodID = _this.collectList[this.data].goodsInfoId;
 					_this.get_goods_collect_del(this.data);
 				}
 			}
 		]
 	  }
+  },
+  mounted() {
+	  this.get_goods_collected()
   },
   methods:{
 	  get_goods_collected:function () {
@@ -92,12 +96,9 @@ export default {
 				pageNo: this.pageNo,
 				pageSize: this.pageSize,
 				firmId: this.firmInfoid,
-				userId: 1881
+				userId: this.userId
 			}
 		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
-			// console.log(resp.data);
 			if (resp.data.statusCode == 100000) {
 				this.isLast = resp.data.data.isLast;
 				if (resp.data.data.pageNo == 1) {
@@ -109,7 +110,6 @@ export default {
 				console.log(data.statusStr);
 			}
 		}).catch(err => {
-			// console.log(JSON.parse(data).data.mainActivityList);
 			   console.log('请求失败：'+ err.statusCode);
 		});
 	},
@@ -118,13 +118,10 @@ export default {
 		this.$ajax.get(this.HOST, {
 			params:{
 				method: "goods_collection_del",
-				userId: 1881,
+				userId: this.userId,
 				goodsId: this.goodID
 			}
 		}).then(resp => {
-			// return JSON.parse(JSON.stringify(result));
-			// return JSON.stringify(data.data);
-			// console.log(resp.data);
 			if (resp.data.statusCode == 100000) {
 				const arr = this.collectList;
 				const arr1 = arr.splice(index, 1);
@@ -133,29 +130,21 @@ export default {
 				console.log(data.statusStr);
 			}
 		}).catch(err => {
-			// console.log(JSON.parse(data).data.mainActivityList);
 			   console.log('请求失败：'+ err.statusCode);
 		});
 	},
-	goodsNumber_max(index) {
-		 this.num++
-	 },
-	 goodsNumber_min(index) {
-		 this.num--
-	 },
-	 toDetail(id) {
+
+	toDetail(id) {
 		this.$router.push({ path:'detail/'+id })
 	},
+
 	loadMore:function(){
         if(!this.isLast){
             this.pageNo ++
             this.get_goods_collected()
-        }
-	 },
-  	},
-  mounted() {
-	  this.get_goods_collected()
-  }
+        	}
+	 	},
+  	}
 }
 </script>
 

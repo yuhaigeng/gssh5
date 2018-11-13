@@ -308,7 +308,6 @@
 	border: 2px solid #dddddd;
 	border-radius: 34px;
 	margin-left: 24px;
-	display: inline-block;
 }
 
  .topClass {
