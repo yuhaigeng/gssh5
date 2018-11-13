@@ -281,6 +281,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../../common/sprite.css";
 .login{
     max-width: 750px;
 }
@@ -334,19 +335,6 @@ export default {
     height: 60px;
     width: 90%;
     line-height: 30px;
-}
-.icon_phone {
-    background-position: -1084px -265px;
-}
-.icon_key {
-    background-position: -1084px -134px;
-}
-.icon_password {
-    background-position: -1084px -196px;
-}
-.sprite {
-    background-image: url(../../assets/img/sprite.png);
-    background-repeat: no-repeat;
 }
 .login_main_content .tips {
     background-color: #fff;

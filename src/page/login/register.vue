@@ -318,6 +318,7 @@ import '@/common/LArea.css'
 </script>
 
 <style scoped>
+
 .main {
     width: 100%;
     height: auto;

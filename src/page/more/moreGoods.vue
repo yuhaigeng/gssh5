@@ -17,10 +17,10 @@
           <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}">
             <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
               <ul class="moreGoods_box_list">
-                <li v-for="(item,index) in listObj " :key="index"  >
+                <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item.id)" >
                   <dl class="moreGoods_goods_detaile clearfloat">
                     <dt>
-                      <img :src="item.goodsLogo" alt="">
+                      <img v-lazy="item.goodsLogo" alt="">
                       <span v-if="item.vipGrade > 0" :class = "'icon_vip'+ item.vipGrade"></span>
                     </dt>
                     <dd>
@@ -268,7 +268,10 @@
                 this.pageNo ++
                 this.goods_info_nav()
             }
-        }
+        },
+        toDetail(id) {
+          this.$router.push({ path:'detail/'+id })
+        },
     }
   }
 </script>
