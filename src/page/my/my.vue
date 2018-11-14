@@ -16,7 +16,7 @@
             </div>
 
         </app-header>
-        <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin="isLogin" ></loginState>
+        <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin" ></loginState>
         <div  v-cloak class="cont cont1 clearfloat">
         <router-link :to="isLogin ? 'vip' : 'login'" tag="dl"  class="float_left " >
             <dt><b>VIP</b></dt>
@@ -31,8 +31,8 @@
             <dd>果币商城</dd>
         </router-link>
         </div>
-        <personalOptions :orderList="orderList" :title ="title" ></personalOptions>
-        <personalOptions :orderList="otherList" :title ="title1"></personalOptions>
+        <personalOptions :orderList="orderList" :title ="title" :isLogin='isLogin'></personalOptions>
+        <personalOptions :orderList="otherList" :title ="title1" :isLogin='isLogin'></personalOptions>
         <app-footer :isLogin="isLogin"></app-footer>
    </div>
 </template>
@@ -60,11 +60,11 @@ export default {
             },
             isLogin:getIsLogin(),
             method:["user_personal_msg","firm_vip_info"],
-            firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
+            firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
             userBasicParam:{
                 source:'firmId'+ this.firmId,
-                tokenId:localStorage.getItem("tokenId"),
-                sign :this.$md5('firmId'+ this.firmId + "key" + localStorage.getItem("secretKey")).toUpperCase()
+                tokenId: getTokenId(),
+                sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
              },
             userInfo:{},
             userVipInfo:{},
@@ -79,7 +79,6 @@ export default {
                  this.personApi()
              this.firm_vip_info()
        }
-
    },
    methods:{
        personApi:function(){

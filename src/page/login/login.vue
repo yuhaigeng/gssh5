@@ -41,7 +41,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import alertVue from '../../components/public/alert.vue';
-
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     name:'login',
     components:{
@@ -59,9 +59,9 @@ export default {
             },
             login : 0,  //短信和账号之间切换
             tipsMsg:null, //提示文本
-            message:null, // 短信方式
-            account:null, // 账号方式
-            passWord:null, // 密码
+            message:"", // 短信方式
+            account:"", // 账号方式
+            passWord:"", // 密码
             code:null,     // 验证码
             isActive:false, //是否激活
             isHidden:true, //是否显示隐藏
@@ -72,10 +72,9 @@ export default {
             timer:null,
             noticeInfoList:null,
             method:['user_dynamic_login','user_login'],
-            websiteNode: "3301",
+            websiteNode: this.websiteDate.code,
             parameter:null,
             descCode:"#HZ-DESC",
-            // closeAlert:false,
 
         }
     },
@@ -83,7 +82,7 @@ export default {
         login:function(val,oldval){
             if(val == 0){
                 if(this.message != null && this.code != null){
-                        if( this.message.length == 11 && this.code.length == 6){
+                    if( this.message.length == 11 && this.code.length == 6){
                         this.isActive = true;
                     }else{
                         this.isActive = false;
@@ -93,7 +92,7 @@ export default {
                 }
             }else{
                 if(this.account != null && this.passWord !=null){
-                        if(this.account.length == 11 && this.passWord.length >= 6){
+                    if(this.account.length == 11 && this.passWord.length >= 6){
                         this.isActive = true;
                     }else{
                         this.isActive = false;
@@ -137,6 +136,10 @@ export default {
                 this.isActive = false;
             }else{
                 if( this.account.length == 11){
+                    if(this.passWord.length >= 6){
+                         this.isActive = true;
+                    }
+
                     if(!this.phoneNumberReg.test(this.account)){
                             this.tipsMsg = "请输入正确的手机号！"
                     }else{
@@ -148,11 +151,11 @@ export default {
                 }
             }
         },
-        passWord:function(){
-            if(this.account.length == 11 && this.passWord.length >= 6 ){
-                this.isActive = true;
+        passWord:function(val){
+            if(this.account.length == 11 && val.length >= 6 ){
+                    this.isActive = true;
             }else{
-                this.isActive = false
+                     this.isActive = false
             }
         },
         code:function(val){

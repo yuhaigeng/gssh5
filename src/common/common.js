@@ -21,7 +21,7 @@ const getSystem = function (params) {
         // console.log(JSON.parse(data).data.mainActivityList);
         console.log('请求失败：' + err.statusCode);
     });
-    
+
 }
 //获取是否有新消息
 const getMessage = function (params) {

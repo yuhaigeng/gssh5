@@ -26,7 +26,7 @@
                     <dd>
                        <h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
                        <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
-                       <div v-if="logined">
+                       <div v-if="isLogin">
                           <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
                             <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
                             </p>
@@ -125,7 +125,6 @@
           {"id":15038,"name":"[特]红心柚(7-9头).福建.箱装","sum":1,"price":52.8,"wholePriceSize":"箱","gssPrice":2.4,"priceUnit":"斤","packageNum":"83","maxCount":"0"}
         ],
         systemMoney:-1,//系统参数配置中配置的起售金额
-
       }
     },
     components: {
@@ -139,7 +138,7 @@
 
       }
       // 数据初始化
-      this.logined = getIsLogin();
+      this.isLogin = getIsLogin();
 
       if ( localStorage.getItem('system') ) {
         this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
