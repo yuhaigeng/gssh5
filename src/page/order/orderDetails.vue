@@ -101,7 +101,7 @@
 					</dl>
 				</div>
 				<!--优惠券-->
-				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='1' @click="toCoupon">
+				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='1' @click="toCoupon(this.Code)">
 					<dl class="order_details_coupon clearfloat">
 						<dt>优惠券:（单选）</dt>
 						<dd class="order_coupon_price"></dd>
@@ -229,9 +229,8 @@ export default {
 		closeAlert:function(){
             this.noticeInfoList = null;
 		},
-		toCoupon() {
-			this.$router.push({path:'/chooseCoupon'})
-			//this.$router.push({path:'/score/goodsList/good',query:{id:'100'}})
+		toCoupon(code) {
+			this.$router.push({path:'/chooseCoupon',query:{code:code}})
 		}
 	},
 	  
