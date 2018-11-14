@@ -31,10 +31,10 @@
 
 <script>
 import  addressHeader from "../../components/public/header.vue";
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 import {layer} from '../../common/layer.js'; //注意路径
 import {LArea} from '../../common/LArea.js' ;
 import {LArea1} from '../../common/LArea1.js';
-import md5 from 'js-md5';
 import '@/common/LArea.css';
 import '@/common/layer.css'
 export default {
@@ -59,11 +59,11 @@ export default {
       phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式,
       tipsMsg:null, //提示文本
       countyId:null,
-      firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
+      firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
       userBasicParam:{
-          source:'firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid,
-          tokenId:localStorage.getItem("tokenId"),
-          sign :md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
+          source:'firmId'+ this.firmId,
+          tokenId: getTokenId(),
+          sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
       },
       addressId:null
     }

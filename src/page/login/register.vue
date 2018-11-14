@@ -63,6 +63,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 import {LArea} from '../../common/LArea.js' ;
 import {LArea1} from '../../common/LArea1.js';
 import '@/common/LArea.css'
@@ -104,7 +105,7 @@ import '@/common/LArea.css'
                     "3301":"杭州站",
                     '3302':'宁波站'
                 },
-                websiteNode:'3301',
+                websiteNode:this.websiteDate.code,
                 noticeInfoList:null,
                 descCode:null,
                 area2:new LArea1(),

@@ -31,6 +31,7 @@
 
 <script>
 import  addressHeader from "../../components/public/header.vue";
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
   name:'addressManagement',
   components:{
@@ -45,11 +46,11 @@ export default {
           right:'新增地址',
           left:'返回'
       },
-      firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
+      firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
       userBasicParam:{
           source:'firmId'+ this.firmId,
-          tokenId:localStorage.getItem("tokenId"),
-          sign :this.$md5('firmId'+ this.firmId + "key" + localStorage.getItem("secretKey")).toUpperCase()
+          tokenId: getTokenId(),
+          sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
       },
       addresses:null,
       addressId:null,

@@ -2,7 +2,7 @@
      	<div class="cont cont2">
             <div class="cont_tit" v-text="title"></div>
             <div class="cont_order_box clearfloat">
-                <router-link :to="{path:logined ? item.linkUrl : 'login', query:{type:item.type}}"   tag="dl" v-for = "(item,index) in orderList" :key="index">
+                <router-link :to="{path:isLogin ? item.linkUrl : 'login', query:{type:item.type}}"   tag="dl" v-for = "(item,index) in orderList" :key="index">
                     <dt><img :src="item.icon"/></dt>
                     <dd v-text="item.name"></dd>
                 </router-link>
@@ -11,12 +11,13 @@
 </template>
 
 <script>
+
     export default {
         name:'personalOptions',
-        props:['orderList', 'title'],
+        props:['orderList', 'title' ,'isLogin'],
          data() {
              return {
-                logined:localStorage.getItem("user_data") ? true : false,
+
              }
          },
     }

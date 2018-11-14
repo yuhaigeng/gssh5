@@ -26,7 +26,7 @@
                     <dd>
                        <h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
                        <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
-                       <div v-if="logined">
+                       <div v-if="isLogin">
                           <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
                             <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
                             </p>
@@ -86,7 +86,7 @@
 				  </div>
         </div>
       </div>
-      <app-footer-go-shop></app-footer-go-shop>
+      <app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney"></app-footer-go-shop>
   </div>
 </template>
 <script>
@@ -98,30 +98,33 @@
     name: 'more',
     data() {
       return {
-         headerMsg:{
-            type:"common",
-            title:'更多商品',
-            left:'返回'
-         },
-         logined:false,
-         pageNo: this.pageNo,
-         pageSize: this.pageSize,
-         websiteNode:this.websiteDate.code,
-         firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
-         goods:[],
-         left_name:[],
-         goodsList:null,
-         listObj:[],
-         typeCode:null,
-         goodsType:null,
-         isSelected:0,
-         isTop:0,
-         isShow:0,
-         goodNum:1,//本地存储的数量
-         isLast:false,
-         goShopCart:[],//本地购物车
-         systemMoney:-1,//系统参数配置中配置的起售金额
-
+        headerMsg:{
+          type:"common",
+          title:'更多商品',
+          left:'返回'
+        },
+        logined:false,
+        pageNo: this.pageNo,
+        pageSize: this.pageSize,
+        websiteNode:this.websiteDate.code,
+        firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
+        goods:[],
+        left_name:[],
+        goodsList:null,
+        listObj:[],
+        typeCode:null,
+        goodsType:null,
+        isSelected:0,
+        isTop:0,
+        isShow:0,
+        goodNum:1,//本地存储的数量
+        isLast:false,
+        goShopCart:[//本地购物车
+          {"id":15207,"name":"[特]砀山梨.安徽.筐装","sum":10,"price":72,"wholePriceSize":"筐","gssPrice":2,"priceUnit":"斤","packageNum":"400","maxCount":"0"},
+          {"id":15039,"name":"[特]三红柚(7-9头).福建.箱装","sum":1,"price":55.44,"wholePriceSize":"箱","gssPrice":2.52,"priceUnit":"斤","packageNum":"100","maxCount":"0"},
+          {"id":15038,"name":"[特]红心柚(7-9头).福建.箱装","sum":1,"price":52.8,"wholePriceSize":"箱","gssPrice":2.4,"priceUnit":"斤","packageNum":"83","maxCount":"0"}
+        ],
+        systemMoney:-1,//系统参数配置中配置的起售金额
       }
     },
     components: {
@@ -135,13 +138,14 @@
 
       }
       // 数据初始化
-      this.logined = getIsLogin();
+      this.isLogin = getIsLogin();
 
       if ( localStorage.getItem('system') ) {
         this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
       } else {
 
       }
+      localStorage.setItem('good',JSON.stringify(this.goShopCart))
       this.goods_first_nav()
       console.log(this.getUserData)
     },
