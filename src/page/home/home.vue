@@ -91,7 +91,7 @@ export default {
                 this.autoLogin();
             }
             const userInfo = JSON.parse(getUserData());
-
+            
             this.userBasicParam = {
                 firmId : userInfo.firmInfoid,
                 source : 'firmId'+userInfo.firmInfoid,
