@@ -16,7 +16,7 @@
 
           </div>
 			</div>
-        <app-footer :logined="logined"></app-footer>
+        <app-footer :isLogin="isLogin"></app-footer>
    </div>
 </template>
 
@@ -39,7 +39,7 @@ export default {
          },
          messages:{},
          objects:[],
-         logined:getIsLogin()
+        isLogin:getIsLogin()
 
        }
    },

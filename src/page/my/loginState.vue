@@ -3,7 +3,7 @@
         <p class="no_login_text" v-show="!isLogin">您还没有登录</p>
         <router-link :to="'login'" tag="span"  class="no_login_btn" v-show="!isLogin">登录</router-link>
 
-        <dl class="wo_top_info clearfloat" v-show="isLogin && userVipInfo.vip">
+        <dl  v-cloak class="wo_top_info clearfloat" v-show="isLogin && userVipInfo">
             <dt class="float_left">
                 <img v-show="userInfo.faceImgUrl" class="user_faceImg" :src="'http://'+userInfo.faceImgUrl"/>
                 <input class="login_type1 " type="file" accept="image/*" name="" id="file" value="" />
@@ -14,7 +14,7 @@
             </dd>
             <router-link to="company" tag="dd" class="my_details float_right"></router-link>
         </dl>
-        <div class="wo_top_growInfo" v-show="isLogin && userVipInfo.vip">
+        <div  v-cloak class="wo_top_growInfo" v-show="isLogin && userVipInfo">
             <div class="growInfo_pointer">
                 <span v-text="'当月成长值'+userVipInfo.firmMonthExp" v-bind:style="{marginLeft:getMarginleft,left:getLeft}"></span>
             </div>

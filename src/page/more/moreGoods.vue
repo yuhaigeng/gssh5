@@ -26,7 +26,7 @@
                     <dd>
                        <h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
                        <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
-                       <div v-if="logined">
+                       <div v-if="isLogin">
                           <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
                             <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
                             </p>
@@ -103,11 +103,11 @@
             title:'更多商品',
             left:'返回'
          },
-         logined:false,
+         isLogin:false,
          pageNo: this.pageNo,
          pageSize: this.pageSize,
          websiteNode:this.websiteDate.code,
-         firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
+         firmId: JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
          goods:[],
          left_name:[],
          goodsList:null,
@@ -135,7 +135,7 @@
 
       }
       // 数据初始化
-      this.logined = getIsLogin();
+      this.isLogin = getIsLogin();
 
       if ( localStorage.getItem('system') ) {
         this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;

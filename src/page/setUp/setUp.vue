@@ -19,52 +19,52 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
-    export default {
-        name:'setUp',
-        components:{
-          setHeader
-        },
-         data() {
-             return {
-                 items:[
-                    {name:'企业信息',routerUrl:"company"},
-                    {name:'登陆密码',routerUrl:"revise"}
-                 ],
-                 headerMsg:{
-                    type:"common",
-                    title:'设置',
-                    left:'返回'
-                },
-                source:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
-                tokenId:localStorage.getItem("tokenId"),
-                sign :this.$md5( this.source + "key" + localStorage.getItem("secretKey")).toUpperCase()
-             }
-         },
-         mounted(){
-             console.log( JSON.parse(localStorage.getItem("user_data")).firmInfoid)
-             console.log(localStorage.getItem("tokenId"))
-         },
-         methods:{
-            login_out:function(){
-                 this.$ajax.get(this.HOST, {
-                    params :{
-                        method:'user_logout',
-                        source :this.source,
-                        sign : this.sign,
-                        tokenId :this.tokenId
-                    }
-                }).then(resp => {
-                       console.log(resp.data)
-                        localStorage.clear();
-                        this.$router.push({path:'/my',query:{isLogin:false}})
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+export default {
+    name:'setUp',
+    components:{
+      setHeader
+    },
+      data() {
+          return {
+              items:[
+                {name:'企业信息',routerUrl:"company"},
+                {name:'登陆密码',routerUrl:"revise"}
+              ],
+              headerMsg:{
+                type:"common",
+                title:'设置',
+                left:'返回'
+            },
+            userBasicParam:{
+                source:'firmId'+ this.firmId,
+                tokenId: getTokenId(),
+                sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+            },
+          }
+      },
+      mounted(){
+          console.log( JSON.parse(localStorage.getItem("user_data")).firmInfoid)
+          console.log(localStorage.getItem("tokenId"))
+      },
+      methods:{
+        login_out:function(){
+              this.$ajax.get(this.HOST, {
+                params :Object.assign({
+                    method:'user_logout',
+                },this.userBasicParam)
+            }).then(resp => {
+                    console.log(resp.data)
+                    localStorage.clear();
+                    this.$router.push({path:'/my',query:{isLogin:false}})
 
-                }).catch(err => {
-                    console.log('请求失败：'+ err.statusCode);
-                });
-            }
+            }).catch(err => {
+                console.log('请求失败：'+ err.statusCode);
+            });
+        }
 
-         }
-    }
+      }
+}
 </script>
 
 <style scoped>

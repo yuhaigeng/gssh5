@@ -60,7 +60,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
-import md5 from 'js-md5';
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
    export default {
         name: 'orderSettlement' ,
         components:{
@@ -77,13 +77,13 @@ import md5 from 'js-md5';
                 websiteNode:'3301',
                 descCode:"#PS-DESC",
                 noticeInfoList:null,
-                firmId:  localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data")).firmInfoid : "" ,
+                firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
                 userBasicParam:{
                     source:'firmId'+ this.firmId,
-                    tokenId:localStorage.getItem("tokenId"),
-                    sign :md5('firmId'+ this.firmId + "key" + localStorage.getItem("secretKey")).toUpperCase()
+                    tokenId: getTokenId(),
+                    sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
                 },
-                userId:JSON.parse(localStorage.getItem("user_data")).cuserInfoid,
+                userId:JSON.parse(getUserData()).cuserInfoid,
                 goodsList:{"goodsList":[{"goodsId":14498,"count":10}]},
                 customRequest:"",
                 addressId:"4131",

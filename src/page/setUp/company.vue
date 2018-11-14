@@ -36,6 +36,7 @@
 <script>
 import setHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
     export default {
         name:'company',
         components:{
@@ -49,13 +50,13 @@ import agreementAlert from  "../../components/public/alert.vue";
                     title:'企业信息',
                     left:'返回'
                 },
-                firmId:JSON.parse(localStorage.getItem("user_data")).firmInfoid,
+                firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
                 userBasicParam:{
-                    source:'firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid,
-                    tokenId:localStorage.getItem("tokenId"),
-                    sign :this.$md5('firmId'+ JSON.parse(localStorage.getItem("user_data")).firmInfoid+ "key" + localStorage.getItem("secretKey")).toUpperCase()
+                    source:'firmId'+ this.firmId,
+                    tokenId: getTokenId(),
+                    sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
                 },
-                userId:JSON.parse(localStorage.getItem('user_data')).cuserInfoid,
+                userId:JSON.parse(getUserData()).cuserInfoid,
                 firmName:null,
                 linkMan:null,
                 saleCard:null,
