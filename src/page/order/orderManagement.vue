@@ -161,7 +161,7 @@ export default {
         },
         //路由传值给详情页面
         toOrderDetail(code,orderStatus) {
-		    this.$router.push({ path:'orderDetails/',query:{code:code,orderStatus:orderStatus} })
+		    this.$router.push({ path:'orderDetails',query:{code:code,orderStatus:orderStatus} })
         }
     }
 }

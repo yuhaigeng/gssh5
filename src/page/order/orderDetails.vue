@@ -74,31 +74,55 @@
             </div>
             <!--配送费用说明-->
             <div class="order_details_distribution" >
-                配送费用：<span class="logistic_price">0.0元</span>
-                    <button class="logistic_show" data-type="#PS-DESC">配送说明</button>
+                配送费用：<span class="logistic_price">{{orderDetailList.postCost}}元</span>
+                    <button class="logistic_show" data-type="#PS-DESC" @click="get_desc">配送说明</button>
             </div>
-            <!--优惠券-->
-            <div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='1' >
-                <dl class="order_details_coupon clearfloat">
-                    <dt>优惠券:（单选）</dt>
-                    <dd class="order_coupon_price"></dd>
-                </dl>
-            </div>
-            <div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='2' >
-                <dl class="order_details_coupon clearfloat">
-                    <dt>商品券:（可多选）</dt>
-                    <dd class="order_coupon_price"></dd>
-                </dl>
-            </div>
-            <div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='3'>
-                <dl class="order_details_coupon clearfloat">
-                    <dt>商品类目券:（可多选）</dt>
-                    <dd class="order_coupon_price"></dd>
-                </dl>
-            </div>
-            <div class="order_details_coupon_box11" v-if="orderStatus == 3">
-                点击去支付后，不能重新选择优惠券，请谨慎操作！
-            </div>
+			<!--优惠-->
+			<div class="order_details_coupon_box">
+				<!--优惠策略-->
+				<div class="order_details_coupon_box2" v-if="orderStatus == 3">
+					<dl class="clearfloat">
+						<dt>优惠策略:</dt>
+						<dd class="order_coupon_price"></dd>
+					</dl>
+				</div>
+				<!--vip优惠-->
+				<div class="order_details_coupon_box3 hidden" >
+					<dl class="clearfloat">
+						<dt>VIP优惠:</dt>
+						<dd class="order_coupon_price"></dd>
+					</dl>
+				</div>
+				<!--其他优惠-->
+				<div class="order_details_coupon_box4 hidden" >
+					<dl class="clearfloat">
+						<dt>其他优惠:</dt>
+						<dd class="order_coupon_price"></dd>
+					</dl>
+				</div>
+				<!--优惠券-->
+				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='1' @click="toCoupon">
+					<dl class="order_details_coupon clearfloat">
+						<dt>优惠券:（单选）</dt>
+						<dd class="order_coupon_price"></dd>
+					</dl>
+				</div>
+				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='2' >
+					<dl class="order_details_coupon clearfloat">
+						<dt>商品券:（可多选）</dt>
+						<dd class="order_coupon_price"></dd>
+					</dl>
+				</div>
+				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='3'>
+					<dl class="order_details_coupon clearfloat">
+						<dt>商品类目券:（可多选）</dt>
+						<dd class="order_coupon_price"></dd>
+					</dl>
+				</div>
+				<div class="order_details_coupon_box11" v-if="orderStatus == 3">
+					点击去支付后，不能重新选择优惠券，请谨慎操作！
+				</div>
+			</div>
             <!--订单总金额-->
             <div class="order_details_money" v-if="orderStatus == 1">
                 <dl class="clearfloat">
@@ -132,12 +156,17 @@
 			<div class="order_details_cancel" v-if="orderStatus == -1">
 				删除订单
 			</div>
-        </div>
+			<div class="order_details_cancel" v-if="orderStatus == 3">
+				去支付
+			</div>
+		<explainAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </explainAlert>
+    </div>
  </div>
 </template>
 
 <script>
 import appHeader from "../../components/public/header.vue";
+import explainAlert from  "../../components/public/alert.vue";
 export default {
     data() {
         return {
@@ -148,12 +177,16 @@ export default {
         	},
 			orderDetailList:[],
 			orderDetailsList:[],
+			noticeInfoList:null,
 			orderStatus: '',
+			descCode: "#PS-DESC",
+			websiteNode:this.websiteDate.code,
 			tokenId:localStorage.getItem("tokenId"),
         }
     },
     components: {
-    	appHeader
+		appHeader,
+		explainAlert
   	},
   	created:function() {
     	this.Code = this.$route.query.code
@@ -161,20 +194,47 @@ export default {
   	},
   	methods: {
         get_order_detail:function () {
-		this.$ajax.get(this.HOST, {
-			params:{
-				method: "order_details_fou",
-				orderCode: this.Code,
-				tokenId: this.tokenId
-				}
-			}).then(resp => {
-                this.orderDetailList = resp.data.data.orderInfo;
-                this.orderDetailsList = resp.data.data.orderInfo.orderDetailsList;
-			}).catch(err => {
-			   console.log('请求失败：'+ err.statusCode);
+			this.$ajax.get(this.HOST, {
+				params:{
+					method: "order_details_fou",
+					orderCode: this.Code,
+					tokenId: this.tokenId
+					}
+				}).then(resp => {
+					this.orderDetailList = resp.data.data.orderInfo;
+					this.orderDetailsList = resp.data.data.orderInfo.orderDetailsList;
+				}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
 			});
 		},
-  	},
+		desc_data:function(){
+			this.$ajax.get(this.HOST, {
+				params:{
+					method:'gss_desc',
+					websiteNode:this.websiteNode,
+					code:this.websiteNode + this.descCode
+				}
+			}).then(resp => {
+					resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+					resp.data.data.noticeTitle =  resp.data.data.title;
+					resp.data.data.alertType = 1;
+					this.noticeInfoList = resp.data.data;
+			}).catch(err => {
+				console.log('请求失败：'+ err.data.statusCode);
+			});
+		},
+		get_desc() {
+			this.desc_data()
+		},
+		closeAlert:function(){
+            this.noticeInfoList = null;
+		},
+		toCoupon() {
+			this.$router.push({path:'/chooseCoupon'})
+			//this.$router.push({path:'/score/goodsList/good',query:{id:'100'}})
+		}
+	},
+	  
   	mounted() {
     	this.get_order_detail()
   	}
@@ -491,59 +551,6 @@ export default {
 	outline: none;
 	margin-bottom: 0;
 }
-/*优惠卷*/
-.coupon_main_wrap {
-	height: auto;
-}
-
-.select_coupon {
-	display: none;
-}
-
-.select_coupon .coupon_main_ .title {
-	font-size: 30px;
-	color: #666666;
-	padding-top: 10px;
-	padding-bottom: 34px;
-}
-
-.select_coupon .coupon_main_unAvailable {
-	color: #9a9a9a;
-}
-
-.select_coupon .coupon_main_available .coupon_status1.active {
-	background: #fff url('../../assets/img/coupon_active.png') no-repeat right top;
-}
-
-.select_coupon .coupon_main_unAvailable .coupon_status1 dt {
-	color: #9A9A9A;
-}
-
-.select_coupon .select_coupon_top {
-	width: 100%;
-	height: 80px;
-	line-height: 80px;
-	background: #FFF url(../../assets/img/bg_num_b.png) no-repeat 96% center;
-	font-size: 24px;
-	padding: 0 24px;
-	margin-top: 30px;
-}
-
-.select_coupon .select_coupon_top.active {
-	background-image: url(../../assets/img/bg_num_a.png);
-}
-
-.select_coupon .coupon_main_ .title {
-	font-size: 30px;
-	color: #666666;
-	padding-top: 10px;
-	padding-bottom: 34px;
-}
-
-.order_coupon_header_right {
-	display: none;
-}
-
 .conpon_item_box .order_details_coupon {
 	width: 100%;
 }
@@ -562,5 +569,4 @@ export default {
 .order_details_coupon_box11 {
 	color: #f50909;
 }
-
 </style>

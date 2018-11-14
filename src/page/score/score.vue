@@ -54,14 +54,7 @@
             </dl> -->
         </div>
     </div>
-    <transition name="fade">
-        <section class="license_container" v-if="showlicenseImg" @click="showlicenseImg = false">
-            <img :src="imgBaseUrl + licenseImg">
-        </section>
-    </transition>
-    <transition name="router-slid" mode="out-in">
-        <router-view></router-view>
-    </transition>
+    
  </div>
 </template>
 
