@@ -99,8 +99,11 @@ export default {
     },
     goBack:function(item){
         if(this.$route.query.isBack){
-            sessionStorage.setItem('data',JSON.stringify(item))
-              this.$router.go(-1)
+           let oldAddress = JSON.parse(sessionStorage.getItem('address'))
+           let newAddress = {address:item}
+           let backAddress = Object.assign(oldAddress,newAddress)
+            sessionStorage.setItem('address',JSON.stringify(backAddress))
+            this.$router.go(-1)
         }
     }
   }

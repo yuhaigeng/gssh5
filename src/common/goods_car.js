@@ -1,9 +1,9 @@
 //本地购物车存储
 //添加商品到本地
 const addgoods = function(id, name, price, wholePriceSize, gssPrice, priceUnit, packageNum, maxCount) {
-  const contact = new Object(); //单个商品的对象，暂时介质
-  const goodobj = new Object(); //商品对象
-  const memberfilter = new Array(); //商品信息
+   contact = new Object(); //单个商品的对象，暂时介质
+   goodobj = new Object(); //商品对象
+   memberfilter = new Array(); //商品信息
     memberfilter[0] = "id";
     memberfilter[1] = "name";
     memberfilter[2] = "sum";
@@ -24,15 +24,15 @@ const addgoods = function(id, name, price, wholePriceSize, gssPrice, priceUnit, 
     contact.priceUnit = priceUnit;
     contact.packageNum = packageNum;
     contact.maxCount = maxCount;
-    const good = new Array();
-    const jsonText = JSON.stringify(contact, memberfilter);
+     good = new Array();
+     jsonText = JSON.stringify(contact, memberfilter);
     good[0] = JSON.parse(jsonText);
     localStorage.good = JSON.stringify(good, memberfilter);
     return 1;
     //console.log(localStorage.good)
   } else {
-    const goodobj = JSON.parse(localStorage.good)
-    const con = 0;
+    let goodobj = JSON.parse(localStorage.good)
+    let con = 0;
     for (let i in goodobj) {
       if (goodobj[i].id == id) {
         //之前已经有此类商品了
@@ -57,8 +57,8 @@ const addgoods = function(id, name, price, wholePriceSize, gssPrice, priceUnit, 
       contact.priceUnit = priceUnit;
       contact.packageNum = packageNum;
       contact.maxCount = maxCount;
-      const jsonText = JSON.stringify(contact, memberfilter);
-      const goolen = goodobj.length;
+      let jsonText = JSON.stringify(contact, memberfilter);
+      let goolen = goodobj.length;
       goodobj[goolen] = JSON.parse(jsonText);
       localStorage.good = JSON.stringify(goodobj, memberfilter);
       return 1;
@@ -66,9 +66,9 @@ const addgoods = function(id, name, price, wholePriceSize, gssPrice, priceUnit, 
     }
   }
 }
-const goodobj = new Object();
-const money = 0;
-const memberfilter = new Array();
+let goodobj = new Object();
+let money = 0;
+let memberfilter = new Array();
   memberfilter[0] = "id";
   memberfilter[1] = "name";
   memberfilter[2] = "sum";
@@ -80,15 +80,15 @@ const memberfilter = new Array();
   memberfilter[8] = "maxCount";
 //商品数量减少
 const cutgoods = function cutgoods(id) {
-  goodobj = JSON.parse(localStorage.good)
+  let goodobj = JSON.parse(localStorage.good)
   for (let i in goodobj) {
     if (goodobj[i].id == id) {
       //之前已经有此类商品了
       //console.log("已有次类商品数目"+goodobj[i].sum)
       if (goodobj[i].sum == 1) {
-        const arr1 = goodobj.slice(0, i);
-        const arr2 = goodobj.slice(++i);
-        const arr = arr1.concat(arr2)
+        let arr1 = goodobj.slice(0, i);
+        let arr2 = goodobj.slice(++i);
+        let arr = arr1.concat(arr2)
         localStorage.setItem('good', JSON.stringify(arr))
         return 0;
       } else {
@@ -105,8 +105,8 @@ const callbackgoodsnumber = function(id) {
   if (typeof (localStorage.good) == "undefined") {
     return 0;
   } else {
-    goodobj = JSON.parse(localStorage.good);
-    const con = false;
+    let goodobj = JSON.parse(localStorage.good);
+    let con = false;
     for (let i in goodobj) {
       if (goodobj[i].id == id) {
         con = true;
@@ -120,11 +120,11 @@ const callbackgoodsnumber = function(id) {
 }
 //获取商品品总数
 const getgoodsNum = function() {
-  const total = 0;
+  let total = 0;
   if (typeof (localStorage.good) == "undefined") {
     return 0;
   } else {
-    goodobj = JSON.parse(localStorage.good);
+    let goodobj = JSON.parse(localStorage.good);
     for (let i in goodobj) {
       total += parseInt(goodobj[i].sum);
     }
@@ -133,11 +133,11 @@ const getgoodsNum = function() {
 }
 //获取商品总价格;
 const getgoodsMoney = function getgoodsMoney() {
-  const totalMoney = 0.00;
+   totalMoney = 0.00;
   if (typeof (localStorage.good) == "undefined") {
     return 0;
   } else {
-    goodobj = JSON.parse(localStorage.good);
+    let goodobj = JSON.parse(localStorage.good);
     for (let i in goodobj) {
       totalMoney += parseInt(goodobj[i].sum) * parseFloat(goodobj[i].price);
     }
@@ -146,16 +146,15 @@ const getgoodsMoney = function getgoodsMoney() {
 }
 //获取商品列表 id和sum
 const goodlist1 = function goodlist1() {
-  let id, num;
-  arr = [];
-  const goodsList1 = {
+  let id, num,arr = [];
+  let goodsList1 = {
     'goodsList': arr
   }
-  if (typeof (localStorage.good) == "undefined") {
+  if (typeof (localStorage.getItem('good')) == "undefined") {
     return 0;
   } else {
-    const obj1;
-    goodobj = JSON.parse(localStorage.good);
+    let obj1;
+    let goodobj = JSON.parse(localStorage.getItem('good'));
     for (let i in goodobj) {
       obj1 = new Object();
       obj1.goodsId = goodobj[i].id;
@@ -175,23 +174,6 @@ const goodlist2 = function goodlist2() {
   }
 }
 
-const getScore = function getScore() {
-  const score = 0;
-  if (typeof (localStorage.good) == "undefined") {
-    return 0;
-  } else {
-    goodobj = JSON.parse(localStorage.good);
-    for (let i in goodobj) {
-      if (goodobj[i].bussinessType != undefined) {
-        if (goodobj[i].bussinessType == 2) {
-          score += parseInt(goodobj[i].sum) * parseFloat(goodobj[i].score);
-        }
-      }
-
-    }
-    return score;
-  }
-}
 export {
   addgoods,
   cutgoods,

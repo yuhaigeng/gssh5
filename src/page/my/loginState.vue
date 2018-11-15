@@ -6,7 +6,7 @@
         <dl  v-cloak class="wo_top_info clearfloat" v-show="isLogin && userVipInfo">
             <dt class="float_left">
                 <img v-show="userInfo.faceImgUrl" class="user_faceImg" :src="'http://'+userInfo.faceImgUrl"/>
-                <input class="login_type1 " type="file" accept="image/*" name="" id="file" value="" />
+                <input class="login_type1 " type="file" accept="image/*" name="" id="file" value=""  @change="uploadImg"/>
             </dt>
             <dd class="float_left" :class="{'active':userVipInfo.vip > 0}">
                 <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class="'vip'+userVipInfo.vipGrade"   ></router-link> <span class="user_vip_msg" v-text="'上个月成长值为'+userVipInfo.lastMonthExp"></span></p>
@@ -31,15 +31,24 @@
 </template>
 
 <script>
+import {Sand} from '../../common/upyun-mu.js'
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
     export default {
         name:'loginState',
         props:["userInfo" ,"userVipInfo",'isLogin'],
          data() {
              return {
+                firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
+                userBasicParam:{
+                    source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
+                    tokenId: getTokenId(),
+                    sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid+ "key" + getSecretKey()).toUpperCase()
+                },
+                src:'',
              }
          },
          mounted:function(){
-            console.log(this.isLogin)
+            // console.log(new Sand())
          },
           computed: {
             getWidth: function() {
@@ -53,6 +62,56 @@
                 return 617 < this.getWidth ? "557px" : this.getWidth < 85 ? "85px" : this.getWidth + "px"
             }
         },
+        methods:{
+            headePic(){
+                this.$ajax.get(this.HOST, {
+                    params :Object.assign({
+                       method:'firm_info_update_faceimgurl',
+                       firmId:this.firmId,
+                       faceImgUrl:this.src
+                    }, this.userBasicParam )
+                }).then(resp => {
+                        console.log(resp.data)
+                }).catch(err => {
+
+                });
+            },
+            uploadImg(e){
+                let files = e.target.files || e.dataTransfer.files;
+                let fNum = files.length;
+                let URL = window.URL || window.webkitURL;
+                if(!files[0])return;
+                console.log(files)
+                for(let i=0;i<fNum;i++){
+                  if(files[i].type.search(/image/)>=0){
+                    let blob = URL.createObjectURL(files[i]);
+                    document.getElementsByClassName('user_faceImg')[0].src=blob;
+                  }
+                };
+                let ext = '.' + document.getElementById('file').files[0].name.split('.').pop();
+                let config = {
+                  bucket: 'zhangshuoinfo',
+                  expiration: parseInt((new Date().getTime() + 3600000) / 1000),
+                  // 尽量不要使用直接传表单 API 的方式，以防泄露造成安全隐患
+                  form_api_secret: 'LaubRPoyoLzq9tJ82/z+RSmFUVY='
+                };
+                let instance = new Sand(config);
+                let options = {
+                  'x-gmkerl-thumb': '/compress/true/rotate/auto',
+                  'notify_url': 'http://zhangshuoinfo.b0.upaiyun.com'
+                };
+                instance.setOptions(options);
+                instance.upload( + parseInt((new Date().getTime() + 3600000) / 1000) + ext);
+
+                document.addEventListener('uploaded', e=>{
+                    let data =  e.detail
+                    this.src=data.bucket_name+".b0.upaiyun.com"+data.path;
+                     this.headePic()
+                });
+
+            },
+
+        }
     }
 </script>
 
