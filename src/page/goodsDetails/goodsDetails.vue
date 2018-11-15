@@ -60,8 +60,9 @@
 </template>
 
 <script>
-import Swiper from 'swiper'
-import '@/common/swiper-3.3.1.min.css'
+import Swiper from 'swiper';
+import '@/common/swiper-3.3.1.min.css';
+import { Toast } from 'mint-ui';
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/goodsBanner.vue";
 import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
@@ -162,16 +163,18 @@ export default {
 			this.isCollect = !this.isCollect
 			if(this.isCollect == false){
 				this.get_goods_collect_del();
-				this.$message({
-				message: '取消收藏',
-				center: true,
-			})
+				Toast({
+					message: '取消收藏',
+					position: 'center',
+					duration: 2000
+				})
 			}else {
 				this.get_goods_collectAdd()
-				this.$message({
-				message: '收藏成功',
-				center: true,
-			})
+				Toast({
+					message: '收藏成功',
+					position: 'center',
+					duration: 2000
+				})
 			}
 		},
 	}

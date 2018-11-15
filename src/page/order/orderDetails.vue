@@ -5,7 +5,7 @@
             <div class="order_details_top">
                 <dl class="order_details_top_code clearfloat">
                     <dt>订单编号：</dt>
-                    <dd><span>{{orderDetailList.orderCode}}</span></dd>
+                    <dd><span v-text="orderDetailList.orderCode"></span></dd>
                     <dd class="tetails" v-if="orderStatus == 1">待发货</dd>
                     <dd class="tetails" v-if="orderStatus == 2">已配货</dd>
                     <dd class="tetails" v-if="orderStatus == 3">待支付</dd>
@@ -13,16 +13,16 @@
                     <dd class="tetails" v-if="orderStatus == -1">已作废</dd>
                 </dl>
                 <dl class="clearfloat">
-                    <dt>下单时间：</dt><dd>{{orderDetailList.createTime}}</dd>
+                    <dt>下单时间：</dt><dd v-text="orderDetailList.createTime"></dd>
                 </dl>
                 <dl class="clearfloat" v-if="orderStatus == 1 || orderStatus == -1">
-                    <dt>预计配送：</dt><dd>{{orderDetailList.preSendTime}}</dd>
+                    <dt>预计配送：</dt><dd v-text="orderDetailList.preSendTime"></dd>
                 </dl>
                 <dl class="clearfloat" v-if="orderStatus == 2 || orderStatus == 3 || orderStatus == 4">
-                    <dt>配货时间：</dt><dd>{{orderDetailList.readyGoodsTime}}</dd>
+                    <dt>配货时间：</dt><dd v-text="orderDetailList.readyGoodsTime"></dd>
                 </dl>
                 <dl class="clearfloat" v-if="orderStatus == 3 || orderStatus == 4">
-                    <dt>配送时间：</dt><dd>{{orderDetailList.sendTime}}</dd>
+                    <dt>配送时间：</dt><dd v-text="orderDetailList.sendTime"></dd>
                 </dl>
                 <dl class="clearfloat"  v-if="orderStatus == 1 || orderStatus == 2">
                     <dt>&nbsp;</dt><dd>(请保持电话畅通)</dd>
@@ -30,16 +30,10 @@
             </div>
             <div class="order_details_add">
                 <div class="order_details_add_top clearfloat">
-                    <div class="order_details_name">
-                        {{orderDetailList.customName}}
-                    </div>
-                    <div class="order_details_phoneNumber">
-                        {{orderDetailList.customMobile}}
-                    </div>
+                    <div class="order_details_name" v-text="orderDetailList.customName"></div>
+                    <div class="order_details_phoneNumber" v-text="orderDetailList.customMobile"></div>
                 </div>
-                <p class="order_details_address">
-                    {{orderDetailList.receiveAddress}}
-                </p>
+                <p class="order_details_address" v-text="orderDetailList.receiveAddress"></p>
                 <span class="order_details_arrows hidden">
                     〉
                 </span>
@@ -47,8 +41,8 @@
             <ul class="order_details_goods">
                 <li v-for="(item,index) in orderDetailsList" :key="index">
                     <dl class="clearfloat">
-                        <dt class="goodName">{{item.goodsName}}</dt>
-                        <dd><span class="color_f27c32">{{item.gssPrice}}</span>元/{{item.priceUnit}}&nbsp;&nbsp;<span class="color_f27c32">{{item.wholeGssPrice}}</span>元/{{item.wholePriceSize}}</dd>
+                        <dt class="goodName" v-text="item.goodsName"></dt>
+                        <dd><span class="color_f27c32" v-text="item.gssPrice"></span>元/{{item.priceUnit}}&nbsp;&nbsp;<span class="color_f27c32" v-text="item.wholeGssPrice"></span>元/{{item.wholePriceSize}}</dd>
                         <dd class="order_details_goods_right">X{{item.buyCount}}</dd>
                     </dl>
                     <dl class="clearfloat">
@@ -74,7 +68,7 @@
             </div>
             <!--配送费用说明-->
             <div class="order_details_distribution" >
-                配送费用：<span class="logistic_price">{{orderDetailList.postCost}}元</span>
+                配送费用：<span class="logistic_price" v-text="orderDetailList.postCost">元</span>
                     <button class="logistic_show" data-type="#PS-DESC" @click="get_desc">配送说明</button>
             </div>
 			<!--优惠-->
@@ -83,7 +77,7 @@
 				<div class="order_details_coupon_box2" v-if="orderStatus == 3">
 					<dl class="clearfloat">
 						<dt>优惠策略:</dt>
-						<dd class="order_coupon_price"></dd>
+						<dd class="order_coupon_price" v-text="couponItem.itemName"></dd>
 					</dl>
 				</div>
 				<!--vip优惠-->
@@ -101,22 +95,23 @@
 					</dl>
 				</div>
 				<!--优惠券-->
-				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='1' @click="toCoupon(this.Code)">
+				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" @click="toCoupon(1)">
 					<dl class="order_details_coupon clearfloat">
 						<dt>优惠券:（单选）</dt>
-						<dd class="order_coupon_price"></dd>
+						<dd class="order_coupon_price" v-if="couponMoney != null">已选：-{{couponMoney}}元</dd>
+						<dd class="order_coupon_price" v-if="couponMoney == null">{{this.couponNum}}张可用</dd>
 					</dl>
 				</div>
-				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='2' >
+				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" @click="toCoupon(2)">
 					<dl class="order_details_coupon clearfloat">
 						<dt>商品券:（可多选）</dt>
-						<dd class="order_coupon_price"></dd>
+						<dd class="order_coupon_price">暂无可用优惠券</dd>
 					</dl>
 				</div>
-				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" data-type='3'>
+				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" @click="toCoupon(3)">
 					<dl class="order_details_coupon clearfloat">
 						<dt>商品类目券:（可多选）</dt>
-						<dd class="order_coupon_price"></dd>
+						<dd class="order_coupon_price">暂无可用优惠券</dd>
 					</dl>
 				</div>
 				<div class="order_details_coupon_box11" v-if="orderStatus == 3">
@@ -174,11 +169,13 @@ export default {
 				type:"common",
 				title:'订单详情',
 				left:'返回'
-        	},
+			},
+			couponItem:[],
 			orderDetailList:[],
 			orderDetailsList:[],
 			noticeInfoList:null,
 			orderStatus: '',
+			couponMoney:'',
 			descCode: "#PS-DESC",
 			websiteNode:this.websiteDate.code,
 			tokenId:localStorage.getItem("tokenId"),
@@ -189,8 +186,7 @@ export default {
 		explainAlert
   	},
   	created:function() {
-    	this.Code = this.$route.query.code
-    	this.orderStatus = this.$route.query.orderStatus
+		  this.couponNum = this.$route.query.couponNum
   	},
   	methods: {
         get_order_detail:function () {
@@ -201,6 +197,7 @@ export default {
 					tokenId: this.tokenId
 					}
 				}).then(resp => {
+					this.couponItem = resp.data.data.offItem;
 					this.orderDetailList = resp.data.data.orderInfo;
 					this.orderDetailsList = resp.data.data.orderInfo.orderDetailsList;
 				}).catch(err => {
@@ -229,12 +226,17 @@ export default {
 		closeAlert:function(){
             this.noticeInfoList = null;
 		},
-		toCoupon(code) {
-			this.$router.push({path:'/chooseCoupon',query:{code:code}})
+		toCoupon(dataType) {
+			this.$router.push({path:'/chooseCoupon',query:{dataType:dataType}})
 		}
 	},
 	  
   	mounted() {
+		let sessCode = sessionStorage.getItem('orderData')
+		this.Code = JSON.parse(sessCode).code;
+		this.orderStatus = JSON.parse(sessCode).order;
+		this.money = this.$route.query.money
+		this.couponMoney = this.money
     	this.get_order_detail()
   	}
 }

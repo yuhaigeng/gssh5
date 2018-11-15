@@ -1,16 +1,19 @@
 <template>
  <div class="">
-    <app-header :type="headerMsg"></app-header>
+    <app-header :type="headerMsg">
+		<div slot="commonAlert" @click="get_desc" v-if="dataType == 1">使用说明</div>
+	</app-header>
+
     <!--选择优惠卷-->
     <div class="main-wrap coupon_main_wrap">
         <div class="main">
-            <div class="select_coupon_top">不使用优惠卷</div>
+            <div class="select_coupon_top" :class="{selectTop:isUse}" @click="noUse(couponNum)">不使用优惠券</div>
             <div class="coupon_main_">
                 <div class="coupon_main_available_box">
-                    <p class="title">可用优惠卷</p>
+                    <p class="title" v-if="couponList.length != 0">可用优惠券</p>
                     <div class="coupon_main_available">
-                        <dl class="clearfloat coupon_status1" v-for="(item, index) in userList" :key="index">
-                            <dt class="sprite_login quan_c">{{item.couponMoney}}元</dt>
+                        <dl class="clearfloat coupon_status1" v-for="(item, index) in couponList" :key="index" :class="{active:isRight == index}" @click="choose(index, item.couponMoney)">
+                            <dt class="sprite_login quan_c" v-text="item.couponMoney">元</dt>
                             <dd>
                                 <div class="coupon_top clearfloat">
                                     <div class="coupon_name">{{item.couponName}}</div>
@@ -24,9 +27,9 @@
                     </div>
                 </div>
                 <div class="coupon_main_unAvailable_box">
-                    <p class="title">不可用优惠卷</p>
+                    <p class="title" v-if="unCouponList.length != 0">不可用优惠券</p>
                     <div class="coupon_main_unAvailable">
-                        <dl class="clearfloat coupon_status1" v-for="(item, index) in unuserList" :key="index">
+                        <dl class="clearfloat coupon_status1" v-for="(item, index) in unCouponList" :key="index">
                             <dt class="sprite_login quan_c">{{item.couponMoney}}元</dt>
                             <dd>
                                 <div class="coupon_top clearfloat">
@@ -43,58 +46,115 @@
             </div>
         </div>
     </div>
+	<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
  </div>
 </template>
 
 <script>
 import appHeader from "../../components/public/header.vue";
+import agreementAlert from  "../../components/public/alert.vue";
 export default {
     name: 'chooseCoupon',
     data() {
         return {
             headerMsg:{
                 type:"common",
-                title:'选择优惠券(单选)',
-                right:'使用说明',
+				title:'',
                 left:'返回',
             },
-            tokenId:localStorage.getItem("tokenId"),
-            userList:null,
-            unuserList:null,
-            gunusableList:null
+			tokenId:localStorage.getItem("tokenId"),
+			websiteNode:this.websiteDate.code,
+			descCode:'#YHQ-DESC',
+			noticeInfoList:null,
+			isRight:0,
+			isUse:false,
+			unCouponList:[],
+			couponList:[],
+			couponNum:''
         }
     },
     components: {
-        appHeader,
+		appHeader,
+		agreementAlert
     },
     created:function() {
-        this.Code = this.$route.query.code
-        console.log(this.Code)
+		this.dataType = this.$route.query.dataType
+		if(this.dataType == 1) {
+			this.headerMsg.title = '选择优惠券(单选)'
+		}else if(this.dataType == 2 ) {
+			this.headerMsg.title = '选择商品券(多选)'
+		}else {
+			this.headerMsg.title = '选择商品类目券(多选)'
+		}
     },
     methods: {
         get_order_coupon:function () {
 			this.$ajax.get(this.HOST, {
 				params:{
 					method: "order_details_fou",
-					orderCode: 2018101001003901,
+					orderCode: 2018101001004201,
 					tokenId: this.tokenId
 					}
 				}).then(resp => {
-                    this.userList = resp.data.data.useable;
-                    this.unuserList = resp.data.data.unusable;
-                    this.gunusableList = resp.data.data.gunusable;
+					if(this.dataType == 1 ) {
+						this.couponList =  resp.data.data.useable
+						this.unCouponList = resp.data.data.unusable;
+						this.couponNum = this.couponList.length
+					}else if(this.dataType == 2 ) {
+						this.couponList =  resp.data.data.guseable
+						this.unCouponList = resp.data.data.gunusable;
+						console.log(this.couponList)
+					}else {
+						this.couponList =  resp.data.data.tuseable
+						this.unCouponList = resp.data.data.tunusable;
+						console.log(this.couponList)
+					}
 				}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
 		},
-    },
+		desc_data:function(){
+			this.$ajax.get(this.HOST, {
+				params:{
+					method:'gss_desc',
+					websiteNode:this.websiteNode,
+					code:this.websiteNode + this.descCode
+				}
+			}).then(resp => {
+				resp.data.data.noticeContent = (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+				resp.data.data.noticeTitle =  resp.data.data.title;
+				resp.data.data.alertType = 1;
+				this.noticeInfoList = resp.data.data;
+			}).catch(err => {
+				console.log('请求失败：'+ err.data.statusCode);
+			});
+		},
+		get_desc() {
+			this.desc_data()
+		},
+		closeAlert:function(){
+            this.noticeInfoList = null;
+		},
+		choose(index, money) {
+			this.isRight = index
+			this.$router.push({path:'/orderDetails',query:{money:money}})
+		},
+		noUse(couponNum) {
+			this.isUse = !this.isUse
+			this.isRight = -1
+			this.$router.push({path:'/orderDetails',query:{couponNum:couponNum}})
+		},
+	},
     mounted() {
-        this.get_order_coupon()
-    }
+		this.get_order_coupon()
+	}
 }
 </script>
 
 <style scoped>
+.active {
+	background: #fff url('../../assets/img/coupon_active.png') no-repeat right top;
+}
 /*在线领取优惠券*/
 
 .coupon_main_ .clearfloat {
@@ -267,7 +327,7 @@ export default {
 	margin-top: 30px;
 }
 
- .select_coupon_top.active {
+ .selectTop {
 	background-image: url(../../assets/img/bg_num_a.png);
 }
 

@@ -113,6 +113,7 @@ export default {
         }
     },
     mounted() {
+        
         this.get_goods_order()
     },
     methods: {
@@ -161,7 +162,9 @@ export default {
         },
         //路由传值给详情页面
         toOrderDetail(code,orderStatus) {
-		    this.$router.push({ path:'orderDetails',query:{code:code,orderStatus:orderStatus} })
+            this.$router.push({ path:'orderDetails'})
+            let a = {code:code,order:orderStatus}
+	        sessionStorage.setItem('orderData', JSON.stringify(a))
         }
     }
 }
