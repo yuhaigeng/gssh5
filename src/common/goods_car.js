@@ -13,7 +13,7 @@ const addgoods = function(id, name, price, wholePriceSize, gssPrice, priceUnit, 
     memberfilter[6] = "priceUnit";
     memberfilter[7] = "packageNum";
     memberfilter[8] = "maxCount";
-  if (typeof (localStorage.good) == "undefined") {
+  if (typeof (localStorage.getItem('good')) == "undefined") {
     //console.log('之前没有任何商品')
     contact.id = parseInt(id);
     contact.name = name;
@@ -27,19 +27,19 @@ const addgoods = function(id, name, price, wholePriceSize, gssPrice, priceUnit, 
      good = new Array();
      jsonText = JSON.stringify(contact, memberfilter);
     good[0] = JSON.parse(jsonText);
-    localStorage.good = JSON.stringify(good, memberfilter);
+    localStorage.set_item('good', JSON.stringify(good, memberfilter)) ;
     return 1;
-    //console.log(localStorage.good)
+    //console.log(localStorage.getItem('good'))
   } else {
-    let goodobj = JSON.parse(localStorage.good)
+    let goodobj = JSON.parse(localStorage.getItem('good'))
     let con = 0;
     for (let i in goodobj) {
       if (goodobj[i].id == id) {
         //之前已经有此类商品了
         //console.log("之前已经有此类商品了")
         goodobj[i].sum = 1 + parseInt(goodobj[i].sum);
-        localStorage.good = JSON.stringify(goodobj, memberfilter);
-        //console.log(localStorage.good)
+        localStorage.setItem('good', JSON.stringify(goodobj, memberfilter));
+        //console.log(localStorage.getItem('good'))
         con++;
         return goodobj[i].sum;
         break;
@@ -60,9 +60,9 @@ const addgoods = function(id, name, price, wholePriceSize, gssPrice, priceUnit, 
       let jsonText = JSON.stringify(contact, memberfilter);
       let goolen = goodobj.length;
       goodobj[goolen] = JSON.parse(jsonText);
-      localStorage.good = JSON.stringify(goodobj, memberfilter);
+      localStorage.setItem('good', JSON.stringify(goodobj, memberfilter));
       return 1;
-      //console.log(localStorage.good)
+      //console.log(localStorage.getItem('good'))
     }
   }
 }
@@ -80,7 +80,7 @@ let memberfilter = new Array();
   memberfilter[8] = "maxCount";
 //商品数量减少
 const cutgoods = function cutgoods(id) {
-  let goodobj = JSON.parse(localStorage.good)
+  let goodobj = JSON.parse(localStorage.getItem('good'))
   for (let i in goodobj) {
     if (goodobj[i].id == id) {
       //之前已经有此类商品了
@@ -93,8 +93,8 @@ const cutgoods = function cutgoods(id) {
         return 0;
       } else {
         goodobj[i].sum = parseInt(goodobj[i].sum) - 1;
-        localStorage.good = JSON.stringify(goodobj, memberfilter);
-        //console.log(localStorage.good);
+        localStorage.setItem('good', JSON.stringify(goodobj, memberfilter));
+        //console.log(localStorage.getItem('good'));
         return goodobj[i].sum;
       }
     }
@@ -102,10 +102,10 @@ const cutgoods = function cutgoods(id) {
 }
 //检索本地数据单个商品 返回商品数目
 const callbackgoodsnumber = function(id) {
-  if (typeof (localStorage.good) == "undefined") {
+  if (typeof (localStorage.getItem('good')) == "undefined") {
     return 0;
   } else {
-    let goodobj = JSON.parse(localStorage.good);
+    let goodobj = JSON.parse(localStorage.getItem('good'));
     let con = false;
     for (let i in goodobj) {
       if (goodobj[i].id == id) {
@@ -121,10 +121,10 @@ const callbackgoodsnumber = function(id) {
 //获取商品品总数
 const getgoodsNum = function() {
   let total = 0;
-  if (typeof (localStorage.good) == "undefined") {
+  if (typeof (localStorage.getItem('good')) == "undefined") {
     return 0;
   } else {
-    let goodobj = JSON.parse(localStorage.good);
+    let goodobj = JSON.parse(localStorage.getItem('good'));
     for (let i in goodobj) {
       total += parseInt(goodobj[i].sum);
     }
@@ -132,12 +132,12 @@ const getgoodsNum = function() {
   }
 }
 //获取商品总价格;
-const getgoodsMoney = function getgoodsMoney() {
-   totalMoney = 0.00;
-  if (typeof (localStorage.good) == "undefined") {
+const getgoodsMoney = function () {
+  let totalMoney = 0.00;
+  if (typeof (localStorage.getItem('good')) == "undefined") {
     return 0;
   } else {
-    let goodobj = JSON.parse(localStorage.good);
+    let goodobj = JSON.parse(localStorage.getItem('good'));
     for (let i in goodobj) {
       totalMoney += parseInt(goodobj[i].sum) * parseFloat(goodobj[i].price);
     }
@@ -167,10 +167,10 @@ const goodlist1 = function goodlist1() {
 }
 //获取商品列表price sum 和 name
 const goodlist2 = function goodlist2() {
-  if (typeof (localStorage.good) == "undefined") {
+  if (typeof (localStorage.getItem('good')) == "undefined") {
     return 0;
   } else {
-    return JSON.parse(localStorage.good);
+    return JSON.parse(localStorage.getItem('good'));
   }
 }
 

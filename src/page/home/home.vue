@@ -79,8 +79,7 @@ export default {
     //:完成了 data 数据的初始化，el没有
     created(){
 
-  },
-
+    },
     //完成挂载
     mounted(){
         console.log(this.websiteDate)
