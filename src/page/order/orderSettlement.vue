@@ -20,24 +20,24 @@
                                 <span class="arrows sprite arrow_left"></span>
                     </router-link>
 					<ul class="order_goods_box">
-                        <li v-for="(item,index) in goods" :key="index">
-                        	<div class="order_goods_top clearfloat">
-                        		<b class="goods_name" v-text="item.name"></b>
-                        		<span class="goods_num" v-text="'X' + item.sum"></span>
-                        	</div>
-                        	<div class="order_goods_bottom clearfloat">
-                         		<p class="goods_Price">
-                         			<span v-text="item.gssPrice"></span>{{'元/'+item.priceUnit+'&nbsp;&nbsp;'}}<span v-text="item.price"></span>{{"元/"+item.wholePriceSize}}
-                         		</p>
-                         		<span class="goods_subtotal" v-text="'合计：￥'+(parseFloat(item.price)*parseInt(item.sum)).toFixed(2)"></span>
-                         	</div>
-                         </li>
+            <li v-for="(item,index) in goodsList" :key="index">
+              <div class="order_goods_top clearfloat">
+                <b class="goods_name" v-text="item.name"></b>
+                <span class="goods_num" v-text="'X' + item.sum"></span>
+              </div>
+              <div class="order_goods_bottom clearfloat">
+                <p class="goods_Price">
+                  <span v-text="item.gssPrice"></span>{{'元/'+item.priceUnit+'&nbsp;&nbsp;'}}<span v-text="item.price"></span>{{"元/"+item.wholePriceSize}}
+                </p>
+                <span class="goods_subtotal" v-text="'合计：￥'+  priceTotal(item)"></span>
+              </div>
+              </li>
 					</ul>
 					<div class="remark">
 						备注：<input type="text" name="" id="remark" value="" v-model="customRequest" placeholder="选填，您想对商家说些什么" />
 					</div>
 					<div class="logistic">
-						配送费用：<span class="logistic_price">0元</span>
+						配送费用：<span class="logistic_price" v-text="postCost +'元'"></span>
 						<button class="logistic_show" @click="agreement" >配送说明</button>
 					</div>
 				</div>
@@ -46,7 +46,7 @@
         <div class="footer-wrap order_footer_wrap">
 			<div class="footer clearfloat">
 				<div class="footer-left order_footer_left">
-					合计:<span v-text="'￥'+total"></span>
+					合计:<span v-text="'￥'"></span>
 				</div>
 				<div class="footer-rigth order_footer_right true" @click="get">
 					提交订单
@@ -61,6 +61,7 @@
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { goodlist1 } from "../../common/goods_car.js";
    export default {
         name: 'orderSettlement' ,
         components:{
@@ -72,71 +73,34 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                  headerMsg:{
                     type:"common",
                     title: '订单结算' ,
+                    left:'返回'
                 },
-                addressInfo:JSON.parse(sessionStorage.getItem("data")) ? JSON.parse(sessionStorage.getItem("data")):{receiverName: "朱高飞",receiverName: "邹",allAddr: "浙江省杭州市下城区31232131",receiverMobile: "12312321322"},
-                websiteNode:'3301',
+                addressInfo:JSON.parse(sessionStorage.getItem('address')).address,
                 descCode:"#PS-DESC",
                 noticeInfoList:null,
                 firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
                 userBasicParam:{
-                    source:'firmId'+ this.firmId,
+                    source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
                     tokenId: getTokenId(),
-                    sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+                    sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid+ "key" + getSecretKey()).toUpperCase()
                 },
                 userId:JSON.parse(getUserData()).cuserInfoid,
-                goodsList:{"goodsList":[{"goodsId":14498,"count":10}]},
+                goodsList:[],
                 customRequest:"",
                 addressId:"4131",
-                postCost:JSON.parse(sessionStorage.addresses).postCost ? JSON.parse(sessionStorage.addresses).postCost : 0 ,
-                goods:[
-                    {
-                        gssPrice: "59.50",
-                        id: "14498",
-                        maxCount: 0,
-                        name: "金黄蕉(福门).广西.箱装",
-                        packageNum: 49139,
-                        price: "59.50",
-                        priceUnit: "箱",
-                        sum: 10,
-                        wholePriceSize: "箱",
-                    }
+                postCost:JSON.parse(sessionStorage.getItem('address')).postCost ? JSON.parse(sessionStorage.getItem('address')).postCost:0 ,
 
-                ]
             }
         },
         computed:{
-                total:function(){
-                        let total = 0;
-                        for(var i = 0, len = this.goods.length; i < len; i++) {
-                            total += this.goods[i].price * this.goods[i].sum;
-                        }
-                        return total
-                },
-                //获取商品列表 id和sum
-                goodlist1:function(){
-                    var id,num;
-                    arr=[];
-                    var goodsList1={'goodsList':arr}
-                    if (typeof (localStorage.good) =="undefined") {
-                        return 0;
-                    }else{
-                        var obj1;
-                        goodobj = JSON.parse(localStorage.good);
-                        for (var i in goodobj) {
-                            obj1 =new Object();
-                            obj1.goodsId=goodobj[i].id;
-                            obj1.count=goodobj[i].sum;
-                            arr.push(obj1)
-                        }
-                        //console.log(JSON.stringify(goodsList1))
-                        return JSON.stringify(goodsList1);
-                    }
-                }
 
         },
         mounted(){
-
-            console.log()
+            if ( localStorage.getItem('good') ) {
+              this.goodsList = JSON.parse(localStorage.getItem('good'))
+            } else {
+              this.goodsList = []
+            }
         },
         methods:{
              desc_data:function(){
@@ -161,7 +125,7 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                         method:'order_submit',
                         userId:this.userId,
                         firmId:this.firmId,
-                        goodsList:this.goodsList,
+                        goodsList:goodlist1(),
                         customRequest:this.customRequest,
                         addressId:this.addressId,
                         postCost:this.postCost,
@@ -184,7 +148,10 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
             },
             get:function(){
                  this.orderSubmit()
-            }
+            },
+            priceTotal:function(item){
+                  return  (parseFloat(item.price)*parseInt(item.sum)).toFixed(2);
+            },
         }
    }
 </script>

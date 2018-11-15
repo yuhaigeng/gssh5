@@ -62,9 +62,9 @@ export default {
             method:["user_personal_msg","firm_vip_info"],
             firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
             userBasicParam:{
-                source:'firmId'+ this.firmId,
+                source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
                 tokenId: getTokenId(),
-                sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+                sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
              },
             userInfo:{},
             userVipInfo:{},
@@ -98,7 +98,7 @@ export default {
             this.$ajax.get(this.HOST, {
                     params:{
                        method:this.method[1],
-				       firmId:this.firmId
+				                firmId:this.firmId
                     }
             }).then(resp => {
                 console.log(resp.data)
