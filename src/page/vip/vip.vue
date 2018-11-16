@@ -1,5 +1,5 @@
 <template>
-   <div class="vip">
+   <div class="vip common-wrap">
         <app-header :type="headerMsg" :logined="logined"   v-show="logined"></app-header>
         <div class="vip_main_top" v-show="userVipInfo.monthExp">
             <div class="vip_main_growValue" >

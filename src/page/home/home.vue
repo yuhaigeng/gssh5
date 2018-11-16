@@ -1,5 +1,5 @@
 <template>
-   <div class="home">
+   <div class="home common-wrap">
         <app-header :type="headerMsg">
             <div slot="homeleft" class="icon_location_a" v-text="websiteNodeName"></div>
             <div slot="homeLogo"><img  src="../../assets/img/top_logo@2x.png" alt="" /></div>
@@ -90,7 +90,7 @@ export default {
                 this.autoLogin();
             }
             const userInfo = JSON.parse(getUserData());
-            
+
             this.userBasicParam = {
                 firmId : userInfo.firmInfoid,
                 source : 'firmId'+userInfo.firmInfoid,

@@ -38,16 +38,22 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
         props:["userInfo" ,"userVipInfo",'isLogin'],
          data() {
              return {
-                firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
-                userBasicParam:{
-                    source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
-                    tokenId: getTokenId(),
-                    sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid+ "key" + getSecretKey()).toUpperCase()
-                },
+                firmId:"" ,
+                userBasicParam:{},
                 src:'',
              }
          },
          mounted:function(){
+             if(localStorage.getItem("user_data")){
+                  this.firmId = JSON.parse(getUserData()).firmInfoid;
+                  this.userBasicParam = {
+                        source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
+                        tokenId: getTokenId(),
+                        sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+                  }
+             }
+
+
             // console.log(new Sand())
          },
           computed: {

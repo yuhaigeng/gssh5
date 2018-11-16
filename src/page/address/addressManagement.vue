@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div class="common-wrap">
     <div class="address" v-show="isManage">
       <addressHeader :type="headerMsg"></addressHeader>
       <div class="main-wrap address_box">

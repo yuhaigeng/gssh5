@@ -1,5 +1,5 @@
 <template>
-   <div class="order-pay">
+   <div class="order-pay common-wrap">
       <payHeader :type='headerMsg'></payHeader>
       <div class="main-wrap">
         <div class="main">

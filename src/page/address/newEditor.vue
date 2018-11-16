@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="common-wrap">
     <addressHeader :type="headerMsg">
       <div class="header_right login_top_right" slot="sure" v-text="'确定'" @click="submit"></div>
     </addressHeader>
@@ -146,14 +146,11 @@ export default {
     },
     // 删除地址
     del:function(){
-        layer.open({
-          content: '您确定要删除地址吗？',
-          btn: ['确定', '取消'],
-          yes:index => {
-          this.delApi();
-                      layer.close(index);
-                        this.$router.go(-1)
-            }
+      this.$messagebox.confirm('您确定要删除地址吗？','').then(action => {
+            this.delApi();
+            this.$router.go(-1)
+        }).catch((e) => {
+            console.log(e)
         });
     },
     selCity:function(){

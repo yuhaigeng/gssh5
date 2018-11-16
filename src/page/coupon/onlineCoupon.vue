@@ -1,5 +1,5 @@
 <template>
-    <div class="coupon">
+    <div class="coupon common-wrap">
         <app-header :type="headerMsg"></app-header>
         <div class="score_goods_main_wrap main-wrap">
             <div class="main score_coupon">
@@ -84,7 +84,7 @@ export default {
                     } else {
                         this.couponList = this.couponList.concat(data.data.list);
                     }
-                    
+
                 } else {
                     console.log(data.statusStr)
                 }
@@ -94,10 +94,10 @@ export default {
             if (!this.isLast) {
                 this.pageNum = this.pageNum+1 ;
                 this.get_coupon_list();
-            } 
+            }
         },
         exchange(index){
-            const id = this.couponList[index].id; 
+            const id = this.couponList[index].id;
             const obj = Object.assign({
                 method: "get_coupon",
                 couponId:id
@@ -113,8 +113,8 @@ export default {
                     console.log(data.statusStr)
                 }
             });
-				
-        }        
+
+        }
     }
 }
 </script>

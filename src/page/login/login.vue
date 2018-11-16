@@ -1,5 +1,5 @@
 <template>
-  <div class="login" >
+  <div class="login common-wrap" >
     <app-header :type="headerMsg"></app-header>
     <div class="main-wrap login_main-wrap">
       <div class="main">

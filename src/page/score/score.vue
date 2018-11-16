@@ -137,10 +137,14 @@ export default {
     margin: 0 auto;
 }
 .score .header-wrap {
+    max-width: 750px;
+    left: 50%;
+    margin-left: -375px;
     background: #f76a10;
     border-bottom-color: #f76a10;
     color: #FFF;
-    height: 88px
+    height: 88px;
+
 }
 .score .main_top {
     width: 100%;
@@ -246,7 +250,7 @@ export default {
     bottom: 0;
     background-color: rgba(0,0,0,.5);
     z-index: 101;
-    
+
 }
 .license_container img{
     width: 100%;

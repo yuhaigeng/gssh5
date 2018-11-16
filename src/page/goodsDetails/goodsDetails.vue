@@ -1,5 +1,5 @@
 <template>
- <div class="detail">
+ <div class="detail common-wrap">
      <div class="header-wrap goodsDetails_header">
 			<div class="header_left header_back sprite icon_delete" @click="back"></div>
 			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_a':'icon_collect_b'" @click="changeCollect"></div>
@@ -330,8 +330,9 @@ export default {
 	border: none;
 	position: absolute;
 	background: none;
-	top: 0;
-	left: 0
+	top: 0 ;
+	left: 50%;
+  margin-left:-384px;
 }
 
 .goodsDetails_header .header_back {

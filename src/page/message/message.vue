@@ -1,5 +1,5 @@
 <template>
-   <div class="message">
+   <div class="message common-wrap">
         <app-header :type="headerMsg"></app-header>
         <div v-cloak class="main-wrap">
           <div class="main message">

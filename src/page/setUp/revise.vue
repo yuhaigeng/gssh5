@@ -1,5 +1,5 @@
 <template>
-     <div>
+     <div class="common-wrap">
         <setHeader :type="headerMsg"></setHeader>
          <div class="main-wrap chang_password_main_wrap">
             <div class="main">

@@ -1,5 +1,5 @@
 <template>
-     <div >
+     <div class="common-wrap">
        <setHeader :type="headerMsg">
             <div class="header_right login_top_right" slot="sure" v-text="'保存'" @click="keep"></div>
        </setHeader>
