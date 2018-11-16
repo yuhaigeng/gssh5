@@ -1,18 +1,18 @@
 <template>
  <div class="">
     <app-header :type="headerMsg">
-		<div slot="commonAlert" @click="get_desc" v-if="dataType == 1">使用说明</div>
+		<div slot="commonAlert" @click="get_desc" v-if="dataType == 'couponInfo'">使用说明</div>
 	</app-header>
 
     <!--选择优惠卷-->
     <div class="main-wrap coupon_main_wrap">
         <div class="main">
             <div class="select_coupon_top" :class="{selectTop:isUse}" @click="noUse(couponNum)">不使用优惠券</div>
-            <div class="coupon_main_">
-                <div class="coupon_main_available_box">
-                    <p class="title" v-if="couponList.length != 0">可用优惠券</p>
+            <div class="coupon_main_" v-if="coupon">
+                <div class="coupon_main_available_box" v-if="coupon.useable && coupon.useable.length">
+                    <p class="title" >可用优惠券</p>
                     <div class="coupon_main_available">
-                        <dl class="clearfloat coupon_status1" v-for="(item, index) in couponList" :key="index" :class="{active:isRight == index}" @click="choose(index, item.couponMoney)">
+                        <dl class="clearfloat coupon_status1"  v-for="(item, index) in coupon.useable" :key="index" :class="{'active':item.id == coupon.selectId,'no':dataType != 'couponInfo'}" @click="choose(item)">
                             <dt class="sprite_login quan_c" v-text="item.couponMoney">元</dt>
                             <dd>
                                 <div class="coupon_top clearfloat">
@@ -26,10 +26,10 @@
                         </dl>
                     </div>
                 </div>
-                <div class="coupon_main_unAvailable_box">
-                    <p class="title" v-if="unCouponList.length != 0">不可用优惠券</p>
+                <div class="coupon_main_unAvailable_box" v-if="coupon.unusable && coupon.unusable.length">
+                    <p class="title">不可用优惠券</p>
                     <div class="coupon_main_unAvailable">
-                        <dl class="clearfloat coupon_status1" v-for="(item, index) in unCouponList" :key="index">
+                        <dl class="clearfloat coupon_status1" v-for="(item, index) in coupon.unusable" :key="index">
                             <dt class="sprite_login quan_c">{{item.couponMoney}}元</dt>
                             <dd>
                                 <div class="coupon_top clearfloat">
@@ -62,57 +62,41 @@ export default {
 				title:'',
                 left:'返回',
             },
-			tokenId:localStorage.getItem("tokenId"),
 			websiteNode:this.websiteDate.code,
 			descCode:'#YHQ-DESC',
 			noticeInfoList:null,
 			isRight:0,
 			isUse:false,
-			unCouponList:[],
-			couponList:[],
-			couponNum:''
+			coupon:{},
+			couponNum:'',
+			dataType:'',
         }
     },
     components: {
 		appHeader,
 		agreementAlert
-    },
+	},
+	watch:{
+		coupon(val,oldVal){
+			if (val) {
+				localStorage.setItem(this.coupon.name,JSON.stringify(val))
+			}
+		}
+	},
     created:function() {
 		this.dataType = this.$route.query.dataType
-		if(this.dataType == 1) {
+		if(this.dataType == 'couponInfo') {
 			this.headerMsg.title = '选择优惠券(单选)'
-		}else if(this.dataType == 2 ) {
+		}else if(this.dataType == 'goodCouponInfo' ) {
 			this.headerMsg.title = '选择商品券(多选)'
-		}else {
+		}else if(this.dataType == 'typeCouponInfo'){
 			this.headerMsg.title = '选择商品类目券(多选)'
 		}
-    },
+	},
+	mounted() {
+		this.coupon = JSON.parse(localStorage.getItem(this.dataType));
+	},
     methods: {
-        get_order_coupon:function () {
-			this.$ajax.get(this.HOST, {
-				params:{
-					method: "order_details_fou",
-					orderCode: 2018101001004201,
-					tokenId: this.tokenId
-					}
-				}).then(resp => {
-					if(this.dataType == 1 ) {
-						this.couponList =  resp.data.data.useable
-						this.unCouponList = resp.data.data.unusable;
-						this.couponNum = this.couponList.length
-					}else if(this.dataType == 2 ) {
-						this.couponList =  resp.data.data.guseable
-						this.unCouponList = resp.data.data.gunusable;
-						console.log(this.couponList)
-					}else {
-						this.couponList =  resp.data.data.tuseable
-						this.unCouponList = resp.data.data.tunusable;
-						console.log(this.couponList)
-					}
-				}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
-			});
-		},
 		desc_data:function(){
 			this.$ajax.get(this.HOST, {
 				params:{
@@ -135,9 +119,26 @@ export default {
 		closeAlert:function(){
             this.noticeInfoList = null;
 		},
-		choose(index, money) {
-			this.isRight = index
-			this.$router.push({path:'/orderDetails',query:{money:money}})
+		choose(item) {
+			const _this = this;
+			if (this.coupon.name == 'couponInfo') {
+				this.coupon.selectId = item.id;
+				this.coupon.couponMoney = item.couponMoney;
+				setTimeout(() => {
+					this.$router.go(-1)
+				}, 500);
+			} else {
+				let id = item.id;
+				let money = item.money;
+				
+				if (this.dataType == 'goodCouponInfo') {
+					
+				} 
+				if (this.dataType == 'typeCouponInfo') {
+					
+				}
+			}
+			
 		},
 		noUse(couponNum) {
 			this.isUse = !this.isUse
@@ -145,9 +146,10 @@ export default {
 			this.$router.push({path:'/orderDetails',query:{couponNum:couponNum}})
 		},
 	},
-    mounted() {
-		this.get_order_coupon()
-	}
+    //离开当前页面后执行
+	destroyed: function () {
+		localStorage.setItem(this.dataType,JSON.stringify(this.coupon))
+	},
 }
 </script>
 
@@ -360,5 +362,8 @@ export default {
 .order_details_coupon_box11 {
 	color: #f50909;
 }
+.coupon_main_available .coupon_status1.no {background:#fff url(../../assets/img/coupon_active_no.png) no-repeat right top;}
+
+.coupon_main_available .coupon_status1.no.active{background:#fff url(../../assets/img/coupon_active.png) no-repeat right top;}
 
 </style>

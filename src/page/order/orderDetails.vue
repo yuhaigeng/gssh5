@@ -1,159 +1,151 @@
 <template>
  <div class="">
      <app-header :type ="headerMsg"></app-header>
-        <div class="main order_details_main">
-            <div class="order_details_top">
-                <dl class="order_details_top_code clearfloat">
-                    <dt>订单编号：</dt>
-                    <dd><span v-text="orderDetailList.orderCode"></span></dd>
-                    <dd class="tetails" v-if="orderStatus == 1">待发货</dd>
-                    <dd class="tetails" v-if="orderStatus == 2">已配货</dd>
-                    <dd class="tetails" v-if="orderStatus == 3">待支付</dd>
-                    <dd class="tetails" v-if="orderStatus == 4">已支付</dd>
-                    <dd class="tetails" v-if="orderStatus == -1">已作废</dd>
-                </dl>
-                <dl class="clearfloat">
-                    <dt>下单时间：</dt><dd v-text="orderDetailList.createTime"></dd>
-                </dl>
-                <dl class="clearfloat" v-if="orderStatus == 1 || orderStatus == -1">
-                    <dt>预计配送：</dt><dd v-text="orderDetailList.preSendTime"></dd>
-                </dl>
-                <dl class="clearfloat" v-if="orderStatus == 2 || orderStatus == 3 || orderStatus == 4">
-                    <dt>配货时间：</dt><dd v-text="orderDetailList.readyGoodsTime"></dd>
-                </dl>
-                <dl class="clearfloat" v-if="orderStatus == 3 || orderStatus == 4">
-                    <dt>配送时间：</dt><dd v-text="orderDetailList.sendTime"></dd>
-                </dl>
-                <dl class="clearfloat"  v-if="orderStatus == 1 || orderStatus == 2">
-                    <dt>&nbsp;</dt><dd>(请保持电话畅通)</dd>
-                </dl>
-            </div>
-            <div class="order_details_add">
-                <div class="order_details_add_top clearfloat">
-                    <div class="order_details_name" v-text="orderDetailList.customName"></div>
-                    <div class="order_details_phoneNumber" v-text="orderDetailList.customMobile"></div>
-                </div>
-                <p class="order_details_address" v-text="orderDetailList.receiveAddress"></p>
-                <span class="order_details_arrows hidden">
-                    〉
-                </span>
-            </div>
-            <ul class="order_details_goods">
-                <li v-for="(item,index) in orderDetailsList" :key="index">
-                    <dl class="clearfloat">
-                        <dt class="goodName" v-text="item.goodsName"></dt>
-                        <dd><span class="color_f27c32" v-text="item.gssPrice"></span>元/{{item.priceUnit}}&nbsp;&nbsp;<span class="color_f27c32" v-text="item.wholeGssPrice"></span>元/{{item.wholePriceSize}}</dd>
-                        <dd class="order_details_goods_right">X{{item.buyCount}}</dd>
-                    </dl>
-                    <dl class="clearfloat">
-                        <dt>商品总量：{{item.roughWeight}}x{{item.buyCount}}={{item.roughWeight*item.buyCount}}斤</dt>
-                        <dd></dd>
-                        <dd class="order_details_goods_right">总价：{{item.costMoney}}元</dd>
-                    </dl>
-                    <div class="order_details_goods_ clearfloat" v-if="orderStatus == 3 || orderStatus == 4">
-                        <dl class="clearfloat">
-                            <dt>实际总重:</dt>
-                            <dd><span class="color_f27c32">{{item.afterWholePriceSize}}斤</span></dd>
-                        </dl>
-                        <dl class="clearfloat">
-                            <dt>实际总价:</dt>
-                            <dd><span class="color_f27c32">{{item.afterCostMoney}}元</span></dd>
-                        </dl>
-                    </div>
-                </li>
-            </ul>
-            <!--备注信息-->
-            <div class="order_details_make">
-                备注：<input type="text" name="" id="remark" value="" placeholder="选填，您想对商家说些什么" />
-            </div>
-            <!--配送费用说明-->
-            <div class="order_details_distribution" >
-                配送费用：<span class="logistic_price" v-text="orderDetailList.postCost">元</span>
-                    <button class="logistic_show" data-type="#PS-DESC" @click="get_desc">配送说明</button>
-            </div>
-			<!--优惠-->
-			<div class="order_details_coupon_box">
-				<!--优惠策略-->
-				<div class="order_details_coupon_box2" v-if="orderStatus == 3">
+	<div class="main order_details_main">
+		<div class="order_details_top" v-if="orderInfo">
+			<dl class="order_details_top_code clearfloat">
+				<dt v-text="'订单编号：'"></dt>
+				<dd><span v-text="orderInfo.orderCode"></span></dd>
+				<dd class="tetails" v-text="orderStatusText[+orderInfo.orderStatus + 1]"></dd>
+			</dl>
+			<dl class="clearfloat">
+				<dt v-text="'下单时间：'"></dt><dd v-text="orderInfo.createTime"></dd>
+			</dl>
+			<dl class="clearfloat" v-if="(orderInfo.orderStatus == -1 || orderInfo.orderStatus == 0 || orderInfo.orderStatus == 1)">
+				<dt v-text="'预计配送：'"></dt><dd v-text="orderInfo.preSendTime"></dd>
+			</dl>
+			<dl class="clearfloat" v-if="(orderInfo.orderStatus == 2 || orderInfo.orderStatus ==3 || orderInfo.orderStatus ==4)">
+				<dt v-text="'配货时间：'"></dt><dd v-text="orderInfo.readyGoodsTime"></dd>
+			</dl>
+			<dl class="clearfloat" v-if="(orderInfo.orderStatus == 3 || orderInfo.orderStatus ==4 || orderInfo.orderStatus ==0)">
+				<dt v-text="'配送时间：'"></dt><dd v-text="orderInfo.sendTime"></dd>
+			</dl>
+			<dl class="clearfloat" v-if="(orderInfo.orderStatus == 1 || orderInfo.orderStatus ==2)">
+				<dt>&nbsp;</dt><dd v-text="'(请保持电话畅通)'"></dd>
+			</dl>
+		</div>
+		<div class="order_details_add" v-if="orderInfo">
+			<div class="order_details_add_top clearfloat">
+				<div class="order_details_name" v-text="orderInfo.customName"></div>
+				<div class="order_details_phoneNumber" v-text="orderInfo.customMobile"></div>
+			</div>
+			<p class="order_details_address" v-text="orderInfo.receiveAddress"></p>
+			<span class="order_details_arrows hidden" v-text="'〉'"></span>
+		</div>
+		<ul class="order_details_goods" v-if="orderInfo && orderInfo.orderDetailsList && orderInfo.orderDetailsList.length">
+			<li v-for="(item,index) in orderInfo.orderDetailsList" :key="index">
+				<dl class="clearfloat">
+					<dt class="goodName" v-text="item.goodsName"></dt>
+					<dd><span class="color_f27c32" v-text="item.gssPrice"></span>元/{{item.priceUnit}}&nbsp;&nbsp;<span class="color_f27c32" v-text="item.wholeGssPrice"></span>元/{{item.wholePriceSize}}</dd>
+					<dd class="order_details_goods_right">X{{item.buyCount}}</dd>
+				</dl>
+				<dl class="clearfloat">
+					<dt>商品总量：{{item.roughWeight}}x{{item.buyCount}}={{item.roughWeight*item.buyCount}}斤</dt>
+					<dd></dd>
+					<dd class="order_details_goods_right">总价：{{item.costMoney}}元</dd>
+				</dl>
+				<div class="order_details_goods_ clearfloat" v-if="(orderInfo.orderStatus == 3 || orderInfo.orderStatus ==4)">
 					<dl class="clearfloat">
-						<dt>优惠策略:</dt>
-						<dd class="order_coupon_price" v-text="couponItem.itemName"></dd>
+						<dt>实际总重:</dt>
+						<dd><span>{{item.afterWholePriceSize}}斤</span></dd>
 					</dl>
-				</div>
-				<!--vip优惠-->
-				<div class="order_details_coupon_box3 hidden" >
 					<dl class="clearfloat">
-						<dt>VIP优惠:</dt>
-						<dd class="order_coupon_price"></dd>
+						<dt>实际总价:</dt>
+						<dd><span>{{item.afterCostMoney}}元</span></dd>
 					</dl>
 				</div>
-				<!--其他优惠-->
-				<div class="order_details_coupon_box4 hidden" >
-					<dl class="clearfloat">
-						<dt>其他优惠:</dt>
-						<dd class="order_coupon_price"></dd>
-					</dl>
-				</div>
-				<!--优惠券-->
-				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" @click="toCoupon(1)">
-					<dl class="order_details_coupon clearfloat">
-						<dt>优惠券:（单选）</dt>
-						<dd class="order_coupon_price" v-if="couponMoney != null">已选：-{{couponMoney}}元</dd>
-						<dd class="order_coupon_price" v-if="couponMoney == null">{{this.couponNum}}张可用</dd>
-					</dl>
-				</div>
-				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" @click="toCoupon(2)">
-					<dl class="order_details_coupon clearfloat">
-						<dt>商品券:（可多选）</dt>
-						<dd class="order_coupon_price">暂无可用优惠券</dd>
-					</dl>
-				</div>
-				<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderStatus == 3" @click="toCoupon(3)">
-					<dl class="order_details_coupon clearfloat">
-						<dt>商品类目券:（可多选）</dt>
-						<dd class="order_coupon_price">暂无可用优惠券</dd>
-					</dl>
-				</div>
-				<div class="order_details_coupon_box11" v-if="orderStatus == 3">
-					点击去支付后，不能重新选择优惠券，请谨慎操作！
-				</div>
+			</li>
+		</ul>
+		<!--备注信息-->
+		<div class="order_details_make" v-if="orderInfo">
+			备注：<input type="text" name="" id="remark" v-model="orderInfo.customRequest" disabled />
+		</div>
+		<!--配送费用说明-->
+		<div class="order_details_distribution" v-if="orderInfo" >
+			配送费用：<span class="logistic_price" v-text="orderInfo.postCost+'元'"></span>
+				<button class="logistic_show" v-show="(orderInfo.orderStatus == 1 || orderInfo.orderStatus == 2 || orderInfo.orderStatus == 3)" data-type="#PS-DESC" @click="get_desc">配送说明</button>
+		</div>
+		<!--优惠-->
+		<div class="order_details_coupon_box" v-if="orderInfo">
+			<!--优惠策略-->
+			<div class="order_details_coupon_box2" v-if="((orderInfo.orderStatus == 3 && offItem.id ) || (orderInfo.orderStatus == 4 && orderInfo.offMoney))">
+				<dl class="clearfloat">
+					<dt>优惠策略:</dt>
+					<dd class="order_coupon_price" v-text="(orderInfo.orderStatus == 3 && offItem.id ) ? offItem.itemName : parseInt(orderInfo.offMoney).toFixed(2)+'元'" :data="(orderInfo.orderStatus == 4 && orderInfo.offMoney) ? parseInt(orderInfo.offMoney).toFixed(2) : null"></dd>
+				</dl>
 			</div>
-            <!--订单总金额-->
-            <div class="order_details_money" v-if="orderStatus == 1">
-                <dl class="clearfloat">
-                    <dt>订单总金额:</dt>
-                    <dd><span class="color_f27c32">{{orderDetailList.orderMoney}}0</span>元</dd>
-                </dl>
-                <p>(实际金额按照收货时实际称重结算)</p>
-            </div>
-            <!--订单金额详情-->
-					<div class="order_details_money_details" v-if="orderStatus == 2 || orderStatus == 3 || orderStatus == 4">
-						<dl class="clearfloat">
-							<dt>订单总金额:</dt>
-							<dd><span class="color_f27c32">{{orderDetailList.goodsMoney}}</span>元</dd>
-						</dl>
-						<dl class="clearfloat">
-							<dt>应付金额:</dt>
-							<dd><span v-if="orderStatus == 2">(按实际称重核算后计算) </span>{{orderDetailList.shouldPayMoney}}元</dd>
-						</dl>
-						<dl class="clearfloat">
-							<dt>优惠金额:</dt>
-							<dd>{{orderDetailList.offMoney}}元</dd>
-						</dl>
-						<dl class="clearfloat">
-							<dt>实际金额:</dt>
-							<dd>{{orderDetailList.realPayMoney}}元</dd>
-						</dl>
-					</div>
-            <div class="order_details_cancel" v-if="orderStatus == 1">
-				取消订单
+			<!--vip优惠-->
+			<div class="order_details_coupon_box3" v-if="orderInfo.vipMoney && (orderInfo.orderStatus == 3 || orderInfo.orderStatus == 4)" >
+				<dl class="clearfloat">
+					<dt>VIP优惠:</dt>
+					<dd class="order_coupon_price" v-text="parseInt(orderInfo.vipMoney).toFixed(2)" :data="parseInt(orderInfo.vipMoney).toFixed(2)"></dd>
+				</dl>
 			</div>
-			<div class="order_details_cancel" v-if="orderStatus == -1">
-				删除订单
+			<!--其他优惠-->
+			<div class="order_details_coupon_box4" v-if="orderInfo.goodsDiscountMoney && (orderInfo.orderStatus == 3 || orderInfo.orderStatus == 4)" >
+				<dl class="clearfloat">
+					<dt>其他优惠:</dt>
+					<dd class="order_coupon_price" v-text="parseInt(orderInfo.goodsDiscountMoney).toFixed(2)" :data="parseInt(orderInfo.goodsDiscountMoney).toFixed(2)"></dd>
+				</dl>
 			</div>
-			<div class="order_details_cancel" v-if="orderStatus == 3">
-				去支付
+			<!--优惠券-->
+			<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="couponList && (orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4))">
+				<dl class="order_details_coupon clearfloat" v-if="couponList" v-for="(item,index) in couponList" :key="index" @click="selectCoupon(item)">
+					<dt v-text="item.title"></dt>
+					<dd class="order_coupon_price" v-text="getCouponText(item)"></dd>
+				</dl>
 			</div>
+			<!-- <div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4)" @click="toCoupon(1)">
+				<dl class="order_details_coupon clearfloat">
+					<dt>优惠券:（单选）</dt>
+					<dd class="order_coupon_price" v-if="couponMoney != null">已选：-{{couponMoney}}元</dd>
+					<dd class="order_coupon_price" v-if="couponMoney == null">{{this.couponNum}}张可用</dd>
+				</dl>
+			</div>
+			<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4)" @click="toCoupon(2)">
+				<dl class="order_details_coupon clearfloat">
+					<dt>商品券:（可多选）</dt>
+					<dd class="order_coupon_price">暂无可用优惠券</dd>
+				</dl>
+			</div>
+			<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4)" @click="toCoupon(3)">
+				<dl class="order_details_coupon clearfloat">
+					<dt>商品类目券:（可多选）</dt>
+					<dd class="order_coupon_price">暂无可用优惠券</dd>
+				</dl>
+			</div> -->
+			<div class="order_details_coupon_box11" v-if="orderInfo.orderStatus == 3">
+				点击去支付后，不能重新选择优惠券，请谨慎操作！
+			</div>
+		</div>
+		<!--订单总金额-->
+		<div class="order_details_money" v-if="orderInfo && orderInfo.orderStatus == 1">
+			<dl class="clearfloat">
+				<dt>订单总金额:</dt>
+				<dd><span class="color_f27c32" v-text="parseFloat(orderInfo.orderMoney).toFixed(2)"></span>元</dd>
+			</dl>
+			<p>(实际金额按照收货时实际称重结算)</p>
+		</div>
+		<!--订单金额详情-->
+		<div class="order_details_money_details" v-if=" orderInfo && (orderInfo.orderStatus == 2 || orderInfo.orderStatus == 3 || orderInfo.orderStatus == 4)">
+			<dl class="clearfloat">
+				<dt>订单总金额:</dt>
+				<dd><span class="color_f27c32">{{orderInfo.goodsMoney}}</span>元</dd>
+			</dl>
+			<dl class="clearfloat">
+				<dt>应付金额:</dt>
+				<dd v-text="(orderInfo.orderStatus == 2) ? '(按实际称重核算后计算)' : parseFloat(orderInfo.shouldPayMoney).toFixed(2) + '元' "></dd>
+			</dl>
+			<dl class="clearfloat">
+				<dt>优惠金额:</dt>
+				<dd v-text="(getCouponMoney == '?' ? '?元' : '-'+getCouponMoney+'元') "></dd>
+			</dl>
+			<dl class="clearfloat">
+				<dt>实际金额:</dt>
+				<dd v-text="(getRealMoney == '?' ? '?元' : getRealMoney+'元')"></dd>
+			</dl>
+		</div>
+		<div class="order_details_cancel" v-if="orderInfo && (orderInfo.orderStatus == 1 || orderInfo.orderStatus == -1 || orderInfo.orderStatus == 3)" v-text="orderStatusBtnText[+orderInfo.orderStatus +1]"></div>
 		<explainAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </explainAlert>
     </div>
  </div>
@@ -162,6 +154,8 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import explainAlert from  "../../components/public/alert.vue";
+
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     data() {
         return {
@@ -170,15 +164,14 @@ export default {
 				title:'订单详情',
 				left:'返回'
 			},
-			couponItem:[],
-			orderDetailList:[],
-			orderDetailsList:[],
 			noticeInfoList:null,
-			orderStatus: '',
-			couponMoney:'',
+			orderInfo:null,
 			descCode: "#PS-DESC",
 			websiteNode:this.websiteDate.code,
-			tokenId:localStorage.getItem("tokenId"),
+			orderCode:null,
+			couponList:[],
+			orderStatusText:['已作废','','待发货','已配货','待支付','已支付'],
+			orderStatusBtnText:['删除订单','','取消订单','','去支付','']
         }
     },
     components: {
@@ -186,23 +179,138 @@ export default {
 		explainAlert
   	},
   	created:function() {
-		  this.couponNum = this.$route.query.couponNum
+		this.couponNum = this.$route.query.couponNum
+	},
+	computed:{
+		getCouponMoney(){
+			let m = '';
+			if (this.orderInfo.orderStatus == 2) {
+				return '?'
+			} else {
+				m = 0;
+				if (this.orderInfo.goodsDiscountMoney) {
+					m = m + parseFloat(this.orderInfo.goodsDiscountMoney)
+				}
+				if (this.orderInfo.vipMoney) {
+					m = m + parseFloat(this.orderInfo.vipMoney)
+				}
+				if (this.orderInfo.offMoney) {
+					m = m + parseFloat(this.orderInfo.offMoney)
+				}
+				if (this.couponList && this.couponList.length) {
+					this.couponList.forEach((item)=>{
+						m = m + parseFloat(item.couponMoney)
+					})
+				}
+				return m.toFixed(2);
+			}
+			
+		},
+		getRealMoney(){
+			let m = '';
+			if (this.orderInfo.orderStatus == 2) {
+				return '?'
+			} else if (this.orderInfo.orderStatus == 3 || this.orderInfo.orderStatus == 4){
+				if ((this.orderInfo.orderStatus == 3 && this.orderInfo.isGoToPay == 1) || this.orderInfo.orderStatus=='4') {
+					return (parseFloat(this.orderInfo.realPayMoney)).toFixed(2)
+				}else{
+					return ((parseFloat(this.orderInfo.realPayMoney) - parseFloat(this.getCouponMoney))).toFixed(2)
+				}
+			}
+		}
+	},
+  	mounted() {
+		let sessCode = sessionStorage.getItem('orderData')
+		this.orderCode = JSON.parse(sessCode).code;
+		if (getIsLogin()) {
+            this.tokenId = getTokenId();
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+                source : 'firmId'+userInfo.firmInfoid,
+                sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+                tokenId : getTokenId()
+			}
+			this.get_order_detail()
+        }
+    	
   	},
   	methods: {
         get_order_detail:function () {
+			let obj = Object.assign({
+				method: "order_details_fou",
+				orderCode: this.orderCode,
+				},this.userBasicParam);
+
 			this.$ajax.get(this.HOST, {
-				params:{
-					method: "order_details_fou",
-					orderCode: this.Code,
-					tokenId: this.tokenId
-					}
-				}).then(resp => {
-					this.couponItem = resp.data.data.offItem;
-					this.orderDetailList = resp.data.data.orderInfo;
-					this.orderDetailsList = resp.data.data.orderInfo.orderDetailsList;
+				params:obj
+			}).then(resp => {
+				let v = resp.data.data;
+					this.offItem = v.offItem;
+					this.orderInfo = v.orderInfo;
+					this.couponInit(v);
 				}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
+		},
+		couponInit(v){
+			this.couponList = [
+				//普通的优惠卷
+				{
+					name:'couponInfo',
+					title:'优惠券:（单选）',
+					selectId:v.orderInfo.coupon,
+					selectData:null,
+					couponMoney:v.orderInfo.couponMoney ? v.orderInfo.couponMoney : 0,//优惠卷金额
+					useable:v.useable,//可用列表
+					unusable:v.unusable//不可用列表
+				},
+				//商品优惠卷
+				{
+					name:'goodCouponInfo',
+					title:'商品券:（可多选）',
+					selectId:v.orderInfo.goodsCoupon ? v.orderInfo.goodsCoupon.join(",") : null,
+					selectData:null,
+					couponMoney:v.orderInfo.goodsCouponMoney ? v.orderInfo.goodsCouponMoney : 0,//优惠卷金额
+					useable:v.guseable,//可用列表
+					unusable:v.gunusable//不可用列表
+				},
+				//类目优惠卷
+				{
+					name:'typeCouponInfo',
+					title:'商品类目券:（可多选）',
+					selectId:v.orderInfo.goodsTypeCoupon ? v.orderInfo.goodsTypeCoupon.join(",") : null,
+					selectData:null,
+					couponMoney:v.orderInfo.goodsTypeCouponMoney ? v.orderInfo.goodsTypeCouponMoney : 0,//优惠卷金额
+					useable:v.tuseable,//可用列表
+					unusable:v.tunusable//不可用列表
+				},
+			]
+			if(v.orderInfo.orderStatus == 3){
+				if (v.orderInfo.isGoToPay == 1) {
+					if (v.couponInfo != null) {
+						this.couponList[0].couponMoney = v.couponInfo.couponMoney;
+					}else{
+						this.couponList[0].couponMoney = 0;
+					}
+				}else{
+					if (localStorage.getItem('couponInfo')) {
+						this.couponList[0] = JSON.parse(localStorage.getItem('couponInfo'));
+					} else {
+						let isEmpty = this.couponList[0].useable && this.couponList[0].useable.length != 0;
+						this.couponList[0].selectId = isEmpty ? this.couponList[0].useable[0].id : null;
+						this.couponList[0].couponMoney = isEmpty ? this.couponList[0].useable[0].couponMoney : 0;
+					}
+					if (localStorage.getItem('goodCouponInfo')) {
+						this.couponList[1] = JSON.parse(localStorage.getItem('goodCouponInfo'));
+					}
+					if (localStorage.getItem('typeCouponInfo')) {
+						this.couponList[2] = JSON.parse(localStorage.getItem('typeCouponInfo'));
+					}
+					
+					
+				}
+			}
 		},
 		desc_data:function(){
 			this.$ajax.get(this.HOST, {
@@ -226,19 +334,72 @@ export default {
 		closeAlert:function(){
             this.noticeInfoList = null;
 		},
-		toCoupon(dataType) {
+		selectCoupon(item) {
+			let dataType = item.name;
+			localStorage.setItem(dataType,JSON.stringify(item));
 			this.$router.push({path:'/chooseCoupon',query:{dataType:dataType}})
+		},
+		getCouponText(item){
+			let obj = {
+				status:0,//0表示--暂无优惠卷可用 1表示有优惠卷但是没有选择 3表示已经选择优惠卷 4表示已绑定状态
+				num:0,//表示可用优惠卷的张数
+				money:0,//表示优惠卷的金额
+				dataId:[],//表示所选优惠卷的ID列表
+			}
+			console.log(item)
+			if (this.orderInfo.orderStatus == 3 || this.orderInfo.orderStatus == 4) {
+				if (this.orderInfo.orderStatus == 3 ) {
+					if (this.orderInfo.isGoToPay) {
+						obj.status = 4;
+						obj.money = item.couponMoney ? item.couponMoney : 0
+					}else{
+						if (item.useable && item.useable.length ) {
+							if (item.selectId) {
+								if (item.selectId instanceof Array) {
+									if (item.selectId.length == 0) {
+										obj.status = 1;
+										obj.num = item.useable.length;
+									}else{
+										obj.status = 3;
+										obj.money = item.couponMoney;
+										obj.dataId = item.selectId;
+									}
+								}else{
+									obj.status = 3;
+									obj.money = item.couponMoney;
+									obj.dataId = item.selectId;
+								}
+							}else{
+								obj.status = 1;
+								obj.num = item.useable.length;
+							}
+						}else{
+							obj.status = 0;
+							obj.num = 0;
+						}
+					}
+				}else{
+					if (item.couponMoney) {
+						return parseInt(item.couponMoney).toFixed(2);
+					}else{
+
+					}
+				}
+			}
+			if (obj.status == 0) {
+				return '暂无优惠卷可用'
+			}
+			if (obj.status == 1) {
+				return obj.num + '张可用'
+			}
+			if (obj.status == 3) {
+				return '已选：-'+parseInt(obj.money).toFixed(2)+'元'
+			}
+			if (obj.status == 4) {
+				return "已绑定："+parseInt(obj.money).toFixed(2)+"元"
+			}
 		}
 	},
-	  
-  	mounted() {
-		let sessCode = sessionStorage.getItem('orderData')
-		this.Code = JSON.parse(sessCode).code;
-		this.orderStatus = JSON.parse(sessCode).order;
-		this.money = this.$route.query.money
-		this.couponMoney = this.money
-    	this.get_order_detail()
-  	}
 }
 </script>
 

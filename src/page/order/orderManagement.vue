@@ -6,59 +6,35 @@
 	</ul>
     <div class="main-wrap order_management_wrap">
         <div class="main">
-            <ul class="order_management_main" v-for="(i, index) in ordersList" :key="index" @click="toOrderDetail(i.orderCode,i.orderStatus)">
+            <ul class="order_management_main" v-for="(item, index) in ordersList" :key="index" @click="toOrderDetail(item)">
                 <li class="order_list">
                     <div class="order_list_top clearfloat">
-                        <div class="order_list_num">
-                            订单编号：{{i.orderCode}}
-                        </div>
-                        <div class="order_list_state" v-if="i.orderStatus == 1 || i.orderStatus == ''">
-                            待发货
-                        </div>
-                        <div class="order_list_state" v-if="i.orderStatus == 2 || i.orderStatus == ''">
-                            已配货
-                        </div>
-                        <div class="order_list_state" v-if="i.orderStatus == 3 || i.orderStatus == ''">
-                            待支付
-                        </div>
-                        <div class="order_list_state" v-if="i.orderStatus == 4 || i.orderStatus == ''">
-                            已支付
-                        </div>
-                        <div class="order_list_state" v-if="i.orderStatus == -1 || i.orderStatus == ''">
-                            已作废
-                        </div>
+                        <div class="order_list_num" v-text="'订单编号：'+item.orderCode"></div>
+                        <div class="order_list_state" v-text="orderStatusText[+item.orderStatus +1]"></div>
                     </div>
                     <div class="order_list_details">
                         <div class="order_list_details_top clearfloat">
-                            <div class="order_list_details_num">
-                                商品数量：{{i.containGoodsNum}}件
-                            </div>
-                            <div class="order_list_details_money">
-                                订单金额：{{i.goodsMoney}}元
-                            </div>
+                            <div class="order_list_details_num" v-text=" '商品数量：'+item.containGoodsNum+'件'"></div>
+                            <div class="order_list_details_money" v-text="'订单金额：￥'+( (item.orderStatus == 3 || item.orderStatus == 4) ? item.realPayMoney : item.orderMoney )+'元'"></div>
                         </div>
                         <div class="order_list_details_buttom clearfloat">
-                            <div class="order_list_details_weight">
-                                商品重量：{{i.containGoodsWeight}}斤
-                            </div>
-                            <div class="order_list_details_time">
-                                下单时间：{{i.createTime}}
-                            </div>
+                            <div class="order_list_details_weight" v-text=" '商品重量：'+item.containGoodsWeight+'斤'"></div>
+                            <div class="order_list_details_time" v-text="'下单时间：'+item.createTime"></div>
                         </div>
                     </div>
-                    <div class="order_list_close" v-if="i.orderStatus == 1 || i.orderStatus == ''">
+                    <div class="order_list_close" v-if="item.orderStatus == 1 || item.orderStatus == ''">
                         <dl class="order_list_close clearfloat"><dt style="color: #2f83ff;">实际金额按照实际称重计算为准</dt><dd>取消订单</dd></dl>
                     </div>
-                    <div class="order_list_close" v-if="i.orderStatus == 2 || i.orderStatus == ''">
+                    <div class="order_list_close" v-if="item.orderStatus == 2 || item.orderStatus == ''">
                         <dl class="order_list_close" style="color: #2f83ff;">实际金额按照实际称重计算为准</dl>
                     </div>
-                    <div class="order_list_close" v-if="i.orderStatus == 3 || i.orderStatus == ''">
+                    <div class="order_list_close" v-if="item.orderStatus == 3 || item.orderStatus == ''">
                         <dl class="order_list_close clearfloat"><dt style="color: #d05351;">为避免耽误您再次下单,请尽快支付</dt><dd style="background:#f47c30;color:#FFF;border-color: #FFF;">立即支付</dd></dl>
                     </div>
-                    <div class="order_list_close" v-if="i.orderStatus == 4 || i.orderStatus == ''">
+                    <div class="order_list_close" v-if="item.orderStatus == 4 || item.orderStatus == ''">
                         <dl class="order_list_close order_suc_">交易成功!</dl>
                     </div>
-                    <div class="order_list_close" v-if="i.orderStatus == -1 || i.orderStatus == ''">
+                    <div class="order_list_close" v-if="item.orderStatus == -1 || item.orderStatus == ''">
                         <dl class="order_list_close">关闭交易</dl>
                     </div>
                 </li>
@@ -95,6 +71,7 @@ export default {
             firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
             orderStatus:1,
             ordersList:[],
+            orderStatusText:['已作废','','待发货','已配货','待支付','已支付'],
         }
     },
     components: {
@@ -161,7 +138,9 @@ export default {
             }
         },
         //路由传值给详情页面
-        toOrderDetail(code,orderStatus) {
+        toOrderDetail(item) {
+            let code = item.orderCode,
+                orderStatus = item.orderStatus
             this.$router.push({ path:'orderDetails'})
             let a = {code:code,order:orderStatus}
 	        sessionStorage.setItem('orderData', JSON.stringify(a))

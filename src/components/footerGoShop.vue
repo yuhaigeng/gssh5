@@ -153,8 +153,11 @@ export default {
 			}
 		},
 		goShopCart:function (val,oldVal) {
+			console.log(this.isCartShow )
 			if(this.isCartShow){
 				if (val.length) {
+					console.log(val )
+					console.log(oldVal)
 					if(val.length != oldVal.length ){
 						$("#gw_car").animate({
 							bottom:($('.footer_car').height()+97)+"px"
