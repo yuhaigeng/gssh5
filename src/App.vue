@@ -7,7 +7,7 @@
     	</transition>
     	<transition name="router-fade" mode="out-in">
 			<router-view v-if="!$route.meta.keepAlive"></router-view>
-		</transition>	
+		</transition>
     </div>
 </template>
 
@@ -39,7 +39,7 @@ export default {
 }
 
 html{ overflow: auto;}
-[v-cloak] { 
+[v-cloak] {
   display: none;
 }
 .empty{width: 100%;height: 87px;}
@@ -119,5 +119,10 @@ html{ overflow: auto;}
     left: 0;
     bottom: 0;
     z-index: 6
+}
+.common-wrap{
+    max-width: 750px;
+    width: 100%;
+    margin: 0 auto;
 }
 </style>

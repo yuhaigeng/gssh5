@@ -1,5 +1,5 @@
 <template>
- <div class="detail">
+ <div class="detail common-wrap">
      <div class="header-wrap goodsDetails_header">
 			<div class="header_left header_back sprite icon_delete" @click="back"></div>
 			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_a':'icon_collect_b'" @click="changeCollect"></div>
@@ -11,8 +11,10 @@
 			</div>
 			<div class="goodsDetails_box1">
 				<div class="goodsDetails_box1_top clearfloat">
-					<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}</h3>
-					<div class="goodsDetails_box1_ionc"></div>
+					<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade"></span></h3>
+					<div class="goodsDetails_box1_ionc">
+						
+					</div>
 				</div>
 				<ul class="goodsDetails_box1_center">
 					<li class="clearfloat goodsDetails_box1_center_li1">
@@ -20,26 +22,21 @@
 							{{detailList.goodsShows}}
 						</div>
 						<div class="moreGoods_goods_number clearfloat">
-							<span class="goodsNumber_min" v-if="buyNum > 0">
-								<img src="../../assets/img/btn_m@2x.png"/>
-							</span>
-							<span class="goodsNumber fontColor" v-if="buyNum > 0">{{buyNum}}</span>
-							<span class="goodsNumber_max">
-								<img src="../../assets/img/btn_a@2x.png"/>
-							</span>
+							<b class='bStyle' v-if="getNumText(detailList)" v-text="getNumText(detailList)" ></b>
+                            <span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailList)"><img src="../../assets/img/btn_m@2x.png"/></span>
+                            <span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber fontColor" v-text="getGoodNum(detailList.id)"></span>
+                            <span v-if="!getNumText(detailList)" class="goodsNumber_max" v-on:click.stop="addGood(detailList,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
 						</div>
 					</li>
 					<li class="clearfloat">
 						<div class="goodsDetails_box_left">
-							单价：<span v-if="logined"><span class="color_f27c32">{{detailList.gssPrice}}</span>元/箱</span>
+							单价：<span v-if="logined"><span class="color_f27c32">{{detailList.gssPrice}}</span>元/{{detailList.priceUnit}}</span>
 							<span v-else></span>
 						</div>
 						<div class="goodsDetails_box_right">
-							总价: <span v-if="logined">{{detailList.gssPrice}}元/箱</span>
+							总价: <span v-if="logined">{{detailList.priceDesc}}</span>
 							<span v-else></span>
 						</div>
-					</li>
-					<li class="clearfloat">
 						<div class="goodsDetails_box_left">
 							产地：{{detailList.sourceCityName}}
 						</div>
@@ -55,7 +52,7 @@
 			</div>
 		</div>
     </div>
-	<app-footer-go-shop></app-footer-go-shop>
+	<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
  </div>
 </template>
 
@@ -65,6 +62,8 @@ import '@/common/swiper-3.3.1.min.css';
 import { Toast } from 'mint-ui';
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/goodsBanner.vue";
+import { goodlist1 } from "../../common/goods_car.js";
+import $ from 'jquery';
 import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
 	name:'goodsDetail',
@@ -78,8 +77,24 @@ export default {
 			collectList: [],
 			userId: getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).cuserInfoid : "",
 			firmId: getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
+			//本地购物车
+			goShopCart:[],
+			systemMoney:-1,//系统参数配置中配置的起售金额
+			showMoveDot: [], //控制下落的小圆点显示隐藏
+			elLeft: 0, //当前点击加按钮在网页中的绝对top值
+			elBottom: 0, //当前点击加按钮在网页中的绝对left值
+			receiveInCart: false, //购物车组件下落的圆点是否到达目标位置
+			windowHeight: null, //屏幕的高度
  		}
 	},
+	watch:{
+      goShopCart: {
+        handler:function( val,oldVal ) {
+          localStorage.setItem('good',JSON.stringify(val))
+        },
+        deep:true,
+      }
+    },
  	components: {
 		appFooterGoShop,
 		goodsBanner
@@ -97,7 +112,53 @@ export default {
 				autoplayDisableOnInteraction: false
 			},
 		})
+		// 数据初始化
+      if (getIsLogin()) {
+        this.isLogin = getIsLogin();
+        this.tokenId = getTokenId();
+        const userInfo = JSON.parse(getUserData());
+        
+        this.userBasicParam = {
+            firmId : userInfo.firmInfoid,
+            source : 'firmId'+userInfo.firmInfoid,
+            sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+            tokenId : getTokenId()
+        }
+      }
+      
+
+      if ( localStorage.getItem('system') ) {
+        this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
+      } else {
+
+      }
+      if ( localStorage.getItem('good') ) {
+        this.goShopCart = JSON.parse(localStorage.getItem('good'))
+      } else {
+        this.goShopCart = []
+      }
+      this.windowHeight = window.innerHeight;
 	},
+	computed:{
+        // 获取宽度
+        getTopWidth:function(){
+          return  (this.goods.length * 164) + 24 +'px'
+        },
+        // 获取高度
+        getLeftHeight:function(){
+          const  bodyHeight  =  document.querySelector("body");
+          const  wrapHeight  =  document.querySelector(".header-wrap");
+          const  topHeight   =  document.querySelector('.moreDoogs_main_top');
+          const  footerHeight =  document.querySelector(".footer-wrap");
+          let a = parseInt(window.getComputedStyle(bodyHeight).height);
+          let b =   wrapHeight ? parseInt(window.getComputedStyle(wrapHeight).height) : 87 ;
+          let c = topHeight ? parseInt(window.getComputedStyle(topHeight).height):90;
+          let d =  footerHeight ? parseInt(window.getComputedStyle(footerHeight).height):98;
+          let e = a-b-c-d;
+         return e + 'px';
+        },
+        
+    },
 	methods:{
 		getOrder() {
 			this.Id = this.$route.params.id
@@ -156,6 +217,186 @@ export default {
 				console.log('请求失败：'+ err.statusCode);
 			});
 		},
+		submitGoShopCart(){
+        let goodsList = goodlist1();
+        let obj = Object.assign({
+            method: "settlement_shop_cart",
+            goodsList:goodsList,
+        },this.userBasicParam)
+        this.$ajax.get(this.HOST, {
+            params:obj
+        }).then(result => {
+            return result.data;
+        }).then(data => {
+            
+            if (data.statusCode=='100000') {
+              sessionStorage.setItem('address',JSON.stringify(data.data));
+              
+              this.$router.push({path:'/orderSettlement'})
+            }else if (data.statusCode=='100903' || data.statusCode=='100907') {
+              var orderResult={
+                statusCode:data.statusCode,
+                orderCode:data.data.orderCode
+              }
+              sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
+              window.location.href='order_result.html?v=0.1'
+            }else{
+              $(".footer-rigth").addClass("true");
+              this.$toast({
+                message : data.statusStr,
+                position: 'boottom',//top boottom middle
+                duration: 2000,//延时多久消失
+                //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+                //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+              })
+            }
+        });
+	  },
+	  getNumText(item){
+        const msgArr = ['','','不是VIP','等级不足']
+        if (item.vipGrade > 0 && (item.state == 2 || item.state == 3) ) {
+          return msgArr[item.state]
+        } else {
+          if ((parseInt(item.initNum) - parseInt(item.saleNum)) <= 0) {
+            return '已售罄'
+          }else{
+            return ''
+          }
+        }
+      },
+      getGoodNum(id){
+        if (this.goShopCart && this.goShopCart.length) {
+          let good = this.goShopCart.filter((item)=>{
+            if (item.id == id) {
+              return item;
+            }
+          });
+          if (good && good.length) {
+            return good[0].sum;
+          }
+          return 0;
+        } else {
+          return 0;
+        }
+      },
+      // 购物车相关
+      //获取本地商品对象
+      getGoodObj(id){
+        if (this.goShopCart && this.goShopCart.length) {
+          let good = this.goShopCart.filter((item)=>{
+            if (item.id == id) {
+              return item;
+            }
+          });
+          if (good && good.length) {
+            return good[0];
+          }
+          return null;
+        } else {
+          return null;
+        }
+      },
+      // 添加商品
+      addGood(item,event){
+        let good = this.getGoodObj(item.id)
+        if (good) {
+          //先判断库存和限购  在执行加操作
+          if ( +good.sum < +item.packageNum) {
+            if(+item.maxCount > 0){
+              if( +good.sum < +item.maxCount){
+                good.sum = parseInt(good.sum) + 1;
+
+                let elLeft = event.target.getBoundingClientRect().left;
+                let elTop = event.target.getBoundingClientRect().top;
+                
+                this.sport(elLeft,elTop)
+              }else{
+                this.$toast({
+                  message : "该商品限购"+item.maxCount+"件",
+                  position: 'boottom',//top boottom middle
+                  duration: 2000,//延时多久消失
+                  //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+                  //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+                })
+              }
+            }else{
+              good.sum = parseInt(good.sum) + 1;
+
+              let elLeft = event.target.getBoundingClientRect().left;
+              let elTop = event.target.getBoundingClientRect().top;
+              
+              this.sport(elLeft,elTop)
+              
+            }
+          } else{
+            this.$toast({
+              message : "库存不足",
+              position: 'boottom',//top boottom middle
+              duration: 2000,//延时多久消失
+              //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+              //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+            })
+          }
+        } else {
+          let obj = {
+            "id":item.id,
+            "name":item.goodsName,
+            "sum":1,
+            "price":item.wholeGssPrice,
+            "wholePriceSize":item.wholePriceSize,
+            "gssPrice":item.gssPrice,
+            "priceUnit":item.priceUnit,
+            "packageNum":item.packageNum,
+            "maxCount":item.maxCount
+          }
+          let elLeft = event.target.getBoundingClientRect().left;
+          let elTop = event.target.getBoundingClientRect().top;
+          
+          this.sport(elLeft,elTop)
+
+          this.goShopCart.push(obj)
+        }
+      },
+      // 减少商品
+      cutGood(item){
+        let good = this.getGoodObj(item.id)
+        if (good.sum == 1) {
+          this.goShopCart.splice(this.goShopCart.indexOf(good),1);
+        } else {
+          good.sum = parseInt(good.sum) - 1;
+        }
+      },
+      sport(x,y){
+        var $ele = $(".gw_car_num");
+        if($ele.is(':visible')){
+          var xEnd=$ele.offset().left+$ele.width()/4;
+          var yEnd=$ele.offset().top;
+        }else{
+          var xEnd = 86,
+            yEnd = this.windowHeight - 110;
+        }
+        var xStar=x;
+        var yStar=y;
+        var main_obj=$('<div></div>');
+        var new_obj=$("<span></span>");
+        $('body').append(main_obj)
+        main_obj.append(new_obj);
+        new_obj.css({
+          'width': '20px',
+          'height': '20px',
+          'position': 'absolute',
+          'background': '#f56d15',
+          "border-radius":"50%",
+          'z-index':'600',
+          "top":yStar,
+          "left":xStar
+        }).animate({
+          left:xEnd,
+          top:yEnd
+        },800,function(){
+          main_obj.remove();
+        })
+      },
 		back(){
 			this.$router.go(-1);
 		},
@@ -163,14 +404,14 @@ export default {
 			this.isCollect = !this.isCollect
 			if(this.isCollect == false){
 				this.get_goods_collect_del();
-				Toast({
+				this.$toast({
 					message: '取消收藏',
 					position: 'center',
 					duration: 2000
 				})
 			}else {
 				this.get_goods_collectAdd()
-				Toast({
+				this.$toast({
 					message: '收藏成功',
 					position: 'center',
 					duration: 2000
@@ -182,7 +423,49 @@ export default {
 </script>
 
 <style scoped>
-.fontColor{margin: 0 10px;}
+.icon_vip1 {
+	display: inline-block;
+	width: 62px;
+	height: 32px;
+	margin-left: 20px;
+	background: url(../../assets/img/vip_icon1_square_active.png);
+}
+
+.icon_vip2 {
+	display: inline-block;
+	width: 62px;
+	height: 32px;
+	margin-left: 20px;
+	background: url(../../assets/img/vip_icon2_square_active.png);
+}
+
+.icon_vip3 {
+	display: inline-block;
+	width: 62px;
+	height: 32px;
+	margin-left: 20px;
+	background: url(../../assets/img/vip_icon3_square_active.png);
+}
+
+.icon_vip4 {
+	display: inline-block;
+	width: 62px;
+	height: 32px;
+	margin-left: 20px;
+	background: url(../../assets/img/vip_icon4_square_active.png);
+}
+.bStyle{
+    color:red;
+    text-align:center;
+    width:100px;
+    height:64px;
+    line-height:64px;
+    display:inline-block;
+    font-size: 24px;
+}
+.fontColor{
+	margin: 0 10px;
+}
 .color_f27c32 {
 	color: #f27c32
 }
@@ -222,7 +505,7 @@ export default {
 .goods_detaile_wrap {
 	margin-top: 0
 }
-.scoregoods .goodsDetails_box2_ {
+ .goodsDetails_box2_ {
 	margin-bottom: 10px;
 }
 .goodsDetails_box2 {
@@ -289,10 +572,11 @@ export default {
 .goodsDetails_box1_center li {
 	border-bottom: 1px dashed #666;
 	font-size: 24px;
-	padding-left: 24px
+	padding-left: 24px;
 }
 .goodsDetails_box1 {
-	background: #FFF
+	background: #FFF;
+	padding-bottom: 15px;
 }
 
 .goodsDetails_box1_top {
@@ -330,8 +614,9 @@ export default {
 	border: none;
 	position: absolute;
 	background: none;
-	top: 0;
-	left: 0
+	top: 0 ;
+	left: 50%;
+  margin-left:-384px;
 }
 
 .goodsDetails_header .header_back {

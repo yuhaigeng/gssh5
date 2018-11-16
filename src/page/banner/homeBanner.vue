@@ -1,5 +1,5 @@
 <template>
-    <div class="swiper-container">
+    <div class="swiper-container common-wrap">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in imgList" :key="index">
                 <img v-lazy="item.adLogo" alt="">
@@ -16,19 +16,19 @@ export default {
 
  data() {
     return {
-        
+
     }
  },
  props:['imgList'],
  mounted(){
-     
+
      var mySwiper = new Swiper('.swiper-container', {
         direction: 'horizontal',
         autoplay:{
             delay: 5000,
         },
         loop: true,
-        
+
         pagination: {
             el: '.swiper-pagination',
             clickable: true

@@ -1,10 +1,10 @@
 <template>
-   <div class="orderSettlement">
+   <div class="orderSettlement common-wrap">
       <app-header :type="headerMsg"></app-header>
       <div class="main-wrap">
 			<div class="main">
 				<div class="order_infor">
-					<router-link  :to="{path:'address', query:{isBack:true}}" tag="div" class="my_infor" v-if="addressInfo">
+					<router-link  :to="{path:'address', query:{isBack:true}}" tag="div" class="my_infor" v-if="addressInfo.receiverName">
 						<div class="my_info_top clearfloat">
 							<div class="my_name" v-text="addressInfo.receiverName">
 							</div>
@@ -46,7 +46,7 @@
         <div class="footer-wrap order_footer_wrap">
 			<div class="footer clearfloat">
 				<div class="footer-left order_footer_left">
-					合计:<span v-text="'￥'"></span>
+					合计:<span v-text="'￥'+ totalPrice"></span>
 				</div>
 				<div class="footer-rigth order_footer_right true" @click="get">
 					提交订单
@@ -61,7 +61,7 @@
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
-import { goodlist1 } from "../../common/goods_car.js";
+import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
    export default {
         name: 'orderSettlement' ,
         components:{
@@ -87,8 +87,9 @@ import { goodlist1 } from "../../common/goods_car.js";
                 userId:JSON.parse(getUserData()).cuserInfoid,
                 goodsList:[],
                 customRequest:"",
-                addressId:"4131",
+                addressId:JSON.parse(sessionStorage.getItem('address')).address.id,
                 postCost:JSON.parse(sessionStorage.getItem('address')).postCost ? JSON.parse(sessionStorage.getItem('address')).postCost:0 ,
+                totalPrice:"" ,
 
             }
         },
@@ -96,6 +97,7 @@ import { goodlist1 } from "../../common/goods_car.js";
 
         },
         mounted(){
+            this.totalPrice =  parseFloat(getgoodsMoney()) + parseInt(this.postCost)
             if ( localStorage.getItem('good') ) {
               this.goodsList = JSON.parse(localStorage.getItem('good'))
             } else {
@@ -113,6 +115,7 @@ import { goodlist1 } from "../../common/goods_car.js";
                 }).then(resp => {
                       resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
                       resp.data.data.noticeTitle =  resp.data.data.title;
+                      resp.data.data.alertType = 1;
                       this.noticeInfoList = resp.data.data;
                       console.log(this.noticeInfoList)
                 }).catch(err => {
@@ -132,10 +135,10 @@ import { goodlist1 } from "../../common/goods_car.js";
                         orderFrom:"H5",
                     }, this.userBasicParam)
                 }).then(resp => {
-                      resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                      resp.data.data.noticeTitle =  resp.data.data.title;
-                      this.noticeInfoList = resp.data.data;
-                      console.log(this.noticeInfoList)
+                  console.log(resp.data)
+                  let a =  resp.data
+                  sessionStorage.setItem('statusData',JSON.stringify(a))
+
                 }).catch(err => {
                     // console.log('请求失败：'+ err.data.statusCode);
                 });
@@ -147,7 +150,8 @@ import { goodlist1 } from "../../common/goods_car.js";
                     this.desc_data()
             },
             get:function(){
-                 this.orderSubmit()
+                this.orderSubmit()
+                this.$router.push({path:'/orderResult'})
             },
             priceTotal:function(item){
                   return  (parseFloat(item.price)*parseInt(item.sum)).toFixed(2);

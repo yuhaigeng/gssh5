@@ -1,5 +1,5 @@
 <template>
-   <div class="my">
+   <div class="my common-wrap">
         <app-header :type="headerMsg"   v-show="isLogin">
             <div   class='my-head'   slot="myLeft">
                 <router-link to="/setUp" tag="dl">
@@ -58,14 +58,10 @@ export default {
                 title:'我的',
                 routerPath:'/setUp',
             },
-            isLogin:getIsLogin(),
+            isLogin:getIsLogin() ? getIsLogin() : false,
             method:["user_personal_msg","firm_vip_info"],
-            firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
-            userBasicParam:{
-                source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
-                tokenId: getTokenId(),
-                sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
-             },
+            firmId: "",
+            userBasicParam:{},
             userInfo:{},
             userVipInfo:{},
             orderList:dateModule.orderList,
@@ -76,8 +72,14 @@ export default {
    },
    mounted(){
        if(localStorage.getItem("user_data")){
-                 this.personApi()
-             this.firm_vip_info()
+            this.firmId = JSON.parse(getUserData()).firmInfoid;
+            this.userBasicParam ={
+                source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
+                tokenId: getTokenId(),
+                sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+           }
+            this.personApi()
+            this.firm_vip_info()
        }
    },
    methods:{

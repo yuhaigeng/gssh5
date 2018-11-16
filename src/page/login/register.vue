@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="register common-wrap">
     <app-header :type = "headerMsg">
         <div slot="commonAlert" @click="agreement(0)">合作协议</div>
     </app-header>
@@ -66,6 +66,7 @@ import agreementAlert from  "../../components/public/alert.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 import {LArea} from '../../common/LArea.js' ;
 import {LArea1} from '../../common/LArea1.js';
+import { Toast } from 'mint-ui';
 import '@/common/LArea.css'
     export default {
         name:'register',
@@ -291,27 +292,32 @@ import '@/common/LArea.css'
             },
             submitBtn:function(){
                 if(this.firmName == null){
-                    this.$message({
-                        message: '请输入店铺名字',
-                        center: true,
-                    });
+                    this.$toast({
+                      message :'请输入店铺名字' ,
+                      position: 'center',
+                      duration: 2000,
+                    })
+
                 } else if (this.address == null) {
-                            this.$message({
-                                message: '请输入地址',
-                                center: true,
-                            });
+                    this.$toast({
+                      message :'请输入地址' ,
+                      position: 'center',
+                      duration: 2000,
+                    })
                 } else if (this.shopPhone == null) {
-                  this.$message({
-                                message: '请输入电话',
-                                center: true,
-                            });
+                    this.$toast({
+                      message :'请输入电话' ,
+                      position: 'center',
+                      duration: 2000,
+                    })
                 } else if (this.linkMan == null) {
-                  this.$message({
-                                message: '请输入联系人',
-                                center: true,
-                            });
+                    this.$toast({
+                      message :'请输入联系人' ,
+                      position: 'center',
+                      duration: 2000,
+                    })
                 } else{
-                  this.rgister()
+                   this.rgister()
                 }
             }
          }
@@ -356,7 +362,7 @@ import '@/common/LArea.css'
     outline: none;
     background: none;
     color: #333333;
-    width: 50%;
+    width: 46%;
     line-height: 30px;
 }
 .apply_suc dt {
@@ -445,6 +451,7 @@ import '@/common/LArea.css'
 }
 .apply_service_main .msg {
     color: red;
+    display:inline-block;
 }
 .myBg{
     visibility: hidden;

@@ -1,21 +1,21 @@
 <template>
-   <div>
-       <div class="empty1"></div>   
+   <div class="common-wrap">
+       <div class="empty1"></div>
        <div class="footer-wrap" v-show="!isMask">
 			<div class="footer clearfloat">
 				<span id="gw_car" class="sprite icon_shoppingcar" v-show="goodAllNum " @click="switchCartShow()" >
 					<span class="gw_car_num" v-text="(goodAllNum > 99 ? '99+' : goodAllNum)"></span>
 				</span>
-				<!-- <transition 
-					@before-enter="beforeEnter" 
-					@enter="enter" 
+				<!-- <transition
+					@before-enter="beforeEnter"
+					@enter="enter"
 					@after-enter="afterEnter"
 					:css="false" >
 					<span id="gw_car" class="sprite icon_shoppingcar" v-show="goodAllNum " @click="switchCartShow()" >
 						<span class="gw_car_num" v-text="(goodAllNum > 99 ? '99+' : goodAllNum)"></span>
 					</span>
 				</transition> -->
-				
+
 				<section class="clearfloat bootom">
 					<div class="footer-left icon_shoppingcar" :class="{'sprite':!goodAllNum}" v-text="(goodAllNum ? '共'+goodAllMoney+'元' : '购物车是空的')"></div>
 					<div class="footer-rigth true" :class="{'submit':isSubmit}" v-text="getSubmitText" @click="submitGoShopCart()"></div>
@@ -26,7 +26,7 @@
 							<div class="car_left" v-text="'购物车'"></div>
 							<div class="car_right car_clear" v-text="'清空所有'" @click="clearShopCart"></div>
 						</dt>
-						<dd class="car_main" >
+						<dd class="car_main" :style="{height:getHeight}">
 							<ul>
 								<li v-for="(item,index) in goShopCart" :key="index">
 									<div class="car_left" v-text="item.name"></div>
@@ -103,8 +103,8 @@ export default {
 			return totalMoney.toFixed(2);
 		},
 		getSubmitText(){
-			const systemMoney = (+this.systemMoney > 0 ? (+this.systemMoney).toFixed(2) : 0.00);
-			let diffVal = (systemMoney - this.goodAllMoney).toFixed(2)
+      const systemMoney = (this.systemMoney > 0 ? (+this.systemMoney).toFixed(2) : 0.00);
+      let diffVal = (systemMoney - this.goodAllMoney).toFixed(2)
 			if ( diffVal > 0 ) {
 				this.isSubmit = false;
 				return '还差￥'+ diffVal
@@ -132,13 +132,20 @@ export default {
 				}
 			}
 			return msg;
-		}
+    },
+    getHeight(){
+      if(this.goShopCart.length > 3){
+          return '300px'
+      }else{
+          return this.goShopCart.length * 100 +'px'
+      }
+    }
 	},
 	watch:{
 		isCartShow:function (val) {
 			if (val) {
 				$("#gw_car").animate({
-					bottom:($('.footer_car').height()+97)+"px"
+					bottom:(parseInt(this.getHeight)+168)+"px"
 				},300)
 				$('.footer-left').animate({
 					'text-indent':-150
@@ -156,13 +163,9 @@ export default {
 			console.log(this.isCartShow )
 			if(this.isCartShow){
 				if (val.length) {
-					console.log(val )
-					console.log(oldVal)
-					if(val.length != oldVal.length ){
 						$("#gw_car").animate({
-							bottom:($('.footer_car').height()+97)+"px"
+							bottom:(parseInt(this.getHeight)+168)+"px"
 						},300)
-					}
 				}else{
 					$("#gw_car").animate({
 						bottom:26+"px"
@@ -175,8 +178,8 @@ export default {
 			if(!val.length){
 				this.isCartShow = false;
 			}
-			
-			
+
+
 		}
 	},
 	methods : {
@@ -220,7 +223,7 @@ export default {
 				item.sum -= 1;
 			} else {
 				this.goShopCart.splice(index,1);
-				
+
 			}
 		},
 		alertMask:function(item,index){
@@ -228,7 +231,7 @@ export default {
 			this.goodNum = item.sum;
 			this.selectIndex = index;
 			this.isMask = true;
-			
+
 		},
 		clearShopCart:function () {
 			this.goShopCart.splice(0,this.goShopCart.length);
@@ -375,5 +378,9 @@ export default {
 .toggle-cart-enter, .toggle-cart-leave-active {
 	transform: translateY(100%);
 }
-
+.car_main{
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.footer-wrap{ left: 50%; margin-left: -375px;}
 </style>
