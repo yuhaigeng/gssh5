@@ -404,14 +404,14 @@ export default {
 			this.isCollect = !this.isCollect
 			if(this.isCollect == false){
 				this.get_goods_collect_del();
-				Toast({
+				this.$toast({
 					message: '取消收藏',
 					position: 'center',
 					duration: 2000
 				})
 			}else {
 				this.get_goods_collectAdd()
-				Toast({
+				this.$toast({
 					message: '收藏成功',
 					position: 'center',
 					duration: 2000

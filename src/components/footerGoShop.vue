@@ -381,5 +381,5 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
 }
-.footer-wrap{ left: 50%;     margin-left: -384px;}
+.footer-wrap{ left: 50%;     margin-left: -375px;}
 </style>
