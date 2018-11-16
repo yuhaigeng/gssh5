@@ -57,7 +57,9 @@ export default {
                     console.log(resp.data)
                     localStorage.clear();
                     this.$router.push({path:'/my',query:{isLogin:false}})
-
+                    if (!sessionStorage.getItem('system')) {
+                        getSystem(this)
+                    }
             }).catch(err => {
                 console.log('请求失败：'+ err.statusCode);
             });

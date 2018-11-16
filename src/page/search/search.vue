@@ -1,9 +1,7 @@
 <template>
  <div class="">
      <div class="header-wrap clearfloat">
-		<router-link to="home">
-			<div class="searchCallback sprite arrow_left"></div>
-		</router-link>
+			<div class="searchCallback sprite arrow_left" @click="goBack"></div>
 		<div class="search">
 			<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" v-focus="focusState"/>
 			<div class="delete sprite delete_b" @click="del()"></div>
@@ -13,9 +11,7 @@
 		<div class="search_star" v-if="!searchVal">
 			<p class="search_tit">热门搜索</p>
 			<ul class="search_item">
-				<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.keyword)">
-					{{item.keyword}}
-				</li>
+				<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.keyword)" v-text="item.keyword"></li>
 			</ul>
 		</div>
 		<div class="search_none" v-if="!goodsList.length && searchVal && state == 3">
@@ -36,8 +32,8 @@
 						<img :src="item.goodsLogo"/>
 					</dt>
 					<dd>
-						<h3 class="moreGoods_goods_name">{{item.goodsName}}</h3>
-						<p class="moreGoods_goods_text">{{item.goodsShows}}</p>
+						<h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
+						<p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
 						<p class="moreGoods_goods_price">
 							<span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}
 						</p>
@@ -128,7 +124,10 @@ export default {
 	},
 	toDetail(id) {
 		this.$router.push({ path:'detail/'+id })
-	}
+	},
+	goBack() {
+		this.$router.go(-1);
+	},
  },
  mounted() {
 	 this.get_goods_hot()
