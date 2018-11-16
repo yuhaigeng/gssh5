@@ -4,7 +4,7 @@
       <div class="main-wrap">
 			<div class="main">
 				<div class="order_infor">
-					<router-link  :to="{path:'address', query:{isBack:true}}" tag="div" class="my_infor" v-if="addressInfo">
+					<router-link  :to="{path:'address', query:{isBack:true}}" tag="div" class="my_infor" v-if="addressInfo.receiverName">
 						<div class="my_info_top clearfloat">
 							<div class="my_name" v-text="addressInfo.receiverName">
 							</div>

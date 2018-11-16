@@ -11,7 +11,7 @@
 				<p class="lodemore" v-text="!dataList.length ? '暂无数据' : (isLast ? '没有更多数据了' : '点击加载更多')" @click="getMore()"></p>
 			</div>
 		</div>
-		<div class="order_refund">		
+		<div class="order_refund">
 			<div class="refund_bg refund_bg_load"></div>
 			<div class="loading_box">
 				<div id="gavinPlay"></div>
@@ -24,7 +24,8 @@
             :defaultData="defaultData"
             :selectData="pickData"
             @cancel="close"
-            @confirm="confirmFn"></vue-pickers>
+            @confirm="confirmFn">
+        </vue-pickers>
     </div>
 </template>
 <script>
@@ -40,7 +41,7 @@ export default {
             headerMsg:{
                 type:"common",
                 title:null,
-                left:'返回' 
+                left:'返回'
             },
             type:'',
             isLast:false,
@@ -63,7 +64,7 @@ export default {
             isLink:false,
             defaultData:[],
             pickData:null,
-            
+
         }
     },
     async beforeMount(){
@@ -125,7 +126,7 @@ export default {
         },
         goBack : function(){
             if (window.history.length <= 1) {
-                    this.$router.push({path:'/my'})   
+                    this.$router.push({path:'/my'})
                     return false;
             } else {
                 this.$router.go(-1)
@@ -138,7 +139,7 @@ export default {
             if (!this.isLast) {
                 this.pageNo = this.pageNo+1 ;
                 this.get_record_list();
-            } 
+            }
         },
         close(){
             this.isShow = false;
