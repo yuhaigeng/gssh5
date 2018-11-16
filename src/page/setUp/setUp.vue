@@ -1,5 +1,5 @@
 <template>
-     <div>
+     <div class="common-wrap">
          <setHeader :type = headerMsg ></setHeader>
          <div class="main-wrap ">
 				<div class="main set_main">

@@ -37,6 +37,8 @@ const orderDetails = r => require.ensure([], () => r(require('../page/order/orde
 const chooseCoupon = r => require.ensure([], () => r(require('../page/order/chooseCoupon.vue')), 'chooseCoupon');
 const orderPay = r => require.ensure([], () => r(require('../page/order/orderPay.vue')), 'orderPay');
 
+const orderResult = r => require.ensure([], () => r(require('../page/order/orderResult.vue')), 'orderResult');
+
 Vue.use(Router)
 
 export default new Router({
@@ -116,19 +118,20 @@ export default new Router({
         ]
       }, //果币商城
       { path: '/orderManagement', component: orderManagement}, //订单管理
-      { 
+      {
         path: '/orderDetails',
         component: orderDetails,
         children:[//选择优惠券
-          
+
         ]
       }, //订单详情
       { path: '/orderSettlement', component: orderSettlement}, //订单结算
-      { 
+      {
         path: 'chooseCoupon',
         component: chooseCoupon,
       },
-      { path: '/orderPay', component:orderPay} //订单支付
+      { path: '/orderPay', component:orderPay}, //订单支付
+      { path: '/orderResult', component:orderResult} //订单结果
     ]
   }]
 })

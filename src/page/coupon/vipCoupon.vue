@@ -1,5 +1,5 @@
 <template>
-    <div class="coupon">
+    <div class="coupon common-wrap">
         <app-header :type="headerMsg"></app-header>
         <div id="appVue" class="main-wrap ticket_main_wrap" v-cloak>
 			<div class="ticket_nav clearfloat">
@@ -15,7 +15,7 @@
 							<p class="ticket_tit"><span class="ticket_name" v-text='item.templateName'></span> <span data-url="vip.html" class="user_vip_icon" :class="'vip'+item.vipGrade"></span></p>
 							<p class="ticket_item_time">有效期：<span v-text='item.realDays+"天"'></span></p>
 							<p class="ticket_item_prerequisite" v-text='textList[coupon["type"]]+item.leastOrderMoney+"元"'></p>
-							
+
 						</div>
 						<div class="ticket_item_right float_right" :class="'state'+item.state">
 							<span class="btn" v-text="btnText(item)" @click="getCoupon(item)"></span>

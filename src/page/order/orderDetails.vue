@@ -1,5 +1,5 @@
 <template>
- <div class="">
+ <div class="common-wrap">
      <app-header :type ="headerMsg"></app-header>
         <div class="main order_details_main">
             <div class="order_details_top">
@@ -166,8 +166,10 @@ export default {
     data() {
         return {
             headerMsg:{
-				type:"common",
-				title:'订单详情',
+				type:"jump",
+        title:'订单详情',
+        jumpBefore:'orderManagement',
+        num:'1',
 				left:'返回'
 			},
 			couponItem:[],
@@ -230,7 +232,7 @@ export default {
 			this.$router.push({path:'/chooseCoupon',query:{dataType:dataType}})
 		}
 	},
-	  
+
   	mounted() {
 		let sessCode = sessionStorage.getItem('orderData')
 		this.Code = JSON.parse(sessCode).code;

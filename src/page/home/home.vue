@@ -1,5 +1,5 @@
 <template>
-   <div class="home">
+   <div class="home common-wrap">
         <app-header :type="headerMsg">
             <div slot="homeleft" class="icon_location_a" v-text="websiteNodeName"></div>
             <div slot="homeLogo"><img  src="../../assets/img/top_logo@2x.png" alt="" /></div>
@@ -79,8 +79,7 @@ export default {
     //:完成了 data 数据的初始化，el没有
     created(){
 
-  },
-
+    },
     //完成挂载
     mounted(){
         console.log(this.websiteDate)
@@ -91,7 +90,7 @@ export default {
                 this.autoLogin();
             }
             const userInfo = JSON.parse(getUserData());
-            
+
             this.userBasicParam = {
                 firmId : userInfo.firmInfoid,
                 source : 'firmId'+userInfo.firmInfoid,

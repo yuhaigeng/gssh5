@@ -1,5 +1,5 @@
 <template>
- <div class="">
+ <div class="common-wrap">
      <app-header :type="headerMsg"></app-header>
      <div class="main-wrap often_shop_main_wrap">
 			<div class="main">

@@ -1,5 +1,5 @@
 <template>
-  <div class="moreGoods">
+  <div class="moreGoods common-wrap">
       <app-header :type ="headerMsg">
       </app-header>
       <div class="moreDoogs_main_wrap">
@@ -58,7 +58,7 @@
         </div>
       </div>
       <app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
-      
+
   </div>
 </template>
 <script>
@@ -77,7 +77,7 @@
           title:'更多商品',
           left:'返回'
         },
-        logined:false,
+        isLogin:'',
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         websiteNode:this.websiteDate.code,
@@ -125,7 +125,7 @@
         this.isLogin = getIsLogin();
         this.tokenId = getTokenId();
         const userInfo = JSON.parse(getUserData());
-        
+
         this.userBasicParam = {
             firmId : userInfo.firmInfoid,
             source : 'firmId'+userInfo.firmInfoid,
@@ -133,7 +133,7 @@
             tokenId : getTokenId()
         }
       }
-      
+
 
       if ( localStorage.getItem('system') ) {
         this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
@@ -167,7 +167,7 @@
           let e = a-b-c-d;
          return e + 'px';
         },
-        
+
     },
     methods: {
       goods_first_nav:function () {
@@ -246,10 +246,10 @@
         }).then(result => {
             return result.data;
         }).then(data => {
-            
+
             if (data.statusCode=='100000') {
               sessionStorage.setItem('address',JSON.stringify(data.data));
-              
+
               this.$router.push({path:'/orderSettlement'})
             }else if (data.statusCode=='100903' || data.statusCode=='100907') {
               var orderResult={
@@ -371,7 +371,7 @@
 
                 let elLeft = event.target.getBoundingClientRect().left;
                 let elTop = event.target.getBoundingClientRect().top;
-                
+
                 this.sport(elLeft,elTop)
               }else{
                 this.$toast({
@@ -387,9 +387,9 @@
 
               let elLeft = event.target.getBoundingClientRect().left;
               let elTop = event.target.getBoundingClientRect().top;
-              
+
               this.sport(elLeft,elTop)
-              
+
             }
           } else{
             this.$toast({
@@ -414,7 +414,7 @@
           }
           let elLeft = event.target.getBoundingClientRect().left;
           let elTop = event.target.getBoundingClientRect().top;
-          
+
           this.sport(elLeft,elTop)
 
           this.goShopCart.push(obj)

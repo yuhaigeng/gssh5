@@ -1,5 +1,5 @@
 <template>
-   <div class="my">
+   <div class="my common-wrap">
         <app-header :type="headerMsg"   v-show="isLogin">
             <div   class='my-head'   slot="myLeft">
                 <router-link to="/setUp" tag="dl">
@@ -58,7 +58,7 @@ export default {
                 title:'我的',
                 routerPath:'/setUp',
             },
-            isLogin:getIsLogin(),
+            isLogin:getIsLogin() ? getIsLogin() : false,
             method:["user_personal_msg","firm_vip_info"],
             firmId: "",
             userBasicParam:{},

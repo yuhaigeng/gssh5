@@ -1,5 +1,5 @@
 <template>
-    <div class="coupon">
+    <div class="coupon common-wrap">
         <app-header :type="headerMsg"></app-header>
         <div class="score_goods_main_wrap main-wrap">
             <div class="main score_coupon">
@@ -13,7 +13,7 @@
                             <p v-text="'来源：'+item.sendMethod "></p>
 						</div>
 						<div class="coupon_right">
-							
+
 						</div>
 					</div>
                 </ul>
@@ -57,7 +57,7 @@ export default {
             this.get_coupon_list();
         }
         //this.get_coupon_kindList();
-        
+
     },
     methods : {
         get_coupon_list(){
@@ -75,13 +75,13 @@ export default {
                 console.log(data);
                 if (data.statusCode == 100000) {
                     this.couponList = data.data;
-                    
+
                 } else {
                     console.log(data.statusStr)
                 }
             });
         }
-        
+
     }
 }
 </script>

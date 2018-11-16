@@ -1,8 +1,8 @@
 <template>
- <div class="">
+ <div class="common-wrap">
      <app-header :type ="headerMsg"></app-header>
      <ul class="order_management_top clearfloat">
-		<li class="order_man_item" v-for="(item,index) in orderNav" :key="index" :class="{order_border_bottom:index == navIndex}" @click="navTop(index)" v-text="item.tit"></li>
+		<li class="order_man_item" v-for="(item,index) in orderNav" :key="index" :class="{'order_border_bottom':index == navIndex}" @click="navTop(index)" v-text="item.tit"></li>
 	</ul>
     <div class="main-wrap order_management_wrap">
         <div class="main">
@@ -77,8 +77,9 @@ export default {
     data() {
         return {
             headerMsg:{
-                type:"common",
+                type:"jump",
                 title:'订单管理',
+                jumpBefore:'my',
                 left:'返回'
             },
             orderNav:[
@@ -113,7 +114,7 @@ export default {
         }
     },
     mounted() {
-        
+
         this.get_goods_order()
     },
     methods: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="register common-wrap">
     <app-header :type = "headerMsg">
         <div slot="commonAlert" @click="agreement(0)">合作协议</div>
     </app-header>
