@@ -11,7 +11,7 @@
 			</div>
 			<div class="goodsDetails_box1">
 				<div class="goodsDetails_box1_top clearfloat">
-					<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade"></span></h3>
+					<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade" @click="goVip"></span></h3>
 					<div class="goodsDetails_box1_ionc">
 						
 					</div>
@@ -23,9 +23,9 @@
 						</div>
 						<div class="moreGoods_goods_number clearfloat">
 							<b class='bStyle' v-if="getNumText(detailList)" v-text="getNumText(detailList)" ></b>
-                            <span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailList)"><img src="../../assets/img/btn_m@2x.png"/></span>
-                            <span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber fontColor" v-text="getGoodNum(detailList.id)"></span>
-                            <span v-if="!getNumText(detailList)" class="goodsNumber_max" v-on:click.stop="addGood(detailList,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
+								<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailList)"><img src="../../assets/img/btn_m@2x.png"/></span>
+								<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber fontColor" v-text="getGoodNum(detailList.id)"></span>
+								<span v-if="!getNumText(detailList)" class="goodsNumber_max" v-on:click.stop="addGood(detailList,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
 						</div>
 					</li>
 					<li class="clearfloat">
@@ -59,7 +59,6 @@
 <script>
 import Swiper from 'swiper';
 import '@/common/swiper-3.3.1.min.css';
-import { Toast } from 'mint-ui';
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/goodsBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
@@ -171,15 +170,25 @@ export default {
 					userId: this.userId
 				}
 			}).then(resp => {
-				this.detailList = resp.data.data;
-				const list = this.detailList.goodsPics.split('@');
-					list.pop();
-				this.bannerDate = list;
 				if (resp.data.statusCode == 100000) {
-				let a = resp.data.data.isColl > 0 ? true : false;
-				this.isCollect = a
-				localStorage.setItem("isColle",a)
+					this.detailList = resp.data.data;
+					const list = this.detailList.goodsPics.split('@');
+					list.pop();
+					this.bannerDate = list;
+					let localColl = resp.data.data.isColl > 0 ? true : false;
+					this.isCollect = localColl
+					localStorage.setItem("isColle",localColl)
+				} else {
+					this.$toast({
+						message : data.statusStr,
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
 				}
+
+				
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
@@ -193,7 +202,17 @@ export default {
 					userId: this.userId
 				}
 			}).then(resp => {
-				this.isColl = true
+				if (resp.data.statusCode == 100000) {
+					this.isColl = true
+				} else {
+					this.$toast({
+						message : data.statusStr,
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
+				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
@@ -211,7 +230,13 @@ export default {
 					const arr1 = arr.splice(index, 1);
 					this.collectList = arr1;
 				} else {
-					console.log(data.statusStr);
+					this.$toast({
+						message : data.statusStr,
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
@@ -399,6 +424,9 @@ export default {
       },
 		back(){
 			this.$router.go(-1);
+		},
+		goVip() {
+			this.$router.push({path:'/vip'})
 		},
 		changeCollect(){
 			this.isCollect = !this.isCollect

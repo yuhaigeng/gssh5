@@ -13,8 +13,8 @@
                     <label>联系电话：</label><input type="text"   maxlength="11" v-model="phone" id="edit_phone" class="edit_phone" placeholder="请输入联系电话"   ><span class="msg" v-text="tipsMsg"></span>
                 </li>
                 <li class="clearfloat">
-                    <label>选择省市：</label><input type="text" id="province"  v-model="city" placeholder="点击选择省市" readonly="readonly" @click="selCity" @input = "cityValue"/>
-                        <input type="hidden" id="value1" value="" />
+                    <label>选择省市：</label><input type="text" id="province"  v-model="city" placeholder="点击选择省市" readonly="readonly" @click="selCity" />
+
                 </li>
                 <li>
                     <label>详细地址：</label><input type="text"   id="edit_county" v-model="street" placeholder="请输入街道地址(无需输入城区)" >
@@ -25,22 +25,28 @@
             </div>
         </div>
     </div>
-    <div class="myBg"></div>
+    <vuePickers
+      v-if="cityData"
+      :show="isShow"
+      :columns="columns"
+      :selectData="cityData"
+      @cancel="close"
+      @confirm="confirmFn"
+    >
+    </vuePickers>
+    <div class="myBg" v-show='isShow'></div>
   </div>
 </template>
 
 <script>
 import  addressHeader from "../../components/public/header.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
-import {layer} from '../../common/layer.js'; //注意路径
-import {LArea} from '../../common/LArea.js' ;
-import {LArea1} from '../../common/LArea1.js';
-import '@/common/LArea.css';
-import '@/common/layer.css'
+import vuePickers from 'vue-pickers';
 export default {
   name:'newEditor',
   components:{
-      addressHeader
+      addressHeader,
+      vuePickers
   },
   data() {
     return {
@@ -50,7 +56,6 @@ export default {
         right:'确定',
         left:'返回'
       },
-      websiteNode:'3301',
       addressData:JSON.parse(sessionStorage.getItem("editorAddress")),
       phone:null,
       person:null,
@@ -61,11 +66,20 @@ export default {
       countyId:null,
       firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
       userBasicParam:{
-          source:'firmId'+ this.firmId,
+          source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
           tokenId: getTokenId(),
-          sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+          sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
       },
-      addressId:null
+      addressId:null,
+      cityData:{
+        data1: [],
+        data2: [],
+        data3: []
+      },
+      isShow:false,
+      columns:3,
+      isNew:this.$route.query.isEdit // 修改， 新建弹框提示
+
     }
   },
   watch:{
@@ -92,7 +106,7 @@ export default {
     }
   },
   mounted:function(){
-    this.cityApi()
+     this.cityApi()
     if( this.$route.query.isEdit ){
         this.phone = this.addressData.receiverMobile
         this.person = this.addressData.receiverName
@@ -116,6 +130,21 @@ export default {
           },this.userBasicParam)
         }).then(resp => {
 
+          if(resp.data.statusCode == "100000"){
+            this.$toast({
+              message : this.isNew ? '修改成功':'新建成功',
+              position: 'center',
+              duration: 2000,
+            })
+            this.$router.go(-1)
+          }else{
+            this.$toast({
+              message : '请把地址填完整',
+              position: 'center',
+              duration: 2000,
+            })
+
+          }
         }).catch(err => {
 
         });
@@ -127,7 +156,16 @@ export default {
               websiteNode:this.websiteNode,
           }
         }).then(resp => {
-          this.newLArea(resp.data.data)
+          if(resp.data.statusCode == "100000"){
+            let data = resp.data.data
+            this.cityData.data1.push({'text':data[0].name,'value':data[0].code})
+            let data1 = data[0].cities;
+            this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
+            let data2 = data1[0].cities;
+            for(let i = 0 ; i < data2.length; i++){
+                this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
+            }
+          }
         }).catch(err => {
 
         });
@@ -139,7 +177,13 @@ export default {
             addressId:this.addressId,
           },this.userBasicParam)
         }).then(resp => {
-
+          if(resp.data.statusCode == "100000"){
+            this.$toast({
+                    message :'删除成功' ,
+                    position: 'center',
+                    duration: 2000,
+                })
+          }
         }).catch(err => {
 
         });
@@ -154,42 +198,51 @@ export default {
         });
     },
     selCity:function(){
-      document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩
-    },
-    newLArea:function(LAreaData){
-      var area1 = new LArea();
-      area1.init({
-        'trigger': '#province', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
-        'valueTo': '#value1', //选择完毕后id属性输出到该位置
-        'keys': {
-            id: 'code',
-            name: 'name'
-        }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
-        'type': 1, //数据源类型
-        'data': LAreaData, //数据源
-      });
-      area1.value=[0,0,0];//控制初始位置，注意：该方法并不会影响到input的value
-    },
-    cityValue:function(){
-      const v = document.getElementById("value1").value;
-      if(v){
-        const a  = v.split(",");
-          this.countyId = a[2]
-      }
+      this.isShow = true;
     },
     submit:function(){
-      if( this.person == ""){
-                alert ("person !!!")
-      }else if (this.phone == ""){
-                alert ("phone !!!")
-      }else if(this.city == ""){
-                alert ("city !!!")
-      }else if(this.street == ""){
-                alert ("street !!!")
+      if( this.person === null){
+        this.$toast({
+          message :'请输入联系人号码' ,
+          position: 'center',
+          duration: 2000,
+        })
+      }else if (this.phone === null){
+        this.$toast({
+          message :'请输入手机号码' ,
+          position: 'center',
+          duration: 2000,
+        })
+      }else if(this.city === null){
+        this.$toast({
+          message :'请选择城市' ,
+          position: 'center',
+          duration: 2000,
+        })
+      }else if(this.street === null){
+        this.$toast({
+          message :'请输入详细地址' ,
+          position: 'center',
+          duration: 2000,
+        })
       }else{
-          this.update()
-          this.$router.go(-1)
+        this.update()
+
       }
+    },
+    close(){
+        this.isShow = false;
+    },
+    confirmFn(val){
+      this.isShow = false;
+      let a = [],
+          b = [];
+      for( var key in val){
+         a.push(val[key].text)
+         b.push(val[key].value)
+      }
+      this.city =  a.join(',')
+      this.countyId = b[2]
     }
   }
 
@@ -243,7 +296,7 @@ export default {
   font-size: 30px;
 }
 .myBg{
-  visibility: hidden;
+
   width:100%;
   height:100%;
   background-color: #000;

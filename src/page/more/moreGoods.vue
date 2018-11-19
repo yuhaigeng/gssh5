@@ -146,7 +146,6 @@
         this.goShopCart = []
       }
       this.goods_first_nav()
-      console.log(this.getUserData)
       this.windowHeight = window.innerHeight;
     },
     computed:{
@@ -257,7 +256,7 @@
                 orderCode:data.data.orderCode
               }
               sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
-              window.location.href='order_result.html?v=0.1'
+              this.$router.push({path:'/orderSettlement'})
             }else{
               $(".footer-rigth").addClass("true");
               this.$toast({
@@ -315,6 +314,9 @@
       toDetail(id) {
         this.$router.push({ path:'detail/'+id })
       },
+      goVip() {
+			  this.$router.push({path:'/vip'})
+		  },
       getNumText(item){
         const msgArr = ['','','不是VIP','等级不足']
         if (item.vipGrade > 0 && (item.state == 2 || item.state == 3) ) {
@@ -464,6 +466,45 @@
   }
 </script>
 <style scoped>
+.icon_vip1 {
+	display: block;
+	position: absolute;
+	width: 62px;
+	height: 32px;
+	background: url(../../assets/img/vip_icon1_square_active.png);
+	top: 20px;
+	left: 0;
+}
+
+.icon_vip2 {
+	display: block;
+	position: absolute;
+	width: 62px;
+	height: 32px;
+	background: url(../../assets/img/vip_icon2_square_active.png);
+	top: 20px;
+	left: 0;
+}
+
+.icon_vip3 {
+	display: block;
+	position: absolute;
+	width: 62px;
+	height: 32px;
+	background: url(../../assets/img/vip_icon3_square_active.png);
+	top: 20px;
+	left: 0;
+}
+
+.icon_vip4 {
+	display: block;
+	position: absolute;
+	width: 62px;
+	height: 32px;
+	background: url(../../assets/img/vip_icon4_square_active.png);
+	top: 20px;
+	left: 0;
+}
 .moreDoogs_main_wrap {
 	background: #EBEAEA;
 	width: 750px;
@@ -511,7 +552,8 @@
 
 .moreGoods_goods_detaile dt,
 .moreGoods_goods_detaile dd {
-	float: left;
+  float: left;
+  position: relative;
 }
 
 .moreGoods_goods_detaile dt {

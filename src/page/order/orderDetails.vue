@@ -232,6 +232,14 @@ export default {
 					this.offItem = v.offItem;
 					this.orderInfo = v.orderInfo;
 					this.couponInit(v);
+				}).then(resp => {
+					if (resp.data.statusCode == 100000) {
+						this.couponItem = resp.data.data.offItem;
+						this.orderDetailList = resp.data.data.orderInfo;
+						this.orderDetailsList = resp.data.data.orderInfo.orderDetailsList;
+					} else {
+						console.log(data.statusStr);
+					}
 				}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
@@ -372,10 +380,14 @@ export default {
 					code:this.websiteNode + this.descCode
 				}
 			}).then(resp => {
-					resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-					resp.data.data.noticeTitle =  resp.data.data.title;
-					resp.data.data.alertType = 1;
-					this.noticeInfoList = resp.data.data;
+					if (resp.data.statusCode == 100000) {
+						resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+						resp.data.data.noticeTitle =  resp.data.data.title;
+						resp.data.data.alertType = 1;
+						this.noticeInfoList = resp.data.data;
+					} else {
+						console.log(data.statusStr);
+					}
 			}).catch(err => {
 				console.log('请求失败：'+ err.data.statusCode);
 			});

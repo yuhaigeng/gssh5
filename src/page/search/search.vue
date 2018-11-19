@@ -81,7 +81,17 @@ export default {
 				method: "goods_show_hot",
 			}
 		}).then(resp => {
-			this.searchList = resp.data.data;
+				if (resp.data.statusCode == 100000) {
+						this.searchList = resp.data.data;
+					} else {
+						this.$toast({
+							message : data.statusStr,
+							position: 'boottom',//top boottom middle
+							duration: 2000,//延时多久消失
+							//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+							//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						})
+					}
 		}).catch(err => {
 			console.log('请求失败：'+ err.statusCode);
 		});
@@ -95,8 +105,18 @@ export default {
 				goodsName:this.searchVal
 			}
 		}).then(resp => {
-				this.goodsList = resp.data.data;
-				this.state = 3;
+				if (resp.data.statusCode == 100000) {
+					this.goodsList = resp.data.data;
+					this.state = 3;
+				} else {
+					this.$toast({
+						message : data.statusStr,
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
+				}
 		}).catch(err => {
 			console.log('请求失败：'+ err.statusCode);
 			this.state = 3;
