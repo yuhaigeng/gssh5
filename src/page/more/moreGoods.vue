@@ -257,7 +257,7 @@
                 orderCode:data.data.orderCode
               }
               sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
-              window.location.href='order_result.html?v=0.1'
+              this.$router.push({path:'/orderSettlement'})
             }else{
               $(".footer-rigth").addClass("true");
               this.$toast({

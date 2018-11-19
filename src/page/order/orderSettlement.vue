@@ -136,22 +136,28 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
                     }, this.userBasicParam)
                 }).then(resp => {
                   console.log(resp.data)
-                  let a =  resp.data
-                  sessionStorage.setItem('statusData',JSON.stringify(a))
-
+                  if(resp.data.statusCode == "100000" ||  resp.data.statusCode == "100903" ||  resp.data.statusCode == '100907' ){
+                      let a =  resp.data
+                      sessionStorage.setItem('statusData',JSON.stringify(a))
+                      this.$router.push({path:'/orderResult'})
+                  }else{
+                      this.$toast({
+                        message :'请选择地址' ,
+                        position: 'center',
+                        duration: 2000,
+                    })
+                  }
                 }).catch(err => {
-                    // console.log('请求失败：'+ err.data.statusCode);
                 });
             },
              closeAlert:function(){
                 this.noticeInfoList = null;
             },
              agreement:function(){
-                    this.desc_data()
+                this.desc_data()
             },
             get:function(){
                 this.orderSubmit()
-                this.$router.push({path:'/orderResult'})
             },
             priceTotal:function(item){
                   return  (parseFloat(item.price)*parseInt(item.sum)).toFixed(2);

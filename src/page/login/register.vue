@@ -17,11 +17,11 @@
               </li>
               <li>
                 <span class="left">选择省市：</span><input type="text" id="province" placeholder="点击选择省市"  v-model="city" readonly="readonly" @focus="focus" @blur="blur" @click="selCity" @input = "cityValue" />
-                    <input type="hidden" id="value1"  />
+
               </li>
               <li>
-                <span class="left">选择地址：</span><input type="text" id="street" placeholder="点击选择详细地址"  readonly="readonly" @focus="focus" @blur="blur" @click="selStreet" @input = "streetValue"/><span class='msg' v-text="streetMag" ></span>
-                    <input type="hidden" id="value2" value="" />
+                <span class="left">选择地址：</span><input type="text" id="street" placeholder="点击选择详细地址"  v-model="street" readonly="readonly"   @focus="focus" @blur="blur" @click="selStreet" @input = "streetValue"/><span class='msg' v-text="streetMag" ></span>
+
               </li>
               <li>
                 <span class="left">店铺地址：</span><input type="text" id="shopAddress" v-model="address"  placeholder="请输入店铺地址" @focus="focus" @blur="blur"/>
@@ -56,7 +56,27 @@
 				说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" @click="agreement(0)" >《果速送合作协议》</a>
 			</div>
 			<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
-      <div class="myBg"></div>
+      <vuePickers
+        v-if="cityData"
+        :show="isShow"
+        :columns="columns"
+        :selectData="cityData"
+        @cancel="close"
+        @confirm="confirmFn"
+      >
+      </vuePickers>
+       <vuePickers
+        v-if="streetData"
+        :show="isShow1"
+        :columns="columns1"
+        :defaultData="defaultData"
+        :selectData="streetData"
+        @cancel="close1"
+        @confirm="confirmFn1"
+      >
+      </vuePickers>
+      <div class="myBg" v-show="isShow || isShow1"></div>
+
   </div>
 </template>
 
@@ -64,15 +84,16 @@
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
-import {LArea} from '../../common/LArea.js' ;
-import {LArea1} from '../../common/LArea1.js';
-import { Toast } from 'mint-ui';
-import '@/common/LArea.css'
+import vuePickers from 'vue-pickers';
+// import {LArea} from '../../common/LArea.js' ;
+// import {LArea1} from '../../common/LArea1.js';
+// import '@/common/LArea.css'
     export default {
         name:'register',
         components:{
             appHeader,
-            agreementAlert
+            agreementAlert,
+            vuePickers
 
         },
          data() {
@@ -109,8 +130,25 @@ import '@/common/LArea.css'
                 websiteNode:this.websiteDate.code,
                 noticeInfoList:null,
                 descCode:null,
-                area2:new LArea1(),
-                streetData :{},
+                cityData:{
+                    data1: [],
+                    data2: [],
+                    data3: []
+                  },
+                isShow:false,
+                columns:3,
+                streetData:{
+                  data1:[]
+                },
+                isShow1:false,
+                columns1:1,
+                defaultData:[
+                      {
+                         text:"",
+                         value:""
+
+                      }
+                ]
 
 
              }
@@ -168,10 +206,17 @@ import '@/common/LArea.css'
                        websiteNode:this.websiteNode,
                     }
                 }).then(resp => {
-                    //   console.log(resp.data.data)
-                      this.newLArea(resp.data.data)
+                  if(resp.data.statusCode == "100000"){
+                    let data = resp.data.data
+                    this.cityData.data1.push({'text':data[0].name,'value':data[0].code})
+                    let data1 = data[0].cities;
+                    this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
+                    let data2 = data1[0].cities;
+                    for(let i = 0 ; i < data2.length; i++){
+                        this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
+                    }
+                  }
                 }).catch(err => {
-                    console.log('请求失败：'+ err.data.statusCode);
                 });
             },
             streetApi:function(code){
@@ -181,10 +226,24 @@ import '@/common/LArea.css'
 				               code:code
                     }
                 }).then(resp => {
-                     this.streetData  = resp.data.data
-                     this.streetInit()
+                  if(resp.data.statusCode == "100000"){
+                       let data = resp.data.data;
+                       console.log(data.length)
+                       if(data.length){
+                          for(let i = 0 ; i < data.length; i++){
+                            this.streetData.data1.push({'text':data[i].name,'value':data[i].code})
+                         }
+
+                          // console.log(this.streetData)
+                       }else{
+                         this.streetData.data1= [{'text':'暂无信息','value':''}]
+                          console.log(this.streetData)
+                       }
+
+
+                  }
+                    //  this.streetData  = resp.data.data
                 }).catch(err => {
-                    console.log('请求失败');
                 });
             },
             rgister:function(){
@@ -231,49 +290,50 @@ import '@/common/LArea.css'
                 this.noticeInfoList = null;
             },
             selCity:function(){
-                document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩
+                this.isShow = true;
             },
 
             selStreet:function(){
-              const v = document.getElementById("value1").value
-                var code = v.split(",");
-                if(v){
-                    this.streetMag = null;
-                     document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩
-                }else{
+               this.isShow1 = true;
+              // const v = document.getElementById("value1").value
+              //   var code = v.split(",");
+              //   if(v){
+              //       this.streetMag = null;
+              //        document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩
+              //   }else{
 
-                     this.streetMag = "请先选择城市!!";
+              //        this.streetMag = "请先选择城市!!";
 
-                }
+              //   }
             },
-            newLArea:function(LAreaData){
-                var area1 = new LArea();
-                area1.init({
-                    'trigger': '#province', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
-                    'valueTo': '#value1', //选择完毕后id属性输出到该位置
-                    'keys': {
-                        id: 'code',
-                        name: 'name'
-                    }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
-                    'type': 1, //数据源类型
-                    'data': LAreaData, //数据源
-                });
-                area1.value=[0,0,0];//控制初始位置，注意：该方法并不会影响到input的value
-            },
-            streetInit:function(){
-                this.area2.init({
-                    'trigger': '#street', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
-                    'valueTo': '#value2', //选择完毕后id属性输出到该位置
-                    'keys': {
-                        id: 'code',
-                        name: 'name'
-                    }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
-                    'type': 1, //数据源类型
-                    'data': this.streetData //数据源
-                });
-                  console.log( this.streetData)
-                this.area2.value=[0,0,0];//控制初始位置，注意：该方法并不会影响到input的value
-            },
+            // newLArea:function(LAreaData){
+            //     var area1 = new LArea();
+            //     area1.init({
+            //         'trigger': '#province', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
+            //         'valueTo': '#value1', //选择完毕后id属性输出到该位置
+            //         'keys': {
+            //             id: 'code',
+            //             name: 'name'
+            //         }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
+            //         'type': 1, //数据源类型
+            //         'data': LAreaData, //数据源
+            //     });
+            //     area1.value=[0,0,0];//控制初始位置，注意：该方法并不会影响到input的value
+            // },
+            // streetInit:function(){
+            //     this.area2.init({
+            //         'trigger': '#street', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
+            //         'valueTo': '#value2', //选择完毕后id属性输出到该位置
+            //         'keys': {
+            //             id: 'code',
+            //             name: 'name'
+            //         }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
+            //         'type': 1, //数据源类型
+            //         'data': this.streetData //数据源
+            //     });
+            //       console.log( this.streetData)
+            //     this.area2.value=[0,0,0];//控制初始位置，注意：该方法并不会影响到input的value
+            // },
             cityValue:function(){
                 const v = document.getElementById("value1").value
                 const arr1 = v.split(",");
@@ -319,6 +379,35 @@ import '@/common/LArea.css'
                 } else{
                    this.rgister()
                 }
+            },
+            close(){
+                this.isShow = false;
+            },
+            close1(){
+                this.isShow1 = false;
+            },
+            confirmFn(val){
+              this.isShow = false;
+              let a = [],
+                  b = [];
+              for( var key in val){
+                a.push(val[key].text)
+                b.push(val[key].value)
+              }
+              this.city =  a.join(',')
+              this.countyId = b[2];
+              this.streetData.data1 = []
+              this.streetApi(this.countyId)
+            },
+            confirmFn1(val){
+              this.isShow1 = false;
+                let a = [],
+                    b = [];
+                for( var key in val){
+                  a.push(val[key].text)
+                  b.push(val[key].value)
+                }
+               this.street =  a.join('')
             }
          }
     }
@@ -454,7 +543,6 @@ import '@/common/LArea.css'
     display:inline-block;
 }
 .myBg{
-    visibility: hidden;
     width:100%;
     height:100%;
     background-color: #000;
