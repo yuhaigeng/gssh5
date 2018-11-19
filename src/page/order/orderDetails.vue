@@ -90,30 +90,11 @@
 			</div>
 			<!--优惠券-->
 			<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="couponList && (orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4))">
-				<dl class="order_details_coupon clearfloat" v-if="couponList" v-for="(item,index) in couponList" :key="index" @click="selectCoupon(item)">
+				<dl class="order_details_coupon clearfloat" v-if="couponList" v-for="(item,index) in couponList" :key="index" @click="selectCoupon(index)">
 					<dt v-text="item.title"></dt>
 					<dd class="order_coupon_price" v-text="getCouponText(item)"></dd>
 				</dl>
 			</div>
-			<!-- <div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4)" @click="toCoupon(1)">
-				<dl class="order_details_coupon clearfloat">
-					<dt>优惠券:（单选）</dt>
-					<dd class="order_coupon_price" v-if="couponMoney != null">已选：-{{couponMoney}}元</dd>
-					<dd class="order_coupon_price" v-if="couponMoney == null">{{this.couponNum}}张可用</dd>
-				</dl>
-			</div>
-			<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4)" @click="toCoupon(2)">
-				<dl class="order_details_coupon clearfloat">
-					<dt>商品券:（可多选）</dt>
-					<dd class="order_coupon_price">暂无可用优惠券</dd>
-				</dl>
-			</div>
-			<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4)" @click="toCoupon(3)">
-				<dl class="order_details_coupon clearfloat">
-					<dt>商品类目券:（可多选）</dt>
-					<dd class="order_coupon_price">暂无可用优惠券</dd>
-				</dl>
-			</div> -->
 			<div class="order_details_coupon_box11" v-if="orderInfo.orderStatus == 3">
 				点击去支付后，不能重新选择优惠券，请谨慎操作！
 			</div>
@@ -145,7 +126,7 @@
 				<dd v-text="(getRealMoney == '?' ? '?元' : getRealMoney+'元')"></dd>
 			</dl>
 		</div>
-		<div class="order_details_cancel" v-if="orderInfo && (orderInfo.orderStatus == 1 || orderInfo.orderStatus == -1 || orderInfo.orderStatus == 3)" v-text="orderStatusBtnText[+orderInfo.orderStatus +1]"></div>
+		<div class="order_details_cancel" v-if="orderInfo && (orderInfo.orderStatus == 1 || orderInfo.orderStatus == -1 || orderInfo.orderStatus == 3)" v-text="orderStatusBtnText[+orderInfo.orderStatus +1]" @click="submitOrder"></div>
 		<explainAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </explainAlert>
     </div>
  </div>
@@ -160,10 +141,10 @@ export default {
     data() {
         return {
             headerMsg:{
-				type:"jump",
-        title:'订单详情',
-        jumpBefore:'orderManagement',
-        num:'1',
+				type:"common",
+				title:'订单详情',
+				// jumpBefore:'orderManagement',
+				// num:'1',
 				left:'返回'
 			},
 			noticeInfoList:null,
@@ -255,63 +236,132 @@ export default {
 				console.log('请求失败：'+ err.statusCode);
 			});
 		},
-		couponInit(v){
-			this.couponList = [
-				//普通的优惠卷
-				{
-					name:'couponInfo',
-					title:'优惠券:（单选）',
-					selectId:v.orderInfo.coupon,
-					selectData:null,
-					couponMoney:v.orderInfo.couponMoney ? v.orderInfo.couponMoney : 0,//优惠卷金额
-					useable:v.useable,//可用列表
-					unusable:v.unusable//不可用列表
-				},
-				//商品优惠卷
-				{
-					name:'goodCouponInfo',
-					title:'商品券:（可多选）',
-					selectId:v.orderInfo.goodsCoupon ? v.orderInfo.goodsCoupon.join(",") : null,
-					selectData:null,
-					couponMoney:v.orderInfo.goodsCouponMoney ? v.orderInfo.goodsCouponMoney : 0,//优惠卷金额
-					useable:v.guseable,//可用列表
-					unusable:v.gunusable//不可用列表
-				},
-				//类目优惠卷
-				{
-					name:'typeCouponInfo',
-					title:'商品类目券:（可多选）',
-					selectId:v.orderInfo.goodsTypeCoupon ? v.orderInfo.goodsTypeCoupon.join(",") : null,
-					selectData:null,
-					couponMoney:v.orderInfo.goodsTypeCouponMoney ? v.orderInfo.goodsTypeCouponMoney : 0,//优惠卷金额
-					useable:v.tuseable,//可用列表
-					unusable:v.tunusable//不可用列表
-				},
-			]
-			if(v.orderInfo.orderStatus == 3){
-				if (v.orderInfo.isGoToPay == 1) {
-					if (v.couponInfo != null) {
-						this.couponList[0].couponMoney = v.couponInfo.couponMoney;
-					}else{
-						this.couponList[0].couponMoney = 0;
-					}
-				}else{
-					if (localStorage.getItem('couponInfo')) {
-						this.couponList[0] = JSON.parse(localStorage.getItem('couponInfo'));
-					} else {
-						let isEmpty = this.couponList[0].useable && this.couponList[0].useable.length != 0;
-						this.couponList[0].selectId = isEmpty ? this.couponList[0].useable[0].id : null;
-						this.couponList[0].couponMoney = isEmpty ? this.couponList[0].useable[0].couponMoney : 0;
-					}
-					if (localStorage.getItem('goodCouponInfo')) {
-						this.couponList[1] = JSON.parse(localStorage.getItem('goodCouponInfo'));
-					}
-					if (localStorage.getItem('typeCouponInfo')) {
-						this.couponList[2] = JSON.parse(localStorage.getItem('typeCouponInfo'));
-					}
+		cancle_order(){
+			let obj = Object.assign({
+				method: "order_cancel",
+				orderCode: this.orderCode,
+				},this.userBasicParam);
+
+			this.$ajax.get(this.HOST, {
+				params:obj
+			}).then(result =>{
+				return result.data
+			}).then(data =>{
+				console.log(data)
+				if (data.statusCode == 100000) {
 					
 					
 				}
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+		},
+		delete_order(){
+			let obj = Object.assign({
+				method: "order_del",
+				orderCode: this.orderCode,
+				},this.userBasicParam);
+
+			this.$ajax.get(this.HOST, {
+				params:obj
+			}).then(result =>{
+				return result.data
+			}).then(data =>{
+				console.log(data)
+				if (data.statusCode == 100000) {
+					this.$router.go(-1)
+				}
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+		},
+		pay_order(){
+			let obj = Object.assign({
+				method: "order_to_pay_fou",
+				orderCode: this.orderCode,
+				couponId:this.couponList[0].selectId,
+				goodsCouponId:this.couponList[1].selectId,
+				goodsTypeCouponId:this.couponList[2].selectId,
+				},this.userBasicParam);
+			
+			this.$ajax.get(this.HOST, {
+				params:obj
+			}).then(result =>{
+				return result.data
+			}).then(data =>{
+				console.log(data)
+				if (data.statusCode == 100000) {
+					var order={
+						orderCode:data.data.orderCode,
+						realPayMoney:data.data.realPayMoney
+					};
+					localStorage.getItem('selectCoupon') && localStorage.removeItem('selectCoupon')
+					localStorage.setItem('order_pay',JSON.stringify(order))
+					this.$router.push({path:'orderPay'})
+				}else{
+					this.$toast({
+						message : data.statusStr,
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
+				}
+				
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+		},
+		couponInit(v){
+			if(v.orderInfo.orderStatus == 3){
+				let selectId = '',couponMoney = 0;
+				if (v.orderInfo.isGoToPay == 1) {
+					if (v.couponInfo != null) {
+						selectId = v.couponInfo.id;
+						couponMoney = v.couponInfo.couponMoney;
+					}else{
+						this.couponList[0].couponMoney = 0;
+						selectId = '';
+						couponMoney = 0;
+					}
+				}else{
+					if (localStorage.getItem('selectCoupon')) {
+						this.couponList = JSON.parse(localStorage.getItem('selectCoupon'));
+					} else {
+						selectId = (v.useable && v.useable.length) ? v.useable[0].id : '';
+						couponMoney = (v.useable && v.useable.length) ? v.useable[0].couponMoney : '';
+						
+					}
+				}
+				this.couponList = [
+					//普通的优惠卷
+					{
+						name:'couponInfo',
+						title:'优惠券:（单选）',
+						selectId:selectId,
+						couponMoney:couponMoney,//优惠卷金额
+						useable:v.useable,//可用列表
+						unusable:v.unusable//不可用列表
+					},
+					//商品优惠卷
+					{
+						name:'goodCouponInfo',
+						title:'商品券:（可多选）',
+						selectId:v.orderInfo.goodsCoupon ? v.orderInfo.goodsCoupon.join(",") : '',
+						couponMoney:v.orderInfo.goodsCouponMoney ? v.orderInfo.goodsCouponMoney : 0,//优惠卷金额
+						useable:v.guseable,//可用列表
+						unusable:v.gunusable//不可用列表
+					},
+					//类目优惠卷
+					{
+						name:'typeCouponInfo',
+						title:'商品类目券:（可多选）',
+						selectId:v.orderInfo.goodsTypeCoupon ? v.orderInfo.goodsTypeCoupon.join(",") : '',
+						couponMoney:v.orderInfo.goodsTypeCouponMoney ? v.orderInfo.goodsTypeCouponMoney : 0,//优惠卷金额
+						useable:v.tuseable,//可用列表
+						unusable:v.tunusable//不可用列表
+					},
+				]
 			}
 		},
 		desc_data:function(){
@@ -336,10 +386,11 @@ export default {
 		closeAlert:function(){
             this.noticeInfoList = null;
 		},
-		selectCoupon(item) {
-			let dataType = item.name;
-			localStorage.setItem(dataType,JSON.stringify(item));
-			this.$router.push({path:'/chooseCoupon',query:{dataType:dataType}})
+		selectCoupon(index) {
+			if (this.orderInfo.orderStatus == 3 && this.orderInfo.isGoToPay != 1) {
+				localStorage.setItem('selectCoupon',JSON.stringify(this.couponList));
+				this.$router.push({path:'/chooseCoupon',query:{dataType:index}})
+			}
 		},
 		getCouponText(item){
 			let obj = {
@@ -348,7 +399,6 @@ export default {
 				money:0,//表示优惠卷的金额
 				dataId:[],//表示所选优惠卷的ID列表
 			}
-			console.log(item)
 			if (this.orderInfo.orderStatus == 3 || this.orderInfo.orderStatus == 4) {
 				if (this.orderInfo.orderStatus == 3 ) {
 					if (this.orderInfo.isGoToPay) {
@@ -399,6 +449,27 @@ export default {
 			}
 			if (obj.status == 4) {
 				return "已绑定："+parseInt(obj.money).toFixed(2)+"元"
+			}
+		},
+		submitOrder(){
+			//'删除订单','','取消订单','','去支付',''
+			if (this.orderInfo.orderStatus == -1) {
+				this.$messagebox.confirm('您确定要删除订单吗？','').then(action => {
+					console.log('删除订单order_del')
+					this.delete_order();
+                }).catch((e) => {
+                    console.log(e)
+                });
+			} else if (this.orderInfo.orderStatus == 1) {
+				this.$messagebox.confirm('您确定要取消订单吗？','').then(action => {
+					console.log('取消订单')
+					this.cancle_order()
+                }).catch((e) => {
+                    console.log(e)
+                });
+			} else if (this.orderInfo.orderStatus == 3) {
+				console.log('order_pay')
+				this.pay_order();
 			}
 		}
 	},

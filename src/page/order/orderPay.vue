@@ -8,7 +8,7 @@
               订单编号: <span v-text="orderMsg.orderCode"></span>
             </div>
             <div class="order_pay_order_money">
-              支付金额: <span  v-text="orderMsg.orderMoney + '元'"></span>
+              支付金额: <span  v-text="orderMsg.realPayMoney + '元'"></span>
             </div>
           </div>
           <ul class="order_pay_mode_box">
@@ -57,20 +57,20 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                    left:'返回',
                    title:'订单支付'
                 },
-                orderMsg:{
-                  orderCode:"2018101001004901",
-                  orderMoney: "5728.0"
-                },
+                orderMsg:null,
                 userInfo:JSON.parse(getUserData()),
                 publicParameter : {}
            }
        },
       mounted(){
+        if (localStorage.getItem('order_pay')) {
+            this.orderMsg = JSON.parse(localStorage.getItem('order_pay'))
+        }
         this.publicParameter = {
-               orderCode : this.orderMsg.orderCode,
-               source : 'firmId'+this.userInfo.firmInfoid,
-               sign : this.$md5('firmId'+this.userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-               tokenId : getTokenId()
+            orderCode : this.orderMsg.orderCode,
+            source : 'firmId'+this.userInfo.firmInfoid,
+            sign : this.$md5('firmId'+this.userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+            tokenId : getTokenId()
         }
         // this.llpay();
         this.api();

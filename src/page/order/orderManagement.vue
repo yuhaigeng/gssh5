@@ -142,9 +142,11 @@ export default {
         toOrderDetail(item) {
             let code = item.orderCode,
                 orderStatus = item.orderStatus
-            this.$router.push({ path:'orderDetails'})
             let a = {code:code,order:orderStatus}
-	        sessionStorage.setItem('orderData', JSON.stringify(a))
+            sessionStorage.setItem('orderData', JSON.stringify(a))
+            localStorage.getItem('selectCoupon') && localStorage.removeItem('selectCoupon')
+            this.$router.push({ path:'orderDetails'})
+            
         }
     }
 }

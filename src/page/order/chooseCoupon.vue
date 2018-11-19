@@ -7,12 +7,12 @@
     <!--选择优惠卷-->
     <div class="main-wrap coupon_main_wrap">
         <div class="main">
-            <div class="select_coupon_top" :class="{selectTop:isUse}" @click="noUse(couponNum)">不使用优惠券</div>
-            <div class="coupon_main_" v-if="coupon">
-                <div class="coupon_main_available_box" v-if="coupon.useable && coupon.useable.length">
+            <div class="select_coupon_top" :class="{selectTop:isUse}" @click="noUse">不使用优惠券</div>
+            <div class="coupon_main_" v-if="coupon[dataType]">
+                <div class="coupon_main_available_box" v-if="coupon[dataType].useable && coupon[dataType].useable.length">
                     <p class="title" >可用优惠券</p>
                     <div class="coupon_main_available">
-                        <dl class="clearfloat coupon_status1"  v-for="(item, index) in coupon.useable" :key="index" :class="{'active':item.id == coupon.selectId,'no':dataType != 'couponInfo'}" @click="choose(item)">
+                        <dl class="clearfloat coupon_status1"  v-for="(item, index) in coupon[dataType].useable" :key="index" :class="{'active':(coupon[dataType].selectId.split(',')).indexOf(item.id) != -1 ,'no':dataType != '0'}" @click="choose(item)">
                             <dt class="sprite_login quan_c" v-text="item.couponMoney">元</dt>
                             <dd>
                                 <div class="coupon_top clearfloat">
@@ -26,10 +26,10 @@
                         </dl>
                     </div>
                 </div>
-                <div class="coupon_main_unAvailable_box" v-if="coupon.unusable && coupon.unusable.length">
+                <div class="coupon_main_unAvailable_box" v-if="coupon[dataType].unusable && coupon[dataType].unusable.length">
                     <p class="title">不可用优惠券</p>
                     <div class="coupon_main_unAvailable">
-                        <dl class="clearfloat coupon_status1" v-for="(item, index) in coupon.unusable" :key="index">
+                        <dl class="clearfloat coupon_status1" v-for="(item, index) in coupon[dataType].unusable" :key="index">
                             <dt class="sprite_login quan_c">{{item.couponMoney}}元</dt>
                             <dd>
                                 <div class="coupon_top clearfloat">
@@ -47,12 +47,14 @@
         </div>
     </div>
 	<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
+	<order-footer v-if="coupon[dataType]" :couponObj="coupon[dataType]" v-on:listenSubmit = "submitCoupon"></order-footer>
  </div>
 </template>
 
 <script>
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
+import orderFooter from  "./footerOrder.vue";
 export default {
     name: 'chooseCoupon',
     data() {
@@ -67,34 +69,30 @@ export default {
 			noticeInfoList:null,
 			isRight:0,
 			isUse:false,
-			coupon:{},
+			coupon:[],
 			couponNum:'',
 			dataType:'',
         }
     },
     components: {
 		appHeader,
-		agreementAlert
+		agreementAlert,
+		orderFooter,
 	},
 	watch:{
 		coupon(val,oldVal){
 			if (val) {
-				localStorage.setItem(this.coupon.name,JSON.stringify(val))
+				console.log('111111')
+				localStorage.setItem('selectCoupon',JSON.stringify(val))
 			}
 		}
 	},
     created:function() {
-		this.dataType = this.$route.query.dataType
-		if(this.dataType == 'couponInfo') {
-			this.headerMsg.title = '选择优惠券(单选)'
-		}else if(this.dataType == 'goodCouponInfo' ) {
-			this.headerMsg.title = '选择商品券(多选)'
-		}else if(this.dataType == 'typeCouponInfo'){
-			this.headerMsg.title = '选择商品类目券(多选)'
-		}
+		this.dataType = this.$route.query.dataType;
 	},
 	mounted() {
-		this.coupon = JSON.parse(localStorage.getItem(this.dataType));
+		this.coupon = JSON.parse(localStorage.getItem('selectCoupon'));
+		this.headerMsg.title = '选择'+this.coupon[this.dataType].title
 	},
     methods: {
 		desc_data:function(){
@@ -121,34 +119,55 @@ export default {
 		},
 		choose(item) {
 			const _this = this;
-			if (this.coupon.name == 'couponInfo') {
-				this.coupon.selectId = item.id;
-				this.coupon.couponMoney = item.couponMoney;
+			if (this.coupon[this.dataType].name == 'couponInfo') {
+				this.coupon[this.dataType].selectId = item.id;
+				this.coupon[this.dataType].couponMoney = item.couponMoney;
 				setTimeout(() => {
 					this.$router.go(-1)
-				}, 500);
+				}, 100);
 			} else {
 				let id = item.id;
 				let money = item.money;
 				
-				if (this.dataType == 'goodCouponInfo') {
-					
-				} 
-				if (this.dataType == 'typeCouponInfo') {
-					
+				if (this.coupon[this.dataType].selectId) {
+					console.log(this.coupon[this.dataType].selectId)
+					var arr = (this.coupon[this.dataType].selectId).split(',');
+					console.log(arr)
+					if (arr.indexOf(id) == -1) {
+						//表示该项没有被选中
+						this.coupon[this.dataType].selectId += ','+id;
+					}else{
+						//表示该项已经被选中
+						arr.splice(arr.indexOf(id), 1);
+						console.log(arr)
+						if (arr.length) {
+							this.coupon[this.dataType].selectId = arr.join(',');
+						}else{
+							this.coupon[this.dataType].selectId = '';
+						}
+					}
+				}else{
+					this.coupon[this.dataType].selectId = id;
 				}
 			}
 			
 		},
 		noUse(couponNum) {
-			this.isUse = !this.isUse
-			this.isRight = -1
-			this.$router.push({path:'/orderDetails',query:{couponNum:couponNum}})
+			this.coupon[this.dataType].selectId = '';
+			this.coupon[this.dataType].couponMoney = 0;
+			
+			this.$router.go(-1)
 		},
+		submitCoupon(data){
+			this.coupon[this.dataType].couponMoney = data;
+			this.$router.go(-1)
+			console.log('subMitCoupon')
+		}
 	},
     //离开当前页面后执行
 	destroyed: function () {
-		localStorage.setItem(this.dataType,JSON.stringify(this.coupon))
+		console.log('end')
+		localStorage.setItem('selectCoupon',JSON.stringify(this.coupon))
 	},
 }
 </script>
