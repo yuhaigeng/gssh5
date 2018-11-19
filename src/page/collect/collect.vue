@@ -167,7 +167,13 @@ export default {
 					this.collectList = this.collectList.concat(resp.data.data.objects);
 				}
 			} else {
-				console.log(data.statusStr);
+				this.$toast({
+					message : data.statusStr,
+					position: 'boottom',//top boottom middle
+					duration: 2000,//延时多久消失
+					//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+					//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+				})
 			}
 		}).catch(err => {
 			   console.log('请求失败：'+ err.statusCode);
@@ -187,7 +193,13 @@ export default {
 				const arr1 = arr.splice(index, 1);
 				this.collectList =arr;
 			} else {
-				console.log(data.statusStr);
+				this.$toast({
+					message : data.statusStr,
+					position: 'boottom',//top boottom middle
+					duration: 2000,//延时多久消失
+					//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+					//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+				})
 			}
 		}).catch(err => {
 			   console.log('请求失败：'+ err.statusCode);
