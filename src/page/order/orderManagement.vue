@@ -114,7 +114,6 @@ export default {
         }
     },
     mounted() {
-
         this.get_goods_order()
     },
     methods: {
@@ -136,8 +135,15 @@ export default {
                     } else {
                         this.ordersList = this.ordersList.concat(resp.data.data.objects);
                     }
+                    
                 } else {
-                    console.log(data.statusStr);
+                    this.$toast({
+                        message : data.statusStr,
+                        position: 'boottom',//top boottom middle
+                        duration: 2000,//延时多久消失
+                        //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+                        //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+				    })
                 }
             }).catch(err => {
                 console.log('请求失败：'+ err.statusCode);
@@ -164,8 +170,8 @@ export default {
         //路由传值给详情页面
         toOrderDetail(code,orderStatus) {
             this.$router.push({ path:'orderDetails'})
-            let a = {code:code,order:orderStatus}
-	        sessionStorage.setItem('orderData', JSON.stringify(a))
+            let localColl = {code:code,order:orderStatus}
+	        sessionStorage.setItem('orderData', JSON.stringify(localColl))
         }
     }
 }

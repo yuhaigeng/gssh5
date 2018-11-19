@@ -96,19 +96,28 @@ export default {
 					tokenId: this.tokenId
 					}
 				}).then(resp => {
-					if(this.dataType == 1 ) {
-						this.couponList =  resp.data.data.useable
-						this.unCouponList = resp.data.data.unusable;
-						this.couponNum = this.couponList.length
-					}else if(this.dataType == 2 ) {
-						this.couponList =  resp.data.data.guseable
-						this.unCouponList = resp.data.data.gunusable;
-						console.log(this.couponList)
-					}else {
-						this.couponList =  resp.data.data.tuseable
-						this.unCouponList = resp.data.data.tunusable;
-						console.log(this.couponList)
+					if (resp.data.statusCode == 100000) {
+						if(this.dataType == 1 ) {
+							this.couponList =  resp.data.data.useable
+							this.unCouponList = resp.data.data.unusable;
+							this.couponNum = this.couponList.length
+						}else if(this.dataType == 2 ) {
+							this.couponList =  resp.data.data.guseable
+							this.unCouponList = resp.data.data.gunusable;
+						}else {
+							this.couponList =  resp.data.data.tuseable
+							this.unCouponList = resp.data.data.tunusable;
+						}
+					} else {
+						this.$toast({
+							message : data.statusStr,
+							position: 'boottom',//top boottom middle
+							duration: 2000,//延时多久消失
+							//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+							//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						})
 					}
+					
 				}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
@@ -121,10 +130,20 @@ export default {
 					code:this.websiteNode + this.descCode
 				}
 			}).then(resp => {
-				resp.data.data.noticeContent = (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-				resp.data.data.noticeTitle =  resp.data.data.title;
-				resp.data.data.alertType = 1;
-				this.noticeInfoList = resp.data.data;
+				if (resp.data.statusCode == 100000) {
+					resp.data.data.noticeContent = (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+					resp.data.data.noticeTitle =  resp.data.data.title;
+					resp.data.data.alertType = 1;
+					this.noticeInfoList = resp.data.data;
+				} else {
+					this.$toast({
+						message : data.statusStr,
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+				})
+				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.data.statusCode);
 			});
