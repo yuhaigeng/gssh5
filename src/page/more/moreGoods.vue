@@ -14,13 +14,13 @@
               <li v-for="(item,index) in left_name" :class="{isSelected:index == isSelected}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
             </ul>
           </div>
-          <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}">
+          <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}" >
             <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
-              <ul class="moreGoods_box_list">
+              <ul class="moreGoods_box_list"  v-show="left_name.length">
                 <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item.id)" >
                   <dl class="moreGoods_goods_detaile clearfloat">
                     <dt>
-                      <img :src="item.goodsLogo" alt="">
+                      <img v-lazy="item.goodsLogo" alt="" :key="item.goodsLogo">
                       <span v-if="item.vipGrade > 0" :class = "'icon_vip'+ item.vipGrade"></span>
                     </dt>
                     <dd>
@@ -52,7 +52,8 @@
                   </dl>
                 </li>
               </ul>
-              <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+              <p class="lodemore" v-show='left_name.length' v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+              <p class="noMore" v-show="left_name.length == 0" v-text="'暂无更多信息'"></p>
             </div>
 				  </div>
         </div>
@@ -73,9 +74,10 @@
     data() {
       return {
         headerMsg:{
-          type:"common",
+          type:"jump",
           title:'更多商品',
-          left:'返回'
+          left:'返回',
+          jumpBefore:'home',
         },
         isLogin:'',
         pageNo: this.pageNo,
@@ -90,7 +92,6 @@
         goodsType:null,
         isSelected:0,
         isTop:0,
-        isShow:0,
         isLast:false,
         //本地购物车
         goShopCart:[],
@@ -115,11 +116,8 @@
       appFooterGoShop
     },
     mounted() {
-      if(this.$route.query.typeCode){
-        this.goodsType = this.$route.query.typeCode
-      }else{
 
-      }
+
       // 数据初始化
       if (getIsLogin()) {
         this.isLogin = getIsLogin();
@@ -133,12 +131,8 @@
             tokenId : getTokenId()
         }
       }
-
-
       if ( localStorage.getItem('system') ) {
         this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
-      } else {
-
       }
       if ( localStorage.getItem('good') ) {
         this.goShopCart = JSON.parse(localStorage.getItem('good'))
@@ -177,9 +171,28 @@
                 websiteNode:this.websiteNode,
             }
         }).then(resp => {
-              this.goods = resp.data.data;
-              this.typeCode = this.goods[0].typeCode
-              this.goods_second_nav()
+              if(this.$route.query.typeCode){
+                this.goods = resp.data.data;
+                let a = this.$route.query.typeCode
+                let b =  a.substring(0,2);
+                let d =[];
+                for (var i = 0 ;i < this.goods.length;i++){
+                   if( this.goods[i].typeCode == b){
+                        return i
+
+                   }
+
+                    // d.push(this.goods[i].typeCode)
+
+                }
+                console.log(i)
+                  // for
+                  //  console.log(d)
+              }else{
+                this.goods = resp.data.data;
+                this.typeCode = this.goods[0].typeCode
+                this.goods_second_nav()
+              }
               console.log(resp.data);
         }).catch(err => {
             // console.log(JSON.parse(data).data.goods);
@@ -247,8 +260,7 @@
         }).then(data => {
 
             if (data.statusCode=='100000') {
-              sessionStorage.setItem('address',JSON.stringify(data.data));
-
+                 sessionStorage.setItem('address',JSON.stringify(data.data));
               this.$router.push({path:'/orderSettlement'})
             }else if (data.statusCode=='100903' || data.statusCode=='100907') {
               var orderResult={
@@ -256,7 +268,7 @@
                 orderCode:data.data.orderCode
               }
               sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
-              this.$router.push({path:'/orderSettlement'})
+              this.$router.push({path:'/orderResult'})
             }else{
               $(".footer-rigth").addClass("true");
               this.$toast({
@@ -713,5 +725,15 @@
   background: #f56d15;
   border-radius: 50%;
   z-index: 600;
+}
+.noMore{
+  width: 100%;
+  height: 100px;
+  text-align: center;
+  line-height: 80px;
+  font-size: 30px;
+  cursor: pointer;
+  background: #FFF;
+  margin-bottom: 10px;
 }
 </style>

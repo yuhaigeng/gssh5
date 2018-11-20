@@ -22,20 +22,20 @@
                             <div class="order_list_details_time" v-text="'下单时间：'+item.createTime"></div>
                         </div>
                     </div>
-                    <div class="order_list_close" v-if="item.orderStatus == 1 || item.orderStatus == ''">
-                        <dl class="order_list_close clearfloat"><dt style="color: #2f83ff;">实际金额按照实际称重计算为准</dt><dd>取消订单</dd></dl>
+                    <div class="order_list_close" v-if="item.orderStatus == 1 " @click.stop>
+                        <dl class="order_list_close clearfloat"><dt style="color: #2f83ff;">实际金额按照实际称重计算为准</dt><dd v-on:click.stop="cancle_order(item,index)">取消订单</dd></dl>
                     </div>
-                    <div class="order_list_close" v-if="item.orderStatus == 2 || item.orderStatus == ''">
+                    <div class="order_list_close" v-if="item.orderStatus == 2 ">
                         <dl class="order_list_close" style="color: #2f83ff;">实际金额按照实际称重计算为准</dl>
                     </div>
-                    <div class="order_list_close" v-if="item.orderStatus == 3 || item.orderStatus == ''">
+                    <div class="order_list_close" v-if="item.orderStatus == 3 ">
                         <dl class="order_list_close clearfloat"><dt style="color: #d05351;">为避免耽误您再次下单,请尽快支付</dt><dd style="background:#f47c30;color:#FFF;border-color: #FFF;">立即支付</dd></dl>
                     </div>
-                    <div class="order_list_close" v-if="item.orderStatus == 4 || item.orderStatus == ''">
+                    <div class="order_list_close" v-if="item.orderStatus == 4">
                         <dl class="order_list_close order_suc_">交易成功!</dl>
                     </div>
-                    <div class="order_list_close" v-if="item.orderStatus == -1 || item.orderStatus == ''">
-                        <dl class="order_list_close">关闭交易</dl>
+                    <div class="order_list_close" v-if="item.orderStatus == -1" @click.stop>
+                        <dl class="order_list_close" v-on:click.stop="delete_order(item,index)">关闭交易</dl>
                     </div>
                 </li>
             </ul>
@@ -73,6 +73,8 @@ export default {
             orderStatus:1,
             ordersList:[],
             orderStatusText:['已作废','','待发货','已配货','待支付','已支付'],
+            goods:localStorage.getItem('good') ? JSON.parse(localStorage.getItem('good')) : [],
+			idArr:[],
         }
     },
     components: {
@@ -91,7 +93,18 @@ export default {
         }
     },
     mounted() {
-        this.get_goods_order()
+        if (getIsLogin()) {
+            this.tokenId = getTokenId();
+            const userInfo = JSON.parse(getUserData());
+            this.userBasicParam = {
+                firmId : userInfo.firmInfoid,
+                source : 'firmId'+userInfo.firmInfoid,
+                sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+                tokenId : getTokenId()
+			}
+            this.idArr = this.getIdArr();
+            this.get_goods_order()
+        }
     },
     methods: {
         // 请求数据
@@ -104,13 +117,15 @@ export default {
                     firmId: this.firmId,
                     orderStatus: this.orderStatus
                 }
-            }).then(resp => {
-                if (resp.data.statusCode == 100000) {
-                    this.isLast = resp.data.data.isLast;
-                    if (resp.data.data.pageNo == 1) {
-                        this.ordersList = resp.data.data.objects;
+            }).then(result => {
+                return result.data;
+            }).then(data => {
+                if (data.statusCode == 100000) {
+                    this.isLast = data.data.isLast;
+                    if (data.data.pageNo == 1) {
+                        this.ordersList = data.data.objects;
                     } else {
-                        this.ordersList = this.ordersList.concat(resp.data.data.objects);
+                        this.ordersList = this.ordersList.concat(data.data.objects);
                     }
                     
                 } else {
@@ -123,7 +138,7 @@ export default {
 				    })
                 }
             }).catch(err => {
-                console.log('请求失败：'+ err.statusCode);
+                console.log('请求失败：'+ err);
             });
 	    },
         navTop(index) {
@@ -153,7 +168,112 @@ export default {
             localStorage.getItem('selectCoupon') && localStorage.removeItem('selectCoupon')
             this.$router.push({ path:'orderDetails'})
             
-        }
+        },
+        cancle_order(item,index){
+			this.$messagebox.confirm('您确定要取消订单吗？','').then(action => {
+                console.log('取消订单')
+                this.cancle_order_api(item,index)
+            }).catch((e) => {
+                console.log(e)
+            });
+        },
+        cancle_order_api(item,index){
+            let obj = Object.assign({
+				method: "order_cancel",
+				orderCode: item.orderCode,
+				},this.userBasicParam);
+
+			this.$ajax.get(this.HOST, {
+				params:obj
+			}).then(result =>{
+				return result.data
+			}).then(data =>{
+				console.log(data)
+				if (data.statusCode == 100000) {
+					this.cancle_goods_callback_goShopCar(data)					
+				}
+			}).catch(err => {
+				console.log('请求失败：'+ err);
+			});
+        },
+		delete_order(item,index){
+			this.$messagebox.confirm('您确定要删除订单吗？','').then(action => {
+                console.log('删除订单order_del')
+                this.delete_order_api(item,index);
+            }).catch((e) => {
+                console.log(e)
+            });
+		},
+        delete_order_api(item,index){
+            let obj = Object.assign({
+				method: "order_del",
+				orderCode: item.orderCode,
+				},this.userBasicParam);
+
+			this.$ajax.get(this.HOST, {
+				params:obj
+			}).then(result =>{
+				return result.data
+			}).then(data =>{
+				if (data.statusCode == 100000) {
+                    this.get_goods_order()
+				}
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+        },
+		cancle_goods_callback_goShopCar(data){
+			var v = data.data;
+			if (data.data != null) {
+				var i = 0;
+				for (i in v) {
+					if (this.goods.length == 0) {
+						let goodobj = {
+							id:v[i].id,
+							name:v[i].goodsName,
+							sum:v[i].buyCount,
+							price:v[i].wholeGssPrice,
+							wholePriceSize:v[i].wholePriceSize,
+							gssPrice:v[i].gssPrice,
+							priceUnit:v[i].priceUnit,
+							packageNum:v[i].packageNum,
+							maxCount:v[i].maxCount
+						};
+						this.goods.push(goodobj);
+						localStorage.setItem("good",JSON.stringify(pub.good));
+					} else{
+						var l = (this.idArr).indexOf(v[i].id);
+						if ( l == -1) {
+							let goodobj = {
+								id:v[i].id,
+								name:v[i].goodsName,
+								sum:v[i].buyCount,
+								price:v[i].wholeGssPrice,
+								wholePriceSize:v[i].wholePriceSize,
+								gssPrice:v[i].gssPrice,
+								priceUnit:v[i].priceUnit,
+								packageNum:v[i].packageNum,
+								maxCount:v[i].maxCount
+							};
+							this.goods.push(goodobj);
+						}else{
+							this.goods[l].sum = v[i].buyCount + this.goods[l].sum ;
+						}
+						localStorage.setItem("good",JSON.stringify(this.goods));
+					}
+				}
+				this.$router.replace({path:"more"})
+			}
+		},
+		getIdArr(){
+			let arr = [];
+			if (this.goods) {
+				this.goods.forEach(element => {
+					arr.push(element.id)
+				});
+			}
+			return arr;
+		}
     }
 }
 </script>

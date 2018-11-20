@@ -48,7 +48,7 @@
 				<div class="footer-left order_footer_left">
 					合计:<span v-text="'￥'+ totalPrice"></span>
 				</div>
-				<div class="footer-rigth order_footer_right true" @click="get">
+				<div class="footer-rigth" :class=" addressInfo.receiverName && 'order_footer_right'" @click="get">
 					提交订单
 				</div>
 			</div>
@@ -140,12 +140,7 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
                       let a =  resp.data
                       sessionStorage.setItem('statusData',JSON.stringify(a))
                       this.$router.push({path:'/orderResult'})
-                  }else{
-                      this.$toast({
-                        message :'请选择地址' ,
-                        position: 'center',
-                        duration: 2000,
-                    })
+                      // sessionStorage.removeItem('address')
                   }
                 }).catch(err => {
                 });
@@ -157,7 +152,17 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
                 this.desc_data()
             },
             get:function(){
-                this.orderSubmit()
+             let a =  document.querySelector(".footer-rigth");
+              if(a.classList.contains('order_footer_right') == true){
+                    this.orderSubmit()
+              }else{
+                 this.$toast({
+                        message :'请选择地址' ,
+                        position: 'center',
+                        duration: 2000,
+                    })
+              }
+
             },
             priceTotal:function(item){
                   return  (parseFloat(item.price)*parseInt(item.sum)).toFixed(2);
@@ -312,12 +317,14 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
     color: #FFF;
 }
 .footer-left, .footer-rigth {
+    width: 258px;
     height: 98px;
     line-height: 98px;
     float: left;
     font-size: 32px;
     color: #FFF;
     background: #494848;
+    text-align: center;
 }
 .footer .order_footer_left span {
     color: #eA5a2a;

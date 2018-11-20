@@ -90,9 +90,9 @@
 			</div>
 			<!--优惠券-->
 			<div class="order_details_coupon_box1 conpon_item_box clearfloat" v-if="couponList && (orderInfo.orderStatus == 3 || (orderInfo.couponMoney && orderInfo.orderStatus == 4))">
-				<dl class="order_details_coupon clearfloat" v-if="couponList" v-for="(item,index) in couponList" :key="index" @click="selectCoupon(index)">
+				<dl class="order_details_coupon clearfloat" v-if="couponList" v-for="(item,index) in couponList" :key="index" @click="selectCoupon(index)" v-show="getCouponText(item)">
 					<dt v-text="item.title"></dt>
-					<dd class="order_coupon_price" v-text="getCouponText(item)"></dd>
+					<dd class="order_coupon_price" :class="{'no_style': orderInfo.orderStatus == 4}" v-text="getCouponText(item)"></dd>
 				</dl>
 			</div>
 			<div class="order_details_coupon_box11" v-if="orderInfo.orderStatus == 3">
@@ -141,10 +141,10 @@ export default {
     data() {
         return {
             headerMsg:{
-				type:"common",
+				type:"jump",
 				title:'订单详情',
-				// jumpBefore:'orderManagement',
-				// num:'1',
+				jumpBefore:'orderManagement',
+				num:'1',
 				left:'返回'
 			},
 			noticeInfoList:null,
@@ -154,7 +154,9 @@ export default {
 			orderCode:null,
 			couponList:[],
 			orderStatusText:['已作废','','待发货','已配货','待支付','已支付'],
-			orderStatusBtnText:['删除订单','','取消订单','','去支付','']
+			orderStatusBtnText:['删除订单','','取消订单','','去支付',''],
+			goods:localStorage.getItem('good') ? JSON.parse(localStorage.getItem('good')) : [],
+			idArr:[],
         }
     },
     components: {
@@ -180,14 +182,17 @@ export default {
 				if (this.orderInfo.offMoney) {
 					m = m + parseFloat(this.orderInfo.offMoney)
 				}
+				//v.coupons.couponInfo.couponMoney == '' ? 0: parseFloat(v.coupons.couponInfo.couponMoney))+(v.coupons.goodCouponInfo.couponMoney == '' ? 0: parseFloat(v.coupons.goodCouponInfo.couponMoney))+(v.coupons.typeCouponInfo.couponMoney == '' ? 0: parseFloat(v.coupons.typeCouponInfo.couponMoney)))
+				console.log(this.couponList)
 				if (this.couponList && this.couponList.length) {
 					this.couponList.forEach((item)=>{
+						
 						m = m + parseFloat(item.couponMoney)
 					})
 				}
 				return m.toFixed(2);
 			}
-			
+
 		},
 		getRealMoney(){
 			let m = '';
@@ -216,10 +221,11 @@ export default {
 			}
 			this.get_order_detail()
         }
-    	
+		this.idArr = this.getIdArr();
   	},
   	methods: {
         get_order_detail:function () {
+			let _this = this;
 			let obj = Object.assign({
 				method: "order_details_fou",
 				orderCode: this.orderCode,
@@ -227,21 +233,19 @@ export default {
 
 			this.$ajax.get(this.HOST, {
 				params:obj
-			}).then(resp => {
-				let v = resp.data.data;
+			}).then(result =>{
+				return result.data
+			}).then(data =>{
+				if( data.statusCode == 100000 ) {
+					let v = data.data;
 					this.offItem = v.offItem;
 					this.orderInfo = v.orderInfo;
 					this.couponInit(v);
-				}).then(resp => {
-					if (resp.data.statusCode == 100000) {
-						this.couponItem = resp.data.data.offItem;
-						this.orderDetailList = resp.data.data.orderInfo;
-						this.orderDetailsList = resp.data.data.orderInfo.orderDetailsList;
-					} else {
-						console.log(data.statusStr);
-					}
-				}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
+				} else {
+					
+				}
+			}).catch(err => {
+				console.log('请求失败：'+ err);
 			});
 		},
 		cancle_order(){
@@ -257,11 +261,10 @@ export default {
 			}).then(data =>{
 				console.log(data)
 				if (data.statusCode == 100000) {
-					
-					
+					this.cancle_goods_callback_goShopCar(data)
 				}
 			}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
+				console.log('请求失败：'+ err);
 			});
 		},
 		delete_order(){
@@ -291,7 +294,7 @@ export default {
 				goodsCouponId:this.couponList[1].selectId,
 				goodsTypeCouponId:this.couponList[2].selectId,
 				},this.userBasicParam);
-			
+
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(result =>{
@@ -315,62 +318,65 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-				
+
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
 		},
 		couponInit(v){
-			if(v.orderInfo.orderStatus == 3){
-				let selectId = '',couponMoney = 0;
-				if (v.orderInfo.isGoToPay == 1) {
-					if (v.couponInfo != null) {
-						selectId = v.couponInfo.id;
-						couponMoney = v.couponInfo.couponMoney;
-					}else{
-						this.couponList[0].couponMoney = 0;
-						selectId = '';
-						couponMoney = 0;
-					}
+			let selectId = '',couponMoney = 0;
+			if (v.orderInfo.orderStatus == 4) {
+				couponMoney = v.orderInfo.couponMoney;
+			} else if(v.orderInfo.orderStatus == 3){
+				if (localStorage.getItem('selectCoupon')) {
+					this.couponList = JSON.parse(localStorage.getItem('selectCoupon'));
+					return;
 				}else{
-					if (localStorage.getItem('selectCoupon')) {
-						this.couponList = JSON.parse(localStorage.getItem('selectCoupon'));
-					} else {
+					if (v.orderInfo.isGoToPay == 1) {
+						if (v.couponInfo != null) {
+							selectId = v.couponInfo.id;
+							couponMoney = v.couponInfo.couponMoney;
+						}else{
+							this.couponList[0].couponMoney = 0;
+							selectId = '';
+							couponMoney = 0;
+						}
+					}else{
 						selectId = (v.useable && v.useable.length) ? v.useable[0].id : '';
 						couponMoney = (v.useable && v.useable.length) ? v.useable[0].couponMoney : '';
-						
+
 					}
 				}
-				this.couponList = [
-					//普通的优惠卷
-					{
-						name:'couponInfo',
-						title:'优惠券:（单选）',
-						selectId:selectId,
-						couponMoney:couponMoney,//优惠卷金额
-						useable:v.useable,//可用列表
-						unusable:v.unusable//不可用列表
-					},
-					//商品优惠卷
-					{
-						name:'goodCouponInfo',
-						title:'商品券:（可多选）',
-						selectId:v.orderInfo.goodsCoupon ? v.orderInfo.goodsCoupon.join(",") : '',
-						couponMoney:v.orderInfo.goodsCouponMoney ? v.orderInfo.goodsCouponMoney : 0,//优惠卷金额
-						useable:v.guseable,//可用列表
-						unusable:v.gunusable//不可用列表
-					},
-					//类目优惠卷
-					{
-						name:'typeCouponInfo',
-						title:'商品类目券:（可多选）',
-						selectId:v.orderInfo.goodsTypeCoupon ? v.orderInfo.goodsTypeCoupon.join(",") : '',
-						couponMoney:v.orderInfo.goodsTypeCouponMoney ? v.orderInfo.goodsTypeCouponMoney : 0,//优惠卷金额
-						useable:v.tuseable,//可用列表
-						unusable:v.tunusable//不可用列表
-					},
-				]
 			}
+			this.couponList = [
+				//普通的优惠卷
+				{
+					name:'couponInfo',
+					title:'优惠券:（单选）',
+					selectId:selectId,
+					couponMoney:couponMoney,//优惠卷金额
+					useable:v.useable,//可用列表
+					unusable:v.unusable//不可用列表
+				},
+				//商品优惠卷
+				{
+					name:'goodCouponInfo',
+					title:'商品券:（可多选）',
+					selectId:v.orderInfo.goodsCoupon ? v.orderInfo.goodsCoupon.join(",") : '',
+					couponMoney:v.orderInfo.goodsCouponMoney ? v.orderInfo.goodsCouponMoney : 0,//优惠卷金额
+					useable:v.guseable,//可用列表
+					unusable:v.gunusable//不可用列表
+				},
+				//类目优惠卷
+				{
+					name:'typeCouponInfo',
+					title:'商品类目券:（可多选）',
+					selectId:v.orderInfo.goodsTypeCoupon ? v.orderInfo.goodsTypeCoupon.join(",") : '',
+					couponMoney:v.orderInfo.goodsTypeCouponMoney ? v.orderInfo.goodsTypeCouponMoney : 0,//优惠卷金额
+					useable:v.tuseable,//可用列表
+					unusable:v.tunusable//不可用列表
+				},
+			]
 		},
 		desc_data:function(){
 			this.$ajax.get(this.HOST, {
@@ -444,9 +450,9 @@ export default {
 					}
 				}else{
 					if (item.couponMoney) {
-						return parseInt(item.couponMoney).toFixed(2);
+						return parseInt(item.couponMoney).toFixed(2) + '元';
 					}else{
-
+						return '';
 					}
 				}
 			}
@@ -483,6 +489,58 @@ export default {
 				console.log('order_pay')
 				this.pay_order();
 			}
+		},
+		cancle_goods_callback_goShopCar(data){
+			var v = data.data;
+			if (data.data != null) {
+				var i = 0;
+				for (i in v) {
+					if (this.goods.length == 0) {
+						let goodobj = {
+							id:v[i].id,
+							name:v[i].goodsName,
+							sum:v[i].buyCount,
+							price:v[i].wholeGssPrice,
+							wholePriceSize:v[i].wholePriceSize,
+							gssPrice:v[i].gssPrice,
+							priceUnit:v[i].priceUnit,
+							packageNum:v[i].packageNum,
+							maxCount:v[i].maxCount
+						};
+						this.goods.push(goodobj);
+						localStorage.setItem("good",JSON.stringify(pub.good));
+					} else{
+						var l = (this.idArr).indexOf(v[i].id);
+						if ( l == -1) {
+							let goodobj = {
+								id:v[i].id,
+								name:v[i].goodsName,
+								sum:v[i].buyCount,
+								price:v[i].wholeGssPrice,
+								wholePriceSize:v[i].wholePriceSize,
+								gssPrice:v[i].gssPrice,
+								priceUnit:v[i].priceUnit,
+								packageNum:v[i].packageNum,
+								maxCount:v[i].maxCount
+							};
+							this.goods.push(goodobj);
+						}else{
+							this.goods[l].sum = v[i].buyCount + this.goods[l].sum ;
+						}
+						localStorage.setItem("good",JSON.stringify(this.goods));
+					}
+				}
+				this.$router.replace({path:"more"})
+			}
+		},
+		getIdArr(){
+			let arr = [];
+			if (this.goods) {
+				this.goods.forEach(element => {
+					arr.push(element.id)
+				});
+			}
+			return arr;
 		}
 	},
 
@@ -813,7 +871,12 @@ export default {
 	right: -20px;
 	color: #f50909;
 }
-
+.conpon_item_box .order_details_coupon dd.no_style{
+	background: none;
+    float: left;
+    color: rgb(51, 51, 51);
+    right: 0px;
+}
 .order_details_coupon_box11 {
 	color: #f50909;
 }

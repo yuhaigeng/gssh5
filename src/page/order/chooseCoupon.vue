@@ -47,7 +47,7 @@
         </div>
     </div>
 	<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
-	<order-footer v-if="coupon[dataType]" :couponObj="coupon[dataType]" v-on:listenSubmit = "submitCoupon"></order-footer>
+	<order-footer v-if="dataType" :couponObj="coupon[dataType]" v-on:listenSubmit = "submitCoupon"></order-footer>
  </div>
 </template>
 
@@ -185,6 +185,9 @@ export default {
 <style scoped>
 .active {
 	background: #fff url('../../assets/img/coupon_active.png') no-repeat right top;
+}
+.main{
+	padding-top: 30px;
 }
 /*在线领取优惠券*/
 
@@ -355,7 +358,6 @@ export default {
 	background: #FFF url(../../assets/img/bg_num_b.png) no-repeat 96% center;
 	font-size: 24px;
 	padding: 0 24px;
-	margin-top: 30px;
 }
 
  .selectTop {

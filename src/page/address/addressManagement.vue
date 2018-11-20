@@ -88,7 +88,12 @@ export default {
       });
     },
     editor:function(item){
-      this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true}})
+      if(this.$route.query.isBack){
+          this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:false}})
+      }else{
+          this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true}})
+      }
+
       sessionStorage.setItem('editorAddress',JSON.stringify(item));
     },
     setDefault:function(ele,id){

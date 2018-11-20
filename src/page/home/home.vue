@@ -6,15 +6,15 @@
         </app-header>
         <div class="main-wrap index-wrap">
           <div class="main">
-                  <div id="banner-wrap">
+                  <div id="banner-wrap common-wrap">
                       <banner :imgList = "topList" v-if="topList.length"></banner>
                   </div>
                   <div class="gonggao-wrap sprite icon_voice">
                       <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
                   </div>
                   <div class="index-advertisement-wrap">
-                      <div class="index-advertisement">
-
+                      <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter(centerList[0].typeCode, centerList[0].linkUrl, centerList[0].adTime)">
+                          <img v-lazy="centerList[0].adLogo" alt="">
                       </div>
                   </div>
                   <div class="center_wrap">
@@ -40,6 +40,7 @@ import ggBanner from "../banner/gonggaoBanner.vue";
 import homeGoods from "./homeGoods.vue";
 import alert from "../../components/public/alert.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { system } from "../../api/index.js";
 export default {
    name: 'home',
    data() {
@@ -97,7 +98,7 @@ export default {
                 sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
                 tokenId : getTokenId()
             }
-            getMessage(this)
+            //getMessage(this)
         }
     },
     watch:{
@@ -106,14 +107,22 @@ export default {
       }
     },
     methods:{
-          click:function () {
-              this.$toast({
-                  message : 'hello world',
-                  position: 'top',//top boottom middle
-                  duration: 5000,//延时多久消失
-                  //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-                  //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-              })
+        
+        click() {
+            //   this.$toast({
+            //       message : 'hello world',
+            //       position: 'top',//top boottom middle
+            //       duration: 5000,//延时多久消失
+            //       //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+            //       //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+            //   })
+                let obj = {
+                    method: "system_config_constant",
+                    websiteNode:'3301'
+                }
+                system(obj).then(data => {
+                    console.log(data)
+                })
           },
           //获取首页数据
           get_main_page:function () {
@@ -186,6 +195,26 @@ export default {
         },
         closeAlert:function (data) {
             this.noticeInfo = null;
+        },
+        jumpRouter:function(type,code,tit){
+          if(this.isLogin){
+              code =  code.trim()
+              if (type) {
+                if (type == 1) {
+                  let codeArr = code.split("&");
+                  return this.$router.push({path:'more',query:{typeCode:codeArr[1]}})
+                }else if (type == 2) {
+                  return this.$router.push({path:'detail/'+code})
+                }else if (type == 3) {
+                  return this.$router.push({path:'details',query:{typeCode:code,title:tit}})
+                }else if(type == 4){
+                  return this.$router.push({path:'onlineCoupon'})
+                }
+              }
+              return null;
+          }else{
+             return this.$router.push({path:'login'})
+          }
         }
     }
   }
@@ -223,5 +252,8 @@ export default {
         text-indent: 80px;
         width: 180px;
     }
-
+    .index-advertisement-wrap .index-advertisement {
+    height: 200px;
+    overflow: hidden;
+}
 </style>
