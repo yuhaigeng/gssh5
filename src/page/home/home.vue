@@ -40,6 +40,7 @@ import ggBanner from "../banner/gonggaoBanner.vue";
 import homeGoods from "./homeGoods.vue";
 import alert from "../../components/public/alert.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { system } from "../../api/index.js";
 export default {
    name: 'home',
    data() {
@@ -97,7 +98,7 @@ export default {
                 sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
                 tokenId : getTokenId()
             }
-            getMessage(this)
+            //getMessage(this)
         }
     },
     watch:{
@@ -106,14 +107,22 @@ export default {
       }
     },
     methods:{
-          click:function () {
-              this.$toast({
-                  message : 'hello world',
-                  position: 'top',//top boottom middle
-                  duration: 5000,//延时多久消失
-                  //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-                  //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-              })
+        
+        click() {
+            //   this.$toast({
+            //       message : 'hello world',
+            //       position: 'top',//top boottom middle
+            //       duration: 5000,//延时多久消失
+            //       //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+            //       //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+            //   })
+                let obj = {
+                    method: "system_config_constant",
+                    websiteNode:'3301'
+                }
+                system(obj).then(data => {
+                    console.log(data)
+                })
           },
           //获取首页数据
           get_main_page:function () {
