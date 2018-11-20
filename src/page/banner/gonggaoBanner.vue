@@ -1,5 +1,5 @@
 <template>
-    <div class="gonggao">
+    <div class="gonggao" :class="{'scoreActive':type=='scoreActive'}">
         <ul class="swiper-wrapper">
             <li class="swiper-slide" v-for="(item,index) in imgList" :key="index" v-text="item.noticeTitle" ></li>
         </ul>
@@ -15,7 +15,7 @@ export default {
             
         }
     },
-    props:['imgList'],
+    props:['imgList','type'],
     mounted(){
         const _this = this;
         var mySwiper = new Swiper('.gonggao', {
@@ -49,4 +49,6 @@ export default {
     width: 100%;
     height: 100%
 }
+.scoreActive{height: 60px;}
+.scoreActive li{color: #FFF;font-size: 28px;line-height: 64px;}
 </style>

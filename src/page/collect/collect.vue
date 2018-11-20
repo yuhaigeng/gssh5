@@ -2,43 +2,39 @@
  <div class="common-wrap">
      <app-header :type="headerMsg"></app-header>
      <div class="main-wrap often_shop_main_wrap">
-			<div class="main">
-				<ul>
-					<li class="line-wrapper"  v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item.goodsInfoId)">
-                        <mt-cell-swipe :right="rightButtons(index)">
-							<div class="line-scroll-wrapper clearfloat">
-								<dl class="line-normal-wrapper clearfloat">
-									<dt class="line-normal-avatar-wrapper">
-										<img v-lazy="item.goodsInfo.goodsLogo"/>
-										<span v-if="item.goodsInfo.vipGrade > 0" :class = "'icon_vip'+ item.goodsInfo.vipGrade"></span>
-									</dt>
-									<dd class="line-normal-info-wrapper">
-										<div class="often_shop_goods_top clearfloat">
-											<p class="often_shop_goods_tit">{{item.goodsInfo.goodsName}}</p>
-											<p class="often_shop_goods_icon"></p>
-										</div>
-										<p class="often_shop_show">{{item.goodsInfo.goodsShows}}</p>
-										<div class="often_shop_NumPir">
-											<div class="os_pir">
-												<span class="often_shop_color">{{item.goodsInfo.gssPrice}}</span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<span>{{item.goodsInfo.priceDesc}}</span>
-											</div>
-											<div class="os_Num">
-												<b class='bStyle' v-if="getNumText(item.goodsInfo)" v-text="getNumText(item.goodsInfo)" ></b>
-                              					<span v-if="!getNumText(item.goodsInfo)" v-show="getGoodNum(item.goodsInfo.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(item.goodsInfo)"><img src="../../assets/img/btn_m@2x.png"/></span>
-                              					<span v-if="!getNumText(item.goodsInfo)" v-show="getGoodNum(item.goodsInfo.id)" class="goodsNumber fontColor" v-text="getGoodNum(item.goodsInfo.id)"></span>
-                              					<span v-if="!getNumText(item.goodsInfo)" class="goodsNumber_max" v-on:click.stop="addGood(item.goodsInfo,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
-											</div>
-										</div>
-									</dd>
-								</dl>
+		<ul>
+			<li class="line-wrapper" v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item.goodsInfoId)">
+				<mt-cell-swipe :right="rightButtons(index)">
+					<dl class="line-normal-wrapper clearfloat">
+						<dt class="line-normal-avatar-wrapper">
+							<img v-lazy="item.goodsInfo.goodsLogo"/>
+							<span v-if="item.goodsInfo.vipGrade > 0" :class = "'icon_vip'+ item.goodsInfo.vipGrade"></span>
+						</dt>
+						<dd class="line-normal-info-wrapper">
+							<div class="often_shop_goods_top clearfloat">
+								<p class="often_shop_goods_tit" v-text="item.goodsInfo.goodsName"></p>
+								<p class="often_shop_goods_icon"></p>
 							</div>
-                        </mt-cell-swipe>
-			        </li>
-				</ul>
-			</div>
-            <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
-		</div>
-		<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
+							<p class="often_shop_show" v-text="item.goodsInfo.goodsShows"></p>
+							<div class="often_shop_NumPir">
+								<div class="os_pir">
+									<span class="often_shop_color" v-text="item.goodsInfo.gssPrice"></span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<span v-text="item.goodsInfo.priceDesc"></span>
+								</div>
+								<div class="os_Num">
+									<b class='bStyle' v-if="getNumText(item.goodsInfo)" v-text="getNumText(item.goodsInfo)" ></b>
+									<span v-if="!getNumText(item.goodsInfo)" v-show="getGoodNum(item.goodsInfo.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(item.goodsInfo)"><img src="../../assets/img/btn_m@2x.png"/></span>
+									<span v-if="!getNumText(item.goodsInfo)" v-show="getGoodNum(item.goodsInfo.id)" class="goodsNumber fontColor" v-text="getGoodNum(item.goodsInfo.id)"></span>
+									<span v-if="!getNumText(item.goodsInfo)" class="goodsNumber_max" v-on:click.stop="addGood(item.goodsInfo,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
+								</div>
+							</div>
+						</dd>
+					</dl>
+				</mt-cell-swipe>
+			</li>
+		</ul>
+	</div>
+	<p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+	<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
  </div>
 </template>
 
@@ -464,7 +460,7 @@ export default {
 	background: #ebeaea;
     margin-top: 97px;
 }
-.often_shop_main_wrap .main ul {
+.often_shop_main_wrap ul {
 	width: 100%;
 	margin-top: 10px;
 	background: #FFF
@@ -472,12 +468,6 @@ export default {
 .line-wrapper {
 	width: 100%;
 	overflow: hidden;
-    -webkit-transition: all 0.2s;
-    transition: all 0.2s;
-}
-.line-scroll-wrapper {
-	height: 200px;
-	width: 950px
 }
 
 .line-normal-wrapper {

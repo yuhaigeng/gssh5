@@ -20,7 +20,7 @@
                 <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item.id)" >
                   <dl class="moreGoods_goods_detaile clearfloat">
                     <dt>
-                      <img v-lazy="item.goodsLogo" alt="">
+                      <img :src="item.goodsLogo" alt="">
                       <span v-if="item.vipGrade > 0" :class = "'icon_vip'+ item.vipGrade"></span>
                     </dt>
                     <dd>
