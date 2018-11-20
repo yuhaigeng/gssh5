@@ -192,7 +192,7 @@ export default {
 				}
 				return m.toFixed(2);
 			}
-			
+
 		},
 		getRealMoney(){
 			let m = '';
@@ -222,8 +222,6 @@ export default {
 			this.get_order_detail()
         }
 		this.idArr = this.getIdArr();
-		console.log(this.getIdArr())
-		console.log(this.idArr)
   	},
   	methods: {
         get_order_detail:function () {
@@ -263,7 +261,7 @@ export default {
 			}).then(data =>{
 				console.log(data)
 				if (data.statusCode == 100000) {
-					this.cancle_goods_callback_goShopCar(data)					
+					this.cancle_goods_callback_goShopCar(data)
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err);
@@ -296,7 +294,7 @@ export default {
 				goodsCouponId:this.couponList[1].selectId,
 				goodsTypeCouponId:this.couponList[2].selectId,
 				},this.userBasicParam);
-			
+
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(result =>{
@@ -320,7 +318,7 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-				
+
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
@@ -346,6 +344,7 @@ export default {
 					}else{
 						selectId = (v.useable && v.useable.length) ? v.useable[0].id : '';
 						couponMoney = (v.useable && v.useable.length) ? v.useable[0].couponMoney : '';
+
 					}
 				}
 			}

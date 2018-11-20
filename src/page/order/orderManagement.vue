@@ -73,6 +73,8 @@ export default {
             orderStatus:1,
             ordersList:[],
             orderStatusText:['已作废','','待发货','已配货','待支付','已支付'],
+            goods:localStorage.getItem('good') ? JSON.parse(localStorage.getItem('good')) : [],
+			idArr:[],
         }
     },
     components: {

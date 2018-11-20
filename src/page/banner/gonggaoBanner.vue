@@ -8,11 +8,12 @@
 <script>
 import Swiper from 'swiper'
 import '@/common/swiper.min.css'
+
 export default {
 
     data() {
         return {
-            
+
         }
     },
     props:['imgList'],
