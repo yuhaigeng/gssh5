@@ -3,20 +3,20 @@
         <p class="no_login_text" v-show="!isLogin">您还没有登录</p>
         <router-link :to="'login'" tag="span"  class="no_login_btn" v-show="!isLogin">登录</router-link>
 
-        <dl  v-cloak class="wo_top_info clearfloat" v-show="isLogin && userVipInfo">
+        <dl  v-cloak class="wo_top_info clearfloat" v-if="isLogin && userVipInfo.firmId">
             <dt class="float_left">
                 <img v-show="userInfo.faceImgUrl" class="user_faceImg" :src="'http://'+userInfo.faceImgUrl"/>
                 <input class="login_type1 " type="file" accept="image/*" name="" id="file" value=""  @change="uploadImg"/>
             </dt>
             <dd class="float_left" :class="{'active':userVipInfo.vip > 0}">
-                <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class="'vip'+userVipInfo.vipGrade"   ></router-link> <span class="user_vip_msg" v-text="'上个月成长值为'+userVipInfo.lastMonthExp"></span></p>
+                <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class="'vip'+userVipInfo.vipGrade"   ></router-link> <span class="user_vip_msg"  v-text="'上个月成长值为'+  userVipInfo.lastMonthExp"></span></p>
                 <p><span class="user_phone" v-text="userInfo.linkTel"></span></p>
             </dd>
             <router-link to="company" tag="dd" class="my_details float_right"></router-link>
         </dl>
-        <div  v-cloak class="wo_top_growInfo" v-show="isLogin && userVipInfo">
-            <div class="growInfo_pointer">
-                <span v-text="'当月成长值'+userVipInfo.firmMonthExp" v-bind:style="{marginLeft:getMarginleft,left:getLeft}"></span>
+        <div  class="wo_top_growInfo" v-if="isLogin && userVipInfo.firmId">
+            <div class="growInfo_pointer" v-show="userVipInfo">
+                <span v-text="'当月成长值'+userVipInfo.firmMonthExp" v-bind:style="{left:getLeft}"></span>
             </div>
             <div class="growInfo_progress">
                 <p class="growInfo_progressAll" ></p>
@@ -59,10 +59,6 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
           computed: {
             getWidth: function() {
                 return this.userVipInfo.firmMonthExp >= this.userVipInfo.monthExp ? "702" : 0 == this.userVipInfo.firmMonthExp ? "0" : (702 * (this.userVipInfo.firmMonthExp / this.userVipInfo.monthExp)).toFixed(2)
-            },
-            getMarginleft: function() {
-                return  "-85px"
-
             },
             getLeft: function() {
                 return 617 < this.getWidth ? "557px" : this.getWidth < 85 ? "85px" : this.getWidth + "px"

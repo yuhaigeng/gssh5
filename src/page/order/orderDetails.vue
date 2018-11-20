@@ -141,10 +141,10 @@ export default {
     data() {
         return {
             headerMsg:{
-				type:"common",
+				type:"jump",
 				title:'订单详情',
-				// jumpBefore:'orderManagement',
-				// num:'1',
+				jumpBefore:'orderManagement',
+				num:'1',
 				left:'返回'
 			},
 			noticeInfoList:null,
@@ -187,7 +187,7 @@ export default {
 				}
 				return m.toFixed(2);
 			}
-			
+
 		},
 		getRealMoney(){
 			let m = '';
@@ -216,7 +216,7 @@ export default {
 			}
 			this.get_order_detail()
         }
-    	
+
   	},
   	methods: {
         get_order_detail:function () {
@@ -257,8 +257,8 @@ export default {
 			}).then(data =>{
 				console.log(data)
 				if (data.statusCode == 100000) {
-					
-					
+
+
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
@@ -291,7 +291,7 @@ export default {
 				goodsCouponId:this.couponList[1].selectId,
 				goodsTypeCouponId:this.couponList[2].selectId,
 				},this.userBasicParam);
-			
+
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(result =>{
@@ -315,7 +315,7 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-				
+
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
@@ -338,7 +338,7 @@ export default {
 					} else {
 						selectId = (v.useable && v.useable.length) ? v.useable[0].id : '';
 						couponMoney = (v.useable && v.useable.length) ? v.useable[0].couponMoney : '';
-						
+
 					}
 				}
 				this.couponList = [

@@ -12,7 +12,7 @@
                     <dt><img src="../../assets/img/icon_server.png"/></dt>
                     <dd>人工客服</dd>
                 </dl>
-                <a class="telPhone"></a>
+                <a class="telPhone" :href="'tel:'+system.feedback_method"></a>
             </div>
 
         </app-header>
@@ -68,10 +68,13 @@ export default {
             otherList:dateModule.otherList,
             title:dateModule.title,
             title1:dateModule.title1,
+            system:{}
         }
    },
    mounted(){
+
        if(localStorage.getItem("user_data")){
+            this.system = JSON.parse(localStorage.getItem('system'))
             this.firmId = JSON.parse(getUserData()).firmInfoid;
             this.userBasicParam ={
                 source:'firmId'+ JSON.parse(getUserData()).firmInfoid,

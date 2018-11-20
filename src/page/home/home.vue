@@ -6,15 +6,15 @@
         </app-header>
         <div class="main-wrap index-wrap">
           <div class="main">
-                  <div id="banner-wrap">
+                  <div id="banner-wrap common-wrap">
                       <banner :imgList = "topList" v-if="topList.length"></banner>
                   </div>
                   <div class="gonggao-wrap sprite icon_voice">
                       <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
                   </div>
                   <div class="index-advertisement-wrap">
-                      <div class="index-advertisement">
-
+                      <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter(centerList[0].typeCode, centerList[0].linkUrl, centerList[0].adTime)">
+                          <img v-lazy="centerList[0].adLogo" alt="">
                       </div>
                   </div>
                   <div class="center_wrap">
@@ -186,6 +186,26 @@ export default {
         },
         closeAlert:function (data) {
             this.noticeInfo = null;
+        },
+        jumpRouter:function(type,code,tit){
+          if(this.isLogin){
+              code =  code.trim()
+              if (type) {
+                if (type == 1) {
+                  let codeArr = code.split("&");
+                  return this.$router.push({path:'more',query:{typeCode:codeArr[1]}})
+                }else if (type == 2) {
+                  return this.$router.push({path:'detail/'+code})
+                }else if (type == 3) {
+                  return this.$router.push({path:'details',query:{typeCode:code,title:tit}})
+                }else if(type == 4){
+                  return this.$router.push({path:'onlineCoupon'})
+                }
+              }
+              return null;
+          }else{
+             return this.$router.push({path:'login'})
+          }
         }
     }
   }
@@ -223,5 +243,8 @@ export default {
         text-indent: 80px;
         width: 180px;
     }
-
+    .index-advertisement-wrap .index-advertisement {
+    height: 200px;
+    overflow: hidden;
+}
 </style>

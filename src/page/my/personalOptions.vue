@@ -1,5 +1,5 @@
 <template>
-     	<div class="cont cont2">
+     	<div class="cont cont2" >
             <div class="cont_tit" v-text="title"></div>
             <div class="cont_order_box clearfloat">
                 <router-link :to="{path:isLogin ? item.linkUrl : 'login', query:{type:item.type}}"   tag="dl" v-for = "(item,index) in orderList" :key="index">
