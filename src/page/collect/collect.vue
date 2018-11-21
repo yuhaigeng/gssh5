@@ -1,41 +1,41 @@
 <template>
- <div class="common-wrap">
-     <app-header :type="headerMsg"></app-header>
-     <div class="main-wrap often_shop_main_wrap">
-		<ul>
-			<li class="line-wrapper" v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item.goodsInfoId)">
-				<mt-cell-swipe :right="rightButtons(index)">
-					<dl class="line-normal-wrapper clearfloat">
-						<dt class="line-normal-avatar-wrapper">
-							<img v-lazy="item.goodsInfo.goodsLogo"/>
-							<span v-if="item.goodsInfo.vipGrade > 0" :class = "'icon_vip'+ item.goodsInfo.vipGrade"></span>
-						</dt>
-						<dd class="line-normal-info-wrapper">
-							<div class="often_shop_goods_top clearfloat">
-								<p class="often_shop_goods_tit" v-text="item.goodsInfo.goodsName"></p>
-								<p class="often_shop_goods_icon"></p>
-							</div>
-							<p class="often_shop_show" v-text="item.goodsInfo.goodsShows"></p>
-							<div class="often_shop_NumPir">
-								<div class="os_pir">
-									<span class="often_shop_color" v-text="item.goodsInfo.gssPrice"></span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<span v-text="item.goodsInfo.priceDesc"></span>
+	<div class="common-wrap">
+		<app-header :type="headerMsg"></app-header>
+		<div class="main-wrap often_shop_main_wrap">
+			<ul>
+				<li class="line-wrapper" v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item.goodsInfoId)">
+					<mt-cell-swipe :right="rightButtons(index)">
+						<dl class="line-normal-wrapper clearfloat">
+							<dt class="line-normal-avatar-wrapper">
+								<img v-lazy="item.goodsInfo.goodsLogo"/>
+								<span v-if="item.goodsInfo.vipGrade > 0" :class = "'icon_vip'+ item.goodsInfo.vipGrade"></span>
+							</dt>
+							<dd class="line-normal-info-wrapper">
+								<div class="often_shop_goods_top clearfloat">
+									<p class="often_shop_goods_tit" v-text="item.goodsInfo.goodsName"></p>
+									<p class="often_shop_goods_icon"></p>
 								</div>
-								<div class="os_Num">
-									<b class='bStyle' v-if="getNumText(item.goodsInfo)" v-text="getNumText(item.goodsInfo)" ></b>
-									<span v-if="!getNumText(item.goodsInfo)" v-show="getGoodNum(item.goodsInfo.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(item.goodsInfo)"><img src="../../assets/img/btn_m@2x.png"/></span>
-									<span v-if="!getNumText(item.goodsInfo)" v-show="getGoodNum(item.goodsInfo.id)" class="goodsNumber fontColor" v-text="getGoodNum(item.goodsInfo.id)"></span>
-									<span v-if="!getNumText(item.goodsInfo)" class="goodsNumber_max" v-on:click.stop="addGood(item.goodsInfo,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
+								<p class="often_shop_show" v-text="item.goodsInfo.goodsShows"></p>
+								<div class="often_shop_NumPir">
+									<div class="os_pir">
+										<span class="often_shop_color" v-text="item.goodsInfo.gssPrice"></span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<span v-text="item.goodsInfo.priceDesc"></span>
+									</div>
+									<div class="os_Num">
+										<b class='bStyle' v-if="getNumText(item.goodsInfo)" v-text="getNumText(item.goodsInfo)" ></b>
+										<span v-if="!getNumText(item.goodsInfo)" v-show="getGoodNum(item.goodsInfo.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(item.goodsInfo)"><img src="../../assets/img/btn_m@2x.png"/></span>
+										<span v-if="!getNumText(item.goodsInfo)" v-show="getGoodNum(item.goodsInfo.id)" class="goodsNumber fontColor" v-text="getGoodNum(item.goodsInfo.id)"></span>
+										<span v-if="!getNumText(item.goodsInfo)" class="goodsNumber_max" v-on:click.stop="addGood(item.goodsInfo,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
+									</div>
 								</div>
-							</div>
-						</dd>
-					</dl>
-				</mt-cell-swipe>
-			</li>
-		</ul>
+							</dd>
+						</dl>
+					</mt-cell-swipe>
+				</li>
+			</ul>
+		</div>
+		<p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+		<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
 	</div>
-	<p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
-	<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
- </div>
 </template>
 
 <script>
@@ -127,25 +127,25 @@ export default {
 	},
 	computed:{
 		// 获取宽度
-		getTopWidth:function(){
-			return  (this.goods.length * 164) + 24 +'px'
+		getTopWidth:function() {
+			return (this.goods.length * 164) + 24 +'px'
 		},
 		// 获取高度
-		getLeftHeight:function(){
-			const  bodyHeight  =  document.querySelector("body");
-			const  wrapHeight  =  document.querySelector(".header-wrap");
-			const  topHeight   =  document.querySelector('.moreDoogs_main_top');
-			const  footerHeight =  document.querySelector(".footer-wrap");
+		getLeftHeight:function() {
+			const bodyHeight = document.querySelector("body");
+			const wrapHeight = document.querySelector(".header-wrap");
+			const topHeight  = document.querySelector('.moreDoogs_main_top');
+			const footerHeigh = document.querySelector(".footer-wrap");
 			let a = parseInt(window.getComputedStyle(bodyHeight).height);
-			let b =   wrapHeight ? parseInt(window.getComputedStyle(wrapHeight).height) : 87 ;
+			let b = wrapHeight ? parseInt(window.getComputedStyle(wrapHeight).height) : 87 ;
 			let c = topHeight ? parseInt(window.getComputedStyle(topHeight).height):90;
-			let d =  footerHeight ? parseInt(window.getComputedStyle(footerHeight).height):98;
+			let d = footerHeight ? parseInt(window.getComputedStyle(footerHeight).height):98;
 			let e = a-b-c-d;
 			return e + 'px';
 		},
 	},
 	methods:{
-		get_goods_collected:function () {
+		get_goods_collected:function() {
 			this.$ajax.get(this.HOST, {
 				params:{
 					method: "goods_collection",
@@ -183,11 +183,11 @@ export default {
 					goodsId: this.goodID
 				}
 			}).then(resp => {
-				if (resp.data.statusCode == 100000) {
+				if(resp.data.statusCode == 100000) {
 					const arr = this.collectList;
 					const arr1 = arr.splice(index, 1);
 					this.collectList =arr;
-				} else {
+				}else {
 					this.$toast({
 						message : data.statusStr,
 						position: 'boottom',//top boottom middle
@@ -250,7 +250,7 @@ export default {
 			}
 		},
 		getGoodNum(id){
-			if (this.goShopCart && this.goShopCart.length) {
+			if(this.goShopCart && this.goShopCart.length) {
 				let good = this.goShopCart.filter((item)=>{
 					if (item.id == id) {
 						return item;
@@ -260,7 +260,7 @@ export default {
 					return good[0].sum;
 				}
 				return 0;
-			} else {
+			}else {
 				return 0;
 			}
 		},
@@ -306,14 +306,11 @@ export default {
 						}
 					}else{
 						good.sum = parseInt(good.sum) + 1;
-
 						let elLeft = event.target.getBoundingClientRect().left;
 						let elTop = event.target.getBoundingClientRect().top;
-						
 						this.sport(elLeft,elTop)
-						
 					}
-				} else{
+				}else {
 					this.$toast({
 						message : "库存不足",
 						position: 'boottom',//top boottom middle
@@ -336,9 +333,7 @@ export default {
 				}
 				let elLeft = event.target.getBoundingClientRect().left;
 				let elTop = event.target.getBoundingClientRect().top;
-				
 				this.sport(elLeft,elTop)
-
 				this.goShopCart.push(obj)
 			}
 		},

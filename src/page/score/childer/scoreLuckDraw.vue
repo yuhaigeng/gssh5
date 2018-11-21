@@ -1,7 +1,6 @@
 <template>
     <div class="scoreGame"> 
         <app-header :type ="headerMsg"></app-header>
-        
         <div class="main-wrap">
             <section id="scroll_section" class="scroll_container">
                 <div class="main score_active">
@@ -81,7 +80,6 @@ export default {
             insideRadius:68,//大转盘内圆的半径
             startAngle:0,//开始角度
             isRotate:false//false:停止;ture:旋转
-            
         }
     },
     components: {
@@ -90,7 +88,7 @@ export default {
     },
     mounted(){
         console.log(getUserData())
-         if (getIsLogin()) {
+        if(getIsLogin()) {
             this.tokenId = getTokenId();
             const userInfo = JSON.parse(getUserData());
         

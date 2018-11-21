@@ -11,6 +11,12 @@
 				</div>
 				<ul class="goodsDetails_box1_center">
 					<li class="clearfloat goodsDetails_box1_center_li1">
+						<div class="goodsDetails_box1_top clearfloat">
+							<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade"></span></h3>
+							<div class="goodsDetails_box1_ionc">
+								
+							</div>
+						</div>
 						<div class="goodsDetails_text" v-text="detailList.goodsShows"></div>
 						<div class="moreGoods_goods_number clearfloat">
 							<b class='bStyle' v-if="getNumText(detailList)" v-text="getNumText(detailList)" ></b>
@@ -68,13 +74,13 @@ export default {
  		}
 	},
 	watch:{
-      goShopCart: {
-        handler:function( val,oldVal ) {
-          localStorage.setItem('good',JSON.stringify(val))
-        },
-        deep:true,
-      }
-    },
+		goShopCart: {
+			handler:function( val,oldVal ) {
+				localStorage.setItem('good',JSON.stringify(val))
+			},
+			deep:true,
+		}
+	},
  	components: {
 		appFooterGoShop,
 		goodsBanner
@@ -209,10 +215,14 @@ export default {
 			this.$router.push({path:'/vip'})
 		},
 		changeCollect(){
-			if(this.isCollect){
-				this.get_goods_collect_del();
+			if(!this.logined) {
+				this.$router.push({ path:'/login'})
 			}else {
-				this.get_goods_collectAdd()
+				if(this.isCollect){
+					this.get_goods_collect_del();
+				}else {
+					this.get_goods_collectAdd()
+				}
 			}
 		},
 		submitGoShopCart(){
@@ -269,7 +279,7 @@ export default {
 					return good[0].sum;
 				}
 				return 0;
-			} else {
+			}else {
 				return 0;
 			}
 		},
@@ -550,6 +560,7 @@ export default {
 	border-bottom: 1px dashed #666;
 	font-size: 24px;
 	padding-left: 24px;
+	background-color: #fff;
 }
 .goodsDetails_box1 {
 	background: #FFF;
@@ -567,7 +578,6 @@ export default {
 }
 
 .goodsDetails_box1_title {
-	text-indent: 24px;
 	font-weight: normal;
 	color: #000;
 	width: 560px;
