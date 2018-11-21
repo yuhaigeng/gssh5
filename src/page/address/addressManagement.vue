@@ -40,11 +40,11 @@ export default {
   data() {
     return {
       headerMsg:{
-          type:"common",
-          title:'地址管理',
-          jumpAfter:'/newEditor',
-          right:'新增地址',
-          left:'返回'
+        type:"common",
+        title:'地址管理',
+        jumpAfter:'/newEditor',
+        right:'新增地址',
+        left:'返回'
       },
       firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
       userBasicParam:{
@@ -64,12 +64,14 @@ export default {
     addressShow:function(){
       this.$ajax.get(this.HOST, {
           params:Object.assign({
-              method:'user_address_show',
-              firmId:this.firmId,
+            method:'user_address_show',
+            firmId:this.firmId,
           },this. userBasicParam)
       }).then(resp => {
+        if(resp.data.statusCode == "100000"){
           this.addresses = resp.data.data
           sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
+        }
       }).catch(err => {
       });
     },
@@ -81,35 +83,36 @@ export default {
               addressId:this.addressId,
           },this.userBasicParam)
       }).then(resp => {
+        if(resp.data.statusCode == "100000"){
           this.addresses = resp.data.data
           sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
           this.addressShow()
+        }
       }).catch(err => {
       });
     },
     editor:function(item){
       if(this.$route.query.isBack){
-          this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:false}})
+        this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:false}})
       }else{
-          this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true}})
+        this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true}})
       }
-
       sessionStorage.setItem('editorAddress',JSON.stringify(item));
     },
     setDefault:function(ele,id){
-            if(ele != 1){
-                  this.addressId = id;
-                  this.default_data();
-            }
+      if(ele != 1){
+        this.addressId = id;
+        this.default_data();
+      }
     },
     goBack:function(item){
-        if(this.$route.query.isBack){
-           let oldAddress = JSON.parse(sessionStorage.getItem('address'))
-           let newAddress = {address:item}
-           let backAddress = Object.assign(oldAddress,newAddress)
-            sessionStorage.setItem('address',JSON.stringify(backAddress))
-            this.$router.go(-1)
-        }
+      if(this.$route.query.isBack){
+        let oldAddress = JSON.parse(sessionStorage.getItem('address'))
+        let newAddress = {address:item}
+        let backAddress = Object.assign(oldAddress,newAddress)
+        sessionStorage.setItem('address',JSON.stringify(backAddress))
+        this.$router.go(-1)
+      }
     }
   }
 }

@@ -27,15 +27,13 @@
                     <!--<div class="score_active_box score_active_prize">
                         <p class="title"></p>
                     </div>-->
-                    <div class="score_active_box score_active_matter  sprite_login bg_Headline">
+                    <div class="score_active_box score_active_matter sprite_login bg_Headline">
                         <p class="title">注意事项</p>
                         <ul class="box">
                             <dl v-html="titleList2"></dl>
                         </ul>
                     </div>
-                    <div class="score_active_copy">
-                        
-                    </div>
+                    <div class="score_active_copy" v-text="activeCopy"></div>
                 </div>
             </section>
 		</div>
@@ -62,9 +60,9 @@ export default {
             pageSize:this.pageSize,
             pageNo:this.pageNo,
             websiteNode:this.websiteDate['code'],
-            ggList:[],
             titleList1:null,
             titleList2:null,
+            activeCopy:null,
             count:null,
             id:null,
             ggList:[],
@@ -95,7 +93,7 @@ export default {
          if (getIsLogin()) {
             this.tokenId = getTokenId();
             const userInfo = JSON.parse(getUserData());
-            
+        
             this.userBasicParam = {
                 firmId : userInfo.firmInfoid,
                 source : 'firmId'+userInfo.firmInfoid,
@@ -103,13 +101,9 @@ export default {
                 tokenId : getTokenId()
             }
             this.draw_prizes_activity()
-           
         }
     },
     methods:{
-        gg() {
-            return ggList.account.substring(0,3)+'****'+ggList.account.substring(7,11)+'的'+ggList.websiteNodeDate+'用户获得了'+ggList.goodsName
-        },
         draw_prizes_activity:function(){
             let obj = Object.assign({
                     method: "draw_prizes_activity",
@@ -142,6 +136,7 @@ export default {
                     });
                     this.titleList1 = (gameActive.desc.toString()).replace(/\r\n/g, '<br/>')
                     this.titleList2 = (gameActive.attention.toString()).replace(/\r\n/g, '<br/>')
+                    this.activeCopy = gameActive.statement
                     this.drawRouletteWheel()
                 } else {
                     console.log(data.statusStr)
@@ -150,13 +145,11 @@ export default {
         },
         initGgList(arr){
             let ggList = [];
-            let _this = this;
             arr.forEach(element => {
                 ggList.push({
                     noticeTitle:element.account.substring(0,3)+'****'+element.account.substring(7,11)+'的'+JSON.parse(getUserData()).websiteNodeName+'用户获得了'+element.goodsName
                 })
             });
-
             this.ggList = ggList;
         },
         //绘制转盘
@@ -263,8 +256,6 @@ export default {
             });
         },
         getArrayIndex:function(arr,item){
-            console.log(arr);
-            console.log(item)
             for (let i in arr) {
                 if (arr[i] == item) {
                     return i;
@@ -272,9 +263,8 @@ export default {
             }					
         },
         rotateFn:function(item,text){
-            console.log(item)
+            // console.log(item)
             let deg = eval('this.get'+$(".item").css("transform"));//当前元素的角度
-            console.log(deg)
             let l = this.lucky.length;
             let a = item *(360/ l );
             //6个奖品
@@ -315,7 +305,6 @@ export default {
             }
             this.n = this.n + 1800;
             this.d = this.n;
-            console.log(this.n)
             $(".item").removeClass("animation_name").css({
                 "webkitTransform":'rotate('+this.n+'deg)',
                 "MozTransform":'rotate('+this.n+'deg)',
@@ -352,15 +341,19 @@ export default {
         },
         btn_Start() {
             if(this.count == null) {
-                console.log("暂无抽奖活动")
+                this.$messagebox({
+                    title:'',
+                    message: '暂无抽奖活动'
+                })
             }else {
                 if(this.count <= 0) {
-                    console.log("果币不足")
+                    this.$messagebox({
+                        title:'',
+                        message: '果币不足'
+                    })
                 }else {
-                    console.log(this.isRotate)
                     if(this.isRotate)return;
                     this.isRotate = !this.isRotate;
-                    console.log(this.isRotate)
                     this.draw_prizes($(this).attr('data'))
                 }
             }

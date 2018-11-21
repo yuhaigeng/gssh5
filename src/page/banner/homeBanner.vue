@@ -1,7 +1,7 @@
 <template>
     <div class="swiper-container " :style="{height:height}">
         <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(item,index) in imgList" :key="index"  @click="jumpRouter(item.typeCode, item.linkUrl, item.adTime)">
+            <div class="swiper-slide" v-for="(item,index) in imgList" :key="index"  @click="jumpRouter(item.jumpType, item.linkUrl, item.adTime)">
                 <!-- 第一张喝醉后一张不使用懒加载 解决 与swiper 冲突 -->
                 <img :src="item.adLogo" alt=""  v-if="index==0||index==(imgList.length-1)">
                 <img v-lazy="item.adLogo" v-else>

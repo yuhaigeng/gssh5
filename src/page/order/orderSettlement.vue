@@ -120,13 +120,13 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
                         code:this.websiteNode + this.descCode
                     }
                 }).then(resp => {
+                    if(resp.data.statusCode ==  "100000"){
                       resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
                       resp.data.data.noticeTitle =  resp.data.data.title;
                       resp.data.data.alertType = 1;
                       this.noticeInfoList = resp.data.data;
-                      console.log(this.noticeInfoList)
+                    }
                 }).catch(err => {
-                    console.log('请求失败：'+ err.data.statusCode);
                 });
             },
             orderSubmit:function(){

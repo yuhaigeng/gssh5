@@ -19,12 +19,12 @@
     name:'alert',
     props:["noticeInfoList"],
     data() {
-        return {}
+      return {}
     },
     methods:{
-        exchange:function() {
-          this.$emit('listenClose',true)
-        }
+      exchange:function() {
+        this.$emit('listenClose',true)
+      }
     }
   }
 </script>

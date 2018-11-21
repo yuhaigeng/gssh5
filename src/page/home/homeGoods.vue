@@ -39,19 +39,18 @@
     name:"homeGoods",
     props:['mainActivityList','isLogin'],
     data() {
-          return {
-
-          }
+      return {
+      }
     },
     methods:{
-        goDetails:function(item){
-            const id = item.goodsId;
-            this.$router.push({path:'/detail/'+id})
-        },
-        goMore:function (item) {
-            const code = item.linkUrl.trim().split('&')[1];
-            this.$router.push({path:'/more',query:{typeCode:code}})
-        }
+      goDetails:function(item){
+        const id = item.goodsId;
+        this.$router.push({path:'/detail/'+id})
+      },
+      goMore:function (item) {
+        const code = item.linkUrl.trim().split('&')[1];
+        this.$router.push({path:'/more',query:{typeCode:code}})
+      }
     }
   }
 </script>
