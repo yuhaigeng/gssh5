@@ -113,13 +113,13 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
                         code:this.websiteNode + this.descCode
                     }
                 }).then(resp => {
+                    if(resp.data.statusCode ==  "100000"){
                       resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
                       resp.data.data.noticeTitle =  resp.data.data.title;
                       resp.data.data.alertType = 1;
                       this.noticeInfoList = resp.data.data;
-                      console.log(this.noticeInfoList)
+                    }
                 }).catch(err => {
-                    console.log('请求失败：'+ err.data.statusCode);
                 });
             },
             orderSubmit:function(){
@@ -135,12 +135,10 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
                         orderFrom:"H5",
                     }, this.userBasicParam)
                 }).then(resp => {
-                  console.log(resp.data)
                   if(resp.data.statusCode == "100000" ||  resp.data.statusCode == "100903" ||  resp.data.statusCode == '100907' ){
                       let a =  resp.data
                       sessionStorage.setItem('statusData',JSON.stringify(a))
                       this.$router.push({path:'/orderResult'})
-                      // sessionStorage.removeItem('address')
                   }
                 }).catch(err => {
                 });
@@ -162,7 +160,6 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
                         duration: 2000,
                     })
               }
-
             },
             priceTotal:function(item){
                   return  (parseFloat(item.price)*parseInt(item.sum)).toFixed(2);

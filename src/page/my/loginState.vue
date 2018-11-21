@@ -73,9 +73,14 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                        faceImgUrl:this.src
                     }, this.userBasicParam )
                 }).then(resp => {
-                        console.log(resp.data)
+                  if(resp.data.statusCode == "100000"){
+                    this.$toast({
+                      message : '更换成功',
+                      position: 'boottom',
+                      duration: 2000,
+                    })
+                  }
                 }).catch(err => {
-
                 });
             },
             uploadImg(e){

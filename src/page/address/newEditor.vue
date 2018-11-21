@@ -14,7 +14,6 @@
                 </li>
                 <li class="clearfloat">
                     <label>选择省市：</label><input type="text" id="province"  v-model="city" placeholder="点击选择省市" readonly="readonly" @click="selCity" />
-
                 </li>
                 <li>
                     <label>详细地址：</label><input type="text"   id="edit_county" v-model="street" placeholder="请输入街道地址(无需输入城区)" >
@@ -79,29 +78,28 @@ export default {
       isShow:false,
       columns:3,
       isNew:this.$route.query.isEdit // 修改， 新建弹框提示
-
     }
   },
   watch:{
     phone:function(val){
       var n = val.replace(/\D/g,"");
-        if (n == 0) {
-          this.phone ='';
+      if (n == 0) {
+        this.phone ='';
       }else{
-          this.phone =n;
+        this.phone =n;
       }
-        if(this.phone.length ==0){
-          this.tipsMsg  = null;
+      if(this.phone.length ==0){
+        this.tipsMsg  = null;
       }else{
-          if(this.phone.length == 11){
-              if(!this.phoneNumberReg.test(this.phone)){
-                      this.tipsMsg = "请输入正确的手机号！"
-              }else{
-                  this.tipsMsg  = null;
-              }
+        if(this.phone.length == 11){
+          if(!this.phoneNumberReg.test(this.phone)){
+            this.tipsMsg = "请输入正确的手机号！"
           }else{
-              this.tipsMsg = "请输入完整的手机号！"
+            this.tipsMsg  = null;
           }
+        }else{
+          this.tipsMsg = "请输入完整的手机号！"
+        }
       }
     }
   },
@@ -129,7 +127,6 @@ export default {
             address:this.street,
           },this.userBasicParam)
         }).then(resp => {
-
           if(resp.data.statusCode == "100000"){
             this.$toast({
               message : this.isNew ? '修改成功':'新建成功',
@@ -143,10 +140,8 @@ export default {
               position: 'center',
               duration: 2000,
             })
-
           }
         }).catch(err => {
-
         });
     },
     cityApi:function(){
@@ -167,7 +162,6 @@ export default {
             }
           }
         }).catch(err => {
-
         });
     },
     delApi:function(){
@@ -185,7 +179,6 @@ export default {
                 })
           }
         }).catch(err => {
-
         });
     },
     // 删除地址
@@ -227,11 +220,10 @@ export default {
         })
       }else{
         this.update()
-
       }
     },
     close(){
-        this.isShow = false;
+      this.isShow = false;
     },
     confirmFn(val){
       this.isShow = false;

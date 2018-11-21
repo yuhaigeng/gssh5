@@ -44,8 +44,7 @@ export default {
           }
       },
       mounted(){
-          console.log( JSON.parse(localStorage.getItem("user_data")).firmInfoid)
-          console.log(localStorage.getItem("tokenId"))
+
       },
       methods:{
         login_out:function(){
@@ -54,14 +53,14 @@ export default {
                     method:'user_logout',
                 },this.userBasicParam)
             }).then(resp => {
-                    console.log(resp.data)
-                    localStorage.clear();
-                    this.$router.push({path:'/my',query:{isLogin:false}})
-                    if (!sessionStorage.getItem('system')) {
-                        getSystem(this)
-                    }
+              if(resp.data.statusCode ==  "100000"){
+                  localStorage.clear();
+                  this.$router.push({path:'/my',query:{isLogin:false}})
+                  if (!sessionStorage.getItem('system')) {
+                      getSystem(this)
+                  }
+              }
             }).catch(err => {
-                console.log('请求失败：'+ err.statusCode);
             });
         }
 

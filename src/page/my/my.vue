@@ -88,29 +88,28 @@ export default {
    methods:{
        personApi:function(){
             this.$ajax.get(this.HOST, {
-                    params:$.extend({
-                       method:this.method[0],
-				      firmId:this.firmId
-                    },this.userBasicParam)
+              params:Object.assign({
+                method:this.method[0],
+                firmId:this.firmId
+              },this.userBasicParam)
             }).then(resp => {
-                console.log(resp.data)
-                this. userInfo = resp.data.data
+              if(resp.data.statusCode ==  "100000"){
+                this.userInfo = resp.data.data
+              }
             }).catch(err => {
-                console.log('请求失败：'+ err.statusCode);
             });
        },
        firm_vip_info:function(){
             this.$ajax.get(this.HOST, {
-                    params:{
-                       method:this.method[1],
-				                firmId:this.firmId
-                    }
+              params:{
+                  method:this.method[1],
+                  firmId:this.firmId
+              }
             }).then(resp => {
-                console.log(resp.data)
-                this.userVipInfo=resp.data.data
-
+               if(resp.data.statusCode ==  "100000"){
+                 this.userVipInfo=resp.data.data
+               }
             }).catch(err => {
-                console.log('请求失败：'+ err.statusCode);
             });
        }
    }

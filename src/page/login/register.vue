@@ -16,11 +16,11 @@
                 <span class="left">联系人：</span><input type="text" id="shopPeople" v-model="linkMan" placeholder="请输入联系人" @focus="focus" @blur="blur" />
               </li>
               <li>
-                <span class="left">选择省市：</span><input type="text" id="province" placeholder="点击选择省市"  v-model="city" readonly="readonly" @focus="focus" @blur="blur" @click="selCity" @input = "cityValue" />
+                <span class="left">选择省市：</span><input type="text" id="province" placeholder="点击选择省市"  v-model="city" readonly="readonly" @focus="focus" @blur="blur" @click="selCity"  />
 
               </li>
               <li>
-                <span class="left">选择地址：</span><input type="text" id="street" placeholder="点击选择详细地址"  v-model="street" readonly="readonly"   @focus="focus" @blur="blur" @click="selStreet" @input = "streetValue"/><span class='msg' v-text="streetMag" ></span>
+                <span class="left">选择地址：</span><input type="text" id="street" placeholder="点击选择详细地址"  v-model="street" readonly="readonly"   @focus="focus" @blur="blur" @click="selStreet" /><span class='msg' v-text="streetMag" ></span>
 
               </li>
               <li>
@@ -61,21 +61,12 @@
         :show="isShow"
         :columns="columns"
         :selectData="cityData"
+        :defaultData="defaultData"
         @cancel="close"
         @confirm="confirmFn"
       >
       </vuePickers>
-       <vuePickers
-        v-if="streetData"
-        :show="isShow1"
-        :columns="columns1"
-        :defaultData="defaultData"
-        :selectData="streetData"
-        @cancel="close1"
-        @confirm="confirmFn1"
-      >
-      </vuePickers>
-      <div class="myBg" v-show="isShow || isShow1"></div>
+      <div class="myBg" v-show="isShow"></div>
 
   </div>
 </template>
@@ -85,332 +76,271 @@ import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 import vuePickers from 'vue-pickers';
-// import {LArea} from '../../common/LArea.js' ;
-// import {LArea1} from '../../common/LArea1.js';
-// import '@/common/LArea.css'
-    export default {
-        name:'register',
-        components:{
-            appHeader,
-            agreementAlert,
-            vuePickers
-
-        },
-         data() {
-             return {
-                headerMsg:{
-                    type:"common",
-                    title:'申请服务',
-                    left:'返回'
-                },
-                firmName:null, //店铺名称
-                linkMan :null,  //联系人
-                address:null,  // 店铺地址
-                shopPhone:null, //联系电话验证
-                phoneMsg:null, //注册提示文本
-                city:null,   //选择城市
-                cities:null,
-                street:null, //街道
-                road:null,   //详细地址
-                province:null,
-                county:null,
-                streetMag:null,
-                description:null, //描述
-                recommendId:null,  //推荐人ID
-                recommendName:null, //店铺名称
-                isMainHidden:false,  //注册提交按钮
-                phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
-                isBottomHidden:false,  //  协议是否显示
-                msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
-                websitData:{
-                    "3201":"南京站",
-                    "3301":"杭州站",
-                    '3302':'宁波站'
-                },
-                websiteNode:this.websiteDate.code,
-                noticeInfoList:null,
-                descCode:null,
-                cityData:{
-                    data1: [],
-                    data2: [],
-                    data3: []
-                  },
-                isShow:false,
-                columns:3,
-                streetData:{
-                  data1:[]
-                },
-                isShow1:false,
-                columns1:1,
-                defaultData:[
-                      {
-                         text:"",
-                         value:""
-
-                      }
-                ]
-
-
-             }
-         },
-         watch:{
-             shopPhone:function(val){
-					var n = val.replace(/\D/g,"");
-		        	if (n == 0) {
-		            	this.shopPhone='';
-		            }else{
-		            	this.shopPhone=n;
-                    }
-                    if(this. shopPhone.length == 0){
-                        this.phoneMsg  = null;
-                    }else{
-                        if( this.shopPhone.length == 11){
-                            if(!this.phoneNumberReg.test(n)){
-                                this.phoneMsg = "请输入正确的手机号！"
-                            }else{
-
-                                this.phoneMsg  = null;
-                            }
-                        }else{
-                            this.phoneMsg= "请输入完整的手机号！"
-
-                        }
-                    }
-                },
-         },
-         mounted:function(){
-             this.cityApi()
-         },
-         methods:{
-            desc_data:function(){
-                 this.$ajax.get(this.HOST, {
-                    params:{
-                        method:'gss_desc',
-                        websiteNode:this.websiteNode,
-                        code:this.websiteNode + this.descCode
-                    }
-                }).then(resp => {
-                      resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                      resp.data.data.noticeTitle =  resp.data.data.title;
-                      resp.data.data.alertType = 1;
-                      this.noticeInfoList = resp.data.data;
-                      console.log(this.noticeInfoList)
-                }).catch(err => {
-                    console.log('请求失败：'+ err.data.statusCode);
-                });
+  export default {
+      name:'register',
+      components:{
+          appHeader,
+          agreementAlert,
+          vuePickers
+      },
+      data() {
+          return {
+            headerMsg:{
+                type:"common",
+                title:'申请服务',
+                left:'返回'
             },
-            cityApi:function(){
-                this.$ajax.get(this.HOST, {
-                    params:{
-                       method:'get_pcc',
-                       websiteNode:this.websiteNode,
-                    }
-                }).then(resp => {
-                  if(resp.data.statusCode == "100000"){
-                    let data = resp.data.data
-                    this.cityData.data1.push({'text':data[0].name,'value':data[0].code})
-                    let data1 = data[0].cities;
-                    this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
-                    let data2 = data1[0].cities;
-                    for(let i = 0 ; i < data2.length; i++){
-                        this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
-                    }
-                  }
-                }).catch(err => {
-                });
+            firmName:null, //店铺名称
+            linkMan :null,  //联系人
+            address:null,  // 店铺地址
+            shopPhone:null, //联系电话验证
+            phoneMsg:null, //注册提示文本
+            city:null,   //选择城市
+            cities:null,
+            street:null, //街道
+            road:null,   //详细地址
+            province:null,
+            county:null,
+            streetMag:null,
+            description:null, //描述
+            recommendId:null,  //推荐人ID
+            recommendName:null, //店铺名称
+            isMainHidden:false,  //注册提交按钮
+            phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
+            isBottomHidden:false,  //  协议是否显示
+            msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
+            websitData:{
+                "3201":"南京站",
+                "3301":"杭州站",
+                '3302':'宁波站'
             },
-            streetApi:function(code){
-                this.$ajax.get(this.HOST, {
-                    params:{
-                       method:'get_street',
-				               code:code
-                    }
-                }).then(resp => {
-                  if(resp.data.statusCode == "100000"){
-                       let data = resp.data.data;
-                       console.log(data.length)
-                       if(data.length){
-                          for(let i = 0 ; i < data.length; i++){
-                            this.streetData.data1.push({'text':data[i].name,'value':data[i].code})
-                         }
-
-                          // console.log(this.streetData)
-                       }else{
-                         this.streetData.data1= [{'text':'暂无信息','value':''}]
-                          console.log(this.streetData)
-                       }
-
-
-                  }
-                    //  this.streetData  = resp.data.data
-                }).catch(err => {
-                });
-            },
-            rgister:function(){
-                 this.$ajax.get(this.HOST, {
-                    params:{
-                        method:'firm_register',
-                        firmName:this.firmName,
-                        address:this.address,
-                        linkTel:this.shopPhone,
-                        linkMan:this.linkMan,
-                        description:this.description,
-                        websiteNode:this.websiteNode,
-                        province:this.province,
-                        city:this.city,
-                        county:this.county,
-                        street:this.street,
-                        road:this.road,
-                        referrerId:this.recommendId,
-                        referrer:this.recommendName
-                    }
-                }).then(resp => {
-                    this.isMainHidden = true;
-                    isBottomHidden = true;
-                }).catch(err => {
-                    console.log('请求失败');
-                });
-            },
-            focus:function(){
-              this.isBottomHidden = true;
-            },
-            blur:function(){
-              this.isBottomHidden = false;
-            },
-            agreement:function(num){
-                if(num == 0){
-                    this.descCode = "#HZ-DESC";
-                    this.desc_data()
+            websiteNode:this.websiteDate.code,
+            noticeInfoList:null,
+            descCode:null,
+            cityData:{},
+            isShow:false,
+            columns:null,
+            defaultData:[]
+          }
+      },
+        watch:{
+          shopPhone:function(val){
+            var n = val.replace(/\D/g,"");
+            if (n == 0) {
+              this.shopPhone='';
+            }else{
+              this.shopPhone=n;
+            }
+            if(this. shopPhone.length == 0){
+              this.phoneMsg  = null;
+            }else{
+              if( this.shopPhone.length == 11){
+                if(!this.phoneNumberReg.test(n)){
+                  this.phoneMsg = "请输入正确的手机号！"
                 }else{
-                    this.descCode = "#TJR-DESC";
-                    this.desc_data()
+                  this.phoneMsg  = null;
                 }
-            },
-             closeAlert:function(){
-                this.noticeInfoList = null;
-            },
-            selCity:function(){
-                this.isShow = true;
-            },
+              }else{
+                this.phoneMsg= "请输入完整的手机号！"
 
-            selStreet:function(){
-               this.isShow1 = true;
-              // const v = document.getElementById("value1").value
-              //   var code = v.split(",");
-              //   if(v){
-              //       this.streetMag = null;
-              //        document.getElementsByClassName("myBg")[0].style.visibility="visible";//隐藏遮罩
-              //   }else{
-
-              //        this.streetMag = "请先选择城市!!";
-
-              //   }
-            },
-            // newLArea:function(LAreaData){
-            //     var area1 = new LArea();
-            //     area1.init({
-            //         'trigger': '#province', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
-            //         'valueTo': '#value1', //选择完毕后id属性输出到该位置
-            //         'keys': {
-            //             id: 'code',
-            //             name: 'name'
-            //         }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
-            //         'type': 1, //数据源类型
-            //         'data': LAreaData, //数据源
-            //     });
-            //     area1.value=[0,0,0];//控制初始位置，注意：该方法并不会影响到input的value
-            // },
-            // streetInit:function(){
-            //     this.area2.init({
-            //         'trigger': '#street', //触发选择控件的文本框，同时选择完毕后name属性输出到该位置
-            //         'valueTo': '#value2', //选择完毕后id属性输出到该位置
-            //         'keys': {
-            //             id: 'code',
-            //             name: 'name'
-            //         }, //绑定数据源相关字段 id对应valueTo的value属性输出 name对应trigger的value属性输出
-            //         'type': 1, //数据源类型
-            //         'data': this.streetData //数据源
-            //     });
-            //       console.log( this.streetData)
-            //     this.area2.value=[0,0,0];//控制初始位置，注意：该方法并不会影响到input的value
-            // },
-            cityValue:function(){
-                const v = document.getElementById("value1").value
-                const arr1 = v.split(",");
-                this.province = arr1[0];
-                this.cities = arr1[1];
-                this.county = arr1[2];
-                if (this.county != "") {
-                  this.streetApi(this.county);
-                }
-            },
-            streetValue:function(){
-                const v = document.getElementById("value1").value
-                var arr2 = v.split(",");
-				        this.street = arr2[0];
-                this.road = arr2[1];
-            },
-            submitBtn:function(){
-                if(this.firmName == null){
-                    this.$toast({
-                      message :'请输入店铺名字' ,
-                      position: 'center',
-                      duration: 2000,
-                    })
-
-                } else if (this.address == null) {
-                    this.$toast({
-                      message :'请输入地址' ,
-                      position: 'center',
-                      duration: 2000,
-                    })
-                } else if (this.shopPhone == null) {
-                    this.$toast({
-                      message :'请输入电话' ,
-                      position: 'center',
-                      duration: 2000,
-                    })
-                } else if (this.linkMan == null) {
-                    this.$toast({
-                      message :'请输入联系人' ,
-                      position: 'center',
-                      duration: 2000,
-                    })
-                } else{
-                   this.rgister()
-                }
-            },
-            close(){
-                this.isShow = false;
-            },
-            close1(){
-                this.isShow1 = false;
-            },
-            confirmFn(val){
-              this.isShow = false;
-              let a = [],
-                  b = [];
-              for( var key in val){
-                a.push(val[key].text)
-                b.push(val[key].value)
               }
+            }
+          }
+        },
+        mounted:function(){
+        },
+        methods:{
+          desc_data:function(){
+              this.$ajax.get(this.HOST, {
+                params:{
+                  method:'gss_desc',
+                  websiteNode:this.websiteNode,
+                  code:this.websiteNode + this.descCode
+                }
+              }).then(resp => {
+                if(resp.data.statusCode == "100000"){
+                  resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+                  resp.data.data.noticeTitle =  resp.data.data.title;
+                  resp.data.data.alertType = 1;
+                  this.noticeInfoList = resp.data.data;
+                }
+              }).catch(err => {
+              });
+          },
+          cityApi:function(){
+              this.$ajax.get(this.HOST, {
+                params:{
+                  method:'get_pcc',
+                  websiteNode:this.websiteNode,
+                }
+              }).then(resp => {
+                if(resp.data.statusCode == "100000"){
+                  this.cityData ={
+                    data1:[],
+                    data2:[],
+                    data3:[],
+                  }
+                  this.columns = 3
+                  let data = resp.data.data
+                  this.cityData.data1.push({'text':data[0].name,'value':data[0].code})
+                  let data1 = data[0].cities;
+                  this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
+                  let data2 = data1[0].cities;
+                  for(let i = 0 ; i < data2.length; i++){
+                      this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
+                  }
+                }
+              }).catch(err => {
+              });
+          },
+          streetApi:function(code){
+              this.$ajax.get(this.HOST, {
+                params:{
+                    method:'get_street',
+                    code:code
+                }
+              }).then(resp => {
+                if(resp.data.statusCode == "100000"){
+                  let data = resp.data.data;
+                  this.cityData ={
+                    data1: []
+                  },
+                  this.columns = 1
+                  if(data.length){
+                    for(let i = 0 ; i < data.length; i++){
+                      this.cityData.data1.push({'text':data[i].name,'value':data[i].code})
+                    }
+                  }else{
+                    this.cityData.data1= [{'text':'','value':''}]
+                  }
+                }
+              }).catch(err => {
+              });
+          },
+          rgister:function(){
+              this.$ajax.get(this.HOST, {
+                params:{
+                    method:'firm_register',
+                    firmName:this.firmName,
+                    address:this.address,
+                    linkTel:this.shopPhone,
+                    linkMan:this.linkMan,
+                    description:this.description,
+                    websiteNode:this.websiteNode,
+                    province:this.province,
+                    city:this.city,
+                    county:this.county,
+                    street:this.street,
+                    road:this.road,
+                    referrerId:this.recommendId,
+                    referrer:this.recommendName
+                }
+              }).then(resp => {
+                if(resp.data.statusCode == "100000"){
+                  this.isMainHidden = true;
+                  isBottomHidden = true;
+                  this.$toast({
+                    message : resp.data.statusStr,
+                    position: 'boottom',
+                    duration: 2000,
+                   })
+                }else{
+                  this.$toast({
+                    message : resp.data.statusStr,
+                    position: 'boottom',
+                    duration: 2000,
+                   })
+                }
+              }).catch(err => {
+              });
+          },
+          focus:function(){
+            this.isBottomHidden = true;
+          },
+          blur:function(){
+            this.isBottomHidden = false;
+          },
+          agreement:function(num){
+            if(num == 0){
+              this.descCode = "#HZ-DESC";
+              this.desc_data()
+            }else{
+              this.descCode = "#TJR-DESC";
+              this.desc_data()
+            }
+          },
+          closeAlert:function(){
+            this.noticeInfoList = null;
+          },
+          selCity:function(){
+            this.defaultData= [
+              {text:'浙江省',value:33},
+              {text:'杭州市'},
+            ]
+            this.cityApi()
+            this.isShow = true;
+          },
+          selStreet:function(){
+            if(this.city){
+              this.isShow = true;
+              this.streetMag = null;
+            }else{
+              this.streetMag = "请先选择城市!!";
+            }
+          },
+          submitBtn:function(){
+              if(this.firmName == null){
+                  this.$toast({
+                    message :'请输入店铺名字' ,
+                    position: 'center',
+                    duration: 2000,
+                  })
+              } else if (this.address == null) {
+                  this.$toast({
+                    message :'请输入地址' ,
+                    position: 'center',
+                    duration: 2000,
+                  })
+              } else if (this.shopPhone == null) {
+                  this.$toast({
+                    message :'请输入电话' ,
+                    position: 'center',
+                    duration: 2000,
+                  })
+              } else if (this.linkMan == null) {
+                  this.$toast({
+                    message :'请输入联系人' ,
+                    position: 'center',
+                    duration: 2000,
+                  })
+              } else{
+                  this.rgister()
+              }
+          },
+          close(){
+            this.isShow = false;
+          },
+          confirmFn(val){
+            this.isShow = false;
+            let a = [],
+                b = [];
+            for( var key in val){
+              a.push(val[key].text)
+              b.push(val[key].value)
+            }
+            if( this.columns == 3){
               this.city =  a.join(',')
               this.countyId = b[2];
-              this.streetData.data1 = []
+              this.province = b[0];
+              this.county = a[2];
               this.streetApi(this.countyId)
-            },
-            confirmFn1(val){
-              this.isShow1 = false;
-                let a = [],
-                    b = [];
-                for( var key in val){
-                  a.push(val[key].text)
-                  b.push(val[key].value)
-                }
-               this.street =  a.join('')
+              this.defaultData= []
+            }else{
+              this.street = a[0]
             }
-         }
-    }
+          }
+        }
+  }
 </script>
 
 <style scoped>

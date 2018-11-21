@@ -82,24 +82,24 @@ export default {
         login:function(val,oldval){
             if(val == 0){
                 if(this.message != null && this.code != null){
-                    if( this.message.length == 11 && this.code.length == 6){
-                        this.isActive = true;
-                    }else{
-                        this.isActive = false;
-                    }
-                }else{
+                  if( this.message.length == 11 && this.code.length == 6){
+                    this.isActive = true;
+                  }else{
                     this.isActive = false;
+                  }
+                }else{
+                  this.isActive = false;
                 }
             }else{
                 if(this.account != null && this.passWord !=null){
-                    if(this.account.length == 11 && this.passWord.length >= 6){
-                        this.isActive = true;
-                    }else{
-                        this.isActive = false;
-                    }
+                  if(this.account.length == 11 && this.passWord.length >= 6){
+                    this.isActive = true;
+                  }else{
+                    this.isActive = false;
+                  }
                 }else{
-                        this.isActive = false;
-                    }
+                  this.isActive = false;
+                }
             }
         },
         message: function(val) {
@@ -113,15 +113,15 @@ export default {
                 this.tipsMsg  = null;
                 this.isActive = false;
             }else{
-                if( this.message.length == 11){
-                    if(!this.phoneNumberReg.test(this.message)){
-                            this.tipsMsg = "请输入正确的手机号！"
-                    }else{
-                        this.tipsMsg  = null;
-                    }
+              if( this.message.length == 11){
+                if(!this.phoneNumberReg.test(this.message)){
+                        this.tipsMsg = "请输入正确的手机号！"
                 }else{
-                    this.tipsMsg = "请输入完整的手机号！"
+                    this.tipsMsg  = null;
                 }
+              }else{
+                  this.tipsMsg = "请输入完整的手机号！"
+              }
             }
         },
         account:function(val){
@@ -135,27 +135,25 @@ export default {
                 this.tipsMsg  = null;
                 this.isActive = false;
             }else{
-                if( this.account.length == 11){
-                    if(this.passWord.length >= 6){
-                         this.isActive = true;
-                    }
-
-                    if(!this.phoneNumberReg.test(this.account)){
-                            this.tipsMsg = "请输入正确的手机号！"
-                    }else{
-                        this.tipsMsg  = null;
-                    }
-                }else{
-                    this.tipsMsg = "请输入完整的手机号！"
-
+              if( this.account.length == 11){
+                if(this.passWord.length >= 6){
+                      this.isActive = true;
                 }
+                if(!this.phoneNumberReg.test(this.account)){
+                        this.tipsMsg = "请输入正确的手机号！"
+                }else{
+                    this.tipsMsg  = null;
+                }
+              }else{
+                  this.tipsMsg = "请输入完整的手机号！"
+              }
             }
         },
         passWord:function(val){
             if(this.account.length == 11 && val.length >= 6 ){
-                    this.isActive = true;
+              this.isActive = true;
             }else{
-                     this.isActive = false
+              this.isActive = false
             }
         },
         code:function(val){
@@ -173,15 +171,28 @@ export default {
     methods:{
         getCode:function(){
             this.$ajax.get(this.HOST, {
-                params:{
-                    method:'gss_sms',
-            mobile: this.message
-                }
+              params:{
+                method:'gss_sms',
+                mobile: this.message
+              }
             }).then(resp => {
-                console.log(resp.data)
-
+              if(resp.data.statusCode == "100000"){
+                this.isHidden = false
+                this.$toast({
+                  message : resp.data.statusStr,
+                  position: 'boottom',
+                  duration: 2000,
+                })
+              }else{
+                this.isHidden = true;
+                this.$toast({
+                  message : resp.data.statusStr,
+                  position: 'boottom',
+                  duration: 2000,
+                })
+              }
             }).catch(err => {
-                console.log('请求失败：'+ err.statusCode);
+
             });
         },
         login_up:function(){
@@ -193,61 +204,64 @@ export default {
                     mobile:this.login ? this.account : this.message
                 }, this.parameter )
             }).then(resp => {
-                    console.log(resp.data)
-                    this.setData(resp.data)
-                    setTimeout(() =>{
-                      this.$router.push({path:'/my'})
-                    },500)
+              if(resp.data.statusCode == "100000"){
+                this.setData(resp.data)
+                setTimeout(() =>{
+                  this.$router.push({path:'/my'})
+                },500)
+                this.$toast({
+                  message : '登录成功',
+                  position: 'boottom',
+                  duration: 2000,
+                })
+              }
             }).catch(err => {
-                console.log('请求失败：'+ err.statusCode);
             });
         },
         desc_data:function(){
               this.$ajax.get(this.HOST, {
                 params:{
-                    method:'gss_desc',
-                    websiteNode:this.websiteNode,
-                    code:this.websiteNode + this.descCode
+                  method:'gss_desc',
+                  websiteNode:this.websiteNode,
+                  code:this.websiteNode + this.descCode
                 }
             }).then(resp => {
-                  resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                  resp.data.data.noticeTitle =  resp.data.data.title;
-                  resp.data.data.alertType = 1;
-                  this.noticeInfoList = resp.data.data;
+              if(resp.data.statusCode == "100000"){
+                resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+                resp.data.data.noticeTitle =  resp.data.data.title;
+                resp.data.data.alertType = 1;
+                this.noticeInfoList = resp.data.data;
+              }
             }).catch(err => {
-                console.log('请求失败：'+ err.data.statusCode);
             });
         },
         login_btn:function(e){
             var target = event.target;
             var isActive =target.classList.contains("active")
             if (isActive) {
-                      if(this.login == 0){
-                          this.parameter = {smsCode:this.code}
-                      }else{
-                          this.parameter = {password:this.$md5(this.passWord)}
-                      }
-                      this.login_up();
-                          //    console.log("登录")
+              if(this.login == 0){
+                this.parameter = {smsCode:this.code}
+              }else{
+                this.parameter = {password:this.$md5(this.passWord)}
+              }
+              this.login_up();
             }
         },
         get_verify_code:function(){
-                    console.log(this.tipsMsg)
-                const TIME_COUNT = 60;
-                if (!this.tipsMsg && this.message) {
-                    this.getCode();
-                    this.count = TIME_COUNT;
-                    this.isHidden = false
-                    this.timer = setInterval(() => {
-                    if (this.count > 0 && this.count <= TIME_COUNT) {
-                        this.count--;
-                    }else{
-                        this.isHidden = true;
-                        clearInterval(this.timer);
-                        this.timer = null;
-                        }
-                      }, 1000)
+          const TIME_COUNT = 60;
+          if (!this.tipsMsg && this.message) {
+              this.getCode();
+              this.count = TIME_COUNT;
+              this.timer = setInterval(() => {
+                if (this.count > 0 && this.count <= TIME_COUNT) {
+                    this.count--;
+                }else{
+                    this.isHidden = true;
+                    clearInterval(this.timer);
+                    this.timer = null;
                 }
+              }, 1000)
+          }
         },
         focus:function(){
           this.isBottomHidden = true;
@@ -256,27 +270,27 @@ export default {
           this.isBottomHidden = false;
         },
         agreement:function(){
-              this.desc_data()
+          this.desc_data()
         },
         closeAlert:function(){
-            this.noticeInfoList = null;
+          this.noticeInfoList = null;
         },
         setData:function(resp){
-            let user_data={
-                    cuserInfoid:resp.data.cuserInfo.id,
-                    firmInfoid:resp.data.firmInfo.id,
-                    firmName:resp.data.firmInfo.firmName,
-                    linkTel:resp.data.cuserInfo.mobile,
-                    score:resp.data.firmInfo.score,
-                    next:resp.data.firmInfo.next,
-                    userGrade:resp.data.firmInfo.userGrade,
-                    websiteNode:resp.data.firmInfo.websiteNode,
-                    faceImgUrl:resp.data.firmInfo.faceImgUrl,
-                    websiteNodeName:resp.data.firmInfo.websiteNodeName
-                }
-                localStorage.setItem("user_data",JSON.stringify(user_data));
-                localStorage.setItem("tokenId",resp.data.tokenId);
-                localStorage.setItem("secretKey",resp.data.secretKey);
+          let user_data={
+            cuserInfoid:resp.data.cuserInfo.id,
+            firmInfoid:resp.data.firmInfo.id,
+            firmName:resp.data.firmInfo.firmName,
+            linkTel:resp.data.cuserInfo.mobile,
+            score:resp.data.firmInfo.score,
+            next:resp.data.firmInfo.next,
+            userGrade:resp.data.firmInfo.userGrade,
+            websiteNode:resp.data.firmInfo.websiteNode,
+            faceImgUrl:resp.data.firmInfo.faceImgUrl,
+            websiteNodeName:resp.data.firmInfo.websiteNodeName
+          }
+          localStorage.setItem("user_data",JSON.stringify(user_data));
+          localStorage.setItem("tokenId",resp.data.tokenId);
+          localStorage.setItem("secretKey",resp.data.secretKey);
         }
     }
 
