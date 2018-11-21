@@ -6,25 +6,25 @@
         </app-header>
         <div class="main-wrap index-wrap">
           <div class="main">
-                  <div id="banner-wrap common-wrap">
-                      <banner :imgList = "topList" v-if="topList.length"></banner>
-                  </div>
-                  <div class="gonggao-wrap sprite icon_voice">
-                      <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
-                  </div>
-                  <div class="index-advertisement-wrap">
-                      <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter(centerList[0].typeCode, centerList[0].linkUrl, centerList[0].adTime)">
-                          <img v-lazy="centerList[0].adLogo" alt="">
-                      </div>
-                  </div>
-                  <div class="center_wrap">
-                      <div class="center">
-                          <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin'></homeGoods>
-                          <div class="index-bottom">
-                              <span class="index-bottom-box"><span class="index-bottom-text" v-text="'已经到底了'" @click="click()"></span></span>
-                          </div>
-                      </div>
-                  </div>
+            <div id="banner-wrap common-wrap">
+                <banner :imgList = "topList" v-if="topList.length"></banner>
+            </div>
+            <div class="gonggao-wrap sprite icon_voice">
+                <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
+            </div>
+            <div class="index-advertisement-wrap">
+                <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter(centerList[0].jumpType, centerList[0].linkUrl, centerList[0].adTime)">
+                    <img v-lazy="centerList[0].adLogo" alt="">
+                </div>
+            </div>
+            <div class="center_wrap">
+                <div class="center">
+                    <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin'></homeGoods>
+                    <div class="index-bottom">
+                        <span class="index-bottom-box"><span class="index-bottom-text" v-text="'已经到底了'" @click="click()"></span></span>
+                    </div>
+                </div>
+            </div>
           </div>
         </div>
     <app-footer :isNew = 'isNew' :isLogin = "isLogin"></app-footer>
@@ -107,7 +107,6 @@ export default {
       }
     },
     methods:{
-        
         click() {
             //   this.$toast({
             //       message : 'hello world',
@@ -125,76 +124,70 @@ export default {
                 })
           },
           //获取首页数据
-          get_main_page:function () {
+        get_main_page:function () {
               this.$ajax.get('/api', {
                   params:{
                       method: "main_page_show_three",
                       websiteNode:this.websiteNode
                   }
               }).then(result => {
-                  console.log(result)
                   return result.data;
               }).then(data => {
-                  if (data.statusCode == 100000) {
-                      this.mainActivityList = data.data.mainActivityList;
-                      this.topList = data.data.topList;
-                      this.noticeInfoList = data.data.noticeInfoList;
-                      this.centerList = data.data.centerList;
-                      if (!sessionStorage.getItem('system')) {
-              getSystem(this)
-            }
-                  } else {
-                      console.log(data.statusStr)
-                  }
+                if (data.statusCode == 100000) {
+                    this.mainActivityList = data.data.mainActivityList;
+                    this.topList = data.data.topList;
+                    this.noticeInfoList = data.data.noticeInfoList;
+                    this.centerList = data.data.centerList;
+                    if (!sessionStorage.getItem('system')) {
+                      getSystem(this)
+                    }
+                } else {
+                }
               })
-          },
-
-          //自动登陆
-          autoLogin:function(){
-              this.$ajax.get('/api',{
-                  params:{
-                      method:'user_login',
-                      tokenId:this.tokenId
+        },
+        //自动登陆
+        autoLogin:function(){
+          this.$ajax.get('/api',{
+              params:{
+                  method:'user_login',
+                  tokenId:this.tokenId
+              }
+          }).then(result =>{
+              return result.data
+          }).then(data =>{
+              console.log(data)
+              if (data.statusCode == 100000) {
+                  const user_data={
+                    cuserInfoid:data.data.cuserInfo.id,
+                    firmInfoid:data.data.firmInfo.id,
+                    firmName:data.data.firmInfo.firmName,
+                    linkTel:data.data.cuserInfo.mobile,
+                    score:data.data.firmInfo.score,
+                    next:data.data.firmInfo.next,
+                    userGrade:data.data.firmInfo.userGrade,
+                    websiteNode:data.data.firmInfo.websiteNode,
+                    faceImgUrl:data.data.firmInfo.faceImgUrl,
+                    websiteNodeName:data.data.firmInfo.websiteNodeName
                   }
-              }).then(result =>{
-                  return result.data
-              }).then(data =>{
-                  console.log(data)
-                  if (data.statusCode == 100000) {
-                      const user_data={
-                          cuserInfoid:data.data.cuserInfo.id,
-                          firmInfoid:data.data.firmInfo.id,
-                          firmName:data.data.firmInfo.firmName,
-                          linkTel:data.data.cuserInfo.mobile,
-                          score:data.data.firmInfo.score,
-                          next:data.data.firmInfo.next,
-                          userGrade:data.data.firmInfo.userGrade,
-                          websiteNode:data.data.firmInfo.websiteNode,
-                          faceImgUrl:data.data.firmInfo.faceImgUrl,
-                          websiteNodeName:data.data.firmInfo.websiteNodeName
-                      }
-                      sessionStorage.setItem("isAuto","true");
-                      localStorage.setItem("user_data",JSON.stringify(user_data));
-                      localStorage.setItem("tokenId",data.data.tokenId);
-                      localStorage.setItem("secretKey",data.data.secretKey);
-                  } else {
-                      var openid = localStorage.getItem("openid");
-                      localStorage.clear();
-                      localStorage.setItem("openid",openid);
-                      console.log(data.statusStr)
-                  }
-
-              });
-          },
+                  sessionStorage.setItem("isAuto","true");
+                  localStorage.setItem("user_data",JSON.stringify(user_data));
+                  localStorage.setItem("tokenId",data.data.tokenId);
+                  localStorage.setItem("secretKey",data.data.secretKey);
+              } else {
+                  var openid = localStorage.getItem("openid");
+                  localStorage.clear();
+                  localStorage.setItem("openid",openid);
+                  console.log(data.statusStr)
+              }
+          });
+        },
       //显示关闭弹框
         showalert:function (data) {
-          console.log(data)
           this.noticeInfoList[data].noticeContent = (this.noticeInfoList[data].noticeContent.toString()).replace(/\r\n/g, '<br/>')
           this.noticeInfo = this.noticeInfoList[data]
-          console.log( this.noticeInfo)
         },
         closeAlert:function (data) {
-            this.noticeInfo = null;
+          this.noticeInfo = null;
         },
         jumpRouter:function(type,code,tit){
           if(this.isLogin){

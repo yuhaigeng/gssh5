@@ -80,15 +80,14 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                         firmId: this.firmId,
                     },this.userBasicParam)
                 }).then(resp => {
-                    console.log(resp.data.data)
+                  if(resp.data.statusCode ==  "100000"){
                     this.personInfo = resp.data.data
                     this.firmName = this.personInfo.firmName
                     this.linkMan = this.personInfo.linkMan
                     this.saleCard = this.personInfo.saleCard
                     this.address = this.personInfo.address
-
+                  }
                 }).catch(err => {
-                    console.log('请求失败：'+ err.statusCode);
                 });
              },
              save:function(){
@@ -103,15 +102,22 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                         address:this.address,
                     },this.userBasicParam)
                 }).then(resp => {
-                    console.log(resp.data)
-                    if(resp.data.statusCode != 100000){
-                             this.$message({
-                                message: resp.data.statusStr,
-                                center: true,
-                            });
+                    if(resp.data.statusCode == '100000'){
+                        this.$toast({
+                          message: '保存成功',
+                          center: true,
+                          duration: 2000,
+                        });
+                       this.$router.go(-1)
+                    }else{
+                         this.$toast({
+                          message: resp.data.statusStr,
+                          center: true,
+                          duration: 2000,
+                        });
                     }
                 }).catch(err => {
-                    console.log(err.data)
+                  console.log(err)
                 });
              },
              desc_data:function(){
@@ -122,13 +128,13 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                         code:this.websiteNode + '#HYDJ-DESC'
                     }
                 }).then(resp => {
+                   if(resp.data.statusCode ==  "100000"){
                       resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
                       resp.data.data.noticeTitle =  resp.data.data.title;
                       resp.data.data.alertType = 1;
                       this.noticeInfoList = resp.data.data;
-                      console.log(this.noticeInfoList)
+                   }
                 }).catch(err => {
-                    console.log('请求失败：'+ err.data.statusCode);
                 });
             },
             agreement:function(){

@@ -12,7 +12,7 @@
                 <div class="message_count" v-text="item.messageContent"></div>
               </div>
             </div>
-            <p class="lodemore" v-text="messages.isLast? '没有更多数据了' :'点击加载更多' " @click="load_more"></p>
+            <p class="lodemore" v-text="messages.isLast? '没有更多数据了' :'点击加载更多' " @click="load_more" v-show="objects.length"></p>
 
           </div>
 			</div>
@@ -27,8 +27,8 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
 export default {
    name: 'message',
    components: {
-        appHeader,
-        appFooter
+      appHeader,
+      appFooter
    },
    data() {
        return {
@@ -39,8 +39,7 @@ export default {
          },
          messages:{},
          objects:[],
-        isLogin:getIsLogin()
-
+         isLogin:getIsLogin()
        }
    },
   mounted(){
@@ -56,19 +55,16 @@ export default {
                     pageNo:this.pageNo,
                 }
             }).then(resp => {
+              if(resp.data.statusCode == "100000"){
                 if(resp.data.data.pageNo == 1){
-                     this.messages = resp.data.data;
-                     this.objects = resp.data.data.objects
+                  this.messages = resp.data.data;
+                  this.objects = resp.data.data.objects
                 }else{
-                    this.messages = resp.data.data;
-                    this.objects =  this.objects.concat(resp.data.data.objects);
-                    console.log( this.messages.isLast);
-                    //  console.log(this.objects);
+                  this.messages = resp.data.data;
+                  this.objects =  this.objects.concat(resp.data.data.objects);
                 }
+              }
             }).catch(err => {
-                // console.log(JSON.parse(data).data.mainActivityList);
-                  console.log('请求失败：'+ err.statusCode);
-
             });
         },
         load_more:function(){
