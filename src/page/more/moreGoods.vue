@@ -83,7 +83,7 @@
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         websiteNode:this.websiteDate.code,
-        firmId:getIsLogin() ? JSON.parse(getUserData()).firmInfoid :"" ,
+        firmId:'',
         goods:[],
         left_name:[],
         goodsList:null,
@@ -120,13 +120,14 @@
       if (getIsLogin()) {
         this.isLogin = getIsLogin();
         this.tokenId = getTokenId();
+        this.firmId = getIsLogin() ? JSON.parse(getUserData()).firmInfoid :"" ;
         const userInfo = JSON.parse(getUserData());
 
         this.userBasicParam = {
-            firmId : userInfo.firmInfoid,
-            source : 'firmId'+userInfo.firmInfoid,
-            sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-            tokenId : getTokenId()
+          // firmId : userInfo.firmInfoid,
+          source : 'firmId'+userInfo.firmInfoid,
+          sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+          tokenId : getTokenId()
         }
       }
       if ( localStorage.getItem('system') ) {
@@ -141,24 +142,23 @@
       this.windowHeight = window.innerHeight;
     },
     computed:{
-        // 获取宽度
-        getTopWidth:function(){
-          return  (this.goods.length * 164) + 24 +'px'
-        },
-        // 获取高度
-        getLeftHeight:function(){
-          const  bodyHeight  =  document.querySelector("body");
-          const  wrapHeight  =  document.querySelector(".header-wrap");
-          const  topHeight   =  document.querySelector('.moreDoogs_main_top');
-          const  footerHeight =  document.querySelector(".footer-wrap");
-          let a = parseInt(window.getComputedStyle(bodyHeight).height);
-          let b =   wrapHeight ? parseInt(window.getComputedStyle(wrapHeight).height) : 87 ;
-          let c = topHeight ? parseInt(window.getComputedStyle(topHeight).height):90;
-          let d =  footerHeight ? parseInt(window.getComputedStyle(footerHeight).height):98;
-          let e = a-b-c-d;
-         return e + 'px';
-        },
-
+      // 获取宽度
+      getTopWidth:function(){
+        return  (this.goods.length * 164) + 24 +'px'
+      },
+      // 获取高度
+      getLeftHeight:function(){
+        const  bodyHeight  =  document.querySelector("body");
+        const  wrapHeight  =  document.querySelector(".header-wrap");
+        const  topHeight   =  document.querySelector('.moreDoogs_main_top');
+        const  footerHeight =  document.querySelector(".footer-wrap");
+        let a = parseInt(window.getComputedStyle(bodyHeight).height);
+        let b =   wrapHeight ? parseInt(window.getComputedStyle(wrapHeight).height) : 87 ;
+        let c = topHeight ? parseInt(window.getComputedStyle(topHeight).height):90;
+        let d =  footerHeight ? parseInt(window.getComputedStyle(footerHeight).height):98;
+        let e = a-b-c-d;
+        return e + 'px';
+      },
     },
     methods: {
       goods_first_nav:function () {
@@ -170,8 +170,8 @@
           }
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
-             this.goods = resp.data.data;
-             if(this.$route.query.typeCode){
+            this.goods = resp.data.data;
+            if(this.$route.query.typeCode){
               let a = this.$route.query.typeCode
               let b =  a.substring(0,2);
               for (var i = 0 ;i < this.goods.length;i++){
@@ -198,87 +198,86 @@
       },
       goods_second_nav:function (num) {
           this.$ajax.get(this.HOST, {
-              params:{
-                method: "goods_second_type",
-                firmId:this.firmId,
-                websiteNode:this.websiteNode,
-                typeCode: this.typeCode
-              }
+            params:{
+              method: "goods_second_type",
+              firmId:this.firmId,
+              websiteNode:this.websiteNode,
+              typeCode: this.typeCode
+            }
           }).then(resp => {
             if(resp.data.statusCode == "100000"){
-                this.left_name = resp.data.data;
-                if(this.$route.query.typeCode){
-                    let a = this.$route.query.typeCode;
-                    let topLeft = document.querySelector(".moreDoogs_main_top")
-                    let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[num]
-                    for (var i = 0 ;i <  this.left_name.length;i++){
-                        if(this.left_name[i].typeCode == a){
-                          this.isSelected = i
-                          this.goodsType = a
-                          this.goods_info_nav(i)
-                          this.$route.query.typeCode = "";
-                        }
-                    }
-                    if (ele.offsetLeft > 200) {
-                      topLeft.scrollLeft = ele.offsetLeft-200
-                    }else{
-                      topLeft.scrollLeft = 0
-                    }
+              this.left_name = resp.data.data;
+              if(this.$route.query.typeCode){
+                let a = this.$route.query.typeCode;
+                let topLeft = document.querySelector(".moreDoogs_main_top")
+                let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[num]
+                for (var i = 0 ;i <  this.left_name.length;i++){
+                  if(this.left_name[i].typeCode == a){
+                    this.isSelected = i
+                    this.goodsType = a
+                    this.goods_info_nav(i)
+                    this.$route.query.typeCode = "";
+                  }
+                }
+                if (ele.offsetLeft > 200) {
+                  topLeft.scrollLeft = ele.offsetLeft-200
+                  }else{
+                    topLeft.scrollLeft = 0
+                  }
                 }else{
                   this.goodsType =  this.left_name[0].typeCode
                   this.isSelected = 0;
                   this.goods_info_nav()
                 }
-            }else{
-               this.$toast({
-                  message : resp.data.statusStr,
-                  position: 'boottom',
-                  duration: 2000,
-               })
+              }else{
+              this.$toast({
+                message : resp.data.statusStr,
+                position: 'boottom',
+                duration: 2000,
+              })
             }
           }).catch(err => {
-
           });
       },
       goods_info_nav:function (num) {
-          this.$ajax.get(this.HOST, {
-              params:{
-                  method: "goods_info_show_fou",
-                  firmId:this.firmId,
-                  websiteNode: this.websiteNode,
-                  typeCode:this.goodsType,
-                  pageNo: this.pageNo,
-                  pageSize: this.pageSize,
-              }
-          }).then(resp => {
-            if(resp.data.statusCode == "100000"){
-              if(this.$route.query.typeCode){
-                let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
-                let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
-                if (ele.offsetTop>200) {
-                  wrapTop.scrollTop = ele.offsetTop-200
-                }else{
-                  wrapTop.scrollTop = 0
-                }
-              }
-              if( this.pageNo == 1){
-                this.goodsList = resp.data.data.page;
-                this.listObj =  this.goodsList.objects
-                this.isLast = this.goodsList.isLast
+        this.$ajax.get(this.HOST, {
+          params:{
+            method: "goods_info_show_fou",
+            firmId:this.firmId,
+            websiteNode: this.websiteNode,
+            typeCode:this.goodsType,
+            pageNo: this.pageNo,
+            pageSize: this.pageSize,
+          }
+        }).then(resp => {
+          if(resp.data.statusCode == "100000"){
+            if(this.$route.query.typeCode){
+              let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
+              let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
+              if (ele.offsetTop>200) {
+                wrapTop.scrollTop = ele.offsetTop-200
               }else{
-                this.goodsList = resp.data.data.page
-                this.listObj =  this.listObj.concat(this.goodsList.objects)
-                this.isLast  = this.goodsList.isLast
+                wrapTop.scrollTop = 0
               }
-            }else{
-              this.$toast({
-                  message : resp.data.statusStr,
-                  position: 'boottom',
-                  duration: 2000,
-               })
             }
-          }).catch(err => {
-          });
+            if( this.pageNo == 1){
+              this.goodsList = resp.data.data.page;
+              this.listObj =  this.goodsList.objects
+              this.isLast = this.goodsList.isLast
+            }else{
+              this.goodsList = resp.data.data.page
+              this.listObj =  this.listObj.concat(this.goodsList.objects)
+              this.isLast  = this.goodsList.isLast
+            }
+          }else{
+            this.$toast({
+              message : resp.data.statusStr,
+              position: 'boottom',
+              duration: 2000,
+            })
+          }
+        }).catch(err => {
+        });
       },
       submitGoShopCart(){
         let goodsList = goodlist1();
@@ -291,26 +290,26 @@
         }).then(result => {
             return result.data;
         }).then(data => {
-            if (data.statusCode=='100000') {
-                 sessionStorage.setItem('address',JSON.stringify(data.data));
-              this.$router.push({path:'/orderSettlement'})
-            }else if (data.statusCode=='100903' || data.statusCode=='100907') {
-              var orderResult={
-                statusCode:data.statusCode,
-                orderCode:data.data.orderCode
-              }
-              sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
-              this.$router.push({path:'/orderResult'})
-            }else{
-              $(".footer-rigth").addClass("true");
-              this.$toast({
-                message : data.statusStr,
-                position: 'boottom',//top boottom middle
-                duration: 2000,//延时多久消失
-                //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-                //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-              })
+          if (data.statusCode=='100000') {
+            sessionStorage.setItem('address',JSON.stringify(data.data));
+            this.$router.push({path:'/orderSettlement'})
+          }else if (data.statusCode=='100903' || data.statusCode=='100907') {
+            var orderResult={
+              statusCode:data.statusCode,
+              orderCode:data.data.orderCode
             }
+            sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
+            this.$router.push({path:'/orderResult'})
+          }else{
+            $(".footer-rigth").addClass("true");
+            this.$toast({
+              message : data.statusStr,
+              position: 'boottom',//top boottom middle
+              duration: 2000,//延时多久消失
+              //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+              //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+            })
+          }
         });
       },
       topNav(typeCode,index) {

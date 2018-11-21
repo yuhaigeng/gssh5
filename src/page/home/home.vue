@@ -44,21 +44,21 @@ import { system } from "../../api/index.js";
 export default {
    name: 'home',
    data() {
-       return {
-            mainActivityList:[],
-            topList:[],
-            noticeInfoList:[],
-            centerList:[],
-            noticeInfo:null,
-            tokenId:null,
-            isLogin:getIsLogin(),
-            websiteNodeName:this.websiteDate.name,
-            websiteNode:this.websiteDate.code,
-            isNew:false,//表示是否有新消息
-            headerMsg:{
-                type:"home",
-            },
-       }
+      return {
+        mainActivityList:[],
+        topList:[],
+        noticeInfoList:[],
+        centerList:[],
+        noticeInfo:null,
+        tokenId:null,
+        isLogin:getIsLogin(),
+        websiteNodeName:this.websiteDate.name,
+        websiteNode:this.websiteDate.code,
+        isNew:false,//表示是否有新消息
+        headerMsg:{
+            type:"home",
+        },
+      }
     },
     components: {
         appHeader,
@@ -86,131 +86,129 @@ export default {
         console.log(this.websiteDate)
         this.get_main_page();
         if (getIsLogin()) {
-            this.tokenId = getTokenId();
-            if (sessionStorage.getItem("isAuto") != "true") {
-                this.autoLogin();
-            }
-            const userInfo = JSON.parse(getUserData());
+          this.tokenId = getTokenId();
+          if (sessionStorage.getItem("isAuto") != "true") {
+            this.autoLogin();
+          }
+          const userInfo = JSON.parse(getUserData());
 
-            this.userBasicParam = {
-                firmId : userInfo.firmInfoid,
-                source : 'firmId'+userInfo.firmInfoid,
-                sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-                tokenId : getTokenId()
-            }
+          this.userBasicParam = {
+            firmId : userInfo.firmInfoid,
+            source : 'firmId'+userInfo.firmInfoid,
+            sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+            tokenId : getTokenId()
+          }
             //getMessage(this)
         }
     },
     watch:{
       isNew:function (val,oldval) {
-          console.log(val,oldval)
       }
     },
     methods:{
-        click() {
-            //   this.$toast({
-            //       message : 'hello world',
-            //       position: 'top',//top boottom middle
-            //       duration: 5000,//延时多久消失
-            //       //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-            //       //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-            //   })
-                let obj = {
-                    method: "system_config_constant",
-                    websiteNode:'3301'
-                }
-                system(obj).then(data => {
-                    console.log(data)
-                })
-          },
-          //获取首页数据
-          get_main_page:function () {
-              this.$ajax.get(this.HOST, {
-                  params:{
-                      method: "main_page_show_three",
-                      websiteNode:this.websiteNode
-                  }
-              }).then(result => {
-                  return result.data;
-              }).then(data => {
-                if (data.statusCode == 100000) {
-                    this.mainActivityList = data.data.mainActivityList;
-                    this.topList = data.data.topList;
-                    this.noticeInfoList = data.data.noticeInfoList;
-                    this.centerList = data.data.centerList;
-                    if (!sessionStorage.getItem('system')) {
-                      getSystem(this)
-                    }
-                } else {
-                }
-              })
-        },
-        //自动登陆
-        autoLogin:function(){
-            this.$ajax.get(this.HOST,{
-                params:{
-                    method:'user_login',
-                    tokenId:this.tokenId
-                }
-            }).then(result =>{
-                return result.data
-            }).then(data =>{
-                console.log(data)
-                if (data.statusCode == 100000) {
-                    const user_data={
-                        cuserInfoid:data.data.cuserInfo.id,
-                        firmInfoid:data.data.firmInfo.id,
-                        firmName:data.data.firmInfo.firmName,
-                        linkTel:data.data.cuserInfo.mobile,
-                        score:data.data.firmInfo.score,
-                        next:data.data.firmInfo.next,
-                        userGrade:data.data.firmInfo.userGrade,
-                        websiteNode:data.data.firmInfo.websiteNode,
-                        faceImgUrl:data.data.firmInfo.faceImgUrl,
-                        websiteNodeName:data.data.firmInfo.websiteNodeName
-                    }
-                    sessionStorage.setItem("isAuto","true");
-                    localStorage.setItem("user_data",JSON.stringify(user_data));
-                    localStorage.setItem("tokenId",data.data.tokenId);
-                    localStorage.setItem("secretKey",data.data.secretKey);
-                } else {
-                    var openid = localStorage.getItem("openid");
-                    localStorage.clear();
-                    localStorage.setItem("openid",openid);
-                    console.log(data.statusStr)
-                }
-            });
-        },
-        //显示关闭弹框
-        showalert:function (data) {
-          this.noticeInfoList[data].noticeContent = (this.noticeInfoList[data].noticeContent.toString()).replace(/\r\n/g, '<br/>')
-          this.noticeInfo = this.noticeInfoList[data]
-        },
-        closeAlert:function (data) {
-          this.noticeInfo = null;
-        },
-        jumpRouter:function(type,code,tit){
-          if(this.isLogin){
-              code =  code.trim()
-              if (type) {
-                if (type == 1) {
-                  let codeArr = code.split("&");
-                  return this.$router.push({path:'more',query:{typeCode:codeArr[1]}})
-                }else if (type == 2) {
-                  return this.$router.push({path:'detail/'+code})
-                }else if (type == 3) {
-                  return this.$router.push({path:'details',query:{typeCode:code,title:tit}})
-                }else if(type == 4){
-                  return this.$router.push({path:'onlineCoupon'})
-                }
-              }
-              return null;
-          }else{
-             return this.$router.push({path:'login'})
+      click() {
+        //   this.$toast({
+        //       message : 'hello world',
+        //       position: 'top',//top boottom middle
+        //       duration: 5000,//延时多久消失
+        //       //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+        //       //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+        //   })
+        let obj = {
+          method: "system_config_constant",
+          websiteNode:'3301'
+        }
+        system(obj).then(data => {
+          console.log(data)
+        })
+      },
+      //获取首页数据
+      get_main_page:function () {
+        this.$ajax.get(this.HOST, {
+          params:{
+            method: "main_page_show_three",
+            websiteNode:this.websiteNode
+          }
+        }).then(result => {
+          return result.data;
+        }).then(data => {
+          if (data.statusCode == 100000) {
+            this.mainActivityList = data.data.mainActivityList;
+            this.topList = data.data.topList;
+            this.noticeInfoList = data.data.noticeInfoList;
+            this.centerList = data.data.centerList;
+            if (!sessionStorage.getItem('system')) {
+              getSystem(this)
+            }
+          } else {
+          }
+        })
+    },
+    //自动登陆
+    autoLogin:function(){
+      this.$ajax.get(this.HOST,{
+        params:{
+          method:'user_login',
+          tokenId:this.tokenId
+        }
+      }).then(result =>{
+        return result.data
+      }).then(data =>{
+        if (data.statusCode == 100000) {
+          const user_data={
+            cuserInfoid:data.data.cuserInfo.id,
+            firmInfoid:data.data.firmInfo.id,
+            firmName:data.data.firmInfo.firmName,
+            linkTel:data.data.cuserInfo.mobile,
+            score:data.data.firmInfo.score,
+            next:data.data.firmInfo.next,
+            userGrade:data.data.firmInfo.userGrade,
+            websiteNode:data.data.firmInfo.websiteNode,
+            faceImgUrl:data.data.firmInfo.faceImgUrl,
+            websiteNodeName:data.data.firmInfo.websiteNodeName
+          }
+          sessionStorage.setItem("isAuto","true");
+          localStorage.setItem("user_data",JSON.stringify(user_data));
+          localStorage.setItem("tokenId",data.data.tokenId);
+          localStorage.setItem("secretKey",data.data.secretKey);
+        } else {
+          let openid = localStorage.getItem("openid");
+          localStorage.clear();
+          localStorage.setItem("openid",openid);
+          console.log(data.statusStr)
+        }
+      });
+    },
+    //显示关闭弹框
+    showalert:function (data) {
+      this.noticeInfoList[data].noticeContent = (this.noticeInfoList[data].noticeContent.toString()).replace(/\r\n/g, '<br/>')
+      this.noticeInfo = this.noticeInfoList[data]
+    },
+    closeAlert:function (data) {
+      this.noticeInfo = null;
+    },
+    jumpRouter:function(type,code,tit){
+      if(this.isLogin){
+        code =  code.trim()
+        if (type) {
+          if (type == 1) {
+            let codeArr = code.split("&");
+            return this.$router.push({path:'more',query:{typeCode:codeArr[1]}})
+          }else if (type == 2) {
+            return this.$router.push({path:'detail/'+code})
+          }else if (type == 3) {
+            return this.$router.push({path:'details',query:{typeCode:code,title:tit}})
+          }else if(type == 4){
+            return this.$router.push({path:'onlineCoupon'})
           }
         }
+        return null;
+      }else{
+        return this.$router.push({path:'login'})
+      }
     }
   }
+}
 </script>
 
 <style scoped >

@@ -43,110 +43,119 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
            setHeader ,
            agreementAlert
         },
-         data() {
-             return {
-                headerMsg:{
-                    type:"common",
-                    title:'企业信息',
-                    left:'返回'
-                },
-                firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
-                userBasicParam:{
-                    source:'firmId'+ this.firmId,
-                    tokenId: getTokenId(),
-                    sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
-                },
-                userId:JSON.parse(getUserData()).cuserInfoid,
-                firmName:null,
-                linkMan:null,
-                saleCard:null,
-                address:null,
-                isMain:{"1":"主账号：","2":"副账号："},
-                status:{"1":"启用","2":"禁用"},
-                authStatus:{"0":'待认证',"-1":'未通过',"1":'已认证'},
-                personInfo:{},
-                noticeInfoList:null,
-                websiteNode:'3301',
-             }
-         },
-         mounted:function(){
-             this.business()
-         },
-         methods:{
-             business:function(){
-                this.$ajax.get(this.HOST, {
-                    params:Object.assign({
-                        method:'firm_info_show',
-                        firmId: this.firmId,
-                    },this.userBasicParam)
-                }).then(resp => {
-                  if(resp.data.statusCode ==  "100000"){
-                    this.personInfo = resp.data.data
-                    this.firmName = this.personInfo.firmName
-                    this.linkMan = this.personInfo.linkMan
-                    this.saleCard = this.personInfo.saleCard
-                    this.address = this.personInfo.address
-                  }
-                }).catch(err => {
-                });
-             },
-             save:function(){
-                this.$ajax.get(this.HOST, {
-                    params:Object.assign({
-                        method:'firm_info_update',
-                         firmId:this.firmId,
-                        userId:this.userId,
-                        firmName:this.firmName,
-                        linkMan:this.linkMan,
-                        saleCard:this.saleCard,
-                        address:this.address,
-                    },this.userBasicParam)
-                }).then(resp => {
-                    if(resp.data.statusCode == '100000'){
-                        this.$toast({
-                          message: '保存成功',
-                          center: true,
-                          duration: 2000,
-                        });
-                       this.$router.go(-1)
-                    }else{
-                         this.$toast({
-                          message: resp.data.statusStr,
-                          center: true,
-                          duration: 2000,
-                        });
-                    }
-                }).catch(err => {
-                  console.log(err)
-                });
-             },
-             desc_data:function(){
-                this.$ajax.get(this.HOST, {
-                    params:{
-                        method:'gss_desc',
-                        websiteNode:this.websiteNode,
-                        code:this.websiteNode + '#HYDJ-DESC'
-                    }
-                }).then(resp => {
-                   if(resp.data.statusCode ==  "100000"){
-                      resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                      resp.data.data.noticeTitle =  resp.data.data.title;
-                      resp.data.data.alertType = 1;
-                      this.noticeInfoList = resp.data.data;
-                   }
-                }).catch(err => {
-                });
+        data() {
+          return {
+            headerMsg:{
+              type:"common",
+              title:'企业信息',
+              left:'返回'
             },
-            agreement:function(){
-               this.desc_data()
-            },
-            closeAlert:function(){
-                this.noticeInfoList = null;
-            },
-            keep:function(){
-                this.save()
+            firmId:'' ,
+            userBasicParam:{},
+            userId:'',
+            firmName:null,
+            linkMan:null,
+            saleCard:null,
+            address:null,
+            isMain:{"1":"主账号：","2":"副账号："},
+            status:{"1":"启用","2":"禁用"},
+            authStatus:{"0":'待认证',"-1":'未通过',"1":'已认证'},
+            personInfo:{},
+            noticeInfoList:null,
+            cache:{}
+          }
+        },
+        mounted:function(){
+          this.userId = JSON.parse(getUserData()).cuserInfoid
+          this.firmId =  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ;
+          this.userBasicParam = {
+            source:'firmId'+ this.firmId,
+            tokenId: getTokenId(),
+            sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+          }
+            this.business()
+        },
+        methods:{
+          business:function(){
+            this.$ajax.get(this.HOST, {
+              params:Object.assign({
+                method:'firm_info_show',
+                firmId: this.firmId,
+              },this.userBasicParam)
+            }).then(resp => {
+              if(resp.data.statusCode ==  "100000"){
+                this.personInfo = resp.data.data
+                this.firmName = this.personInfo.firmName
+                this.linkMan = this.personInfo.linkMan
+                this.saleCard = this.personInfo.saleCard
+                this.address = this.personInfo.address
+              }
+            }).catch(err => {
+            });
+          },
+          save:function(){
+            this.$ajax.get(this.HOST, {
+              params:Object.assign({
+                method:'firm_info_update',
+                firmId:this.firmId,
+                userId:this.userId,
+                firmName:this.firmName,
+                linkMan:this.linkMan,
+                saleCard:this.saleCard,
+                address:this.address,
+              },this.userBasicParam)
+            }).then(resp => {
+              if(resp.data.statusCode == '100000'){
+                this.$toast({
+                  message: '保存成功',
+                  center: true,
+                  duration: 2000,
+                });
+                this.$router.go(-1)
+              }else{
+                this.$toast({
+                  message: resp.data.statusStr,
+                  center: true,
+                  duration: 2000,
+                });
+              }
+            }).catch(err => {
+            });
+          },
+          desc_data:function(){
+            this.$ajax.get(this.HOST, {
+              params:{
+                method:'gss_desc',
+                websiteNode:this.websiteNode,
+                code:this.websiteNode + '#HYDJ-DESC'
             }
-         }
+          }).then(resp => {
+              if(resp.data.statusCode ==  "100000"){
+                resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+                resp.data.data.noticeTitle =  resp.data.data.title;
+                resp.data.data.alertType = 1;
+                this.noticeInfoList = resp.data.data;
+                let key = this.websiteNode + this.descCode ;
+                let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
+                this.cache = Object.assign(this.cache,JSON.parse(obj))
+              }
+          }).catch(err => {
+          });
+        },
+        agreement:function(){
+          if (this.cache[this.websiteNode+this.descCode]) {
+            this.noticeInfoList = this.cache[this.websiteNode+this.descCode]
+          }else{
+            this.desc_data()
+          }
+        },
+        closeAlert:function(){
+          this.noticeInfoList = null;
+        },
+        keep:function(){
+          this.save()
+        }
+      }
     }
 </script>
 

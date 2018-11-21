@@ -41,18 +41,18 @@
               </li>
             </ul>
 
-            <dl class="apply_suc" :class="isMainHidden ? '' :'hidden'">
+            <dl class="apply_suc" v-show="isMainHidden">
               <dt>您的申请提交成功</dt>
               <dd>
                 <p>稍后业务经理为您服务</p>
                 <p>服务热线：400-0169-682</p>
-                <a :herf=" !isMainHidden &&'tel:400-800-9696'" class="">立即呼叫</a>
+                <a :href="'tel:'+ system.feedback_method">立即呼叫</a>
               </dd>
             </dl>
           </div>
-				<button class="submit_btn" :class="{'hidden':isMainHidden}"  @click="submitBtn">提交申请</button>
+				<button class="submit_btn" v-show='!isMainHidden'  @click="submitBtn">提交申请</button>
 			</div>
-			<div class="login_bottom" :class="{'hidden':isBottomHidden}"  >
+			<div class="login_bottom"  v-show='!isMainHidden'  >
 				说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" @click="agreement(0)" >《果速送合作协议》</a>
 			</div>
 			<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
@@ -109,18 +109,16 @@ import vuePickers from 'vue-pickers';
             phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
             isBottomHidden:false,  //  协议是否显示
             msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
-            websitData:{
-                "3201":"南京站",
-                "3301":"杭州站",
-                '3302':'宁波站'
-            },
+            websitData:{},
             websiteNode:this.websiteDate.code,
             noticeInfoList:null,
             descCode:null,
             cityData:{},
             isShow:false,
             columns:null,
-            defaultData:[]
+            defaultData:[],
+            system:{},
+            cache:{}
           }
       },
         watch:{
@@ -148,6 +146,12 @@ import vuePickers from 'vue-pickers';
           }
         },
         mounted:function(){
+           this.websitData = {
+               "3201":"南京站",
+               "3301":"杭州站",
+               '3302':'宁波站'
+           }
+           this.system = JSON.parse(localStorage.getItem('system'))
         },
         methods:{
           desc_data:function(){
@@ -163,6 +167,9 @@ import vuePickers from 'vue-pickers';
                   resp.data.data.noticeTitle =  resp.data.data.title;
                   resp.data.data.alertType = 1;
                   this.noticeInfoList = resp.data.data;
+                  let key = this.websiteNode + this.descCode ;
+                  let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
+                  this.cache = Object.assign(this.cache,JSON.parse(obj))
                 }
               }).catch(err => {
               });
@@ -218,41 +225,41 @@ import vuePickers from 'vue-pickers';
               });
           },
           rgister:function(){
-              this.$ajax.get(this.HOST, {
-                params:{
-                    method:'firm_register',
-                    firmName:this.firmName,
-                    address:this.address,
-                    linkTel:this.shopPhone,
-                    linkMan:this.linkMan,
-                    description:this.description,
-                    websiteNode:this.websiteNode,
-                    province:this.province,
-                    city:this.city,
-                    county:this.county,
-                    street:this.street,
-                    road:this.road,
-                    referrerId:this.recommendId,
-                    referrer:this.recommendName
-                }
-              }).then(resp => {
-                if(resp.data.statusCode == "100000"){
-                  this.isMainHidden = true;
-                  isBottomHidden = true;
-                  this.$toast({
-                    message : resp.data.statusStr,
-                    position: 'boottom',
-                    duration: 2000,
-                   })
-                }else{
-                  this.$toast({
-                    message : resp.data.statusStr,
-                    position: 'boottom',
-                    duration: 2000,
-                   })
-                }
-              }).catch(err => {
-              });
+            this.$ajax.get(this.HOST, {
+              params:{
+                method:'firm_register',
+                firmName:this.firmName,
+                address:this.address,
+                linkTel:this.shopPhone,
+                linkMan:this.linkMan,
+                description:this.description,
+                websiteNode:this.websiteNode,
+                province:this.province,
+                city:this.city,
+                county:this.county,
+                street:this.street,
+                road:this.road,
+                referrerId:this.recommendId,
+                referrer:this.recommendName
+              }
+            }).then(resp => {
+              if(resp.data.statusCode == "100000"){
+                this.isMainHidden = true;
+                isBottomHidden = true;
+                this.$toast({
+                  message : resp.data.statusStr,
+                  position: 'boottom',
+                  duration: 2000,
+                  })
+              }else{
+                this.$toast({
+                  message : resp.data.statusStr,
+                  position: 'boottom',
+                  duration: 2000,
+                  })
+              }
+            }).catch(err => {
+            });
           },
           focus:function(){
             this.isBottomHidden = true;
@@ -263,9 +270,12 @@ import vuePickers from 'vue-pickers';
           agreement:function(num){
             if(num == 0){
               this.descCode = "#HZ-DESC";
-              this.desc_data()
             }else{
               this.descCode = "#TJR-DESC";
+            }
+            if (this.cache[this.websiteNode+this.descCode]) {
+              this.noticeInfoList = this.cache[this.websiteNode+this.descCode]
+            }else{
               this.desc_data()
             }
           },
@@ -400,9 +410,6 @@ import vuePickers from 'vue-pickers';
     height: 400px;
     background: #FFF;
     margin-top: 20px;
-}
-.hidden {
-    display: none;
 }
 .apply_suc dd p {
     line-height: 36px;

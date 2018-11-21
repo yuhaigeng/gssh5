@@ -46,27 +46,29 @@ export default {
         right:'新增地址',
         left:'返回'
       },
-      firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
-      userBasicParam:{
-          source:'firmId'+ this.firmId,
-          tokenId: getTokenId(),
-          sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
-      },
+      firmId: "" ,
+      userBasicParam:{},
       addresses:null,
       addressId:null,
       isManage:true,
     }
   },
   mounted:function(){
+    this.firmId = JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ;
+    this.userBasicParam ={
+      source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
+      tokenId: getTokenId(),
+      sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+    }
     this.addressShow();
   },
   methods:{
     addressShow:function(){
       this.$ajax.get(this.HOST, {
-          params:Object.assign({
-            method:'user_address_show',
-            firmId:this.firmId,
-          },this. userBasicParam)
+        params:Object.assign({
+          method:'user_address_show',
+          firmId:this.firmId,
+        },this. userBasicParam)
       }).then(resp => {
         if(resp.data.statusCode == "100000"){
           this.addresses = resp.data.data
@@ -77,11 +79,11 @@ export default {
     },
     default_data:function(){
       this.$ajax.get(this.HOST, {
-          params:Object.assign({
-              method:'user_address_default',
-              firmId:this.firmId,
-              addressId:this.addressId,
-          },this.userBasicParam)
+        params:Object.assign({
+          method:'user_address_default',
+          firmId:this.firmId,
+          addressId:this.addressId,
+        },this.userBasicParam)
       }).then(resp => {
         if(resp.data.statusCode == "100000"){
           this.addresses = resp.data.data

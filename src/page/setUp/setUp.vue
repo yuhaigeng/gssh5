@@ -36,29 +36,29 @@ export default {
                 title:'设置',
                 left:'返回'
             },
-            userBasicParam:{
-                source:'firmId'+ this.firmId,
-                tokenId: getTokenId(),
-                sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
-            },
+            userBasicParam:{},
           }
       },
       mounted(){
-
+          this.userBasicParam = {
+            source:'firmId'+ this.firmId,
+            tokenId: getTokenId(),
+            sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+          }
       },
       methods:{
         login_out:function(){
-              this.$ajax.get(this.HOST, {
-                params :Object.assign({
-                    method:'user_logout',
-                },this.userBasicParam)
+            this.$ajax.get(this.HOST, {
+              params :Object.assign({
+                  method:'user_logout',
+              },this.userBasicParam)
             }).then(resp => {
               if(resp.data.statusCode ==  "100000"){
-                  localStorage.clear();
-                  this.$router.push({path:'/my',query:{isLogin:false}})
-                  if (!sessionStorage.getItem('system')) {
-                      getSystem(this)
-                  }
+                localStorage.clear();
+                this.$router.push({path:'/my'})
+                if (!sessionStorage.getItem('system')) {
+                    getSystem(this)
+                }
               }
             }).catch(err => {
             });

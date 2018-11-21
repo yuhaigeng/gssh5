@@ -13,13 +13,13 @@
 <script>
 
     export default {
-        name:'personalOptions',
-        props:['orderList', 'title' ,'isLogin'],
-         data() {
-             return {
+      name:'personalOptions',
+      props:['orderList', 'title' ,'isLogin'],
+        data() {
+          return {
 
-             }
-         },
+          }
+        },
     }
 </script>
 
