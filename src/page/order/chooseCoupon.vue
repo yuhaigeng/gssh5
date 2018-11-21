@@ -1,5 +1,5 @@
 <template>
- <div class="">
+ <div class="common-wrap">
     <app-header :type="headerMsg">
 		<div slot="commonAlert" @click="get_desc" v-if="dataType == 'couponInfo'">使用说明</div>
 	</app-header>
@@ -82,17 +82,15 @@ export default {
 	watch:{
 		coupon(val,oldVal){
 			if (val) {
-				console.log('111111')
 				localStorage.setItem('selectCoupon',JSON.stringify(val))
 			}
 		}
 	},
-    created:function() {
-		this.dataType = this.$route.query.dataType;
-	},
 	mounted() {
 		this.coupon = JSON.parse(localStorage.getItem('selectCoupon'));
-		this.headerMsg.title = '选择'+this.coupon[this.dataType].title
+		this.dataType = this.$route.query.dataType;
+		this.headerMsg.title = '选择'+this.coupon[this.dataType].title;
+		document.querySelectorAll("body")[0].scrollTop = 0;
 	},
     methods: {
 		desc_data:function(){
@@ -183,11 +181,12 @@ export default {
 </script>
 
 <style scoped>
+.coupon_main_wrap{
+	margin-bottom: 0;
+    margin-top: 107px;
+}
 .active {
 	background: #fff url('../../assets/img/coupon_active.png') no-repeat right top;
-}
-.main{
-	padding-top: 30px;
 }
 /*在线领取优惠券*/
 
@@ -241,9 +240,6 @@ export default {
 }
 /*优惠券管理页面*/
 
-.coupon_main_wrap {
-	height: 1244px;
-}
 
 .coupon_main_ {
 	padding-top: 20px;
@@ -327,10 +323,6 @@ export default {
 	color: #666
 }
 
-.coupon_main_wrap {
-    height: auto;
-    margin-top: 87px;
-}
 
  .coupon_main_ .title {
 	font-size: 30px;

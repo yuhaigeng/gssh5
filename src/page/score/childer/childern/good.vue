@@ -6,7 +6,7 @@
                 <div class="main-wrap goods_detaile_wrap">
                     <div class="main">
                         <div class="goodsDetails_img_box">
-                            <banner :imgList = "bannerDate" v-if="bannerDate.length"></banner>
+                            <banner :imgList = "bannerDate" :height = "'600px'" v-if="bannerDate.length"></banner>
                         </div>
                         <div class="goodsDetails_box1" v-if="scoreGoods.id">
                             <div class="goodsDetails_box1_top clearfloat">
@@ -176,11 +176,6 @@ export default {
 </script>
 <style scoped>
 .score_goods{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     padding-top: 87px;
     background-color: #ebebeb;
     z-index: 19;

@@ -17,7 +17,7 @@ Vue.use(Mint);
 
 Vue.prototype.$ajax = axios //修改Vue的原型属性
 
-Vue.prototype.HOST = '/api'
+Vue.prototype.HOST = 'http://testapp.guoss.cn/gssapi/server/api.do'
 Vue.config.productionTip = false
 
 import md5 from 'js-md5';

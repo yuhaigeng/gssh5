@@ -1,6 +1,6 @@
 <template>
  <div class="common-wrap">
-     <app-header :type ="headerMsg"></app-header>
+    <app-header :type ="headerMsg"></app-header>
 	<div class="main order_details_main">
 		<div class="order_details_top" v-if="orderInfo">
 			<dl class="order_details_top_code clearfloat">
@@ -144,8 +144,8 @@ export default {
 				type:"jump",
 				title:'订单详情',
 				jumpBefore:'orderManagement',
+				left:'返回',
 				num:'1',
-				left:'返回'
 			},
 			noticeInfoList:null,
 			orderInfo:null,
@@ -163,9 +163,6 @@ export default {
 		appHeader,
 		explainAlert
   	},
-  	created:function() {
-		this.couponNum = this.$route.query.couponNum
-	},
 	computed:{
 		getCouponMoney(){
 			let m = '';
@@ -208,8 +205,15 @@ export default {
 		}
 	},
   	mounted() {
-		let sessCode = sessionStorage.getItem('orderData')
-		this.orderCode = JSON.parse(sessCode).code;
+		let sessCode = sessionStorage.getItem('orderData');
+		if (sessCode) {
+			this.orderCode = JSON.parse(sessCode).orderCode;
+			let type = JSON.parse(sessCode).type;
+			this.headerMsg.num = type || 1;
+		}else{
+			this.$router.push({path:"orderManagement",query:{type:this.headerMsg.num}});
+			return;
+		}
 		if (getIsLogin()) {
             this.tokenId = getTokenId();
             const userInfo = JSON.parse(getUserData());
@@ -280,7 +284,7 @@ export default {
 			}).then(data =>{
 				console.log(data)
 				if (data.statusCode == 100000) {
-					this.$router.go(-1)
+					this.$router.push({path:'orderManagement', query:{type:this.headerMsg.num}})
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
@@ -508,7 +512,6 @@ export default {
 							maxCount:v[i].maxCount
 						};
 						this.goods.push(goodobj);
-						localStorage.setItem("good",JSON.stringify(pub.good));
 					} else{
 						var l = (this.idArr).indexOf(v[i].id);
 						if ( l == -1) {
@@ -527,9 +530,9 @@ export default {
 						}else{
 							this.goods[l].sum = v[i].buyCount + this.goods[l].sum ;
 						}
-						localStorage.setItem("good",JSON.stringify(this.goods));
 					}
 				}
+				localStorage.setItem("good",JSON.stringify(this.goods));
 				this.$router.replace({path:"more"})
 			}
 		},

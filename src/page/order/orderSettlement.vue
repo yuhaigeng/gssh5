@@ -4,7 +4,7 @@
       <div class="main-wrap">
 			<div class="main">
 				<div class="order_infor">
-					<router-link  :to="{path:'address', query:{isBack:true}}" tag="div" class="my_infor" v-if="addressInfo.receiverName">
+					<router-link  :to="{path:'address', query:{isBack:true}}" tag="div" class="my_infor" v-if="addressInfo && addressInfo.id">
 						<div class="my_info_top clearfloat">
 							<div class="my_name" v-text="addressInfo.receiverName">
 							</div>
@@ -48,7 +48,7 @@
 				<div class="footer-left order_footer_left">
 					合计:<span v-text="'￥'+ totalPrice"></span>
 				</div>
-				<div class="footer-rigth" :class=" addressInfo.receiverName && 'order_footer_right'" @click="get">
+				<div class="footer-rigth" :class="{'order_footer_right':addressInfo && addressInfo.id} " @click="get">
 					提交订单
 				</div>
 			</div>
@@ -70,38 +70,45 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
         },
         data() {
              return {
-                 headerMsg:{
+                headerMsg:{
                     type:"common",
                     title: '订单结算' ,
                     left:'返回'
                 },
-                addressInfo:JSON.parse(sessionStorage.getItem('address')).address,
+                addressInfo:null,
                 descCode:"#PS-DESC",
                 noticeInfoList:null,
-                firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
-                userBasicParam:{
-                    source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
-                    tokenId: getTokenId(),
-                    sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid+ "key" + getSecretKey()).toUpperCase()
-                },
-                userId:JSON.parse(getUserData()).cuserInfoid,
+                userInfo:null,
                 goodsList:[],
                 customRequest:"",
-                addressId:JSON.parse(sessionStorage.getItem('address')).address.id,
-                postCost:JSON.parse(sessionStorage.getItem('address')).postCost ? JSON.parse(sessionStorage.getItem('address')).postCost:0 ,
+                postCost:0,
                 totalPrice:"" ,
-
+                websiteNode:this.websiteDate.code
             }
         },
-        computed:{
-
-        },
         mounted(){
-            this.totalPrice =  parseFloat(getgoodsMoney()) + parseInt(this.postCost)
-            if ( localStorage.getItem('good') ) {
-              this.goodsList = JSON.parse(localStorage.getItem('good'))
-            } else {
-              this.goodsList = []
+            if (getIsLogin()) {
+                this.totalPrice =  parseFloat(getgoodsMoney()) + parseInt(this.postCost)
+                if ( localStorage.getItem('good') ) {
+                    this.goodsList = JSON.parse(localStorage.getItem('good'))
+                } else {
+                    this.goodsList = []
+                }
+                this.tokenId = getTokenId();
+                const userInfo = JSON.parse(getUserData());
+                this.userInfo = userInfo;
+                this.userBasicParam = {
+                    firmId : userInfo.firmInfoid,
+                    source : 'firmId'+userInfo.firmInfoid,
+                    sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+                    tokenId : getTokenId()
+                };
+                if (sessionStorage.getItem('address')) {
+                    let addressObj = JSON.parse(sessionStorage.getItem('address'));
+                    this.addressInfo = addressObj.address;
+                    this.postCost = addressObj.postCost
+                    this.addressId = this.addressInfo.id;
+                }
             }
         },
         methods:{
@@ -123,49 +130,55 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
                 });
             },
             orderSubmit:function(){
-                 this.$ajax.get(this.HOST, {
-                    params:Object.assign({
+                let obj = Object.assign({
                         method:'order_submit',
-                        userId:this.userId,
-                        firmId:this.firmId,
+                        userId:this.userInfo.cuserInfoid,
                         goodsList:goodlist1(),
                         customRequest:this.customRequest,
-                        addressId:this.addressId,
+                        addressId:this.addressInfo.id,
                         postCost:this.postCost,
                         orderFrom:"H5",
                     }, this.userBasicParam)
+                this.$ajax.get(this.HOST, {
+                    params:obj,
                 }).then(resp => {
-                  console.log(resp.data)
-                  if(resp.data.statusCode == "100000" ||  resp.data.statusCode == "100903" ||  resp.data.statusCode == '100907' ){
-                      let a =  resp.data
-                      sessionStorage.setItem('statusData',JSON.stringify(a))
-                      this.$router.push({path:'/orderResult'})
-                      // sessionStorage.removeItem('address')
-                  }
+                    let data = resp.data;
+                    if(data.statusCode == "100000" ||  data.statusCode == "100903" ||  data.statusCode == '100907' ){
+                        if (data.statusCode=='100000') {
+                            localStorage.removeItem('good');
+                        };
+                        var orderResult={
+                            statusCode:data.statusCode,
+                            orderCode:data.data.orderCode
+                        }
+                        sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
+                        this.$router.push({path:'/orderResult'})
+                    }
                 }).catch(err => {
+                    console.log('err:'+err);
+                    
                 });
             },
-             closeAlert:function(){
+            closeAlert:function(){
                 this.noticeInfoList = null;
             },
-             agreement:function(){
+            agreement:function(){
                 this.desc_data()
             },
             get:function(){
-             let a =  document.querySelector(".footer-rigth");
-              if(a.classList.contains('order_footer_right') == true){
+                let a =  document.querySelector(".footer-rigth");
+                if(a.classList.contains('order_footer_right') == true){
                     this.orderSubmit()
-              }else{
-                 this.$toast({
+                }else{
+                    this.$toast({
                         message :'请选择地址' ,
                         position: 'center',
                         duration: 2000,
                     })
-              }
-
+                }
             },
             priceTotal:function(item){
-                  return  (parseFloat(item.price)*parseInt(item.sum)).toFixed(2);
+                return  (parseFloat(item.price)*parseInt(item.sum)).toFixed(2);
             },
         }
    }

@@ -92,31 +92,27 @@ export default new Router({
       { //果币商城
         path: '/score',
         component: score ,
-        children: [
-          { //果币记录
-            path: 'record',
-            component: scoreRecord,
-          },
-          { //果币商品
-            path: 'goodsList',
-            component: goodsList,
-            children:[
-              { //果币商品
-                path: 'good',
-                component: good,
-              },
-            ]
-          },
-          {//兑换优惠卷
-            path: 'exchangeCoupon',
-            component: exchangeCoupon,
-          },
-          {
-            path: 'scoreGame',
-            component: scoreGame,
-          }
-        ]
-      }, //果币商城
+      },
+      { //果币商品
+        path: '/score/goodsList',
+        component: goodsList,
+      },
+      { //果币商品
+        path: '/score/goodsList/good',
+        component: good,
+      },
+      { //果币记录
+        path: '/score/record',
+        component: scoreRecord,
+      },
+      { //兑换优惠卷
+        path: '/score/exchangeCoupon',
+        component: exchangeCoupon,
+      },
+      {
+        path: '/score/scoreGame',
+        component: scoreGame,
+      },
       { path: '/orderManagement', component: orderManagement}, //订单管理
       {
         path: '/orderDetails',

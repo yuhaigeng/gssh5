@@ -1,5 +1,5 @@
 <template>
-    <div class="swiper-container " :style="{height:bannerHeight}">
+    <div class="swiper-container " :style="{height:height}">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in imgList" :key="index"  @click="jumpRouter(item.typeCode, item.linkUrl, item.adTime)">
                 <!-- 第一张喝醉后一张不使用懒加载 解决 与swiper 冲突 -->
@@ -21,7 +21,7 @@ export default {
       isLogin:getIsLogin(),
     }
  },
- props:['imgList'],
+ props:['imgList','height'],
  mounted(){
   var mySwiper = new Swiper('.swiper-container', {
     direction: 'horizontal',

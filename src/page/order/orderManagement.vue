@@ -142,15 +142,16 @@ export default {
             });
 	    },
         navTop(index) {
-            this.navIndex = index
-            this.orderStatus = index + 1
-            if(this.orderStatus >= 4) {
-                this.orderStatus = ''
-            }else {
-                // 重置pageNo
-                this.pageNo = 1
+            if (index != this.navIndex) {
+                this.navIndex = index
+                this.orderStatus = index + 1
+                if(this.orderStatus >= 4) {
+                    this.orderStatus = ''
+                }else {
+                    this.pageNo = 1
+                }
+                this.get_goods_order()
             }
-            this.get_goods_order()
         },
         //加载更多
         loadMore:function(){
@@ -162,9 +163,9 @@ export default {
         //路由传值给详情页面
         toOrderDetail(item) {
             let code = item.orderCode,
-                orderStatus = item.orderStatus
-            let a = {code:code,order:orderStatus}
-            sessionStorage.setItem('orderData', JSON.stringify(a))
+                type = this.type;
+            let obj = {orderCode:code,type:type}
+            sessionStorage.setItem('orderData', JSON.stringify(obj))
             localStorage.getItem('selectCoupon') && localStorage.removeItem('selectCoupon')
             this.$router.push({ path:'orderDetails'})
             
@@ -240,7 +241,7 @@ export default {
 							maxCount:v[i].maxCount
 						};
 						this.goods.push(goodobj);
-						localStorage.setItem("good",JSON.stringify(pub.good));
+						
 					} else{
 						var l = (this.idArr).indexOf(v[i].id);
 						if ( l == -1) {
@@ -259,9 +260,10 @@ export default {
 						}else{
 							this.goods[l].sum = v[i].buyCount + this.goods[l].sum ;
 						}
-						localStorage.setItem("good",JSON.stringify(this.goods));
+						
 					}
-				}
+                }
+                localStorage.setItem("good",JSON.stringify(this.goods));
 				this.$router.replace({path:"more"})
 			}
 		},

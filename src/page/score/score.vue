@@ -54,7 +54,7 @@
             </dl> -->
         </div>
     </div>
-    <transition name="fade">
+    <!-- <transition name="fade">
         <section class="license_container" v-if="showlicenseImg" @click="showlicenseImg = false">
             <img v-lazy="imgBaseUrl + licenseImg">
         </section>
@@ -62,6 +62,7 @@
     <transition name="router-slid" mode="out-in">
         <router-view></router-view>
     </transition>
+     -->
  </div>
 </template>
 
@@ -129,9 +130,9 @@ export default {
 @import "../../common/sprite.css";
 
 .score{
-    position: absolute;
+    /* position: absolute;
     right: 0;
-    left: 0;
+    left: 0; */
     height: 100%;
     max-width: 750px;
     margin: 0 auto;

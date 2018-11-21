@@ -136,11 +136,6 @@ export default {
 
 <style scoped>
 .score_goods_list{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     padding-top: 87px;
     background-color: #ebebeb;
     z-index: 18;

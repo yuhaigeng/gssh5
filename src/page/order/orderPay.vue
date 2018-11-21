@@ -77,7 +77,7 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
       },
       methods:{
         llpay:function () {
-              this.$ajax.get('/api', {
+              this.$ajax.get(_this.HOST, {
                   params:Object.assign({
                      method:'order_topay_llpay',
                   },this.publicParameter)

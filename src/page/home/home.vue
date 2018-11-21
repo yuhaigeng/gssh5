@@ -7,7 +7,7 @@
         <div class="main-wrap index-wrap">
           <div class="main">
                   <div id="banner-wrap common-wrap">
-                      <banner :imgList = "topList" v-if="topList.length"></banner>
+                      <banner :imgList = "topList" :height = "'280px'" v-if="topList.length"></banner>
                   </div>
                   <div class="gonggao-wrap sprite icon_voice">
                       <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
@@ -126,7 +126,7 @@ export default {
           },
           //获取首页数据
           get_main_page:function () {
-              this.$ajax.get('/api', {
+              this.$ajax.get(this.HOST, {
                   params:{
                       method: "main_page_show_three",
                       websiteNode:this.websiteNode
@@ -151,7 +151,7 @@ export default {
 
           //自动登陆
           autoLogin:function(){
-              this.$ajax.get('/api',{
+              this.$ajax.get(this.HOST,{
                   params:{
                       method:'user_login',
                       tokenId:this.tokenId
@@ -253,7 +253,11 @@ export default {
         width: 180px;
     }
     .index-advertisement-wrap .index-advertisement {
-    height: 200px;
-    overflow: hidden;
-}
+        height: 200px;
+        overflow: hidden;
+    }
+    .index-advertisement img{
+        width: 100%;
+        height: 100%;
+    }
 </style>

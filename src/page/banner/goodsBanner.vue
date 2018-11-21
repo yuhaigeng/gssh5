@@ -1,5 +1,5 @@
 <template>
-    <div class="swiper-container common-wrap">
+    <div class="swiper-container common-wrap" :style="{height:height}">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(item,index) in imgList" :key="index">
                 <img :src="item" alt="">
@@ -19,7 +19,7 @@ export default {
 
     }
  },
- props:['imgList'],
+ props:['imgList','height'],
  mounted(){
 
      var mySwiper = new Swiper('.swiper-container', {
@@ -36,8 +36,6 @@ export default {
     })
  }
 }
-</script>
-
 </script>
 
 <style scoped>

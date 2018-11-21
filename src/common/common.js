@@ -2,7 +2,7 @@ const websiteNode = '3301';
 //调用系统参数
 const getSystem = function (params) {
     const _this = params
-    _this.$ajax.get('/api', {
+    _this.$ajax.get(_this.HOST, {
         params: {
             method: "system_config_constant",
             websiteNode: _this.websiteNode
@@ -32,7 +32,7 @@ const getMessage = function (params) {
     }, _this.userBasicParam);
     console.log(obj)
 
-    _this.$ajax.get('/api', {
+    _this.$ajax.get(_this.HOST, {
         params: obj
     }).then(result => {
         return result.data;

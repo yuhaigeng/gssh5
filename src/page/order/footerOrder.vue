@@ -25,6 +25,7 @@ export default {
 	computed: {
 		getMoney(){
 			let totalMoney = 0;
+			console.log(this.couponObj)
 			if (this.couponObj.selectId) {
 				var arr = (this.couponObj.selectId).split(',');
 				var couponArr = this.couponObj.useable;

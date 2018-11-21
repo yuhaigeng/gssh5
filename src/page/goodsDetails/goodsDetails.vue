@@ -1,64 +1,62 @@
 <template>
- <div class="detail common-wrap">
-     <div class="header-wrap goodsDetails_header">
+ 	<div class="detail common-wrap">
+    <div class="header-wrap goodsDetails_header">
 			<div class="header_left header_back sprite icon_delete" @click="back"></div>
 			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_a':'icon_collect_b'" @click="changeCollect"></div>
-	</div>
-	<div class="main-wrap goods_detaile_wrap">
-		<div class="main">
-			<div class="goodsDetails_img_box">
-				<goodsBanner :imgList = "bannerDate" v-if="bannerDate.length"></goodsBanner>
-			</div>
-			<div class="goodsDetails_box1">
-				<div class="goodsDetails_box1_top clearfloat">
-					<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade" @click="goVip"></span></h3>
-					<div class="goodsDetails_box1_ionc">
-						
-					</div>
-				</div>
-				<ul class="goodsDetails_box1_center">
-					<li class="clearfloat goodsDetails_box1_center_li1">
-						<div class="goodsDetails_text">
-							{{detailList.goodsShows}}
-						</div>
-						<div class="moreGoods_goods_number clearfloat">
-							<b class='bStyle' v-if="getNumText(detailList)" v-text="getNumText(detailList)" ></b>
-								<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailList)"><img src="../../assets/img/btn_m@2x.png"/></span>
-								<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber fontColor" v-text="getGoodNum(detailList.id)"></span>
-								<span v-if="!getNumText(detailList)" class="goodsNumber_max" v-on:click.stop="addGood(detailList,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
-						</div>
-					</li>
-					<li class="clearfloat">
-						<div class="goodsDetails_box_left">
-							单价：<span v-if="logined"><span class="color_f27c32">{{detailList.gssPrice}}</span>元/{{detailList.priceUnit}}</span>
-							<span v-else></span>
-						</div>
-						<div class="goodsDetails_box_right">
-							总价: <span v-if="logined">{{detailList.priceDesc}}</span>
-							<span v-else></span>
-						</div>
-						<div class="goodsDetails_box_left">
-							产地：{{detailList.sourceCityName}}
-						</div>
-						<div class="goodsDetails_box_right">
-							规格：{{detailList.sizeDesc}}
-						</div>
-					</li>
-				</ul>
-			</div>
-			<div class="goodsDetails_box2">
-				<h4><span></span>&nbsp;&nbsp;商品详情</h4>
-				<div class="goodsDetails_box2_" v-html="detailList.goodsContext"></div>
-			</div>
 		</div>
+		<div class="main-wrap goods_detaile_wrap">
+			<div class="main">
+				<div class="goodsDetails_img_box">
+					<goodsBanner :imgList = "bannerDate" :height = "'600px'" v-if="bannerDate.length"></goodsBanner>
+				</div>
+				<div class="goodsDetails_box1">
+					<div class="goodsDetails_box1_top clearfloat">
+						<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade" @click="goVip"></span></h3>
+						<div class="goodsDetails_box1_ionc">
+							
+						</div>
+					</div>
+					<ul class="goodsDetails_box1_center">
+						<li class="clearfloat goodsDetails_box1_center_li1">
+							<div class="goodsDetails_text">
+								{{detailList.goodsShows}}
+							</div>
+							<div class="moreGoods_goods_number clearfloat">
+								<b class='bStyle' v-if="getNumText(detailList)" v-text="getNumText(detailList)" ></b>
+									<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailList)"><img src="../../assets/img/btn_m@2x.png"/></span>
+									<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber fontColor" v-text="getGoodNum(detailList.id)"></span>
+									<span v-if="!getNumText(detailList)" class="goodsNumber_max" v-on:click.stop="addGood(detailList,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
+							</div>
+						</li>
+						<li class="clearfloat">
+							<div class="goodsDetails_box_left">
+								单价：<span v-if="logined"><span class="color_f27c32">{{detailList.gssPrice}}</span>元/{{detailList.priceUnit}}</span>
+								<span v-else></span>
+							</div>
+							<div class="goodsDetails_box_right">
+								总价: <span v-if="logined">{{detailList.priceDesc}}</span>
+								<span v-else></span>
+							</div>
+							<div class="goodsDetails_box_left">
+								产地：{{detailList.sourceCityName}}
+							</div>
+							<div class="goodsDetails_box_right">
+								规格：{{detailList.sizeDesc}}
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="goodsDetails_box2">
+					<h4><span></span>&nbsp;&nbsp;商品详情</h4>
+					<div class="goodsDetails_box2_" v-html="detailList.goodsContext"></div>
+				</div>
+			</div>
     </div>
-	<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
- </div>
+		<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
+ 	</div>
 </template>
 
 <script>
-import Swiper from 'swiper';
-import '@/common/swiper-3.3.1.min.css';
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/goodsBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
@@ -68,14 +66,11 @@ export default {
 	name:'goodsDetail',
  	data() {
  		return {
-			isCollect: localStorage.getItem("isColle"),
+			isCollect: false,
 			logined:getIsLogin(),
 			detailList: [],
-			buyNum: 0,
 			bannerDate:[],
-			collectList: [],
-			userId: getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).cuserInfoid : "",
-			firmId: getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
+			userId:[],
 			//本地购物车
 			goShopCart:[],
 			systemMoney:-1,//系统参数配置中配置的起售金额
@@ -99,74 +94,59 @@ export default {
 		goodsBanner
  	},
 	created:function() {
-		this.getOrder()
+		this.goodsId = this.$route.params.id
  	},
 	mounted(){
-		this.get_goods_detail()
-		var mySwiper = new Swiper('.swiper-container', {
-			loop: true,
-			pagination: {
-				el: '.swiper-pagination',
-				clickable: true,
-				autoplayDisableOnInteraction: false
-			},
-		})
 		// 数据初始化
-      if (getIsLogin()) {
-        this.isLogin = getIsLogin();
-        this.tokenId = getTokenId();
-        const userInfo = JSON.parse(getUserData());
-        
-        this.userBasicParam = {
-            firmId : userInfo.firmInfoid,
-            source : 'firmId'+userInfo.firmInfoid,
-            sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-            tokenId : getTokenId()
-        }
-      }
-      
+		if (getIsLogin()) {
+			const userInfo = JSON.parse(getUserData());
+			this.userBasicParam = {
+				firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
+			}
+			this.userId = userInfo.cuserInfoid;
+			this.firmId = userInfo.firmInfoid;
+		}
+		if ( localStorage.getItem('system') ) {
+			this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
+		} else {
 
-      if ( localStorage.getItem('system') ) {
-        this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
-      } else {
-
-      }
-      if ( localStorage.getItem('good') ) {
-        this.goShopCart = JSON.parse(localStorage.getItem('good'))
-      } else {
-        this.goShopCart = []
-      }
-      this.windowHeight = window.innerHeight;
+		}
+		if ( localStorage.getItem('good') ) {
+			this.goShopCart = JSON.parse(localStorage.getItem('good'))
+		} else {
+			this.goShopCart = []
+		}
+		this.windowHeight = window.innerHeight;
+		this.get_goods_detail()
 	},
 	computed:{
-        // 获取宽度
-        getTopWidth:function(){
-          return  (this.goods.length * 164) + 24 +'px'
-        },
-        // 获取高度
-        getLeftHeight:function(){
-          const  bodyHeight  =  document.querySelector("body");
-          const  wrapHeight  =  document.querySelector(".header-wrap");
-          const  topHeight   =  document.querySelector('.moreDoogs_main_top');
-          const  footerHeight =  document.querySelector(".footer-wrap");
-          let a = parseInt(window.getComputedStyle(bodyHeight).height);
-          let b =   wrapHeight ? parseInt(window.getComputedStyle(wrapHeight).height) : 87 ;
-          let c = topHeight ? parseInt(window.getComputedStyle(topHeight).height):90;
-          let d =  footerHeight ? parseInt(window.getComputedStyle(footerHeight).height):98;
-          let e = a-b-c-d;
-         return e + 'px';
-        },
-        
-    },
-	methods:{
-		getOrder() {
-			this.Id = this.$route.params.id
+		// 获取宽度
+		getTopWidth:function(){
+			return  (this.goods.length * 164) + 24 +'px'
 		},
+		// 获取高度
+		getLeftHeight:function(){
+			const  bodyHeight  =  document.querySelector("body");
+			const  wrapHeight  =  document.querySelector(".header-wrap");
+			const  topHeight   =  document.querySelector('.moreDoogs_main_top');
+			const  footerHeight =  document.querySelector(".footer-wrap");
+			let a = parseInt(window.getComputedStyle(bodyHeight).height);
+			let b =   wrapHeight ? parseInt(window.getComputedStyle(wrapHeight).height) : 87 ;
+			let c = topHeight ? parseInt(window.getComputedStyle(topHeight).height):90;
+			let d =  footerHeight ? parseInt(window.getComputedStyle(footerHeight).height):98;
+			let e = a-b-c-d;
+			return e + 'px';
+		},
+	},
+	methods:{
 		get_goods_detail:function () {
 			this.$ajax.get(this.HOST, {
 				params:{
 					method: "goods_get_by_id_two",
-					goodsId: this.Id,
+					goodsId: this.goodsId,
 					userId: this.userId
 				}
 			}).then(resp => {
@@ -175,9 +155,7 @@ export default {
 					const list = this.detailList.goodsPics.split('@');
 					list.pop();
 					this.bannerDate = list;
-					let localColl = resp.data.data.isColl > 0 ? true : false;
-					this.isCollect = localColl
-					localStorage.setItem("isColle",localColl)
+					this.isCollect = (resp.data.data.isColl > 0 ? true : false)
 				} else {
 					this.$toast({
 						message : data.statusStr,
@@ -187,31 +165,30 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-
-				
 			}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
+				console.log('请求失败：'+ err);
 			});
 		},
 		get_goods_collectAdd:function () {
 			this.$ajax.get(this.HOST, {
 				params:{
 					method: "goods_collection_add",
-					goodsId: this.Id,
+					goodsId: this.goodsId,
 					firmId: this.firmId,
 					userId: this.userId
 				}
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
-					this.isColl = true
-				} else {
+					this.isCollect = true
 					this.$toast({
-						message : data.statusStr,
+						message : '收藏成功',
 						position: 'boottom',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
+				} else {
+					
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
@@ -221,15 +198,61 @@ export default {
 			this.$ajax.get(this.HOST, {
 				params:{
 					method: "goods_collection_del",
-					userId: this.userId,
-					goodsId: this.Id
+					goodsId: this.goodsId,
+					firmId: this.firmId,
+					userId: this.userId
 				}
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
-					const arr = this.collectList;
-					const arr1 = arr.splice(index, 1);
-					this.collectList = arr1;
+					this.isCollect = false;
+					this.$toast({
+						message : '取消收藏成功',
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
 				} else {
+					
+				}
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+		},
+		goVip() {
+			this.$router.push({path:'/vip'})
+		},
+		changeCollect(){
+			if(this.isCollect){
+				this.get_goods_collect_del();
+			}else {
+				this.get_goods_collectAdd()
+			}
+		},
+		submitGoShopCart(){
+			let goodsList = goodlist1();
+			let obj = Object.assign({
+					method: "settlement_shop_cart",
+					goodsList:goodsList,
+			},this.userBasicParam)
+			
+			this.$ajax.get(this.HOST, {
+					params:obj
+			}).then(result => {
+					return result.data;
+			}).then(data => {
+				if (data.statusCode=='100000') {
+					sessionStorage.setItem('address',JSON.stringify(data.data));
+					this.$router.push({path:'/orderSettlement'})
+				}else if (data.statusCode=='100903' || data.statusCode=='100907') {
+					var orderResult={
+						statusCode:data.statusCode,
+						orderCode:data.data.orderCode
+					}
+					sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
+					this.$router.push({path:'/orderResult'})
+				}else{
+					$(".footer-rigth").addClass("true");
 					this.$toast({
 						message : data.statusStr,
 						position: 'boottom',//top boottom middle
@@ -238,214 +261,154 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-			}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
 			});
-		},
-		submitGoShopCart(){
-        let goodsList = goodlist1();
-        let obj = Object.assign({
-            method: "settlement_shop_cart",
-            goodsList:goodsList,
-        },this.userBasicParam)
-        this.$ajax.get(this.HOST, {
-            params:obj
-        }).then(result => {
-            return result.data;
-        }).then(data => {
-            
-            if (data.statusCode=='100000') {
-              sessionStorage.setItem('address',JSON.stringify(data.data));
-              
-              this.$router.push({path:'/orderSettlement'})
-            }else if (data.statusCode=='100903' || data.statusCode=='100907') {
-              var orderResult={
-                statusCode:data.statusCode,
-                orderCode:data.data.orderCode
-              }
-              sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
-              window.location.href='order_result.html?v=0.1'
-            }else{
-              $(".footer-rigth").addClass("true");
-              this.$toast({
-                message : data.statusStr,
-                position: 'boottom',//top boottom middle
-                duration: 2000,//延时多久消失
-                //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-                //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-              })
-            }
-        });
 	  },
 	  getNumText(item){
-        const msgArr = ['','','不是VIP','等级不足']
-        if (item.vipGrade > 0 && (item.state == 2 || item.state == 3) ) {
-          return msgArr[item.state]
-        } else {
-          if ((parseInt(item.initNum) - parseInt(item.saleNum)) <= 0) {
-            return '已售罄'
-          }else{
-            return ''
-          }
-        }
-      },
-      getGoodNum(id){
-        if (this.goShopCart && this.goShopCart.length) {
-          let good = this.goShopCart.filter((item)=>{
-            if (item.id == id) {
-              return item;
-            }
-          });
-          if (good && good.length) {
-            return good[0].sum;
-          }
-          return 0;
-        } else {
-          return 0;
-        }
-      },
-      // 购物车相关
-      //获取本地商品对象
-      getGoodObj(id){
-        if (this.goShopCart && this.goShopCart.length) {
-          let good = this.goShopCart.filter((item)=>{
-            if (item.id == id) {
-              return item;
-            }
-          });
-          if (good && good.length) {
-            return good[0];
-          }
-          return null;
-        } else {
-          return null;
-        }
-      },
-      // 添加商品
-      addGood(item,event){
-        let good = this.getGoodObj(item.id)
-        if (good) {
-          //先判断库存和限购  在执行加操作
-          if ( +good.sum < +item.packageNum) {
-            if(+item.maxCount > 0){
-              if( +good.sum < +item.maxCount){
-                good.sum = parseInt(good.sum) + 1;
+			const msgArr = ['','','不是VIP','等级不足']
+			if (item.vipGrade > 0 && (item.state == 2 || item.state == 3) ) {
+				return msgArr[item.state]
+			} else {
+				let text = ((parseInt(item.initNum) - parseInt(item.saleNum)) <= 0) ? '已售罄' : ''
+				return text;
+			}
+		},
+		getGoodNum(id){
+			if (this.goShopCart && this.goShopCart.length) {
+				let good = this.goShopCart.filter((item)=>{
+					if (item.id == id) {
+						return item;
+					}
+				});
+				if (good && good.length) {
+					return good[0].sum;
+				}
+				return 0;
+			} else {
+				return 0;
+			}
+		},
+		// 购物车相关
+		//获取本地商品对象
+		getGoodObj(id){
+			if (this.goShopCart && this.goShopCart.length) {
+				let good = this.goShopCart.filter((item)=>{
+					if (item.id == id) {
+						return item;
+					}
+				});
+				if (good && good.length) {
+					return good[0];
+				}
+				return null;
+			} else {
+				return null;
+			}
+		},
+		// 添加商品
+		addGood(item,event){
+			let good = this.getGoodObj(item.id)
+			if (good) {
+				//先判断库存和限购  在执行加操作
+				if ( +good.sum < +item.packageNum) {
+					if(+item.maxCount > 0){
+						if( +good.sum < +item.maxCount){
+							good.sum = parseInt(good.sum) + 1;
 
-                let elLeft = event.target.getBoundingClientRect().left;
-                let elTop = event.target.getBoundingClientRect().top;
-                
-                this.sport(elLeft,elTop)
-              }else{
-                this.$toast({
-                  message : "该商品限购"+item.maxCount+"件",
-                  position: 'boottom',//top boottom middle
-                  duration: 2000,//延时多久消失
-                  //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-                  //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-                })
-              }
-            }else{
-              good.sum = parseInt(good.sum) + 1;
+							let elLeft = event.target.getBoundingClientRect().left;
+							let elTop = event.target.getBoundingClientRect().top;
+							
+							this.sport(elLeft,elTop)
+						}else{
+							this.$toast({
+								message : "该商品限购"+item.maxCount+"件",
+								position: 'boottom',//top boottom middle
+								duration: 2000,//延时多久消失
+								//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+								//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+							})
+						}
+					}else{
+						good.sum = parseInt(good.sum) + 1;
 
-              let elLeft = event.target.getBoundingClientRect().left;
-              let elTop = event.target.getBoundingClientRect().top;
-              
-              this.sport(elLeft,elTop)
-              
-            }
-          } else{
-            this.$toast({
-              message : "库存不足",
-              position: 'boottom',//top boottom middle
-              duration: 2000,//延时多久消失
-              //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-              //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-            })
-          }
-        } else {
-          let obj = {
-            "id":item.id,
-            "name":item.goodsName,
-            "sum":1,
-            "price":item.wholeGssPrice,
-            "wholePriceSize":item.wholePriceSize,
-            "gssPrice":item.gssPrice,
-            "priceUnit":item.priceUnit,
-            "packageNum":item.packageNum,
-            "maxCount":item.maxCount
-          }
-          let elLeft = event.target.getBoundingClientRect().left;
-          let elTop = event.target.getBoundingClientRect().top;
-          
-          this.sport(elLeft,elTop)
+						let elLeft = event.target.getBoundingClientRect().left;
+						let elTop = event.target.getBoundingClientRect().top;
+						
+						this.sport(elLeft,elTop)
+						
+					}
+				} else{
+					this.$toast({
+						message : "库存不足",
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
+				}
+			} else {
+				let obj = {
+					"id":item.id,
+					"name":item.goodsName,
+					"sum":1,
+					"price":item.wholeGssPrice,
+					"wholePriceSize":item.wholePriceSize,
+					"gssPrice":item.gssPrice,
+					"priceUnit":item.priceUnit,
+					"packageNum":item.packageNum,
+					"maxCount":item.maxCount
+				}
+				let elLeft = event.target.getBoundingClientRect().left;
+				let elTop = event.target.getBoundingClientRect().top;
+				
+				this.sport(elLeft,elTop)
 
-          this.goShopCart.push(obj)
-        }
-      },
-      // 减少商品
-      cutGood(item){
-        let good = this.getGoodObj(item.id)
-        if (good.sum == 1) {
-          this.goShopCart.splice(this.goShopCart.indexOf(good),1);
-        } else {
-          good.sum = parseInt(good.sum) - 1;
-        }
-      },
-      sport(x,y){
-        var $ele = $(".gw_car_num");
-        if($ele.is(':visible')){
-          var xEnd=$ele.offset().left+$ele.width()/4;
-          var yEnd=$ele.offset().top;
-        }else{
-          var xEnd = 86,
-            yEnd = this.windowHeight - 110;
-        }
-        var xStar=x;
-        var yStar=y;
-        var main_obj=$('<div></div>');
-        var new_obj=$("<span></span>");
-        $('body').append(main_obj)
-        main_obj.append(new_obj);
-        new_obj.css({
-          'width': '20px',
-          'height': '20px',
-          'position': 'absolute',
-          'background': '#f56d15',
-          "border-radius":"50%",
-          'z-index':'600',
-          "top":yStar,
-          "left":xStar
-        }).animate({
-          left:xEnd,
-          top:yEnd
-        },800,function(){
-          main_obj.remove();
-        })
-      },
+				this.goShopCart.push(obj)
+			}
+		},
+		// 减少商品
+		cutGood(item){
+			let good = this.getGoodObj(item.id)
+			if (good.sum == 1) {
+				this.goShopCart.splice(this.goShopCart.indexOf(good),1);
+			} else {
+				good.sum = parseInt(good.sum) - 1;
+			}
+		},
+		sport(x,y){
+			var $ele = $(".gw_car_num");
+			if($ele.is(':visible')){
+				var xEnd=$ele.offset().left+$ele.width()/4;
+				var yEnd=$ele.offset().top;
+			}else{
+				var xEnd = 86,
+					yEnd = this.windowHeight - 110;
+			}
+			var xStar=x;
+			var yStar=y;
+			var main_obj=$('<div></div>');
+			var new_obj=$("<span></span>");
+			$('body').append(main_obj)
+			main_obj.append(new_obj);
+			new_obj.css({
+				'width': '20px',
+				'height': '20px',
+				'position': 'absolute',
+				'background': '#f56d15',
+				"border-radius":"50%",
+				'z-index':'600',
+				"top":yStar,
+				"left":xStar
+			}).animate({
+				left:xEnd,
+				top:yEnd
+			},800,function(){
+				main_obj.remove();
+			})
+		},
 		back(){
 			this.$router.go(-1);
 		},
-		goVip() {
-			this.$router.push({path:'/vip'})
-		},
-		changeCollect(){
-			this.isCollect = !this.isCollect
-			if(this.isCollect == false){
-				this.get_goods_collect_del();
-				this.$toast({
-					message: '取消收藏',
-					position: 'center',
-					duration: 2000
-				})
-			}else {
-				this.get_goods_collectAdd()
-				this.$toast({
-					message: '收藏成功',
-					position: 'center',
-					duration: 2000
-				})
-			}
-		},
+		
 	}
 }
 </script>
