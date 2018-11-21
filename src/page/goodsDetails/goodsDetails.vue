@@ -18,9 +18,7 @@
 				</div>
 				<ul class="goodsDetails_box1_center">
 					<li class="clearfloat goodsDetails_box1_center_li1">
-						<div class="goodsDetails_text">
-							{{detailList.goodsShows}}
-						</div>
+						<div class="goodsDetails_text" v-text="detailList.goodsShows"></div>
 						<div class="moreGoods_goods_number clearfloat">
 							<b class='bStyle' v-if="getNumText(detailList)" v-text="getNumText(detailList)" ></b>
 								<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailList)"><img src="../../assets/img/btn_m@2x.png"/></span>
@@ -30,19 +28,15 @@
 					</li>
 					<li class="clearfloat">
 						<div class="goodsDetails_box_left">
-							单价：<span v-if="logined"><span class="color_f27c32">{{detailList.gssPrice}}</span>元/{{detailList.priceUnit}}</span>
+							单价：<span v-if="logined"><span class="color_f27c32" v-text="detailList.gssPrice"></span>元/{{detailList.priceUnit}}</span>
 							<span v-else></span>
 						</div>
 						<div class="goodsDetails_box_right">
-							总价: <span v-if="logined">{{detailList.priceDesc}}</span>
+							总价: <span v-if="logined" v-text="detailList.priceDesc"></span>
 							<span v-else></span>
 						</div>
-						<div class="goodsDetails_box_left">
-							产地：{{detailList.sourceCityName}}
-						</div>
-						<div class="goodsDetails_box_right">
-							规格：{{detailList.sizeDesc}}
-						</div>
+						<div class="goodsDetails_box_left" v-text="'产地：' + detailList.sourceCityName"></div>
+						<div class="goodsDetails_box_right" v-text="'规格：' + detailList.sizeDesc"></div>
 					</li>
 				</ul>
 			</div>
