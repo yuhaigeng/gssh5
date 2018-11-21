@@ -245,7 +245,7 @@ export default {
                     console.log(data.statusStr);
                 }else {
                     this.isRotate =!this.isRotate;
-                    this.$refs.luckyCanvas.css({
+                    $(".item").css({
                         'animation-name': '',
                         '-moz-animation-name': '',
                         '-webkit-animation-name': '',
