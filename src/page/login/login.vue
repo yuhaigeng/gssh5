@@ -45,254 +45,266 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
 export default {
     name:'login',
     components:{
-        appHeader,
-        alertVue
+      appHeader,
+      alertVue
     },
     data() {
-        return {
-            headerMsg:{
-                type:"common",
-                title:'登陆',
-                jumpAfter:'register',
-                right:'申请服务',
-                left:'返回'
-            },
-            login : 0,  //短信和账号之间切换
-            tipsMsg:null, //提示文本
-            message:"", // 短信方式
-            account:"", // 账号方式
-            passWord:"", // 密码
-            code:null,     // 验证码
-            isActive:false, //是否激活
-            isHidden:true, //是否显示隐藏
-            isBottomHidden:false,  // 协议是否显示
-            phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
-            msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
-            count:'',
-            timer:null,
-            noticeInfoList:null,
-            method:['user_dynamic_login','user_login'],
-            websiteNode: this.websiteDate.code,
-            parameter:null,
-            descCode:"#HZ-DESC",
-
-        }
+      return {
+        headerMsg:{
+          type:"common",
+          title:'登陆',
+          jumpAfter:'register',
+          right:'申请服务',
+          left:'返回'
+        },
+        login : 0,  //短信和账号之间切换
+        tipsMsg:null, //提示文本
+        message:"", // 短信方式
+        account:"", // 账号方式
+        passWord:"", // 密码
+        code:null,     // 验证码
+        isActive:false, //是否激活
+        isHidden:true, //是否显示隐藏
+        isBottomHidden:false,  // 协议是否显示
+        phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
+        msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
+        count:'',
+        timer:null,
+        noticeInfoList:null,
+        method:['user_dynamic_login','user_login'],
+        websiteNode: this.websiteDate.code,
+        parameter:null,
+        descCode:"#HZ-DESC",
+        cache:{}
+      }
     },
     watch:{
         login:function(val,oldval){
-            if(val == 0){
-                if(this.message != null && this.code != null){
-                  if( this.message.length == 11 && this.code.length == 6){
-                    this.isActive = true;
-                  }else{
-                    this.isActive = false;
-                  }
-                }else{
-                  this.isActive = false;
-                }
+          if(val == 0){
+            if(this.message != null && this.code != null){
+              if( this.message.length == 11 && this.code.length == 6){
+                this.isActive = true;
+              }else{
+                this.isActive = false;
+              }
             }else{
-                if(this.account != null && this.passWord !=null){
-                  if(this.account.length == 11 && this.passWord.length >= 6){
-                    this.isActive = true;
-                  }else{
-                    this.isActive = false;
-                  }
-                }else{
-                  this.isActive = false;
-                }
+              this.isActive = false;
             }
+          }else{
+            if(this.account != null && this.passWord !=null){
+              if(this.account.length == 11 && this.passWord.length >= 6){
+                this.isActive = true;
+              }else{
+                this.isActive = false;
+              }
+            }else{
+              this.isActive = false;
+            }
+          }
         },
         message: function(val) {
-            var n = val.replace(/\D/g,"");
-            if (n == 0) {
-                this.message='';
-            }else{
-                this.message=n;
-            }
-            if(this.message.length ==0){
-                this.tipsMsg  = null;
-                this.isActive = false;
-            }else{
-              if( this.message.length == 11){
-                if(!this.phoneNumberReg.test(this.message)){
-                        this.tipsMsg = "请输入正确的手机号！"
-                }else{
-                    this.tipsMsg  = null;
-                }
+          var n = val.replace(/\D/g,"");
+          if (n == 0) {
+            this.message='';
+          }else{
+            this.message=n;
+          }
+          if(this.message.length ==0){
+            this.tipsMsg  = null;
+            this.isActive = false;
+          }else{
+            if( this.message.length == 11){
+              if(!this.phoneNumberReg.test(this.message)){
+                this.tipsMsg = "请输入正确的手机号！"
               }else{
-                  this.tipsMsg = "请输入完整的手机号！"
+                this.tipsMsg  = null;
               }
+            }else{
+              this.tipsMsg = "请输入完整的手机号！"
             }
+          }
         },
         account:function(val){
-            var n = val.replace(/\D/g,"");
-            if (n == 0) {
-                this.account='';
-            }else{
-                this.account=n;
-            }
-            if(this.account.length == 0){
-                this.tipsMsg  = null;
-                this.isActive = false;
-            }else{
-              if( this.account.length == 11){
-                if(this.passWord.length >= 6){
-                      this.isActive = true;
-                }
-                if(!this.phoneNumberReg.test(this.account)){
-                        this.tipsMsg = "请输入正确的手机号！"
-                }else{
-                    this.tipsMsg  = null;
-                }
-              }else{
-                  this.tipsMsg = "请输入完整的手机号！"
+          var n = val.replace(/\D/g,"");
+          if (n == 0) {
+            this.account='';
+          }else{
+            this.account=n;
+          }
+          if(this.account.length == 0){
+            this.tipsMsg  = null;
+            this.isActive = false;
+          }else{
+            if( this.account.length == 11){
+              if(this.passWord.length >= 6){
+                this.isActive = true;
               }
+              if(!this.phoneNumberReg.test(this.account)){
+                this.tipsMsg = "请输入正确的手机号！"
+              }else{
+                this.tipsMsg  = null;
+              }
+            }else{
+              this.tipsMsg = "请输入完整的手机号！"
             }
+          }
         },
         passWord:function(val){
-            if(this.account.length == 11 && val.length >= 6 ){
-              this.isActive = true;
-            }else{
-              this.isActive = false
-            }
+          if(this.account.length == 11 && val.length >= 6 ){
+            this.isActive = true;
+          }else{
+            this.isActive = false
+          }
         },
         code:function(val){
-            var n = val.replace(/\D/g,"");
-            this.code = n;
-            if( this.message.length == 11 && this.code.length == 6 ){
-                this.isActive = true;
-            }else{
-                this.isActive = false
-            }
+          var n = val.replace(/\D/g,"");
+          this.code = n;
+          if( this.message.length == 11 && this.code.length == 6 ){
+            this.isActive = true;
+          }else{
+            this.isActive = false
+          }
         },
     },
     mounted(){
     },
     methods:{
-        getCode:function(){
-            this.$ajax.get(this.HOST, {
-              params:{
-                method:'gss_sms',
-                mobile: this.message
-              }
-            }).then(resp => {
-              if(resp.data.statusCode == "100000"){
-                this.isHidden = false
-                this.$toast({
-                  message : resp.data.statusStr,
-                  position: 'boottom',
-                  duration: 2000,
-                })
-              }else{
-                this.isHidden = true;
-                this.$toast({
-                  message : resp.data.statusStr,
-                  position: 'boottom',
-                  duration: 2000,
-                })
-              }
-            }).catch(err => {
-
-            });
-        },
-        login_up:function(){
-            // Object.assign()
-            this.$ajax.get(this.HOST, {
-                params :Object.assign({
-                    method:this.method[this.login],
-                    websiteNode:this.websiteNode,
-                    mobile:this.login ? this.account : this.message
-                }, this.parameter )
-            }).then(resp => {
-              if(resp.data.statusCode == "100000"){
-                this.setData(resp.data)
-                setTimeout(() =>{
-                  this.$router.push({path:'/my'})
-                },500)
-                this.$toast({
-                  message : '登录成功',
-                  position: 'boottom',
-                  duration: 2000,
-                })
-              }
-            }).catch(err => {
-            });
-        },
-        desc_data:function(){
-              this.$ajax.get(this.HOST, {
-                params:{
-                  method:'gss_desc',
-                  websiteNode:this.websiteNode,
-                  code:this.websiteNode + this.descCode
-                }
-            }).then(resp => {
-              if(resp.data.statusCode == "100000"){
-                resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-                resp.data.data.noticeTitle =  resp.data.data.title;
-                resp.data.data.alertType = 1;
-                this.noticeInfoList = resp.data.data;
-              }
-            }).catch(err => {
-            });
-        },
-        login_btn:function(e){
-            var target = event.target;
-            var isActive =target.classList.contains("active")
-            if (isActive) {
-              if(this.login == 0){
-                this.parameter = {smsCode:this.code}
-              }else{
-                this.parameter = {password:this.$md5(this.passWord)}
-              }
-              this.login_up();
+      getCode:function(){
+        this.$ajax.get(this.HOST, {
+          params:{
+            method:'gss_sms',
+            mobile: this.message
+          }
+        }).then(resp => {
+          if(resp.data.statusCode == "100000"){
+            this.isHidden = false
+            this.$toast({
+              message : resp.data.statusStr,
+              position: 'boottom',
+              duration: 2000,
+            })
+          }else{
+            this.isHidden = true;
+            this.$toast({
+              message : resp.data.statusStr,
+              position: 'boottom',
+              duration: 2000,
+            })
+          }
+        }).catch(err => {
+        });
+      },
+      login_up:function(){
+          // Object.assign()
+          this.$ajax.get(this.HOST, {
+            params :Object.assign({
+              method:this.method[this.login],
+              websiteNode:this.websiteNode,
+              mobile:this.login ? this.account : this.message
+            }, this.parameter )
+          }).then(resp => {
+            if(resp.data.statusCode == "100000"){
+              this.setData(resp.data)
+              setTimeout(() =>{
+                this.$router.push({path:'/my'})
+              },500)
+              this.$toast({
+                message : '登录成功',
+                position: 'boottom',
+                duration: 2000,
+              })
+            }else{
+              this.$toast({
+                message : resp.data.statusStr,
+                position: 'boottom',
+                duration: 2000,
+              })
             }
-        },
-        get_verify_code:function(){
-          const TIME_COUNT = 60;
-          if (!this.tipsMsg && this.message) {
-              this.getCode();
-              this.count = TIME_COUNT;
-              this.timer = setInterval(() => {
-                if (this.count > 0 && this.count <= TIME_COUNT) {
-                    this.count--;
-                }else{
-                    this.isHidden = true;
-                    clearInterval(this.timer);
-                    this.timer = null;
-                }
-              }, 1000)
+          }).catch(err => {
+          });
+      },
+      desc_data:function(){
+        this.$ajax.get(this.HOST, {
+          params:{
+            method:'gss_desc',
+            websiteNode:this.websiteNode,
+            code:this.websiteNode + this.descCode
           }
-        },
-        focus:function(){
-          this.isBottomHidden = true;
-        },
-        blur:function(){
-          this.isBottomHidden = false;
-        },
-        agreement:function(){
-          this.desc_data()
-        },
-        closeAlert:function(){
-          this.noticeInfoList = null;
-        },
-        setData:function(resp){
-          let user_data={
-            cuserInfoid:resp.data.cuserInfo.id,
-            firmInfoid:resp.data.firmInfo.id,
-            firmName:resp.data.firmInfo.firmName,
-            linkTel:resp.data.cuserInfo.mobile,
-            score:resp.data.firmInfo.score,
-            next:resp.data.firmInfo.next,
-            userGrade:resp.data.firmInfo.userGrade,
-            websiteNode:resp.data.firmInfo.websiteNode,
-            faceImgUrl:resp.data.firmInfo.faceImgUrl,
-            websiteNodeName:resp.data.firmInfo.websiteNodeName
+        }).then(resp => {
+          if(resp.data.statusCode == "100000"){
+            resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+            resp.data.data.noticeTitle =  resp.data.data.title;
+            resp.data.data.alertType = 1;
+            this.noticeInfoList = resp.data.data;
+            let key = this.websiteNode + this.descCode ;
+            let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
+            this.cache = Object.assign(this.cache,JSON.parse(obj))
           }
-          localStorage.setItem("user_data",JSON.stringify(user_data));
-          localStorage.setItem("tokenId",resp.data.tokenId);
-          localStorage.setItem("secretKey",resp.data.secretKey);
+        }).catch(err => {
+        });
+      },
+      login_btn:function(e){
+        var target = event.target;
+        var isActive =target.classList.contains("active")
+        if (isActive) {
+          if(this.login == 0){
+            this.parameter = {smsCode:this.code}
+          }else{
+            this.parameter = {password:this.$md5(this.passWord)}
+          }
+          this.login_up();
         }
-    }
+      },
+      get_verify_code:function(){
+        const TIME_COUNT = 60;
+        if (!this.tipsMsg && this.message) {
+          this.getCode();
+          this.count = TIME_COUNT;
+          this.timer = setInterval(() => {
+            if (this.count > 0 && this.count <= TIME_COUNT) {
+              this.count--;
+            }else{
+              this.isHidden = true;
+              clearInterval(this.timer);
+              this.timer = null;
+            }
+          }, 1000)
+        }
+      },
+      focus:function(){
+        this.isBottomHidden = true;
+      },
+      blur:function(){
+        this.isBottomHidden = false;
+      },
+      agreement:function(){
+        if (this.cache[this.websiteNode+this.descCode]) {
+          this.noticeInfoList = this.cache[this.websiteNode+this.descCode]
+        }else{
+          this.desc_data()
+        }
+      },
+      closeAlert:function(){
+        this.noticeInfoList = null;
+      },
+      setData:function(resp){
+        let user_data={
+          cuserInfoid:resp.data.cuserInfo.id,
+          firmInfoid:resp.data.firmInfo.id,
+          firmName:resp.data.firmInfo.firmName,
+          linkTel:resp.data.cuserInfo.mobile,
+          score:resp.data.firmInfo.score,
+          next:resp.data.firmInfo.next,
+          userGrade:resp.data.firmInfo.userGrade,
+          websiteNode:resp.data.firmInfo.websiteNode,
+          faceImgUrl:resp.data.firmInfo.faceImgUrl,
+          websiteNodeName:resp.data.firmInfo.websiteNodeName
+        }
+        localStorage.setItem("user_data",JSON.stringify(user_data));
+        localStorage.setItem("tokenId",resp.data.tokenId);
+        localStorage.setItem("secretKey",resp.data.secretKey);
+      }
+  }
 
 }
 </script>

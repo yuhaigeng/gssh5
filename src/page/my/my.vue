@@ -51,111 +51,110 @@ export default {
         loginState,
         personalOptions,
    },
-   data() {
-       return {
-            headerMsg:{
-                type:"my",
-                title:'我的',
-                routerPath:'/setUp',
-            },
-            isLogin:getIsLogin() ? getIsLogin() : false,
-            method:["user_personal_msg","firm_vip_info"],
-            firmId: "",
-            userBasicParam:{},
-            userInfo:{},
-            userVipInfo:{},
-            orderList:dateModule.orderList,
-            otherList:dateModule.otherList,
-            title:dateModule.title,
-            title1:dateModule.title1,
-            system:{}
-        }
-   },
-   mounted(){
-
-       if(localStorage.getItem("user_data")){
-            this.system = JSON.parse(localStorage.getItem('system'))
-            this.firmId = JSON.parse(getUserData()).firmInfoid;
-            this.userBasicParam ={
-                source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
-                tokenId: getTokenId(),
-                sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
-           }
-            this.personApi()
-            this.firm_vip_info()
-       }
+  data() {
+    return {
+      headerMsg:{
+        type:"my",
+        title:'我的',
+        routerPath:'/setUp',
+      },
+      isLogin:getIsLogin() ? getIsLogin() : false,
+      method:["user_personal_msg","firm_vip_info"],
+      firmId: "",
+      userBasicParam:{},
+      userInfo:{},
+      userVipInfo:{},
+      orderList:dateModule.orderList,
+      otherList:dateModule.otherList,
+      title:dateModule.title,
+      title1:dateModule.title1,
+      system:{}
+    }
+  },
+  mounted(){
+    if(localStorage.getItem("user_data")){
+      this.system = JSON.parse(localStorage.getItem('system'))
+      this.firmId = JSON.parse(getUserData()).firmInfoid;
+      this.userBasicParam ={
+        source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
+        tokenId: getTokenId(),
+        sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+      }
+      this.personApi()
+      this.firm_vip_info()
+    }
    },
    methods:{
-       personApi:function(){
-            this.$ajax.get(this.HOST, {
-              params:Object.assign({
-                method:this.method[0],
-                firmId:this.firmId
-              },this.userBasicParam)
-            }).then(resp => {
-              if(resp.data.statusCode ==  "100000"){
-                this.userInfo = resp.data.data
-              }
-            }).catch(err => {
-            });
-       },
-       firm_vip_info:function(){
-            this.$ajax.get(this.HOST, {
-              params:{
-                  method:this.method[1],
-                  firmId:this.firmId
-              }
-            }).then(resp => {
-               if(resp.data.statusCode ==  "100000"){
-                 this.userVipInfo=resp.data.data
-               }
-            }).catch(err => {
-            });
-       }
+      personApi:function(){
+        this.$ajax.get(this.HOST, {
+          params:Object.assign({
+            method:this.method[0],
+            firmId:this.firmId
+          },this.userBasicParam)
+        }).then(resp => {
+          if(resp.data.statusCode ==  "100000"){
+            this.userInfo = resp.data.data
+          }
+        }).catch(err => {
+        });
+      },
+      firm_vip_info:function(){
+        this.$ajax.get(this.HOST, {
+          params:{
+            method:this.method[1],
+            firmId:this.firmId
+          }
+        }).then(resp => {
+          if(resp.data.statusCode ==  "100000"){
+            this.userVipInfo=resp.data.data
+          }
+        }).catch(err => {
+        });
+      }
    }
 }
 var dateModule  = {
-      isLogin:false,//是否登陆
-      title:"我的订单",
-      title1:"其他",
-      orderList:[//订单列表数据结构
-        {
-          icon:'.././static/img/icon_order1.png',
-          type:1,
-          name:'待发货',
-          linkUrl:'orderManagement',
-        },{
-          icon:'.././static/img/icon_order2.png',
-          type:2,
-          name:'已配货',
-          linkUrl:'orderManagement',
-        },{
-          icon:'.././static/img/icon_order3.png',
-          type:3,
-          name:'待支付',
-          linkUrl:'orderManagement',
-        },{
-          icon:'.././static/img/icon_order0.png',
-          type:4,
-          name:'全部订单',
-          linkUrl:'orderManagement',
-        }
-      ],
-      //其他列表数据结构
-      otherList:[
-        {
-          icon:'.././static/img/icon_address.png',
-          type:null,
-          name:'收货地址',
-          linkUrl:'address',
-        },{
-          icon:'.././static/img/icon_collection.png',
-          type:null,
-          name:'收藏',
-          linkUrl:'collect',
-        }
-      ]
-  }
+  isLogin:false,//是否登陆
+  title:"我的订单",
+  title1:"其他",
+  orderList:[//订单列表数据结构
+    {
+      icon:'.././static/img/icon_order1.png',
+      type:1,
+      name:'待发货',
+      linkUrl:'orderManagement',
+    },{
+      icon:'.././static/img/icon_order2.png',
+      type:2,
+      name:'已配货',
+      linkUrl:'orderManagement',
+    },{
+      icon:'.././static/img/icon_order3.png',
+      type:3,
+      name:'待支付',
+      linkUrl:'orderManagement',
+    },{
+      icon:'.././static/img/icon_order0.png',
+      type:4,
+      name:'全部订单',
+      linkUrl:'orderManagement',
+    }
+  ],
+  //其他列表数据结构
+  otherList:[
+    {
+      icon:'.././static/img/icon_address.png',
+      type:null,
+      name:'收货地址',
+      linkUrl:'address',
+    },{
+      icon:'.././static/img/icon_collection.png',
+      type:null,
+      name:'收藏',
+      linkUrl:'collect',
+    }
+  ]
+}
 </script>
 
 <style scoped >

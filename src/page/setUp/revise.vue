@@ -40,16 +40,20 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                     title:'修改密码',
                     left:'返回'
                 },
-                firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
-                userBasicParam:{
-                    source:'firmId'+ this.firmId,
-                    tokenId: getTokenId(),
-                    sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
-                },
+                firmId:'',
+                userBasicParam:{},
                 oldPassword:null,
                 newPassword:null,
                 confirmPassword:null,
              }
+         },
+         mounted(){
+            this.firmId = JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ;
+            this.userBasicParam = {
+              source:'firmId'+ this.firmId,
+              tokenId: getTokenId(),
+              sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+            }
          },
          methods:{
              changePassword:function(){

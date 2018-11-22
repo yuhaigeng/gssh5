@@ -1,49 +1,49 @@
 <template>
- <div class="">
-     <div class="header-wrap clearfloat">
-			<div class="searchCallback sprite arrow_left" @click="goBack"></div>
-		<div class="search">
-			<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" v-focus="focusState"/>
-			<div class="delete sprite delete_b" @click="del()"></div>
+	<div class="">
+		<div class="header-wrap clearfloat">
+				<div class="searchCallback sprite arrow_left" @click="goBack"></div>
+			<div class="search">
+				<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" v-focus="focusState"/>
+				<div class="delete sprite delete_b" @click="del()"></div>
+			</div>
 		</div>
-	</div>
-	<div class="main-wrap">
-		<div class="search_star" v-if="!searchVal">
-			<p class="search_tit">热门搜索</p>
-			<ul class="search_item">
-				<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.keyword)" v-text="item.keyword"></li>
-			</ul>
-		</div>
-		<div class="search_none" v-if="!goodsList.length && searchVal && state == 3">
-			<dl>
-				<dt>
-					<img src="../../assets/img/pic_logo@2x.png"/>
-				</dt>
-				<dd>
-					<p>非常抱歉，暂时没有您需要的水果！</p>
-					<p>400-0169-682</p>
-				</dd>
-			</dl>
-		</div>
-		<div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
-			<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item.id)">
+		<div class="main-wrap">
+			<div class="search_star" v-if="!searchVal">
+				<p class="search_tit">热门搜索</p>
+				<ul class="search_item">
+					<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.keyword)" v-text="item.keyword"></li>
+				</ul>
+			</div>
+			<div class="search_none" v-if="!goodsList.length && searchVal && state == 3">
 				<dl>
 					<dt>
-						<img :src="item.goodsLogo"/>
+						<img src="../../assets/img/pic_logo@2x.png"/>
 					</dt>
 					<dd>
-						<h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
-						<p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
-						<p class="moreGoods_goods_price">
-							<span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}
-						</p>
-						<div class="moreGoods_goods_icon"></div>
+						<p>非常抱歉，暂时没有您需要的水果！</p>
+						<p>400-0169-682</p>
 					</dd>
 				</dl>
 			</div>
+			<div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
+				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item.id)">
+					<dl>
+						<dt>
+							<img :src="item.goodsLogo"/>
+						</dt>
+						<dd>
+							<h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
+							<p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
+							<p class="moreGoods_goods_price">
+								<span v-if="logined"><span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}</span>
+							</p>
+							<div class="moreGoods_goods_icon"></div>
+						</dd>
+					</dl>
+				</div>
+			</div>
 		</div>
 	</div>
- </div>
 </template>
 
 <script>
@@ -57,54 +57,55 @@ const delay = (function() {
 		};
 })();
 export default {
- data() {
-	return {
-		focusState:false,
-		searchVal:'',
-		searchList:[],
-		goodsList:[],
-		state:1,//1 未请求,2 请求中,3 请求完毕
-		websiteNode: this.websiteDate.code
-	}
- },
- watch:{
-	searchVal() {
-		delay(() => {
-			this.search();
-		},300)
-	}
- },
- methods:{
-	get_goods_hot:function(){
-	 	this.$ajax.get(this.HOST, {
-			params:{
-				method: "goods_show_hot",
-			}
-		}).then(resp => {
-				if (resp.data.statusCode == 100000) {
-						this.searchList = resp.data.data;
-					} else {
-						this.$toast({
-							message : data.statusStr,
-							position: 'boottom',//top boottom middle
-							duration: 2000,//延时多久消失
-							//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-							//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-						})
-					}
-		}).catch(err => {
-			console.log('请求失败：'+ err.statusCode);
-		});
+	data() {
+		return {
+			focusState:false,
+			searchVal:'',
+			logined:getIsLogin(),
+			searchList:[],
+			goodsList:[],
+			state:1,//1 未请求,2 请求中,3 请求完毕
+			websiteNode: this.websiteDate.code
+		}
 	},
-	get_goods_name2:function() {
-		 this.state = 2;
-		 this.$ajax.get(this.HOST, {
-			params:{
-				method: "goods_show_name2",
-				websiteNode: this.websiteNode,
-				goodsName:this.searchVal
-			}
-		}).then(resp => {
+	watch:{
+		searchVal() {
+			delay(() => {
+				this.search();
+			},300)
+		}
+	},
+	methods:{
+		get_goods_hot:function(){
+			this.$ajax.get(this.HOST, {
+				params:{
+					method: "goods_show_hot",
+				}
+			}).then(resp => {
+				if (resp.data.statusCode == 100000) {
+					this.searchList = resp.data.data;
+				} else {
+					this.$toast({
+						message : data.statusStr,
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
+				}
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+			});
+		},
+		get_goods_name2:function() {
+			this.state = 2;
+			this.$ajax.get(this.HOST, {
+				params:{
+					method: "goods_show_name2",
+					websiteNode: this.websiteNode,
+					goodsName:this.searchVal
+				}
+			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					this.goodsList = resp.data.data;
 					this.state = 3;
@@ -117,51 +118,51 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-		}).catch(err => {
-			console.log('请求失败：'+ err.statusCode);
-			this.state = 3;
-		});
+			}).catch(err => {
+				console.log('请求失败：'+ err.statusCode);
+				this.state = 3;
+			});
+		},
+		clearTimer() {
+			if (this.timer) {
+				clearTimeout(this.timer)
+			}
+		},
+		search(event) {
+			if(event) {
+				if(this.searchVal.length != 0){
+					this.get_goods_name2() 
+				}
+			}
+		},
+		del() {
+			this.searchVal = ''
+			this.goodsList = []
+		},
+		showSearch(index) {
+			this.searchVal = index;
+			this.get_goods_name2() 
+		},
+		toDetail(id) {
+			this.$router.push({ path:'detail/'+id })
+		},
+		goBack() {
+			this.$router.go(-1);
+		},
 	},
-    clearTimer() {
-      if (this.timer) {
-        clearTimeout(this.timer)
-      }
-    },
-    search(event) {
-		if(event) {
-			if(this.searchVal.length != 0){
-				this.get_goods_name2() 
+	mounted() {
+		this.get_goods_hot()
+	},
+	directives: {
+		focus: {
+			//根据focusState的状态改变是否聚焦focus
+			update: function (el, value) {  //第二个参数传进来的是个json
+				if (value) {
+					el.focus()
+				}
 			}
 		}
-    },
-    del() {
-		this.searchVal = ''
-		this.goodsList = []
-	},
-	showSearch(index) {
-		this.searchVal = index;
-		this.get_goods_name2() 
-	},
-	toDetail(id) {
-		this.$router.push({ path:'detail/'+id })
-	},
-	goBack() {
-		this.$router.go(-1);
-	},
- },
- mounted() {
-	 this.get_goods_hot()
- },
- directives: {
-    focus: {
-      //根据focusState的状态改变是否聚焦focus
-      update: function (el, value) {  //第二个参数传进来的是个json
-        if (value) {
-          el.focus()
-        }
-      }
-    }
-  }
+	}
 }
 </script>
 

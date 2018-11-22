@@ -47,33 +47,32 @@ export default {
   },
   methods:{
        get_meassage:function () {
-            this.$ajax.get(this.HOST, {
-                params:{
-                    method: 'mipush_msgrcd_show',
-                    firmId: 132,
-                    pageSize: this.pageSize,
-                    pageNo:this.pageNo,
-                }
-            }).then(resp => {
-              if(resp.data.statusCode == "100000"){
-                if(resp.data.data.pageNo == 1){
-                  this.messages = resp.data.data;
-                  this.objects = resp.data.data.objects
-                }else{
-                  this.messages = resp.data.data;
-                  this.objects =  this.objects.concat(resp.data.data.objects);
-                }
+         this.$ajax.get(this.HOST, {
+            params:{
+              method: 'mipush_msgrcd_show',
+              firmId: 132,
+              pageSize: this.pageSize,
+              pageNo:this.pageNo,
+            }
+         }).then(resp => {
+            if(resp.data.statusCode == "100000"){
+              if(resp.data.data.pageNo == 1){
+                this.messages = resp.data.data;
+                this.objects = resp.data.data.objects
+              }else{
+                this.messages = resp.data.data;
+                this.objects =  this.objects.concat(resp.data.data.objects);
               }
-            }).catch(err => {
-            });
-        },
-        load_more:function(){
-            if (!this.messages.isLast) {
-							this.pageNo ++ ;
-						  this.get_meassage();
-						}
+            }
+         }).catch(err => {
+         });
+      },
+      load_more:function(){
+        if (!this.messages.isLast) {
+          this.pageNo ++ ;
+          this.get_meassage();
         }
-
+      }
   }
 }
 </script>

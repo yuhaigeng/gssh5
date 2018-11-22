@@ -1,54 +1,54 @@
 <template>
- <div class="common-wrap">
-    <app-header :type="headerMsg">
-		<div slot="commonAlert" @click="get_desc" v-if="dataType == 'couponInfo'">使用说明</div>
-	</app-header>
+	<div class="common-wrap">
+		<app-header :type="headerMsg">
+			<div slot="commonAlert" @click="get_desc" v-if="dataType == 0">使用说明</div>
+		</app-header>
 
-    <!--选择优惠卷-->
-    <div class="main-wrap coupon_main_wrap">
-        <div class="main">
-            <div class="select_coupon_top" :class="{selectTop:isUse}" @click="noUse">不使用优惠券</div>
-            <div class="coupon_main_" v-if="coupon[dataType]">
-                <div class="coupon_main_available_box" v-if="coupon[dataType].useable && coupon[dataType].useable.length">
-                    <p class="title" >可用优惠券</p>
-                    <div class="coupon_main_available">
-                        <dl class="clearfloat coupon_status1"  v-for="(item, index) in coupon[dataType].useable" :key="index" :class="{'active':(coupon[dataType].selectId.split(',')).indexOf(item.id) != -1 ,'no':dataType != '0'}" @click="choose(item)">
-                            <dt class="sprite_login quan_c" v-text="item.couponMoney">元</dt>
-                            <dd>
-                                <div class="coupon_top clearfloat">
-                                    <div class="coupon_name">{{item.couponName}}</div>
-                                    <div class="coupon_state"></div>
-                                </div>
-                                <div class="coupon_time">有效期至：{{item.endTime}}</div>
-                                <div class="coupon_money">金额要求：单个订单大于{{item.leastOrderMoney}}元</div>
-                                <div class="coupon_come">来源：{{item.sendMethod}}</div>
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-                <div class="coupon_main_unAvailable_box" v-if="coupon[dataType].unusable && coupon[dataType].unusable.length">
-                    <p class="title">不可用优惠券</p>
-                    <div class="coupon_main_unAvailable">
-                        <dl class="clearfloat coupon_status1" v-for="(item, index) in coupon[dataType].unusable" :key="index">
-                            <dt class="sprite_login quan_c">{{item.couponMoney}}元</dt>
-                            <dd>
-                                <div class="coupon_top clearfloat">
-                                    <div class="coupon_name">{{item.couponName}}</div>
-                                    <div class="coupon_state"></div>
-                                </div>
-                                <div class="coupon_time">有效期至：{{item.endTime}}</div>
-                                <div class="coupon_money">金额要求：单个订单大于{{item.leastOrderMoney}}元</div>
-                                <div class="coupon_come">来源：{{item.sendMethod}}</div>
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-	<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
-	<order-footer v-if="dataType" :couponObj="coupon[dataType]" v-on:listenSubmit = "submitCoupon"></order-footer>
- </div>
+		<!--选择优惠卷-->
+		<div class="main-wrap coupon_main_wrap">
+			<div class="main">
+				<div class="select_coupon_top" :class="{selectTop:isUse}" @click="noUse">不使用优惠券</div>
+				<div class="coupon_main_" v-if="coupon[dataType]">
+					<div class="coupon_main_available_box" v-if="coupon[dataType].useable && coupon[dataType].useable.length">
+						<p class="title" >可用优惠券</p>
+						<div class="coupon_main_available">
+							<dl class="clearfloat coupon_status1"  v-for="(item, index) in coupon[dataType].useable" :key="index" :class="{'active':(coupon[dataType].selectId.split(',')).indexOf(item.id) != -1 ,'no':dataType != '0'}" @click="choose(item)">
+								<dt class="sprite_login quan_c" v-text="item.couponMoney">元</dt>
+								<dd>
+									<div class="coupon_top clearfloat">
+										<div class="coupon_name">{{item.couponName}}</div>
+										<div class="coupon_state"></div>
+									</div>
+									<div class="coupon_time">有效期至：{{item.endTime}}</div>
+									<div class="coupon_money">金额要求：单个订单大于{{item.leastOrderMoney}}元</div>
+									<div class="coupon_come">来源：{{item.sendMethod}}</div>
+								</dd>
+							</dl>
+						</div>
+					</div>
+					<div class="coupon_main_unAvailable_box" v-if="coupon[dataType].unusable && coupon[dataType].unusable.length">
+						<p class="title">不可用优惠券</p>
+						<div class="coupon_main_unAvailable">
+							<dl class="clearfloat coupon_status1" v-for="(item, index) in coupon[dataType].unusable" :key="index">
+								<dt class="sprite_login quan_c">{{item.couponMoney}}元</dt>
+								<dd>
+									<div class="coupon_top clearfloat">
+										<div class="coupon_name">{{item.couponName}}</div>
+										<div class="coupon_state"></div>
+									</div>
+									<div class="coupon_time">有效期至：{{item.endTime}}</div>
+									<div class="coupon_money">金额要求：单个订单大于{{item.leastOrderMoney}}元</div>
+									<div class="coupon_come">来源：{{item.sendMethod}}</div>
+								</dd>
+							</dl>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
+		<order-footer v-if="dataType" :couponObj="coupon[dataType]" v-on:listenSubmit = "submitCoupon"></order-footer>
+	</div>
 </template>
 
 <script>
@@ -72,6 +72,7 @@ export default {
 			coupon:[],
 			couponNum:'',
 			dataType:'',
+			cache:{}
         }
     },
     components: {
@@ -106,6 +107,9 @@ export default {
 					resp.data.data.noticeTitle =  resp.data.data.title;
 					resp.data.data.alertType = 1;
 					this.noticeInfoList = resp.data.data;
+					let key = this.websiteNode + this.descCode ;
+					let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
+					this.cache = Object.assign(this.cache,JSON.parse(obj))
 				} else {
 					this.$toast({
 						message : data.statusStr,
@@ -113,14 +117,19 @@ export default {
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-				})
+					})
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.data.statusCode);
 			});
 		},
 		get_desc() {
-			this.desc_data()
+            // console.log(this.cache[this.websiteNode+this.descCode])
+            if (this.cache[this.websiteNode+this.descCode]) {
+              	this.noticeInfoList = this.cache[this.websiteNode+this.descCode]
+            }else{
+              	this.desc_data()
+            }
 		},
 		closeAlert:function(){
             this.noticeInfoList = null;
@@ -158,12 +167,10 @@ export default {
 					this.coupon[this.dataType].selectId = id;
 				}
 			}
-			
 		},
 		noUse(couponNum) {
 			this.coupon[this.dataType].selectId = '';
 			this.coupon[this.dataType].couponMoney = 0;
-			
 			this.$router.go(-1)
 		},
 		submitCoupon(data){
