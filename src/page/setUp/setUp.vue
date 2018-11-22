@@ -25,80 +25,80 @@ export default {
     components:{
       setHeader
     },
-      data() {
-          return {
-              items:[
-                {name:'企业信息',routerUrl:"company"},
-                {name:'登陆密码',routerUrl:"revise"}
-              ],
-              headerMsg:{
-                type:"common",
-                title:'设置',
-                left:'返回'
-            },
-            userBasicParam:{},
-          }
-      },
-      mounted(){
-          this.userBasicParam = {
-            source:'firmId'+ this.firmId,
-            tokenId: getTokenId(),
-            sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
-          }
-      },
-      methods:{
-        login_out:function(){
-            this.$ajax.get(this.HOST, {
-              params :Object.assign({
-                  method:'user_logout',
-              },this.userBasicParam)
-            }).then(resp => {
-              if(resp.data.statusCode ==  "100000"){
-                localStorage.clear();
-                this.$router.push({path:'/my'})
-                if (!sessionStorage.getItem('system')) {
-                    getSystem(this)
-                }
-              }
-            }).catch(err => {
-            });
-        }
-
+    data() {
+      return {
+        items:[
+          {name:'企业信息',routerUrl:"company"},
+          {name:'登陆密码',routerUrl:"revise"}
+        ],
+        headerMsg:{
+          type:"common",
+          title:'设置',
+          left:'返回'
+          },
+        userBasicParam:{},
       }
+    },
+    mounted(){
+      this.userBasicParam = {
+        source:'firmId'+ this.firmId,
+        tokenId: getTokenId(),
+        sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+      }
+    },
+    methods:{
+      login_out:function(){
+        this.$ajax.get(this.HOST, {
+          params :Object.assign({
+            method:'user_logout',
+          },this.userBasicParam)
+        }).then(resp => {
+          if(resp.data.statusCode ==  "100000"){
+            localStorage.clear();
+            this.$router.push({path:'/my'})
+            if (!sessionStorage.getItem('system')) {
+              getSystem(this)
+            }
+          }
+        }).catch(err => {
+        });
+      }
+
+    }
 }
 </script>
 
 <style scoped>
 .main-wrap{
-    margin-top: 87px;
+  margin-top: 87px;
 }
 .set_main .set_box {
-    margin-bottom: 22px;
-    background: #FFF;
-    padding: 0 24px;
+  margin-bottom: 22px;
+  background: #FFF;
+  padding: 0 24px;
 }
 .set_box .set_item {
-    background: url(../../assets/img/arrow_right.png) right center no-repeat;
-    color: #333;
-    border-bottom: 1px solid #DDD;
+  background: url(../../assets/img/arrow_right.png) right center no-repeat;
+  color: #333;
+  border-bottom: 1px solid #DDD;
 }
 .set_box .set_item, .set_main .signOut {
-    height: 88px;
-    line-height: 88px;
-    font-size: 30px;
+  height: 88px;
+  line-height: 88px;
+  font-size: 30px;
 }
 .set_box .set_item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 .hidden {
-    display: none;
+  display: none;
 }
 .set_main .signOut {
-    color: #F51B44;
-    margin-top: 60px;
+  color: #F51B44;
+  margin-top: 60px;
 }
 .set_main .signOut, .ticket_nav {
-    text-align: center;
-    background: #FFF;
+  text-align: center;
+  background: #FFF;
 }
 </style>

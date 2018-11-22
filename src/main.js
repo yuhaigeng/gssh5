@@ -24,11 +24,12 @@ import md5 from 'js-md5';
 Vue.prototype.$md5 = md5;
 
 
-import { pageNo , pageSize , websiteDate , websideNode } from "./config/env.js";
+import { pageNo , pageSize , websiteDate  } from "./config/env.js";
 console.log(websiteDate)
 Vue.prototype.pageNo = pageNo;
 Vue.prototype.pageSize = pageSize;
 Vue.prototype.websiteDate = websiteDate;
+Vue.prototype.websideNode = websiteDate.code;
 
 import Vuelazyload from "vue-lazyload"
 Vue.use(Vuelazyload,{

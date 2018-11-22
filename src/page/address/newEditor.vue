@@ -4,25 +4,23 @@
       <div class="header_right login_top_right" slot="sure" v-text="'确定'" @click="submit"></div>
     </addressHeader>
     <div class="main-wrap address_edit_box">
-        <div class="edit_box">
-            <ul class="edit_main">
-                <li>
-                    <label>联系人：</label><input type="text" v-model="person" id="edit_name" placeholder="请输入收货人姓名" >
-                </li>
-                <li>
-                    <label>联系电话：</label><input type="text"   maxlength="11" v-model="phone" id="edit_phone" class="edit_phone" placeholder="请输入联系电话"   ><span class="msg" v-text="tipsMsg"></span>
-                </li>
-                <li class="clearfloat">
-                    <label>选择省市：</label><input type="text" id="province"  v-model="city" placeholder="点击选择省市" readonly="readonly" @click="selCity" />
-                </li>
-                <li>
-                    <label>详细地址：</label><input type="text"   id="edit_county" v-model="street" placeholder="请输入街道地址(无需输入城区)" >
-                </li>
-            </ul>
-            <div class="address_del" v-show="this.$route.query.isEdit " @click="del"  >
-                地址删除
-            </div>
-        </div>
+      <div class="edit_box">
+        <ul class="edit_main">
+          <li>
+            <label>联系人：</label><input type="text" v-model="person" id="edit_name" placeholder="请输入收货人姓名" >
+          </li>
+          <li>
+            <label>联系电话：</label><input type="text"   maxlength="11" v-model="phone" id="edit_phone" class="edit_phone" placeholder="请输入联系电话"   ><span class="msg" v-text="tipsMsg"></span>
+          </li>
+          <li class="clearfloat">
+            <label>选择省市：</label><input type="text" id="province"  v-model="city" placeholder="点击选择省市" readonly="readonly" @click="selCity" />
+          </li>
+          <li>
+            <label>详细地址：</label><input type="text"   id="edit_county" v-model="street" placeholder="请输入街道地址(无需输入城区)" >
+          </li>
+        </ul>
+        <div class="address_del" v-show="this.$route.query.isEdit " @click="del">地址删除</div>
+      </div>
     </div>
     <vuePickers
       v-if="cityData"
@@ -44,8 +42,8 @@ import vuePickers from 'vue-pickers';
 export default {
   name:'newEditor',
   components:{
-      addressHeader,
-      vuePickers
+    addressHeader,
+    vuePickers
   },
   data() {
     return {
@@ -55,7 +53,7 @@ export default {
         right:'确定',
         left:'返回'
       },
-      addressData:JSON.parse(sessionStorage.getItem("editorAddress")),
+      addressData:[],
       phone:null,
       person:null,
       city:null,
@@ -63,12 +61,8 @@ export default {
       phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式,
       tipsMsg:null, //提示文本
       countyId:null,
-      firmId:  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ,
-      userBasicParam:{
-          source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
-          tokenId: getTokenId(),
-          sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
-      },
+      firmId: "" ,
+      userBasicParam:{},
       addressId:null,
       cityData:{
         data1: [],
@@ -76,8 +70,8 @@ export default {
         data3: []
       },
       isShow:false,
-      columns:3,
-      isNew:this.$route.query.isEdit // 修改， 新建弹框提示
+      columns:null,
+      isNew:null // 修改， 新建弹框提示
     }
   },
   watch:{
@@ -104,14 +98,23 @@ export default {
     }
   },
   mounted:function(){
-     this.cityApi()
+    this.firmId = JSON.parse(getUserData()).firmInfoid
+    this. userBasicParam={
+      source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
+      tokenId: getTokenId(),
+      sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+    }
+    this.addressData = JSON.parse(sessionStorage.getItem("editorAddress"));
+    this.columns = 3;
+    this.isNew = this.$route.query.isEdit;
+    this.cityApi()
     if( this.$route.query.isEdit ){
-        this.phone = this.addressData.receiverMobile
-        this.person = this.addressData.receiverName
-        this.city = this.addressData.countyAddr
-        this.street =  this.addressData.address
-        this.addressId = this.addressData.id
-        this.countyId=  this.addressData.countyId
+      this.phone = this.addressData.receiverMobile
+      this.person = this.addressData.receiverName
+      this.city = this.addressData.countyAddr
+      this.street =  this.addressData.address
+      this.addressId = this.addressData.id
+      this.countyId=  this.addressData.countyId
     }
   },
   methods:{
@@ -147,8 +150,8 @@ export default {
     cityApi:function(){
         this.$ajax.get(this.HOST, {
           params:{
-              method:'get_pcc',
-              websiteNode:this.websiteNode,
+            method:'get_pcc',
+            websiteNode:this.websiteNode,
           }
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
@@ -158,7 +161,7 @@ export default {
             this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
             let data2 = data1[0].cities;
             for(let i = 0 ; i < data2.length; i++){
-                this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
+              this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
             }
           }
         }).catch(err => {
@@ -173,10 +176,10 @@ export default {
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
             this.$toast({
-                    message :'删除成功' ,
-                    position: 'center',
-                    duration: 2000,
-                })
+              message :'删除成功' ,
+              position: 'center',
+              duration: 2000,
+            })
           }
         }).catch(err => {
         });
@@ -184,11 +187,10 @@ export default {
     // 删除地址
     del:function(){
       this.$messagebox.confirm('您确定要删除地址吗？','').then(action => {
-            this.delApi();
-            this.$router.go(-1)
-        }).catch((e) => {
-            console.log(e)
-        });
+        this.delApi();
+        this.$router.go(-1)
+      }).catch((e) => {
+      });
     },
     selCity:function(){
       this.isShow = true;
@@ -230,8 +232,8 @@ export default {
       let a = [],
           b = [];
       for( var key in val){
-         a.push(val[key].text)
-         b.push(val[key].value)
+        a.push(val[key].text)
+        b.push(val[key].value)
       }
       this.city =  a.join(',')
       this.countyId = b[2]
