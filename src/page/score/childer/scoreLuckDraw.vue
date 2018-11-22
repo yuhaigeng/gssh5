@@ -216,7 +216,7 @@ export default {
                 }
             }
         },
-        draw_prizes:function(id){
+        draw_prizes:function(){
             let obj = Object.assign({
                     method: "draw_prizes",
                     websiteNode: this.websiteNode,
@@ -243,12 +243,11 @@ export default {
                     console.log(data.statusStr);
                 }else {
                     this.isRotate =!this.isRotate;
-                    this.$refs.luckyCanvas.css({
-                        'animation-name': '',
-                        '-moz-animation-name': '',
-                        '-webkit-animation-name': '',
-                        '-o-animation-name': '',
-                    });
+                    let dom = this.$refs.luckyCanvas;
+                    dom.style.animationName = ''
+                    dom.style.mozAnimationName = ''
+                    dom.style.webkitAnimationName = ''
+                    dom.style.oAnimationName = ''
                     console.log(data.statusStr)
                 }
             });
@@ -262,7 +261,10 @@ export default {
         },
         rotateFn:function(item,text){
             // console.log(item)
-            let deg = eval('this.get'+this.$refs.luckyCanvas.css("transform"));//当前元素的角度
+            let dom = this.$refs.luckyCanvas;
+            let obj =window.getComputedStyle(dom);
+            let resultTransform = obj.transform;
+            let deg = eval('this.get'+resultTransform);//当前元素的角度
             let l = this.lucky.length;
             let a = item *(360/ l );
             //6个奖品
@@ -303,13 +305,12 @@ export default {
             }
             this.n = this.n + 1800;
             this.d = this.n;
-            this.$refs.luckyCanvas.classList.remove("animation_name").css({
-                "webkitTransform":'rotate('+this.n+'deg)',
-                "MozTransform":'rotate('+this.n+'deg)',
-                "msTransform":'rotate('+this.n+'deg)',
-                "OTransform":'rotate('+this.n+'deg)',
-                "transform":'rotate('+this.n+'deg)',
-            });
+            dom.classList.remove('animation_name');
+            dom.style.transform = 'rotate('+this.n+'deg)'
+            dom.style.webkitTransform = 'rotate('+this.n+'deg)'
+            dom.style.MozTransform = 'rotate('+this.n+'deg)'
+            dom.style.msTransform = 'rotate('+this.n+'deg)'
+            dom.style.OTransform = 'rotate('+this.n+'deg)'
         },
         /* 
         * 解析matrix矩阵，0°-360°，返回旋转角度 
@@ -352,7 +353,7 @@ export default {
                 }else {
                     if(this.isRotate)return;
                     this.isRotate = !this.isRotate;
-                    this.draw_prizes(this.attr('data'))
+                    this.draw_prizes()
                 }
             }
         },
