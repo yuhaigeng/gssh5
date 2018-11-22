@@ -5,9 +5,6 @@ import App from './App'
 import router from './router'
 import "./common/mobile-util";
 
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI)
 import axios from 'axios' //引入axios
 
 import Mint from 'mint-ui';
@@ -20,7 +17,7 @@ Vue.prototype.$ajax = axios //修改Vue的原型属性
 Vue.prototype.HOST = 'http://testapp.guoss.cn/gssapi/server/api.do'
 Vue.config.productionTip = false
 
-import md5 from 'js-md5';
+let md5 = require("js-md5")
 Vue.prototype.$md5 = md5;
 
 
@@ -32,7 +29,7 @@ Vue.prototype.websiteDate = websiteDate;
 
 import Vuelazyload from "vue-lazyload"
 Vue.use(Vuelazyload,{
-  loading:require('./assets/img/default_huodong_pic.png')
+  loading:require('../static/img/default_huodong_pic.png')
 })
 /* eslint-disable no-new */
 new Vue({
