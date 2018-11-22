@@ -10,9 +10,9 @@
                         </div>
                         <div class="score_active_center">
                             <div class="score_active_turntable">
-                                <img class="pointer1" src="../../../../static/img/img_Pointer@2x.png" alt="" />
+                                <img class="pointer1" src="../../../assets/img/img_Pointer@2x.png" alt="" />
                                 <canvas class="item animation0 transform0" id="wheelcanvas" ref="luckyCanvas" width="680px" height="680px" @transitionend="transitionend" @webkitTransitionend="transitionend"></canvas>
-                                <img class="pointer" src="../../../../static/img/btn_Start draw@2x.png" @click="btn_Start"/>
+                                <img class="pointer" src="../../../assets/img/btn_Start draw@2x.png" @click="btn_Start"/>
                             </div>
                         </div>
                         <p class="active_count" v-text="'还剩余'+count+'次抽奖机会'"></p>
@@ -370,10 +370,10 @@ export default {
 
 <style scoped>
 .icon_ad2 {
-	background: url(../../../../static/img/icon_ad@3x.png) no-repeat 20px center;
+	background: url(../../../assets/img/icon_ad@3x.png) no-repeat 20px center;
 }
 .sprite_login {
-	background-image: url(../../../../static/img/sprite_login.png);
+	background-image: url(../../../assets/img/sprite_login.png);
 	background-repeat: no-repeat;
 }
 
@@ -394,8 +394,8 @@ export default {
 .score_active_main{width: 100%;}
 .active_count{width: 100%;height: 40px;margin-bottom:20px;margin-top: -32px;text-align: center;color: #FFF;line-height: 40px;font-size: 24px;}
 .gonggao-wrap{height: 60px;overflow: hidden;}
-.score_active_center{height: 814px;background:url(../../../../static/img/img_bg_money@2x.png) no-repeat center ;}
-.score_active_turntable{width: 750px; height: 814px; background: url(../../../../static/img/img_Lottery_turntable_a@2x.png) no-repeat center;position: relative;overflow: hidden;}
+.score_active_center{height: 814px;background:url(../../../assets/img/img_bg_money@2x.png) no-repeat center ;}
+.score_active_turntable{width: 750px; height: 814px; background: url(../../../assets/img/img_Lottery_turntable_a@2x.png) no-repeat center;position: relative;overflow: hidden;}
 .score_active_turntable .pointer1{width: 88px;height: 120px;position: relative;left: 50%;margin-left: -44px;top:60px ;z-index: 2;}
 .score_active_turntable .pointer{position: absolute;width: 180px;height: 180px;left: 50%;top: 50%;margin-left: -90px;margin-top: -90px;}
 .score_active_turntable .item{width: 684px;height: 684px;position: absolute;left: 30px;top: 70px;transition: all 5s;}/*transition: all 2s;*/
