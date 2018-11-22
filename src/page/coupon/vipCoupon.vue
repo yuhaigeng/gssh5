@@ -204,10 +204,10 @@ export default {
 .ticket_item_right.state4 .btn{border: none;background:#dbdbdb ;color: #999;}
 /*.ticket_item .user_name {font-size: 36px;line-height: 52px;padding-right: 30px;}*/
 .ticket_item .user_vip_icon {display: inline-block;width: 98px;height: 34px;border-radius: 17px;margin-right: 8px;position: relative;top: 6px;}
-.ticket_item .user_vip_icon.vip1{background: url(../../../static/img/vip_icon1_square_active.png) no-repeat center;}
-.ticket_item .user_vip_icon.vip2{background: url(../../../static/img/vip_icon2_square_active.png) no-repeat center;}
-.ticket_item .user_vip_icon.vip3{background: url(../../../static/img/vip_icon3_square_active.png) no-repeat center;}
-.ticket_item .user_vip_icon.vip4{background: url(../../../static/img/vip_icon4_square_active.png) no-repeat center;}
+.ticket_item .user_vip_icon.vip1{background: url(../../assetc/img/vip_icon1_square_active.png) no-repeat center;}
+.ticket_item .user_vip_icon.vip2{background: url(../../assetc/img/vip_icon2_square_active.png) no-repeat center;}
+.ticket_item .user_vip_icon.vip3{background: url(../../assetc/img/vip_icon3_square_active.png) no-repeat center;}
+.ticket_item .user_vip_icon.vip4{background: url(../../assetc/img/vip_icon4_square_active.png) no-repeat center;}
 
 .ticket_bottom{position: fixed;width: 100%;left: 0;bottom: 0;height: 80px;background: #E5E5E5;}
 .ticket_bottom p {text-align: center;color: #F51B44;font-size: 24px;line-height: 80px;}

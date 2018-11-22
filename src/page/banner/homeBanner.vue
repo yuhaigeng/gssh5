@@ -71,7 +71,7 @@ export default {
 <style scoped>
 
 .swiper-slide {
-    background: url(../../../static/img/pic_logo@2x.png) center no-repeat;
+    background: url(../../assetc/img/pic_logo@2x.png) center no-repeat;
     background-size: auto
 }
 .swiper-slide img{

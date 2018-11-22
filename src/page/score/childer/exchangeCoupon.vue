@@ -185,16 +185,16 @@ export default {
 .coupon_left{width: 170px;height: 166px;line-height: 166px;font-size: 30px;text-indent: 30px;color: #F76A10;}
 .coupon_right{height: 166px;width: 180px;text-align: center;}
 .coupon_center{flex: 1;};
-.coupon_center1{background: url(../../../../static/img/exchange01@2x.png) no-repeat 65% center;}
-.coupon_center2{background: url(../../../../static/img/exchange02@2x.png) no-repeat 65% center;}
-.coupon_center3{background: url(../../../../static/img/exchange03@2x.png) no-repeat 65% center;}
+.coupon_center1{background: url(../../../assetc/img/exchange01@2x.png) no-repeat 65% center;}
+.coupon_center2{background: url(../../../assetc/img/exchange02@2x.png) no-repeat 65% center;}
+.coupon_center3{background: url(../../../assetc/img/exchange03@2x.png) no-repeat 65% center;}
 .coupon_list_item .coupon_name,.coupon_list_item .coupon_score{height: 70px;padding-top: 28px;line-height: 48px;font-size: 26px;width: 100%;}
 .coupon_list_item .coupon_score{color: #f76a10;height: 90px;line-height: 68px;font-size: 34px;}
 .coupon_list_item .coupon_score span{font-size: 18px;}
 .coupon_center p{line-height: 30px;font-size: 20px;color: #666666;}
 .coupon_button{width: 140px;height: 52px;border: 1px solid rgb(145,145,145);color: rgb(145,145,145); line-height: 52px;font-size: 26px;border-radius: 3px;margin: 0 auto;}
 .coupon_btn0{border-color: rgb(247,106,16);color: rgb(247,106,16);}
-.coupon_center1{background: url(../../../../static/img/exchange01@2x.png) no-repeat 65% center;}
-.coupon_center2{background: url(../../../../static/img/exchange02@2x.png) no-repeat 65% center;}
-.coupon_center3{background: url(../../../../static/img/exchange03@2x.png) no-repeat 65% center;}
+.coupon_center1{background: url(../../../assetc/img/exchange01@2x.png) no-repeat 65% center;}
+.coupon_center2{background: url(../../../assetc/img/exchange02@2x.png) no-repeat 65% center;}
+.coupon_center3{background: url(../../../assetc/img/exchange03@2x.png) no-repeat 65% center;}
 </style>

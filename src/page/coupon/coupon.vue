@@ -104,7 +104,7 @@ export default {
 .coupon_center p{line-height: 30px;font-size: 20px;color: #666666;}
 .coupon_button{width: 140px;height: 52px;border: 1px solid rgb(145,145,145);color: rgb(145,145,145); line-height: 52px;font-size: 26px;border-radius: 3px;margin: 0 auto;}
 .coupon_btn0{border-color: rgb(247,106,16);color: rgb(247,106,16);}
-.coupon_center1{background: url(../../../static/img/exchange01@2x.png) no-repeat 65% center;}
-.coupon_center2{background: url(../../../static/img/exchange02@2x.png) no-repeat 65% center;}
-.coupon_center3{background: url(../../../static/img/exchange03@2x.png) no-repeat 65% center;}
+.coupon_center1{background: url(../../assetc/img/exchange01@2x.png) no-repeat 65% center;}
+.coupon_center2{background: url(../../assetc/img/exchange02@2x.png) no-repeat 65% center;}
+.coupon_center3{background: url(../../assetc/img/exchange03@2x.png) no-repeat 65% center;}
 </style>
