@@ -381,7 +381,7 @@ export default {
     font-size: 48px;
     color: #999;
     padding-top: 14px;
-    background: url(../../assetc/img/icon_vip_big.png) left center no-repeat;
+    background: url(../../assets/img/icon_vip_big.png) left center no-repeat;
     padding-left: 80px
 }
 
@@ -395,7 +395,7 @@ export default {
 }
 
 .vip_grow_all.active .vip_growValue_tit {
-    background: url(../../assetc/img/icon_vip_big_active.png) left center no-repeat;
+    background: url(../../assets/img/icon_vip_big_active.png) left center no-repeat;
     color: #f6c500
 }
 
@@ -431,35 +431,35 @@ export default {
     display: none
 }
 .vip_prowValue_grade_box dl.grade1 dt {
-    background: url(../../assetc/img/icon_vip1.png) center no-repeat
+    background: url(../../assets/img/icon_vip1.png) center no-repeat
 }
 
 .vip_prowValue_grade_box dl.grade2 dt {
-    background: url(../../assetc/img/icon_vip2.png) center no-repeat
+    background: url(../../assets/img/icon_vip2.png) center no-repeat
 }
 
 .vip_prowValue_grade_box dl.grade3 dt {
-    background: url(../../assetc/img/icon_vip3.png) center no-repeat
+    background: url(../../assets/img/icon_vip3.png) center no-repeat
 }
 
 .vip_prowValue_grade_box dl.grade4 dt {
-    background: url(../../assetc/img/icon_vip4.png) center no-repeat
+    background: url(../../assets/img/icon_vip4.png) center no-repeat
 }
 
 .vip_prowValue_grade_box dl.grade1.active dt {
-    background: url(../../assetc/img/icon_vip1_active.png) center no-repeat
+    background: url(../../assets/img/icon_vip1_active.png) center no-repeat
 }
 
 .vip_prowValue_grade_box dl.grade2.active dt {
-    background: url(../../assetc/img/icon_vip2_active.png) center no-repeat
+    background: url(../../assets/img/icon_vip2_active.png) center no-repeat
 }
 
 .vip_prowValue_grade_box dl.grade3.active dt {
-    background: url(../../assetc/img/icon_vip3_active.png) center no-repeat
+    background: url(../../assets/img/icon_vip3_active.png) center no-repeat
 }
 
 .vip_prowValue_grade_box dl.grade4.active dt {
-    background: url(../../assetc/img/icon_vip4_active.png) center no-repeat
+    background: url(../../assets/img/icon_vip4_active.png) center no-repeat
 }
 
 .vip_prowValue_grade_box .line_box {
@@ -471,7 +471,7 @@ export default {
 }
 
 .vip_prowValue_grade_box .line_box.active {
-    background: url(../../assetc/img/line_now.png) center no-repeat;
+    background: url(../../assets/img/line_now.png) center no-repeat;
     height: 26px;
     margin-top: 7px
 }

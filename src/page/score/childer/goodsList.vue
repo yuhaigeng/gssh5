@@ -173,7 +173,7 @@ export default {
 }
 
 .product dl dt {
-    background: url(../../../assetc/img/pic_logo@2x.png) center no-repeat;
+    background: url(../../../assets/img/pic_logo@2x.png) center no-repeat;
     position: relative
 }
 
