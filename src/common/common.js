@@ -1,4 +1,3 @@
-const websiteNode = '3301';
 //调用系统参数
 const getSystem = function (params) {
     const _this = params

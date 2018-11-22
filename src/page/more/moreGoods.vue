@@ -16,6 +16,9 @@
           </div>
           <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}" >
             <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
+              <ul class="moreGoods_box_list_class" v-show="gtes.length">
+                <li v-for="(item,index) in gtes" :key="index" v-text="item.name" :class="{active:index == isThree}" @click="threeNav(index,item.id)"></li>
+              </ul>
               <ul class="moreGoods_box_list"  v-show="left_name.length">
                 <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item.id)" >
                   <dl class="moreGoods_goods_detaile clearfloat">
@@ -92,6 +95,7 @@
         goodsType:null,
         isSelected:0,
         isTop:0,
+        isThree:0,
         isLast:false,
         //本地购物车
         goShopCart:[],
@@ -101,6 +105,9 @@
         elBottom: 0, //当前点击加按钮在网页中的绝对left值
         receiveInCart: false, //购物车组件下落的圆点是否到达目标位置
         windowHeight: null, //屏幕的高度
+        isWithout:null,
+        gtes:[],
+        eyeId:null
       }
     },
     watch:{
@@ -120,7 +127,7 @@
       if (getIsLogin()) {
         this.isLogin = getIsLogin();
         this.tokenId = getTokenId();
-        this.firmId = getIsLogin() ? JSON.parse(getUserData()).firmInfoid :"" ;
+        this.firmId = JSON.parse(getUserData()).firmInfoid  ;
         const userInfo = JSON.parse(getUserData());
 
         this.userBasicParam = {
@@ -173,15 +180,27 @@
             this.goods = resp.data.data;
             if(this.$route.query.typeCode){
               let a = this.$route.query.typeCode
-              let b =  a.substring(0,2);
-              for (var i = 0 ;i < this.goods.length;i++){
+              let b = a.substring(0,2);
+              let  i ,index , len=[];
+              for ( i = 0 ;i < this.goods.length;i++){
                 if(this.goods[i].typeCode == b){
-                  this.isTop = i
-                  this.typeCode = b
-                  this.goods_second_nav(i)
+                  break;
                 }
+                len.push(i)
               }
+              if(len.length == this.goods.length){
+                this.isWithout = true;
+                index = 0;
+                b = this.goods[0].typeCode
+              }else{
+                this.isWithout = false;
+                index = i;
+              }
+              this.isTop = index
+              this.typeCode = b
+              this.goods_second_nav(index)
             }else{
+              this.isTop = 0
               this.typeCode = this.goods[0].typeCode
               this.goods_second_nav()
             }
@@ -192,7 +211,6 @@
               duration: 2000,
             })
           }
-
         }).catch(err => {
         });
       },
@@ -208,28 +226,37 @@
             if(resp.data.statusCode == "100000"){
               this.left_name = resp.data.data;
               if(this.$route.query.typeCode){
-                let a = this.$route.query.typeCode;
+                let a =  this.$route.query.typeCode;
+                let index  , i ;
                 let topLeft = document.querySelector(".moreDoogs_main_top")
                 let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[num]
-                for (var i = 0 ;i <  this.left_name.length;i++){
+                for ( i = 0 ;i <  this.left_name.length;i++){
                   if(this.left_name[i].typeCode == a){
-                    this.isSelected = i
-                    this.goodsType = a
-                    this.goods_info_nav(i)
-                    this.$route.query.typeCode = "";
+                    break;
                   }
                 }
+                if(this.isWithout){
+                  index = 0
+                  a = this.left_name[0].typeCode ;
+                }else{
+                  index = i
+                }
+                this.isSelected = index ;
+                this.goodsType = a
+                this.$route.query.typeCode = "";
+                this.goods_info_nav(index)
                 if (ele.offsetLeft > 200) {
                   topLeft.scrollLeft = ele.offsetLeft-200
-                  }else{
-                    topLeft.scrollLeft = 0
-                  }
                 }else{
-                  this.goodsType =  this.left_name[0].typeCode
-                  this.isSelected = 0;
-                  this.goods_info_nav()
+                  topLeft.scrollLeft = 0
                 }
               }else{
+                this.goodsType =  this.left_name[0].typeCode
+                this.isSelected = 0;
+                this.goods_info_nav()
+              }
+
+            }else{
               this.$toast({
                 message : resp.data.statusStr,
                 position: 'boottom',
@@ -246,11 +273,14 @@
             firmId:this.firmId,
             websiteNode: this.websiteNode,
             typeCode:this.goodsType,
+            eyeId: this.eyeId,
             pageNo: this.pageNo,
             pageSize: this.pageSize,
           }
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
+            this.goodsList = resp.data.data.page;
+            this.gtes = resp.data.data.gtes;
             if(this.$route.query.typeCode){
               let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
               let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
@@ -259,13 +289,11 @@
               }else{
                 wrapTop.scrollTop = 0
               }
-            }
+             }
             if( this.pageNo == 1){
-              this.goodsList = resp.data.data.page;
               this.listObj =  this.goodsList.objects
               this.isLast = this.goodsList.isLast
             }else{
-              this.goodsList = resp.data.data.page
               this.listObj =  this.listObj.concat(this.goodsList.objects)
               this.isLast  = this.goodsList.isLast
             }
@@ -324,7 +352,6 @@
             rightTop.scrollTop = 0;
             wrapTop.scrollTop = 0;
             let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[index]
-            console.log(ele.offsetLeft)
             if (ele.offsetLeft > 200) {
               topLeft.scrollLeft = ele.offsetLeft-200
             }else{
@@ -336,6 +363,8 @@
         let rightTop = document.querySelector(".moreDoogs_main_box_right")
         let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
         if ( this.goodsType != typeCode ) {
+          this.eyeId = null;
+          this.isThree = 0;
           this.pageNo = '1'
           this.goodsType = typeCode
           this.isSelected =  index
@@ -502,6 +531,13 @@
         },800,function(){
           main_obj.remove();
         })
+      },
+      threeNav(index,id){
+        console.log(id)
+        this.pageNo = '1'
+        this.isThree = index;
+        this.eyeId = id
+        this.goods_info_nav()
       }
     }
   }
@@ -639,113 +675,113 @@
 	padding-top: 16px;
 	border-bottom: 1px solid #DDDDDD;
 }
-  .moreDoogs_main_box_left .isSelected {
-    border-left: 4px solid rgb(234, 90, 42);
-    color: rgb(234, 90, 42);
-    border-right: none;
-    background: rgb(255, 255, 255)
-  }
-  .moreDoogs_main_box {
-    margin-top: 90px;
-    width: 100%;
-    position: relative;
-  }
-  .moreDoogs_main_box_left_wrap,
-  .moreDoogs_main_box_right {
-    float: left;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  .moreDoogs_main_box_left_wrap {
-    width: 130px;
-    background: #ebeaea;
-    position: relative;
-  }
-  .moreDoogs_main_box_left li {
-    width: 129px;
-    height: 99px;
-    text-align: center;
-    background: #f5f5f5;
-    font-size: 30px;
-    line-height: 99px;
-    overflow: hidden;
-    border-bottom: 1px solid #DDDDDD;
-    border-right: 1px solid #DDDDDD;
-    color: #666666;
-  }
-  .moreDoogs_main_box_right {
-    width: 620px;
-    padding-left: 20px;
-    background: #FFF;
-    position: relative;
-  }
-  .coupon_main_ .clearfloat .receive_state {
-    position: absolute;
-    right: 20px;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    width: initial;
-    height: 60px;
-    font-size: 26px;
-    padding: 10px 26px;
-    border-radius: 26px;
-    letter-spacing: 2px;
-    box-sizing: border-box;
-  }
-  .clearfloat:after {
-    content: ".";
-    display: block;
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
-    clear: both;
-  }
-  /*公用goods*/
-  .moreGoods_box_list .moreGoods_goods_name {
-    font-size: 30px;
-    width: 400px;
-    color: #000;
-    height: 34px;
-    line-height: 34px;
-    font-weight: 500;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-  .moreGoods_box_list .moreGoods_goods_text {
-    height: 64px;
-    font-size: 24px;
-    line-height: 32px;
-    padding-right: 24px;
-    overflow: hidden
-  }
-  .moreGoods_box_list .moreGoods_goods_price {
-    height: 38px;
-    line-height: 38px;
-    font-size: 26px
-  }
-  .moreGoods_box_list .fontColor {
-    color: #eb5c2b;
-    font-size: 34px;
-    height: 60px;
-  }
-  .moreGoods_box_list .moreGoods_goods_num {
-    height: 62px;
-    line-height: 60px
-  }
-  .moreGoods_box_list .moreGoods_goods_icon {
-    float: left;
-    width: 150px;
-    height: 62px
-  }
+.moreDoogs_main_box_left .isSelected {
+  border-left: 4px solid rgb(234, 90, 42);
+  color: rgb(234, 90, 42);
+  border-right: none;
+  background: rgb(255, 255, 255)
+}
+.moreDoogs_main_box {
+  margin-top: 90px;
+  width: 100%;
+  position: relative;
+}
+.moreDoogs_main_box_left_wrap,
+.moreDoogs_main_box_right {
+  float: left;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.moreDoogs_main_box_left_wrap {
+  width: 130px;
+  background: #ebeaea;
+  position: relative;
+}
+.moreDoogs_main_box_left li {
+  width: 129px;
+  height: 99px;
+  text-align: center;
+  background: #f5f5f5;
+  font-size: 30px;
+  line-height: 99px;
+  overflow: hidden;
+  border-bottom: 1px solid #DDDDDD;
+  border-right: 1px solid #DDDDDD;
+  color: #666666;
+}
+.moreDoogs_main_box_right {
+  width: 620px;
+  padding-left: 20px;
+  background: #FFF;
+  position: relative;
+}
+.coupon_main_ .clearfloat .receive_state {
+  position: absolute;
+  right: 20px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: initial;
+  height: 60px;
+  font-size: 26px;
+  padding: 10px 26px;
+  border-radius: 26px;
+  letter-spacing: 2px;
+  box-sizing: border-box;
+}
+.clearfloat:after {
+  content: ".";
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  clear: both;
+}
+/*公用goods*/
+.moreGoods_box_list .moreGoods_goods_name {
+  font-size: 30px;
+  width: 400px;
+  color: #000;
+  height: 34px;
+  line-height: 34px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.moreGoods_box_list .moreGoods_goods_text {
+  height: 64px;
+  font-size: 24px;
+  line-height: 32px;
+  padding-right: 24px;
+  overflow: hidden
+}
+.moreGoods_box_list .moreGoods_goods_price {
+  height: 38px;
+  line-height: 38px;
+  font-size: 26px
+}
+.moreGoods_box_list .fontColor {
+  color: #eb5c2b;
+  font-size: 34px;
+  height: 60px;
+}
+.moreGoods_box_list .moreGoods_goods_num {
+  height: 62px;
+  line-height: 60px
+}
+.moreGoods_box_list .moreGoods_goods_icon {
+  float: left;
+  width: 150px;
+  height: 62px
+}
   /*.goodsNumber_min {float: left;}
   .goodsNumber_max{float: right;}*/
-  .moreGoods_box_list .goodsNumber_max,
-  .moreGoods_box_list .goodsNumber_min {
-    font-size: 34px;
+.moreGoods_box_list .goodsNumber_max,
+.moreGoods_box_list .goodsNumber_min {
+  font-size: 34px;
   }
-  .moreDoogs_main_box_right {
+.moreDoogs_main_box_right {
 	width: 620px;
 	padding-left: 20px;
 	background: #FFF;
@@ -756,21 +792,21 @@
   padding-right: 10px;
 }
 .bStyle{
-    color:red;
-    text-align:center;
-    width:100px;
-    height:64px;
-    line-height:64px;
-    display:inline-block;
-    font-size: 24px;
+  color:red;
+  text-align:center;
+  width:100px;
+  height:64px;
+  line-height:64px;
+  display:inline-block;
+  font-size: 24px;
 }
 .moreGoods_goods_number {
-    float: right;
-    height: 62px;
-    padding-right: 10px;
-    line-height: 62px;
-    text-align: right;
-    width: 240px
+  float: right;
+  height: 62px;
+  padding-right: 10px;
+  line-height: 62px;
+  text-align: right;
+  width: 240px
 }
 .move_dot{
   width: 20px;
@@ -789,5 +825,28 @@
   cursor: pointer;
   background: #FFF;
   margin-bottom: 10px;
+}
+.moreGoods_box_list_class {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 20px 20px 20px 0;
+  font-size: 30px;
+  text-align: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.moreGoods_box_list_class .active {
+  border-color: #ea5a2a;
+  color: #ea5a2a;
+}
+.moreGoods_box_list_class li {
+  padding: 8px 20px;
+  height: 60px;
+  margin-left: 30px;
+  margin-bottom: 30px;
+  line-height: 42px;
+  border: 1px solid #999;
+  border-radius: 8px;
 }
 </style>

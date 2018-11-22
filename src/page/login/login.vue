@@ -79,92 +79,92 @@ export default {
       }
     },
     watch:{
-        login:function(val,oldval){
-          if(val == 0){
-            if(this.message != null && this.code != null){
-              if( this.message.length == 11 && this.code.length == 6){
-                this.isActive = true;
-              }else{
-                this.isActive = false;
-              }
+      login:function(val,oldval){
+        if(val == 0){
+          if(this.message != null && this.code != null){
+            if( this.message.length == 11 && this.code.length == 6){
+              this.isActive = true;
             }else{
               this.isActive = false;
             }
           }else{
-            if(this.account != null && this.passWord !=null){
-              if(this.account.length == 11 && this.passWord.length >= 6){
-                this.isActive = true;
-              }else{
-                this.isActive = false;
-              }
+            this.isActive = false;
+          }
+        }else{
+          if(this.account != null && this.passWord !=null){
+            if(this.account.length == 11 && this.passWord.length >= 6){
+              this.isActive = true;
             }else{
               this.isActive = false;
             }
-          }
-        },
-        message: function(val) {
-          var n = val.replace(/\D/g,"");
-          if (n == 0) {
-            this.message='';
           }else{
-            this.message=n;
-          }
-          if(this.message.length ==0){
-            this.tipsMsg  = null;
             this.isActive = false;
-          }else{
-            if( this.message.length == 11){
-              if(!this.phoneNumberReg.test(this.message)){
-                this.tipsMsg = "请输入正确的手机号！"
-              }else{
-                this.tipsMsg  = null;
-              }
+          }
+        }
+      },
+      message: function(val) {
+        var n = val.replace(/\D/g,"");
+        if (n == 0) {
+          this.message='';
+        }else{
+          this.message=n;
+        }
+        if(this.message.length ==0){
+          this.tipsMsg  = null;
+          this.isActive = false;
+        }else{
+          if( this.message.length == 11){
+            if(!this.phoneNumberReg.test(this.message)){
+              this.tipsMsg = "请输入正确的手机号！"
             }else{
-              this.tipsMsg = "请输入完整的手机号！"
+              this.tipsMsg  = null;
             }
-          }
-        },
-        account:function(val){
-          var n = val.replace(/\D/g,"");
-          if (n == 0) {
-            this.account='';
           }else{
-            this.account=n;
+            this.tipsMsg = "请输入完整的手机号！"
           }
-          if(this.account.length == 0){
-            this.tipsMsg  = null;
-            this.isActive = false;
-          }else{
-            if( this.account.length == 11){
-              if(this.passWord.length >= 6){
-                this.isActive = true;
-              }
-              if(!this.phoneNumberReg.test(this.account)){
-                this.tipsMsg = "请输入正确的手机号！"
-              }else{
-                this.tipsMsg  = null;
-              }
+        }
+      },
+      account:function(val){
+        var n = val.replace(/\D/g,"");
+        if (n == 0) {
+          this.account='';
+        }else{
+          this.account=n;
+        }
+        if(this.account.length == 0){
+          this.tipsMsg  = null;
+          this.isActive = false;
+        }else{
+          if( this.account.length == 11){
+            if(this.passWord.length >= 6){
+              this.isActive = true;
+            }
+            if(!this.phoneNumberReg.test(this.account)){
+              this.tipsMsg = "请输入正确的手机号！"
             }else{
-              this.tipsMsg = "请输入完整的手机号！"
+              this.tipsMsg  = null;
             }
-          }
-        },
-        passWord:function(val){
-          if(this.account.length == 11 && val.length >= 6 ){
-            this.isActive = true;
           }else{
-            this.isActive = false
+            this.tipsMsg = "请输入完整的手机号！"
           }
-        },
-        code:function(val){
-          var n = val.replace(/\D/g,"");
-          this.code = n;
-          if( this.message.length == 11 && this.code.length == 6 ){
-            this.isActive = true;
-          }else{
-            this.isActive = false
-          }
-        },
+        }
+      },
+      passWord:function(val){
+        if(this.account.length == 11 && val.length >= 6 ){
+          this.isActive = true;
+        }else{
+          this.isActive = false
+        }
+      },
+      code:function(val){
+        var n = val.replace(/\D/g,"");
+        this.code = n;
+        if( this.message.length == 11 && this.code.length == 6 ){
+          this.isActive = true;
+        }else{
+          this.isActive = false
+        }
+      },
     },
     mounted(){
     },
@@ -312,103 +312,105 @@ export default {
 <style scoped>
 @import "../../common/sprite.css";
 .login{
-    max-width: 750px;
+  max-width: 750px;
 }
 .main-wrap {
-    width: 100%;
-    margin-top: 107px;
-    background: #ebeaea;
+  width: 100%;
+  margin-top: 107px;
+  background: #ebeaea;
 }
 .login_main_top {
-    width: 100%;
-    height: 78px;
-    margin-top: 20px;
-    background: #ebeaea;
-    line-height: 78px;
-    border-top: 1px solid #d8d8d8;
-    font-size: 24px;
-    text-align: center;
+  width: 100%;
+  height: 78px;
+  margin-top: 20px;
+  background: #ebeaea;
+  line-height: 78px;
+  border-top: 1px solid #d8d8d8;
+  font-size: 24px;
+  text-align: center;
 }
 .login_main_top .active {
-    background: #FFFFFF;
-    color: #000000;
+  background: #FFFFFF;
+  color: #000000;
 }
 .login_main_top li {
-    float: left;
-    width: 50%;
+  float: left;
+  width: 50%;
 }
 .tab_bg_color {
-    background: #ebeaea;
-    color: #666666;
+  background: #ebeaea;
+  color: #666666;
 }
 .login_main_content {
-    width: 100%;
-    height: 156px;
-    line-height: 78px;
-    font-size: 24px;
-    background: #FFFFFF;
-    position: relative;
+  width: 100%;
+  height: 156px;
+  line-height: 78px;
+  font-size: 24px;
+  background: #FFFFFF;
+  position: relative;
 }
 .login_main_content li {
-    width: 100%;
-    height: 78px;
-    border-top: 1px solid #d8d8d8;
-    padding: 0 20px;
+  width: 100%;
+  height: 78px;
+  border-top: 1px solid #d8d8d8;
+  padding: 0 20px;
 }
 .login_main_content input {
-    border: none;
-    outline: none;
-    background: none;
-    text-indent: 40px;
-    color: #333333;
-    height: 60px;
-    width: 90%;
-    line-height: 30px;
+  border: none;
+  outline: none;
+  background: none;
+  text-indent: 40px;
+  color: #333333;
+  height: 60px;
+  width: 90%;
+  line-height: 30px;
 }
 .login_main_content .tips {
-    background-color: #fff;
-    color: red;
+  margin-top:10px;
+  padding-left:24px;
+  background-color: #fff;
+  color: red;
 }
 .msg_login li:nth-child(1) a {
-    width: 200px;
-    height: 50px;
-    background: #f37c30;
-    position: absolute;
-    text-align: center;
-    line-height: 50px;
-    color: #FFFFFF;
-    border-radius: 25px;
-    right: 20px;
-    top: 14px;
+  width: 200px;
+  height: 50px;
+  background: #f37c30;
+  position: absolute;
+  text-align: center;
+  line-height: 50px;
+  color: #FFFFFF;
+  border-radius: 25px;
+  right: 20px;
+  top: 14px;
 }
 .login_btn {
-    width: 80%;
-    height: 80px;
-   margin-top: 120px;
-    margin-left: 10%;
-    border-radius: 30px;
-    text-align: center;
-    line-height: 80px;
-    color: #FFFFFF;
-    background: #f37c30;
-    font-size: 36px;
-    outline: none;
+  width: 80%;
+  height: 80px;
+  margin-top: 120px;
+  margin-left: 10%;
+  border-radius: 30px;
+  text-align: center;
+  line-height: 80px;
+  color: #FFFFFF;
+  background: #f37c30;
+  font-size: 36px;
+  outline: none;
 }
 .login_btn {
-    background-color: #999;
+  background-color: #999;
 }
 .login_bottom {
-    max-width:750px;
-    height: 60px;
-    text-align: center;
-    position: relative;
-    font-size: 20px;
-    bottom: -730px;
+  max-width:750px;
+  height: 60px;
+  text-align: center;
+  position: relative;
+  font-size: 20px;
+  bottom: -730px;
 }
 .login_bottom a {
-    color: #666;
+  color: #666;
 }
 .login_btn.active {
-    background-color: #f37c30;
+  background-color: #f37c30;
 }
 </style>

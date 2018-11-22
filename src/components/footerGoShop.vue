@@ -1,6 +1,5 @@
 <template>
    <div class="common-wrap">
-       <div class="empty1"></div>
        <div class="footer-wrap" v-show="!isMask">
 			<div class="footer clearfloat">
 				<span id="gw_car" class="sprite icon_shoppingcar" v-show="goodAllNum " @click="switchCartShow()" >
@@ -261,7 +260,6 @@ export default {
 <style scoped >
 
 @import "../common/sprite.css";
-.empty1{width: 100%;height: 98px;}
 .footer-wrap{max-width: 750px;width: 100%;margin: 0 auto;height: 98px;background: #FFFFFF;position: fixed;border-top: 1px solid #bababa;left: 0;bottom: 0;z-index: 6;}
 
 .footer-left,.footer-rigth{height:98px;line-height:98px;float:left;font-size:32px;color:#FFF;background-color:#494848;z-index: 13;}
