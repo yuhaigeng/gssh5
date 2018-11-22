@@ -104,21 +104,15 @@ export default {
   watch:{
     isNew:function (val,oldval) {
     }
+
   },
   methods:{
     click() {
-      //   this.$toast({
-      //       message : 'hello world',
-      //       position: 'top',//top boottom middle
-      //       duration: 5000,//延时多久消失
-      //       //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-      //       //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-      //   })
       let obj = {
         method: "system_config_constant",
         websiteNode:'3301'
       }
-      system(obj).then(data => {
+     system(obj).then(data => {
         console.log(data)
       })
     },

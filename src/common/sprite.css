@@ -1,5 +1,5 @@
 .sprite {
-  background-image: url(../../static/img/sprite.png)
+  background-image: url(../assets/img/sprite.png)
 }
 
 .icon_location_a {
@@ -155,7 +155,7 @@
 }
 
 .sprite_login {
-  background-image: url(../../static/img/sprite_login.png)
+  background-image: url(../assets/img/sprite_login.png)
 }
 
 .icon_ad {
@@ -237,7 +237,7 @@
 }
 
 .icon_ad2 {
-  background: url(../../static/img/icon_ad@3x.png) 20px center no-repeat
+  background: url(../assets/img/icon_ad@3x.png) 20px center no-repeat
 }
 
 .btn_exchange_a {

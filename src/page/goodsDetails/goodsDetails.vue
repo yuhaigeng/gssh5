@@ -12,13 +12,13 @@
 				<ul class="goodsDetails_box1_center">
 					<li class="clearfloat goodsDetails_box1_center_li1">
 						<div class="goodsDetails_box1_top clearfloat">
-							<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade"></span></h3>
+							<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade" @click="goVip"></span></h3>
 							<div class="goodsDetails_box1_ionc">
 								
 							</div>
 						</div>
 						<div class="goodsDetails_text" v-text="detailList.goodsShows"></div>
-						<div class="moreGoods_goods_number clearfloat">
+						<div class="moreGoods_goods_number clearfloat" v-if="logined">
 							<b class='bStyle' v-if="getNumText(detailList)" v-text="getNumText(detailList)" ></b>
 							<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailList)"><img src="../../assets/img/btn_m@2x.png"/></span>
 							<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber fontColor" v-text="getGoodNum(detailList.id)"></span>
@@ -212,7 +212,11 @@ export default {
 			});
 		},
 		goVip() {
-			this.$router.push({path:'/vip'})
+			if(!this.logined) {
+				this.$router.push({path:'/login'})
+			}else {
+				this.$router.push({path:'/vip'})
+			}
 		},
 		changeCollect(){
 			if(!this.logined) {
@@ -493,7 +497,7 @@ export default {
 	margin-top: 0
 }
  .goodsDetails_box2_ {
-	margin-bottom: 10px;
+	height: 300px;
 }
 .goodsDetails_box2 {
 	font-size: 24px;

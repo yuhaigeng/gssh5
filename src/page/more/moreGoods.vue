@@ -387,9 +387,6 @@
       toDetail(id) {
         this.$router.push({ path:'detail/'+id })
       },
-      goVip() {
-			  this.$router.push({path:'/vip'})
-		  },
       getNumText(item){
         const msgArr = ['','','不是VIP','等级不足']
         if (item.vipGrade > 0 && (item.state == 2 || item.state == 3) ) {

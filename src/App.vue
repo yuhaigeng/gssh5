@@ -43,7 +43,6 @@ html{ overflow: auto;}
   display: none;
 }
 .empty{width: 100%;height: 87px;}
-.empty1{width: 100%;height: 98px;}
 .float_right{float: right;}
 .float_left{float: left;}
 .clearfloat:after {
