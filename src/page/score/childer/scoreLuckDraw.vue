@@ -11,7 +11,7 @@
                         <div class="score_active_center">
                             <div class="score_active_turntable">
                                 <img class="pointer1" src="../../../../static/img/img_Pointer@2x.png" alt="" />
-                                <canvas class="item animation0 transform0" id="wheelcanvas" width="680px" height="680px" @transitionend="transitionend" @webkitTransitionend="transitionend"></canvas>
+                                <canvas class="item animation0 transform0" id="wheelcanvas" ref="luckyCanvas" width="680px" height="680px" @transitionend="transitionend" @webkitTransitionend="transitionend"></canvas>
                                 <img class="pointer" src="../../../../static/img/btn_Start draw@2x.png" @click="btn_Start"/>
                             </div>
                         </div>
@@ -243,7 +243,7 @@ export default {
                     console.log(data.statusStr);
                 }else {
                     this.isRotate =!this.isRotate;
-                    $(".item").css({
+                    this.$refs.luckyCanvas.css({
                         'animation-name': '',
                         '-moz-animation-name': '',
                         '-webkit-animation-name': '',
@@ -262,7 +262,7 @@ export default {
         },
         rotateFn:function(item,text){
             // console.log(item)
-            let deg = eval('this.get'+$(".item").css("transform"));//当前元素的角度
+            let deg = eval('this.get'+this.$refs.luckyCanvas.css("transform"));//当前元素的角度
             let l = this.lucky.length;
             let a = item *(360/ l );
             //6个奖品
@@ -303,7 +303,7 @@ export default {
             }
             this.n = this.n + 1800;
             this.d = this.n;
-            $(".item").removeClass("animation_name").css({
+            this.$refs.luckyCanvas.classList.remove("animation_name").css({
                 "webkitTransform":'rotate('+this.n+'deg)',
                 "MozTransform":'rotate('+this.n+'deg)',
                 "msTransform":'rotate('+this.n+'deg)',
@@ -352,7 +352,7 @@ export default {
                 }else {
                     if(this.isRotate)return;
                     this.isRotate = !this.isRotate;
-                    this.draw_prizes($(this).attr('data'))
+                    this.draw_prizes(this.attr('data'))
                 }
             }
         },
@@ -414,7 +414,6 @@ export default {
 	animation-iteration-count: 5;
 	/*animation-play-state: paused;*/
 	/*animation-play-state: running;*/
-	
 }
 .score_active_turntable .transform0{
 	transform: rotate(0deg);
@@ -426,8 +425,6 @@ export default {
 }
 .score_active_box p{height: 82px;line-height: 50px;text-align: center;color: #FFF;font-size: 30px;}
 .score_active_box .box{padding: 0 54px;color: #FFFDDA;line-height: 46px;font-size: 30px;padding-bottom: 40px;}
-
 .score_active_matter .box li span{display: inline-block; width: 20px; height: 20px;border-radius: 10px;background: #FFF; vertical-align: middle;}
 .score_active_copy{height: 146px;border-top: 2px dashed #FFF;line-height: 146px;color: #FFF;padding: 0 40px;font-size: 28px;text-align: center;}
-
 </style>

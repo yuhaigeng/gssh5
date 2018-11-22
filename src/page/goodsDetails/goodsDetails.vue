@@ -497,7 +497,7 @@ export default {
 	margin-top: 0
 }
  .goodsDetails_box2_ {
-	margin-bottom: 10px;
+	height: 300px;
 }
 .goodsDetails_box2 {
 	font-size: 24px;

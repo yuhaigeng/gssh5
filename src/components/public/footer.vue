@@ -1,6 +1,5 @@
 <template>
    <div class="common-wrap">
-       <div class="empty1"></div>
        <div class="footer-wrap">
 		<div class="footer1">
 			<router-link :to="'home'" tag="dl" >
@@ -40,8 +39,6 @@ export default {
 </script>
 
 <style scoped >
-
-.empty1{width: 100%;height: 98px;}
 .footer-wrap{max-width: 750px;width: 100%;margin: 0 auto;height: 98px;background: #FFFFFF;position: fixed;border-top: 1px solid #bababa;left: 0;bottom: 0;z-index: 6;}
 /*首页和我的页面公用底部*/
 .footer1{width:100%;position:relative;display:flex}
