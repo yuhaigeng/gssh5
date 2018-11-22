@@ -1,7 +1,7 @@
 <template>
    <div class="home common-wrap">
       <app-header :type="headerMsg">
-        <div slot="homeleft" class="icon_location_a" v-text="websiteNodeName"></div>
+        <div slot="homeleft" class="index_header_left sprite icon_location_a" v-text="websiteNodeName"></div>
         <div slot="homeLogo"><img  src="../../assets/img/top_logo@2x.png" alt="" /></div>
       </app-header>
       <div class="main-wrap index-wrap">
@@ -234,12 +234,8 @@ export default {
 .index-bottom-box:after{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}
 .index-bottom-box:before{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}
 /* 头部样式 */
-.icon_location_a {
-  width:100%;
-  height:100%;
-  background-image: url(../../assets/img/sprite.png);
-  background-repeat: no-repeat;
-  background-position: -422px -318px;
+
+.index_header_left{
   text-indent: 80px;
   width: 180px;
 }

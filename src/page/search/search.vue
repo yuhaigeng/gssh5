@@ -167,6 +167,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../../common/sprite.css";
 .moreGoods_box_list .moreGoods_goods_name {
 	font-size: 30px;
 	width: 400px;
@@ -203,16 +204,6 @@ export default {
 	margin: 0 auto;
 	background: #ebeaea;
     margin-top: 87px;
-}
-.delete_b {
-	background-position: -888px 0;
-}
-.icon_search_grey {
-	background-position: -1084px -78px;
-}
-.sprite {
-	background-image: url(../../assets/img/sprite.png);
-	background-repeat: no-repeat;
 }
 .search {
 	width: 666px;
@@ -312,19 +303,5 @@ export default {
 	width: 84px;
 	height: 87px;
 	float: left;
-}
-.header-wrap {
-	max-width: 750px;
-	width: 100%;
-	margin: 0 auto;
-	height: 87px;
-	border-bottom: 1px solid #d8d8d8;
-	position: fixed;
-	background: #f6f6f6;
-	z-index: 3;
-	top: 0;
-}
-.arrow_left {
-	background-position: 21px -210px;
 }
 </style>

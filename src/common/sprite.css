@@ -1,7 +1,11 @@
 .sprite {
-  background-image: url(../assets/img/sprite.png)
+  background-image: url(../assets/img/sprite.png);
+  background-repeat: no-repeat;
 }
-
+.sprite_login {
+  background-image: url(../assets/img/sprite_login.png);
+  background-repeat: no-repeat;
+}
 .icon_location_a {
   background-position: -422px -318px
 }
@@ -10,14 +14,12 @@
   background-position: 21px -210px
 }
 
-.arrow_left_b {
-  background-position: 21px -280px
-}
-
 .arrow_left_orange {
   background-position: 21px -352px
 }
-
+.arrow_left_b {
+  background-position: 21px -280px
+}
 .icon_search_a {
   background-position: -1000px 20px
 }
@@ -154,9 +156,7 @@
   background-position: -633px -177px
 }
 
-.sprite_login {
-  background-image: url(../assets/img/sprite_login.png)
-}
+
 
 .icon_ad {
   background-position: 20px -48px
@@ -250,8 +250,4 @@
 .main_wo_wrap .arrow_left,
 .score .arrow_left {
   background-position: -5px -210px
-}
-.sprite,
-.sprite_login {
-  background-repeat: no-repeat
 }
