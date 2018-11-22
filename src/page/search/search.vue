@@ -32,7 +32,7 @@
 							<img :src="item.goodsLogo"/>
 						</dt>
 						<dd>
-							<h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
+							<h3 class="moreGoods_goods_name ellipsis" v-text="item.goodsName"></h3>
 							<p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
 							<p class="moreGoods_goods_price">
 								<span v-if="logined"><span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}</span>
@@ -178,6 +178,7 @@ export default {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
+.search_goods .moreGoods_goods_name{width: 468px;}
 .moreGoods_box_list .moreGoods_goods_text {
 	height: 64px;
 	font-size: 24px;
