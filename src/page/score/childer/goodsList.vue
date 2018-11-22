@@ -6,20 +6,20 @@
                 <ul class="product clearfloat" v-if="goodsList.length">
                     <li v-for="(item,index) in goodsList" :key="index" @click="goGoods(index)">
                         <!-- <router-link :to="{path: '/score/goodsList/good',query:{id:item.id}}" tag="dl"> -->
-                            <dl>
-                                <dt>
-                                    <img v-lazy="item.goodsLogo"/>
-                                </dt>
-                                <dd>
-                                    <p class="name" v-text="item.goodsName"></p>
-                                    <p class="describe" v-text="item.sizeDesc"></p>
-                                    <p class="info">
-                                        <span v-text="item.score"></span>
-                                        <span class="font22" v-text="'币'"></span>
-                                        <del class="original_price" v-text="'￥'+item.gssPrice"></del>
-                                    </p>
-                                </dd>
-                            </dl>
+                        <dl>
+                            <dt>
+                                <img v-lazy="item.goodsLogo"/>
+                            </dt>
+                            <dd>
+                                <p class="name" v-text="item.goodsName"></p>
+                                <p class="describe" v-text="item.sizeDesc"></p>
+                                <p class="info">
+                                    <span v-text="item.score"></span>
+                                    <span class="font22" v-text="'币'"></span>
+                                    <del class="original_price" v-text="'￥'+item.gssPrice"></del>
+                                </p>
+                            </dd>
+                        </dl>
                         <!-- </router-link> -->
                     </li>
                 </ul>
@@ -130,6 +130,10 @@ export default {
                 this.get_score_goodsList();
             } 
         }
+    },
+    beforeDestroy(){
+        localStorage.getItem('scoreGoods') && localStorage.removeItem('scoreGoods');
+        localStorage.getItem('scoreGoods_desc') && localStorage.removeItem('scoreGoods_desc');
     }
 }
 </script>

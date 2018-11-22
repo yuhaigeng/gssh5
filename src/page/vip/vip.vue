@@ -29,18 +29,18 @@
                 </div>
             </div>
         </div>
-        <div class="vip_main_center" v-if="userVipInfo && vipPrivilege && vipPrivilege.lenght && userVipInfo.monthExp">
+        <div class="vip_main_center" v-if="userVipInfo && vipPrivilege && vipPrivilege.length && userVipInfo.monthExp">
             <div class="vip_main_icon cont cont4">
                 <div class="vip_main_icon_tit cont_tit" :class="{'noactive':isActive}">VIP特权</div>
                 <div class="vip_main_icon_boxs clearfloat">
                     <dl class="float_left" v-for="(item,index) in vipPrivilege" @click="goToNext(item)" :key="index">
-                        <dt><img :src="item.state == 1 ? item.onLogo : item.offLogo"/></dt>
+                        <dt><img v-lazy="item.state == 1 ? item.onLogo : item.offLogo"/></dt>
                         <dd v-text="item.name"></dd>
                     </dl>
                 </div>
             </div>
         </div>
-        <div class="vip_main_bottom" v-if="userVipInfo　&& system">
+        <div class="vip_main_bottom" v-if="userVipInfo && system">
             <div class="vip_main_introduce">
                 <div class="vip_main_introduce_item">
                     <div class="vip_main_introduce_title">
@@ -177,6 +177,8 @@ export default {
                 this.firm_vip_info();
                 this.vip_grade_show();
                 this.vip_privilege_list();
+            }else{
+                this.$router.replace({path:'login'})
             }
         }
         
@@ -237,7 +239,7 @@ export default {
 				return result.data
 			}).then(data =>{
 				if( data.statusCode == 100000 ) {
-					let v = data.data;
+                    let v = data.data;
 					_this.vipPrivilege = v;
 				} else {
 					
@@ -273,24 +275,34 @@ export default {
                     appInteractivity(jsonObj)
                 }else{
                     if (item.type == 1 || item.type == 2 || item.type == 3) {
-                        common.jump("vip_ticket_center.html?type="+item.type);
+                        this.$router.push({path:'/vipCoupon',query:{type:item.type}})
                     }else if (item.type == 4){
-                        var code = '';
+                        let code = '';
                         if (item.linkUrl && item.linkUrl.split("&")[1] && item.linkUrl.split("&")[1].length == 4 ) {
                             code = item.linkUrl.split("&")[1];
-                            common.jump("moreGoods.html?typeCode="+code)
+                            //common.jump("moreGoods.html?typeCode="+code)
+                            this.$router.push({path:'/more',query:{typeCode:code}})
                         }else{
-                            common.jump("moreGoods.html")
+                            //common.jump("moreGoods.html")
+                            this.$router.push({path:'/more'})
                         }
                     }
                 }
             }else{
+                let textMessage = ''
                 if (item.state == 2) {
-                    common.prompt("不是VIP！")
+                    textMessage = "不是VIP！";
                 }
                 if (item.state == 3) {
-                    common.prompt("没有活动！")							
+                    textMessage = "没有活动！";
                 }
+                this.$toast({
+                    message : textMessage,
+                    position: 'middle',//top boottom middle
+                    duration: 2000,//延时多久消失
+                    //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+                    //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+                })
             }
         },
     }
@@ -619,15 +631,19 @@ export default {
 .cont4 dl {
     float: left;
     width: 25%;
-    text-align: center
+    text-align: center;
+    padding-top:28px; 
 }
 .cont4 {
     background: #FFF;
     padding: 32px 0
 }
 .cont4 dl dt {
-    padding-top: 28px;
-    padding-bottom: 4px
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    margin-bottom: 4px;
+    background: url(../../assets/img/default_huodong_pic.png) no-repeat center;
 }
 .cont4 dl dd {
     font-size: 24px;
