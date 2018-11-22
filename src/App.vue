@@ -1,5 +1,5 @@
 <template>
-  <div>
+    <div>
 		<transition name="router-fade" mode="out-in">
 			<keep-alive>
 			    <router-view v-if="$route.meta.keepAlive"></router-view>
@@ -65,13 +65,17 @@ html{ overflow: auto;}
     max-width: 750px
 }
 .header-wrap {
-    width: 100%;
-    height: 87px;
-    border-bottom: 1px solid #d8d8d8;
-    position: fixed;
-    background: #f6f6f6;
-    z-index: 3;
-    top: 0
+    max-width: 750px;
+	width: 100%;
+	margin: 0 auto;
+	height: 87px;
+	border-bottom: 1px solid #d8d8d8;
+	position: fixed;
+	background: #f6f6f6;
+	z-index: 3;
+	top: 0;
+	left: 0;
+	right: 0;
 }
 .header_left,.header_right {
     width: 150px;
@@ -117,11 +121,16 @@ html{ overflow: auto;}
     border-top: 1px solid #bababa;
     left: 0;
     bottom: 0;
+    right: 0;
     z-index: 6
 }
 .common-wrap{
     max-width: 750px;
     width: 100%;
     margin: 0 auto;
+}
+img[lazy="loaded"]{
+    opacity: 1;
+    transition: opacity .3s ease-in .1s;
 }
 </style>

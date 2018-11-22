@@ -1,11 +1,12 @@
 <template>
  <div class="score">
-    <div class="header-wrap">
+    <!-- <div class="header-wrap">
         <div class="header_left header_back sprite arrow_left_b" @click="goBack"></div>
         <div class="index_tit header_tit" v-text="'果币商城'"></div>
-    </div>
+    </div> -->
+    <app-header :type="headerMsg"></app-header>
     <div class="main_top">
-        <div class="now_score" v-html="'&nbsp;'+score_info.surplusScore"></div>
+        <div class="now_score" v-html="score_info.surplusScore"></div>
         <div class="now_score_show" v-text="'可用果币'"></div>
         <!--<div class="score_msg">
             总积分<span class="font"></span>击败了<span></span>商家
@@ -75,7 +76,7 @@ export default {
             headerMsg:{
                 type:"common",
                 title:'果币商城',
-                left:'返回'
+                leftColor:'white'
             },
             licenseImg: null,
             showlicenseImg: false,
