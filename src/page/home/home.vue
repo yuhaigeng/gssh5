@@ -1,34 +1,34 @@
 <template>
    <div class="home common-wrap">
-        <app-header :type="headerMsg">
-            <div slot="homeleft" class="icon_location_a" v-text="websiteNodeName"></div>
-            <div slot="homeLogo"><img  src="../../assets/img/top_logo@2x.png" alt="" /></div>
-        </app-header>
-        <div class="main-wrap index-wrap">
-          <div class="main">
-                <div id="banner-wrap common-wrap">
-                    <banner :imgList = "topList" :height = "'280px'" v-if="topList.length"></banner>
-                </div>
-                <div class="gonggao-wrap sprite icon_voice">
-                    <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
-                </div>
-                <div class="index-advertisement-wrap">
-                    <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter(centerList[0].jumpType, centerList[0].linkUrl, centerList[0].adTime)">
-                        <img v-lazy="centerList[0].adLogo" alt="">
-                    </div>
-                </div>
-                <div class="center_wrap">
-                    <div class="center">
-                        <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin'></homeGoods>
-                        <div class="index-bottom">
-                            <span class="index-bottom-box"><span class="index-bottom-text" v-text="'已经到底了'" @click="click()"></span></span>
-                        </div>
-                    </div>
-                </div>
+      <app-header :type="headerMsg">
+        <div slot="homeleft" class="icon_location_a" v-text="websiteNodeName"></div>
+        <div slot="homeLogo"><img  src="../../assets/img/top_logo@2x.png" alt="" /></div>
+      </app-header>
+      <div class="main-wrap index-wrap">
+        <div class="main">
+          <div id="banner-wrap common-wrap">
+            <banner :imgList = "topList" :height = "'280px'" v-if="topList.length"></banner>
+          </div>
+          <div class="gonggao-wrap sprite icon_voice">
+            <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
+          </div>
+          <div class="index-advertisement-wrap">
+            <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter(centerList[0].jumpType, centerList[0].linkUrl, centerList[0].adTime)">
+              <img v-lazy="centerList[0].adLogo" alt="">
+            </div>
+          </div>
+          <div class="center_wrap">
+            <div class="center">
+              <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin'></homeGoods>
+              <div class="index-bottom">
+                <span class="index-bottom-box"><span class="index-bottom-text" v-text="'已经到底了'" @click="click()"></span></span>
+              </div>
+            </div>
           </div>
         </div>
-    <app-footer :isNew = 'isNew' :isLogin = "isLogin"></app-footer>
-    <alert :noticeInfoList="noticeInfo" v-if="noticeInfo" v-on:listenClose = "closeAlert"></alert>
+      </div>
+      <app-footer :isNew = 'isNew' :isLogin = "isLogin"></app-footer>
+      <alert :noticeInfoList="noticeInfo" v-if="noticeInfo" v-on:listenClose = "closeAlert"></alert>
   </div>
 </template>
 
@@ -56,17 +56,17 @@ export default {
         websiteNode:this.websiteDate.code,
         isNew:false,//表示是否有新消息
         headerMsg:{
-            type:"home",
+          type:"home",
         },
       }
     },
     components: {
-        appHeader,
-        appFooter,
-        banner,
-        ggBanner,
-        alert,
-        homeGoods
+      appHeader,
+      appFooter,
+      banner,
+      ggBanner,
+      alert,
+      homeGoods
     },
     //生命周期总结
     // beforecreate : 举个栗子：可以在这加个loading事件
@@ -83,23 +83,23 @@ export default {
     },
     //完成挂载
     mounted(){
-        console.log(this.websiteDate)
-        this.get_main_page();
-        if (getIsLogin()) {
-          this.tokenId = getTokenId();
-          if (sessionStorage.getItem("isAuto") != "true") {
-            this.autoLogin();
-          }
-          const userInfo = JSON.parse(getUserData());
-
-          this.userBasicParam = {
-            firmId : userInfo.firmInfoid,
-            source : 'firmId'+userInfo.firmInfoid,
-            sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-            tokenId : getTokenId()
-          }
-            //getMessage(this)
+      console.log(this.websiteDate)
+      this.get_main_page();
+      if (getIsLogin()) {
+        this.tokenId = getTokenId();
+        if (sessionStorage.getItem("isAuto") != "true") {
+          this.autoLogin();
         }
+        const userInfo = JSON.parse(getUserData());
+
+        this.userBasicParam = {
+          firmId : userInfo.firmInfoid,
+          source : 'firmId'+userInfo.firmInfoid,
+          sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+          tokenId : getTokenId()
+        }
+        getMessage(this)
+      }
     },
     watch:{
       isNew:function (val,oldval) {
@@ -214,41 +214,41 @@ export default {
 <style scoped >
 
 @import "../../common/sprite.css";
-    .index-wrap{
-        padding-top: 87px;
-    }
-    #banner-wrap{
-        width: 100%;
-        height: 280px;
-        overflow: hidden;
-        position: relative;
-        background: url(../../assets/img/pic_logo@2x.png) center no-repeat;
-        background-size: auto
-    }
-    .gonggao-wrap{width: 100%;height: 50px;overflow: hidden;}
-    .gonggao-wrap.sprite{background-color: #FFFFFF}
-    .index-wrap .center_wrap{margin-bottom: 20px;}
+.index-wrap{
+  padding-top: 87px;
+}
+#banner-wrap{
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  position: relative;
+  background: url(../../assets/img/pic_logo@2x.png) center no-repeat;
+  background-size: auto
+}
+.gonggao-wrap{width: 100%;height: 50px;overflow: hidden;}
+.gonggao-wrap.sprite{background-color: #FFFFFF}
+.index-wrap .center_wrap{margin-bottom: 20px;}
 
-    .index-bottom{text-align: center;font-size: 28px;color: #ccc;line-height: 64px;padding-top: 20px;background: #E5E5E5;}
-    .index-bottom-text{padding: 0 22px;}
-    .index-bottom-box:after{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}
-    .index-bottom-box:before{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}
-    /* 头部样式 */
-    .icon_location_a {
-        width:100%;
-        height:100%;
-        background-image: url(../../assets/img/sprite.png);
-        background-repeat: no-repeat;
-        background-position: -422px -318px;
-        text-indent: 80px;
-        width: 180px;
-    }
-    .index-advertisement-wrap .index-advertisement {
-        height: 200px;
-        overflow: hidden;
-    }
-    .index-advertisement img{
-        width: 100%;
-        height: 100%;
-    }
+.index-bottom{text-align: center;font-size: 28px;color: #ccc;line-height: 64px;padding-top: 20px;background: #E5E5E5;}
+.index-bottom-text{padding: 0 22px;}
+.index-bottom-box:after{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}
+.index-bottom-box:before{display: inline-block;content: "";width: 80px;height: 2px;background: #CCC;vertical-align:middle;margin-top: -2px;}
+/* 头部样式 */
+.icon_location_a {
+  width:100%;
+  height:100%;
+  background-image: url(../../assets/img/sprite.png);
+  background-repeat: no-repeat;
+  background-position: -422px -318px;
+  text-indent: 80px;
+  width: 180px;
+}
+.index-advertisement-wrap .index-advertisement {
+  height: 200px;
+  overflow: hidden;
+}
+.index-advertisement img{
+  width: 100%;
+  height: 100%;
+}
 </style>
