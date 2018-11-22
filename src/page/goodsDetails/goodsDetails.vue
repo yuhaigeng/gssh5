@@ -12,7 +12,7 @@
 				<ul class="goodsDetails_box1_center">
 					<li class="clearfloat goodsDetails_box1_center_li1">
 						<div class="goodsDetails_box1_top clearfloat">
-							<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade"></span></h3>
+							<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade" @click="goVip"></span></h3>
 							<div class="goodsDetails_box1_ionc">
 								
 							</div>
