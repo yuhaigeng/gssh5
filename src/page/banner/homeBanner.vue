@@ -1,10 +1,10 @@
 <template>
     <div class="swiper-container " :style="{height:height}">
         <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(item,index) in imgList" :key="index"  @click="jumpRouter(item.jumpType, item.linkUrl, item.adTime)">
+            <div class="swiper-slide" v-for="(item,index) in imgList" :key="index" >
                 <!-- 第一张喝醉后一张不使用懒加载 解决 与swiper 冲突 -->
-                <img :src="item.adLogo" alt=""  v-if="index==0||index==(imgList.length-1)">
-                <img v-lazy="item.adLogo" v-else>
+                <img :src="item.adLogo" alt=""  v-if="index==0||index==(imgList.length-1)"  @click="dataEvent(item.jumpType, item.linkUrl, item.adTime)">
+                <img v-lazy="item.adLogo" v-else  @click="jumpRouter(item.jumpType, item.linkUrl, item.adTime)">
             </div>
         </div>
         <!-- 如果需要分页器 -->
@@ -18,10 +18,9 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
 export default {
  data() {
     return {
-      isLogin:getIsLogin(),
     }
  },
- props:['imgList','height'],
+ props:['imgList','height','isLogin'],
  mounted(){
   var mySwiper = new Swiper('.swiper-container', {
     direction: 'horizontal',
@@ -43,26 +42,10 @@ export default {
    }
  },
  methods:{
-    jumpRouter:function(type,code,tit){
-      if(this.isLogin){
-         code =  code.trim()
-        if (type) {
-          if (type == 1) {
-            let codeArr = code.split("&");
-            return this.$router.push({path:'more',query:{typeCode:codeArr[1]}})
-          }else if (type == 2) {
-            return this.$router.push({path:'detail/'+code})
-          }else if (type == 3) {
-            return this.$router.push({path:'details',query:{typeCode:code,title:tit}})
-          }else if(type == 4){
-            return this.$router.push({path:'onlineCoupon'})
-          }
-        }
-        return null;
-      }else{
-        return this.$router.push({path:'login'})
-      }
-    }
+   dataEvent(type,code,tit){
+      let data = [type,code,tit]
+      this.$emit('listenEvent',data )
+   }
   }
 }
 </script>

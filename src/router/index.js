@@ -39,6 +39,7 @@ const orderPay = r => require.ensure([], () => r(require('../page/order/orderPay
 
 const orderResult = r => require.ensure([], () => r(require('../page/order/orderResult.vue')), 'orderResult');
 
+const other = r => require.ensure([], () => r(require('../page/other/other.vue')), 'other');
 Vue.use(Router)
 
 export default new Router({
@@ -127,7 +128,8 @@ export default new Router({
         component: chooseCoupon,
       },
       { path: '/orderPay', component:orderPay}, //订单支付
-      { path: '/orderResult', component:orderResult} //订单结果
+      { path: '/orderResult', component:orderResult}, //订单结果
+    { path: '/other', component:other}
     ]
   }]
 })

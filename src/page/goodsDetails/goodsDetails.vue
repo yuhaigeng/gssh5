@@ -14,7 +14,7 @@
 						<div class="goodsDetails_box1_top clearfloat">
 							<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade" @click="goVip"></span></h3>
 							<div class="goodsDetails_box1_ionc">
-								
+
 							</div>
 						</div>
 						<div class="goodsDetails_text" v-text="detailList.goodsShows"></div>
@@ -180,7 +180,7 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				} else {
-					
+
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
@@ -205,7 +205,7 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				} else {
-					
+
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
@@ -235,7 +235,7 @@ export default {
 					method: "settlement_shop_cart",
 					goodsList:goodsList,
 			},this.userBasicParam)
-			
+
 			this.$ajax.get(this.HOST, {
 					params:obj
 			}).then(result => {
@@ -316,7 +316,7 @@ export default {
 
 							let elLeft = event.target.getBoundingClientRect().left;
 							let elTop = event.target.getBoundingClientRect().top;
-							
+
 							this.sport(elLeft,elTop)
 						}else{
 							this.$toast({
@@ -332,9 +332,9 @@ export default {
 
 						let elLeft = event.target.getBoundingClientRect().left;
 						let elTop = event.target.getBoundingClientRect().top;
-						
+
 						this.sport(elLeft,elTop)
-						
+
 					}
 				} else{
 					this.$toast({
@@ -359,7 +359,7 @@ export default {
 				}
 				let elLeft = event.target.getBoundingClientRect().left;
 				let elTop = event.target.getBoundingClientRect().top;
-				
+
 				this.sport(elLeft,elTop)
 
 				this.goShopCart.push(obj)
@@ -408,7 +408,7 @@ export default {
 		back(){
 			this.$router.go(-1);
 		},
-		
+
 	}
 }
 </script>
