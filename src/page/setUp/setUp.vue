@@ -35,7 +35,7 @@ export default {
           type:"common",
           title:'设置',
           left:'返回'
-          },
+        },
         userBasicParam:{},
       }
     },

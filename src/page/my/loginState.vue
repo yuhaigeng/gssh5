@@ -206,6 +206,18 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
 .wo_top_info dd .user_vip_icon.vip0 {
   background: url(../../assets/img/icon_vip0.png) center no-repeat;
 }
+.wo_top_info dd .user_vip_icon.vip1 {
+  background: url(../../assets/img/icon_vip1.png) center no-repeat;
+}
+.wo_top_info dd .user_vip_icon.vip2 {
+  background: url(../../assets/img/icon_vip2.png) center no-repeat;
+}
+.wo_top_info dd .user_vip_icon.vip3 {
+  background: url(../../assets/img/icon_vip3.png) center no-repeat;
+}
+.wo_top_info dd .user_vip_icon.vip4 {
+  background: url(../../assets/img/icon_vip4.png) center no-repeat;
+}
 .wo_top_info dd .user_vip_icon {
   display: inline-block;
   width: 98px;

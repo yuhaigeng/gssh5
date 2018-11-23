@@ -7,13 +7,13 @@
     <div class="main-wrap index-wrap">
       <div class="main">
         <div id="banner-wrap common-wrap">
-          <banner :imgList = "topList" :height = "'280px'" v-if="topList.length"></banner>
+          <banner :imgList = "topList" :height = "'280px'" :isLogin = 'isLogin'  v-if="topList.length" v-on:listenEvent = 'jumpRouter'></banner>
         </div>
         <div class="gonggao-wrap sprite icon_voice">
           <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
         </div>
         <div class="index-advertisement-wrap">
-          <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter(centerList[0].jumpType, centerList[0].linkUrl, centerList[0].adTime)">
+          <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter([centerList[0].jumpType, centerList[0].linkUrl, centerList[0].adTime])">
             <img v-lazy="centerList[0].adLogo" alt="">
           </div>
         </div>
@@ -180,21 +180,22 @@ export default {
     closeAlert:function (data) {
       this.noticeInfo = null;
     },
-    jumpRouter:function(type,code,tit){
+    jumpRouter:function(data){
       if(this.isLogin){
-        code =  code.trim()
+        let code =  data[1].trim()
+        let type = data[0]
         if (type) {
           if (type == 1) {
-            let codeArr = code.split("&");
+            let codeArr = data[1].split("&");
             return this.$router.push({path:'more',query:{typeCode:codeArr[1]}})
           }else if (type == 2) {
             return this.$router.push({path:'detail/'+code})
           }else if (type == 3) {
-            return this.$router.push({path:'details',query:{typeCode:code,title:tit}})
+            return this.$router.push({path:'other',query:{typeCode:code,title: data[2]}})
           }else if(type == 4){
             return this.$router.push({path:'onlineCoupon'})
           }else if(type == 5){
-            return this.$router.push({path:'vip_ticket_center',query:{type:code}})
+            return this.$router.push({path:'vipCoupon',query:{type:code}})
           }else if(type == 6){
             return this.$router.push({path:'vip'})
           }
