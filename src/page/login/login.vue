@@ -236,8 +236,9 @@ export default {
             resp.data.data.noticeTitle =  resp.data.data.title;
             resp.data.data.alertType = 1;
             this.noticeInfoList = resp.data.data;
-            let key = this.websiteNode + this.descCode ;
-            let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
+            let key = JSON.stringify(this.websiteNode + this.descCode);
+            let value = JSON.stringify(resp.data.data)
+            let obj = `{${key}:${value}}`
             this.cache = Object.assign(this.cache,JSON.parse(obj))
           }
         }).catch(err => {

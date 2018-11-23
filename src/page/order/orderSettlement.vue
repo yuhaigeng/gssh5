@@ -80,6 +80,7 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
         customRequest:"",
         postCost:0,
         totalPrice:"" ,
+        cache:{}
       }
     },
     mounted(){
@@ -119,6 +120,11 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
             resp.data.data.noticeTitle =  resp.data.data.title;
             resp.data.data.alertType = 1;
             this.noticeInfoList = resp.data.data;
+
+            let key = JSON.stringify(this.websiteNode + this.descCode);
+            let value = JSON.stringify(resp.data.data)
+            let obj = `{${key}:${value}}`
+            this.cache = Object.assign(this.cache, JSON.parse(obj))
           }
         }).catch(err => {
           console.log(err)
@@ -158,7 +164,11 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
         this.noticeInfoList = null;
       },
       agreement:function(){
-        this.desc_data()
+        if(this.cache[this.websiteNode + this.descCode]){
+          this.noticeInfoList = this.cache[this.websiteNode + this.descCode]
+        }else{
+          this.desc_data()
+        }
       },
       get:function(){
         let a =  document.querySelector(".footer-rigth");

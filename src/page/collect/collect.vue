@@ -31,9 +31,9 @@
 						</dl>
 					</mt-cell-swipe>
 				</li>
+        <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
 			</ul>
 		</div>
-		<p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
 		<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
 	</div>
 </template>
@@ -103,7 +103,7 @@ export default {
 			this.isLogin = getIsLogin();
 			this.tokenId = getTokenId();
 			const userInfo = JSON.parse(getUserData());
-			
+
 			this.userBasicParam = {
 				firmId : userInfo.firmInfoid,
 				source : 'firmId'+userInfo.firmInfoid,
@@ -111,7 +111,7 @@ export default {
 				tokenId : getTokenId()
 			}
 		}
-		
+
 
 		if ( localStorage.getItem('system') ) {
 			this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
@@ -211,7 +211,7 @@ export default {
 			}).then(result => {
 				return result.data;
 			}).then(data => {
-				
+
 				if (data.statusCode=='100000') {
 					sessionStorage.setItem('address',JSON.stringify(data.data));
 					this.$router.push({path:'/orderSettlement'})
@@ -295,7 +295,7 @@ export default {
 
 							let elLeft = event.target.getBoundingClientRect().left;
 							let elTop = event.target.getBoundingClientRect().top;
-							
+
 							this.sport(elLeft,elTop)
 						}else{
 							this.$toast({
@@ -449,9 +449,8 @@ export default {
 .main-wrap {
 	max-width: 750px;
 	width: 100%;
-	margin: 0 auto;
+	margin: 97px  auto  108px;
 	background: #ebeaea;
-    margin-top: 97px;
 }
 .often_shop_main_wrap ul {
 	width: 100%;

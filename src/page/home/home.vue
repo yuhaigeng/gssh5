@@ -225,6 +225,7 @@ export default {
 @import "../../common/sprite.css";
 .index-wrap{
   padding-top: 87px;
+  margin-bottom: 98px;
 }
 #banner-wrap{
   width: 100%;

@@ -131,7 +131,7 @@
         const userInfo = JSON.parse(getUserData());
 
         this.userBasicParam = {
-          // firmId : userInfo.firmInfoid,
+          firmId : userInfo.firmInfoid,
           source : 'firmId'+userInfo.firmInfoid,
           sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
           tokenId : getTokenId()
@@ -598,7 +598,7 @@
 .moreDoogs_main_top::-webkit-scrollbar ,.moreDoogs_main_box_left_wrap::-webkit-scrollbar,.moreDoogs_main_box_right::-webkit-scrollbar {
   width: 10px;
   height: 10px;
-  background-color: #f5f5f5; 
+  background-color: #f5f5f5;
 }
 .moreDoogs_main_top::-webkit-scrollbar-thumb ,.moreDoogs_main_box_left_wrap::-webkit-scrollbar-thumb,.moreDoogs_main_box_right::-webkit-scrollbar-thumb {
   background-color: #AAA;
@@ -669,6 +669,7 @@
 .moreGoods_goods_detaile dt img {
 	width: 160px;
 	height: 160px;
+  background: url(../../assets/img/default_huodong_pic.png) no-repeat center;
 }
 
 .moreGoods_goods_detaile dd {
