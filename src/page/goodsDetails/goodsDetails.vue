@@ -106,6 +106,15 @@ export default {
 		} else {
 
 		}
+		if (sessionStorage.getItem('goodsDeatils')) {
+			const details = JSON.parse(sessionStorage.getItem('goodsDeatils'));
+			this.detailList = details;
+			const list = this.detailList.goodsPics.split('@');
+			list.pop();
+			this.bannerDate = list;
+		}else{
+			
+		}
 		if ( localStorage.getItem('good') ) {
 			this.goShopCart = JSON.parse(localStorage.getItem('good'))
 		} else {
@@ -408,8 +417,10 @@ export default {
 		back(){
 			this.$router.go(-1);
 		},
-
-	}
+	},
+	beforeDestroy(){
+        sessionStorage.getItem('goodsDetails') && sessionStorage.removeItem('goodsDetails');
+    }
 }
 </script>
 

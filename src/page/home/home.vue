@@ -9,7 +9,7 @@
         <div id="banner-wrap common-wrap">
           <banner :imgList = "topList" :height = "'280px'" :isLogin = 'isLogin'  v-if="topList.length" v-on:listenEvent = 'jumpRouter'></banner>
         </div>
-        <div class="gonggao-wrap sprite icon_voice">
+        <div class="gonggao-wrap sprite icon_voice" v-if="noticeInfoList.length">
           <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
         </div>
         <div class="index-advertisement-wrap">
@@ -20,7 +20,7 @@
       </div>
       <div class="center_wrap">
         <div class="center">
-          <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin' v-on:listenJump="jumpRouter"></homeGoods>
+          <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin' v-on:listenEvent = 'jumpRouter' v-on:listenJump="goodsJump"></homeGoods>
           <div class="index-bottom">
             <span class="index-bottom-box"><span class="index-bottom-text" v-text="'已经到底了'" @click="click()"></span></span>
           </div>
@@ -83,8 +83,14 @@ export default {
   },
   //完成挂载
   mounted(){
-    console.log(this.websiteDate)
-    this.get_main_page();
+    console.log(this.$router)
+    if (sessionStorage.getItem('homePage')) {
+      const homePage = JSON.parse(sessionStorage.getItem('homePage'));
+      this.mainActivityList = homePage.data.mainActivityList;
+      this.topList = homePage.data.topList;
+      this.noticeInfoList = homePage.data.noticeInfoList;
+      this.centerList = homePage.data.centerList;
+    }
     if (getIsLogin()) {
       this.tokenId = getTokenId();
       if (sessionStorage.getItem("isAuto") != "true") {
@@ -98,13 +104,10 @@ export default {
         sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
         tokenId : getTokenId()
       }
-        //getMessage(this)
+      //getMessage(this)
     }
-  },
-  watch:{
-    isNew:function (val,oldval) {
-    }
-
+    
+    this.get_main_page();
   },
   methods:{
     click() {
@@ -126,12 +129,13 @@ export default {
       }).then(result => {
         return result.data;
       }).then(data => {
+        sessionStorage.setItem('homePage',JSON.stringify(data))
         if (data.statusCode == 100000) {
           this.mainActivityList = data.data.mainActivityList;
           this.topList = data.data.topList;
           this.noticeInfoList = data.data.noticeInfoList;
           this.centerList = data.data.centerList;
-          if (!sessionStorage.getItem('system')) {
+          if (!localStorage.getItem('system')) {
             getSystem(this)
           }
         }
@@ -207,6 +211,10 @@ export default {
       }else{
         return null;
       }
+    },
+    goodsJump(id,item){
+      sessionStorage.setItem('goodsDetails',JSON.stringify(item.goodsInfo))
+      this.$router.push({path:'detail/'+id})
     }
   }
 }

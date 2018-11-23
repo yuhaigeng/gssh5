@@ -42,14 +42,13 @@
     },
     methods:{
       goDetails:function(item){
-        const type = 2;
-        const id = item.goodsId+'';
-        this.$emit('listenJump',[type,id,''])
+        const id = item.goodsId;
+        this.$emit('listenJump',id,item)
       },
       goMore:function (item) {
         const type = 1;
         const code = item.linkUrl+'';
-        this.$emit('listenJump',[type,code,''])
+        this.$emit('listenEvent',[type,code,''])
       }
     }
   }

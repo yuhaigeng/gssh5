@@ -3,7 +3,7 @@
 		<app-header :type="headerMsg"></app-header>
 		<div class="main-wrap often_shop_main_wrap">
 			<ul>
-				<li class="line-wrapper" v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item.goodsInfoId)">
+				<li class="line-wrapper" v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item)">
 					<mt-cell-swipe :right="rightButtons(index)">
 						<dl class="line-normal-wrapper clearfloat">
 							<dt class="line-normal-avatar-wrapper">
@@ -234,7 +234,9 @@ export default {
 				}
 			});
 		},
-		toDetail(id) {
+		toDetail(item) {
+			const id = item.goodsInfoId;
+			sessionStorage.setItem('goodsDetails',JSON.stringify(item.goodsInfo));
 			this.$router.push({ path:'detail/'+id })
 		},
 		getNumText(item){

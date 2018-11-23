@@ -1,7 +1,7 @@
 <template>
   <div class="my common-wrap">
     <app-header :type="headerMsg"   v-show="isLogin">
-      <div   class='my-head'   slot="myLeft">
+      <div class='my-head'   slot="myLeft">
         <router-link to="/setUp" tag="dl">
           <dt><img src="../../assets/img/icon_set.png"/></dt>
           <dd>设置</dd>
@@ -17,18 +17,18 @@
     </app-header>
     <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin" ></loginState>
     <div  v-cloak class="cont cont1 clearfloat">
-    <router-link :to="isLogin ? 'vip' : 'login'" tag="dl"  class="float_left " >
-      <dt><b>VIP</b></dt>
-      <dd>服务</dd>
-    </router-link>
-    <router-link :to="isLogin ?'onlineCoupon' : 'login'" tag="dl"  class="float_left " >
-      <dt><b v-text='userVipInfo.coupons || 0'></b><span>张</span></dt>
-      <dd>优惠券</dd>
-    </router-link>
-    <router-link :to=" isLogin ? 'score' :'login'" tag="dl" class="float_left" >
-      <dt><b v-text='userVipInfo.surplusScore || 0'></b><span>个</span></dt>
-      <dd>果币商城</dd>
-    </router-link>
+      <router-link :to="isLogin ? 'vip' : 'login'" tag="dl"  class="float_left " >
+        <dt><b>VIP</b></dt>
+        <dd>服务</dd>
+      </router-link>
+      <router-link :to="isLogin ?'coupon' : 'login'" tag="dl"  class="float_left " >
+        <dt><b v-text='userVipInfo.coupons || 0'></b><span>张</span></dt>
+        <dd>优惠券</dd>
+      </router-link>
+      <router-link :to=" isLogin ? 'score' :'login'" tag="dl" class="float_left" >
+        <dt><b v-text='userVipInfo.surplusScore || 0'></b><span>个</span></dt>
+        <dd>果币商城</dd>
+      </router-link>
     </div>
     <personalOptions :orderList="orderList" :title ="title" :isLogin='isLogin'></personalOptions>
     <personalOptions :orderList="otherList" :title ="title1" :isLogin='isLogin'></personalOptions>

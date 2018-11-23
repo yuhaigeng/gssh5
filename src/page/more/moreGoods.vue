@@ -20,7 +20,7 @@
                 <li v-for="(item,index) in gtes" :key="index" v-text="item.name" :class="{active:index == isThree}" @click="threeNav(index,item.id)"></li>
               </ul>
               <ul class="moreGoods_box_list"  v-show="left_name.length">
-                <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item.id)" >
+                <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item)" >
                   <dl class="moreGoods_goods_detaile clearfloat">
                     <dt>
                       <img v-lazy="item.goodsLogo" alt="" :key="item.goodsLogo">
@@ -384,8 +384,10 @@
           this.goods_info_nav()
         }
       },
-      toDetail(id) {
-        this.$router.push({ path:'detail/'+id })
+      toDetail(item) {
+        const id = item.id;
+			  sessionStorage.setItem('goodsDetails',JSON.stringify(item));
+			  this.$router.push({ path:'detail/'+id })
       },
       getNumText(item){
         const msgArr = ['','','不是VIP','等级不足']

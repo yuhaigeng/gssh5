@@ -26,7 +26,7 @@
 				</dl>
 			</div>
 			<div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
-				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item.id)">
+				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item)">
 					<dl>
 						<dt>
 							<img :src="item.goodsLogo"/>
@@ -143,7 +143,9 @@ export default {
 			this.searchVal = index;
 			this.get_goods_name2() 
 		},
-		toDetail(id) {
+		toDetail(item) {
+			const id = item.id;
+			sessionStorage.setItem('goodsDetails',JSON.stringify(item));
 			this.$router.push({ path:'detail/'+id })
 		},
 		goBack() {
