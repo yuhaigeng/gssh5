@@ -3,7 +3,7 @@
     <setHeader :type="headerMsg">
       <div class="header_right login_top_right" slot="sure" v-text="'保存'" @click="keep"></div>
     </setHeader>
-    <div class="main-wrap business_main_wrap" v-cloak>
+    <div class="main-wrap business_main_wrap" v-show="personInfo.id">
     <ul class="content1">
       <li>
         <div><label>名称：</label><input type="text" v-model="firmName" id="business_shop_name" ></div>

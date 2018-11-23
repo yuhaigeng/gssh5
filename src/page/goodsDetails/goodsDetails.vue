@@ -670,4 +670,8 @@ export default {
 	color: #f66b0c;
 	top: 0;
 }
+.detail{
+  position: relative;
+  margin-bottom: 98px;
+}
 </style>

@@ -11,9 +11,8 @@
                 </div>
                 <div class="message_count" v-text="item.messageContent"></div>
               </div>
+              <p class="lodemore" v-text="messages.isLast? '没有更多数据了' :'点击加载更多' " @click="load_more" v-show="objects.length"></p>
             </div>
-            <p class="lodemore" v-text="messages.isLast? '没有更多数据了' :'点击加载更多' " @click="load_more" v-show="objects.length"></p>
-
           </div>
 			</div>
         <app-footer :isLogin="isLogin"></app-footer>
@@ -87,6 +86,7 @@ export default {
 .main {
   width: 100%;
   height: auto;
+  margin-bottom: 98px;
 }
 .message_box {
   padding: 20px;
