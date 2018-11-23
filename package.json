@@ -28,7 +28,6 @@
     "vue": "^2.5.2",
     "vue-layer": "^0.9.10",
     "vue-lazyload": "^1.2.6",
-    "vue-pickers": "^1.1.5",
     "vue-router": "^3.0.1",
     "wind-dom": "0.0.3"
   },

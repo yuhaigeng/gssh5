@@ -73,7 +73,7 @@
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
-import vuePickers from 'vue-pickers';
+import vuePickers from '../../components/public/picker.vue';
   export default {
     name:'register',
     components:{

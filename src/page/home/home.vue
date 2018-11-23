@@ -20,7 +20,7 @@
       </div>
       <div class="center_wrap">
         <div class="center">
-          <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin'></homeGoods>
+          <homeGoods v-for="(item,index) in mainActivityList" :key="index" :mainActivityList = 'item' :isLogin='isLogin' v-on:listenJump="goodJump"></homeGoods>
           <div class="index-bottom">
             <span class="index-bottom-box"><span class="index-bottom-text" v-text="'已经到底了'" @click="click()"></span></span>
           </div>
@@ -203,6 +203,10 @@ export default {
       }else{
           return this.$router.push({path:'login'})
       }
+    },
+    goodJump(type,code){
+      console.log(type,code)
+      //this.jumpRouter(type,code)
     }
   }
 }

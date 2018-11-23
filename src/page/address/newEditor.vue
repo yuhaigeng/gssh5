@@ -38,7 +38,7 @@
 <script>
 import  addressHeader from "../../components/public/header.vue";
 import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
-import vuePickers from 'vue-pickers';
+import vuePickers from '../../components/public/picker.vue';
 export default {
   name:'newEditor',
   components:{

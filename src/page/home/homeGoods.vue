@@ -42,12 +42,17 @@
     },
     methods:{
       goDetails:function(item){
+        const type = 2;
         const id = item.goodsId;
-        this.$router.push({path:'/detail/'+id})
+        //this.$router.push({path:'/detail/'+id})
+        this.$emit('listenJump',type,id)
       },
       goMore:function (item) {
-        const code = item.linkUrl.trim().split('&')[1];
-        this.$router.push({path:'/more',query:{typeCode:code}})
+        const type = 1;
+        //const code = item.linkUrl.trim().split('&')[1];
+        const code = item.linkUrl
+        //this.$router.push({path:'/more',query:{typeCode:code}})
+        this.$emit('listenJump',type,code)
       }
     }
   }

@@ -31,7 +31,7 @@
 <script>
 import appHeader from "../../../components/public/header.vue";
 import sTable from "../../../components/public/table.vue";
-import vuePickers from 'vue-pickers';
+import vuePickers from '../../../components/public/picker.vue';
 
 import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../common/common.js";
 export default {
