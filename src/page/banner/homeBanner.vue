@@ -14,7 +14,6 @@
 <script>
 import Swiper from 'swiper'
 import '@/common/swiper.min.css'
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
  data() {
     return {
@@ -35,11 +34,6 @@ export default {
         clickable: true
     },
   })
- },
- computed:{
-   bannerHeight(){
-     return '280px'
-   }
  },
  methods:{
    dataEvent(type,code,tit){

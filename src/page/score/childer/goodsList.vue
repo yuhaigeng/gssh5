@@ -132,8 +132,8 @@ export default {
         }
     },
     beforeDestroy(){
-        localStorage.getItem('scoreGoods') && localStorage.removeItem('scoreGoods');
-        localStorage.getItem('scoreGoods_desc') && localStorage.removeItem('scoreGoods_desc');
+        // localStorage.getItem('scoreGoods') && localStorage.removeItem('scoreGoods');
+        // localStorage.getItem('scoreGoods_desc') && localStorage.removeItem('scoreGoods_desc');
     }
 }
 </script>

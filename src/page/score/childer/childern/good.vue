@@ -125,9 +125,14 @@ export default {
                 // return JSON.parse(JSON.stringify(result));
                 return result.data;
 
-                // console.log(data);
+                
             }).then(data => {
+                console.log(data.data.scoreGoods);
                 if (data.statusCode == 100000) {
+                    this.scoreGoods = data.data.scoreGoods;
+                    const list = this.scoreGoods.goodsPics.split('@');
+                        list.pop();
+                    this.bannerDate = list;
                     this.state = data.data.status;
                 } else {
                     console.log(data.statusStr)
@@ -171,6 +176,10 @@ export default {
                 }
             });
         }
+    },
+    beforeDestroy(){
+        localStorage.getItem('scoreGoods') && localStorage.removeItem('scoreGoods');
+        // localStorage.getItem('scoreGoods_desc') && localStorage.removeItem('scoreGoods_desc');
     }
 }
 </script>

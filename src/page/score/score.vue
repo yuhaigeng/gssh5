@@ -100,6 +100,7 @@ export default {
             }
             this.get_firm_score_info();
         }
+        localStorage.getItem('scoreGoods_desc') && localStorage.removeItem('scoreGoods_desc');
     },
     methods:{
         get_firm_score_info:function(){
