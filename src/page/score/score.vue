@@ -69,7 +69,7 @@
 
 <script>
 import appHeader from "../../components/public/header.vue";
-import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     data() {
         return {

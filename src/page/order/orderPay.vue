@@ -43,7 +43,7 @@
 
 <script>
 import  payHeader from "../../components/public/header.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey, websiteNode, getIsWeiXin} from "../../common/common.js";
+import { getTokenId , getUserData, getSecretKey, getIsWeiXin} from "../../common/common.js";
    export default {
        name:'orderPay',
        components:{
@@ -58,16 +58,18 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
               title:'订单支付'
             },
             orderMsg:{},
-            userInfo:JSON.parse(getUserData()),
+            userInfo:{},
             publicParameter : {}
           }
        },
       mounted(){
         this.api();
-        if (localStorage.getItem('order_pay')) {
-            this.orderMsg = JSON.parse(localStorage.getItem('order_pay'))
+        this.userInfo = JSON.parse(getUserData())
+        let pay = localStorage.getItem('order_pay')
+        if (pay) {
+            this.orderMsg = JSON.parse(pay)
             this.publicParameter = {
-              orderCode : JSON.parse(localStorage.getItem('order_pay')).orderCode,
+              orderCode : JSON.parse(pay).orderCode,
               source : 'firmId'+this.userInfo.firmInfoid,
               sign : this.$md5('firmId'+this.userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
               tokenId : getTokenId()
@@ -77,8 +79,8 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
       methods:{
         llpay:function () {
           let obj = Object.assign({
-                      method:'order_topay_llpay',
-                    },this.publicParameter)
+            method:'order_topay_llpay',
+          },this.publicParameter)
           this.$ajax.get(_this.HOST, {
             params:obj
           }).then(result => {

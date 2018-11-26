@@ -57,7 +57,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
   export default {
     name: 'orderSettlement' ,

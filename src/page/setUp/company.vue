@@ -66,14 +66,14 @@ export default {
     }
   },
   mounted:function(){
-    this.userId = JSON.parse(getUserData()).cuserInfoid
-    this.firmId =  JSON.parse(getUserData()) ? JSON.parse(getUserData()).firmInfoid : "" ;
+    this.userId = JSON.parse(getUserData()).cuserInfoid;
+    this.firmId = JSON.parse(getUserData()).firmInfoid ;
     this.userBasicParam = {
       source:'firmId'+ this.firmId,
       tokenId: getTokenId(),
       sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
     }
-      this.business()
+    this.business()
   },
   methods:{
     business:function(){

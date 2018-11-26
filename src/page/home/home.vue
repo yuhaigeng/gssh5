@@ -39,7 +39,7 @@ import banner from "../banner/homeBanner.vue";
 import ggBanner from "../banner/gonggaoBanner.vue";
 import homeGoods from "./homeGoods.vue";
 import alert from "../../components/public/alert.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getSystem , getMessage , getIsLogin , getTokenId , getSecretKey, getUserData } from "../../common/common.js";
 import { system } from "../../api/index.js";
 export default {
   name: 'home',
@@ -120,19 +120,11 @@ export default {
         websiteNode:'3301'
       }
      system(obj).then(data => {
-       if(data.statusCode == "100000"){
         this.$toast({
           message : data.statusStr,
           position: 'middle',
           duration: 2000,
         })
-       }else{
-        this.$toast({
-          message : data.statusStr,
-          position: 'middle',
-          duration: 2000,
-        })
-       }
       })
     },
     //获取首页数据

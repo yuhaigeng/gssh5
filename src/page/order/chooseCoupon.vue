@@ -60,9 +60,9 @@ export default {
     data() {
         return {
             headerMsg:{
-                type:"common",
-				title:'',
-                left:'返回',
+              type:"common",
+              title:'',
+              left:'返回',
             },
 			websiteNode:this.websiteDate.code,
 			descCode:'#YHQ-DESC',
@@ -104,12 +104,13 @@ export default {
 				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
-					resp.data.data.noticeContent = (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-					resp.data.data.noticeTitle =  resp.data.data.title;
-					resp.data.data.alertType = 1;
-					this.noticeInfoList = resp.data.data;
+          let data = resp.data.data
+					data.noticeContent = (data.desc.toString()).replace(/\r\n/g, '<br/>');
+				  data.noticeTitle =  data.title;
+					data.alertType = 1;
+					this.noticeInfoList = data;
 					let key = this.websiteNode + this.descCode ;
-					let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
+					let obj = '{'+'"'+key+'"'+':'+JSON.stringify(data)+'}'
 					this.cache = Object.assign(this.cache,JSON.parse(obj))
 				} else {
 					this.$toast({
@@ -126,20 +127,21 @@ export default {
 		},
 		get_desc() {
             // console.log(this.cache[this.websiteNode+this.descCode])
-            if (this.cache[this.websiteNode+this.descCode]) {
-              	this.noticeInfoList = this.cache[this.websiteNode+this.descCode]
-            }else{
-              	this.desc_data()
-            }
+      if (this.cache[this.websiteNode+this.descCode]) {
+          this.noticeInfoList = this.cache[this.websiteNode+this.descCode]
+      }else{
+          this.desc_data()
+      }
 		},
 		closeAlert:function(){
             this.noticeInfoList = null;
 		},
 		choose(item) {
-			const _this = this;
-			if (this.coupon[this.dataType].name == 'couponInfo') {
-				this.coupon[this.dataType].selectId = item.id;
-				this.coupon[this.dataType].couponMoney = item.couponMoney;
+      const _this = this;
+      let coupon = 	this.coupon[this.dataType]
+			if (coupon.name == 'couponInfo') {
+			  coupon.selectId = item.id;
+				coupon.couponMoney = item.couponMoney;
 				setTimeout(() => {
 					this.$router.go(-1)
 				}, 100);
@@ -147,31 +149,32 @@ export default {
 				let id = item.id;
 				let money = item.money;
 
-				if (this.coupon[this.dataType].selectId) {
-					console.log(this.coupon[this.dataType].selectId)
-					var arr = (this.coupon[this.dataType].selectId).split(',');
+				if (coupon.selectId) {
+					console.log(coupon.selectId)
+					var arr = (coupon.selectId).split(',');
 					console.log(arr)
 					if (arr.indexOf(id) == -1) {
 						//表示该项没有被选中
-						this.coupon[this.dataType].selectId += ','+id;
+						coupon.selectId += ','+id;
 					}else{
 						//表示该项已经被选中
 						arr.splice(arr.indexOf(id), 1);
 						console.log(arr)
 						if (arr.length) {
-							this.coupon[this.dataType].selectId = arr.join(',');
+						coupon.selectId = arr.join(',');
 						}else{
-							this.coupon[this.dataType].selectId = '';
+							coupon.selectId = '';
 						}
 					}
 				}else{
-					this.coupon[this.dataType].selectId = id;
+				coupon.selectId = id;
 				}
 			}
 		},
 		noUse(couponNum) {
-			this.coupon[this.dataType].selectId = '';
-			this.coupon[this.dataType].couponMoney = 0;
+      let coupon = 	this.coupon[this.dataType]
+			coupon.selectId = '';
+			coupon.couponMoney = 0;
 			this.$router.go(-1)
 		},
 		submitCoupon(data){
