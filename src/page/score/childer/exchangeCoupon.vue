@@ -1,7 +1,7 @@
 <template>
-    <div class="exchangeCoupon"> 
+    <div class="exchangeCoupon">
         <app-header :type ="headerMsg"></app-header>
-        
+
         <div class="score_goods_main_wrap main-wrap">
             <div class="main score_coupon">
                 <ul class="score_coupon_box clearfloat" v-if="couponList.length">
@@ -53,7 +53,7 @@ export default {
     mounted(){
          console.log('mounted')
         if (getIsLogin()) {
-            
+
             const userInfo = JSON.parse(getUserData());
             this.userBasicParam = {
                 firmId : userInfo.firmInfoid,
@@ -68,11 +68,11 @@ export default {
         //优惠卷列表
         get_coupon_kindList:function(){
             const obj = Object.assign({
-                    method: "coupon_kind",
-                    websiteNode: this.websiteNode,
-                    pageSize:this.pageSize,
-                    pageNo:this.pageNo,
-                },this.userBasicParam)
+              method: "coupon_kind",
+              websiteNode: this.websiteNode,
+              pageSize:this.pageSize,
+              pageNo:this.pageNo,
+            },this.userBasicParam)
             this.$ajax.get(this.HOST, {
                 params:obj
             }).then(result => {
@@ -83,7 +83,7 @@ export default {
             }).then(data => {
                 console.log(data);
                 if (data.statusCode == 100000) {
-                    
+
                     this.isLast = data.data.isLast;
                     if (data.data.pageNo == 1) {
                         this.couponList = data.data.objects;
@@ -91,17 +91,21 @@ export default {
                         this.couponList = this.couponList.concat(data.data.objects);
                     }
                 } else {
-                    console.log(data.statusStr)
+                  this.$toast({
+                    message : data.statusStr,
+                    position: 'middle',//top boottom middle
+                    duration: 2000,//延时多久消失
+                  })
                 }
             });
         },
         //果币兑换优惠卷
         exchange_coupon:function(id){
             const obj = Object.assign({
-                    method: "exchange_coupon",
-                    websiteNode: this.websiteNode,
-                    couponKindId:id,
-                },this.userBasicParam)
+              method: "exchange_coupon",
+              websiteNode: this.websiteNode,
+              couponKindId:id,
+            },this.userBasicParam)
             this.$ajax.get(this.HOST, {
                 params:obj
             }).then(result => {
@@ -117,42 +121,42 @@ export default {
                     }).catch((e) => {
                         console.log(e)
                     });
-                    
                 } else if (data.statusCode == 100619) {
-                    
-                    this.$toast({
-                        message : data.statusStr,
-                        position: 'middle',//top boottom middle
-                        duration: 2000,//延时多久消失
-                        //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-                        //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-                    })
+                  this.$toast({
+                    message : data.statusStr,
+                    position: 'middle',//top bottom middle
+                    duration: 2000,//延时多久消失
+                    //iconClass: 'mint-toast-icon mintui mintui-field-warning'
+                    //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+                  })
                 } else {
-                    console.log(data.statusStr)
+                  this.$toast({
+                    message :data.statusStr,
+                    position: 'middle',//top bottom middle
+                    duration: 2000,//延时多久消失
+                  })
                 }
             });
-            
+
         },
         getMore:function () {
-            if (!this.isLast) {
-                this.pageNo = this.pageNo+1 ;
-                this.get_coupon_kindList();
-            } 
+          if (!this.isLast) {
+            this.pageNo = this.pageNo+1 ;
+            this.get_coupon_kindList();
+          }
         },
         exchange:function (i) {
-            const _this = this;
-            const id = this.couponList[i].id;
-            if (this.couponList[i].flag == 0) {
-                
-                this.$messagebox.confirm('是否兑换优惠卷？','').then(action => {
-                    _this.exchange_coupon(id);
-                }).catch((e) => {
-                    console.log(e)
-                });
-            } else {
-                
-            }
-            
+          const _this = this;
+          const id = this.couponList[i].id;
+          if (this.couponList[i].flag == 0) {
+            this.$messagebox.confirm('是否兑换优惠卷？','').then(action => {
+              _this.exchange_coupon(id);
+            }).catch((e) => {
+              console.log(e)
+            });
+          } else {
+          }
+
         }
     }
 }

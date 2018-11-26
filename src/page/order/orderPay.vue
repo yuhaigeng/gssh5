@@ -50,17 +50,17 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
           payHeader
        },
        data() {
-           return {
-                paySel:0,
-                headerMsg:{
-                   type:'common',
-                   left:'返回',
-                   title:'订单支付'
-                },
-                orderMsg:{},
-                userInfo:JSON.parse(getUserData()),
-                publicParameter : {}
-           }
+          return {
+            paySel:0,
+            headerMsg:{
+              type:'common',
+              left:'返回',
+              title:'订单支付'
+            },
+            orderMsg:{},
+            userInfo:JSON.parse(getUserData()),
+            publicParameter : {}
+          }
        },
       mounted(){
         this.api();
@@ -76,24 +76,25 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
       },
       methods:{
         llpay:function () {
-              this.$ajax.get(_this.HOST, {
-                  params:Object.assign({
-                     method:'order_topay_llpay',
-                  },this.publicParameter)
-              }).then(result => {
-                  console.log(result)
-                  return result.data;
-              }).then(data => {
-                  if (data.statusCode == 100000) {
-                    let str=JSON.stringify(data.data);
-                    let input = document.getElementById('input1')
-                    let form  = document.getElementById('form1')
-                    input.value = str ;
-                    form.submit()
-                  } else {
-                      console.log(data.statusStr)
-                  }
-              })
+          let obj = Object.assign({
+                      method:'order_topay_llpay',
+                    },this.publicParameter)
+          this.$ajax.get(_this.HOST, {
+            params:obj
+          }).then(result => {
+            console.log(result)
+            return result.data;
+          }).then(data => {
+            if (data.statusCode == 100000) {
+              let str=JSON.stringify(data.data);
+              let input = document.getElementById('input1')
+              let form  = document.getElementById('form1')
+              input.value = str ;
+              form.submit()
+            } else {
+              console.log(data.statusStr)
+            }
+          })
         },
         // wxpay:function(){
         //    this.$ajax.get('/api', {
@@ -150,29 +151,26 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
         //     })
         // },
         api:function(){
-             if(this.orderMsg){
-                if(getIsWeiXin()){
-                    // this.paySel = 0
-                }else{
-                    this.paySel = 1
-                }
-             }
+          if(this.orderMsg){
+            if(getIsWeiXin()){
+              // this.paySel = 0
+            }else{
+              this.paySel = 1
+            }
+          }
         },
         pay:function(){
-            const pay = document.getElementsByClassName('true_order')[0].classList.contains('no_pay');
-						if (!pay) {
-							if (this.paySel == 0) {
-								// pub.openId && pub.pay.wxpay();
-							}
-							if (this.paySel == 1 ) {
-								this.llpay();
-							}
-						}
-
-
+          const pay = document.getElementsByClassName('true_order')[0].classList.contains('no_pay');
+          if (!pay) {
+            if (this.paySel == 0) {
+              // pub.openId && pub.pay.wxpay();
+            }
+            if (this.paySel == 1 ) {
+              this.llpay();
+            }
+          }
         }
       }
-
    }
 </script>
 

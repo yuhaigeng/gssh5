@@ -120,7 +120,11 @@ export default {
                        this.dataList = this.dataList.concat(data.data.objects);
                    }
                 } else {
-                    console.log(data.statusStr);
+                  this.$toast({
+                    message :data.statusStr,
+                    position: 'middle',//top bottom middle
+                    duration: 2000,//延时多久消失
+                  })
                 }
             });
         },

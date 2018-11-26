@@ -144,12 +144,13 @@ export default {
 	},
 	methods:{
 		get_goods_detail:function () {
+      let obj = {
+        method: "goods_get_by_id_two",
+        goodsId: this.goodsId,
+        userId: this.userId
+      }
 			this.$ajax.get(this.HOST, {
-				params:{
-					method: "goods_get_by_id_two",
-					goodsId: this.goodsId,
-					userId: this.userId
-				}
+				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					this.detailList = resp.data.data;
@@ -160,7 +161,7 @@ export default {
 				} else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -171,19 +172,20 @@ export default {
 			});
 		},
 		get_goods_collectAdd:function () {
+      let obj = {
+        method: "goods_collection_add",
+        goodsId: this.goodsId,
+        firmId: this.firmId,
+        userId: this.userId
+      }
 			this.$ajax.get(this.HOST, {
-				params:{
-					method: "goods_collection_add",
-					goodsId: this.goodsId,
-					firmId: this.firmId,
-					userId: this.userId
-				}
+				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					this.isCollect = true
 					this.$toast({
 						message : '收藏成功',
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -196,19 +198,20 @@ export default {
 			});
 		},
 		get_goods_collect_del:function (index) {
+      let obj = {
+        method: "goods_collection_del",
+        goodsId: this.goodsId,
+        firmId: this.firmId,
+        userId: this.userId
+      }
 			this.$ajax.get(this.HOST, {
-				params:{
-					method: "goods_collection_del",
-					goodsId: this.goodsId,
-					firmId: this.firmId,
-					userId: this.userId
-				}
+				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					this.isCollect = false;
 					this.$toast({
 						message : '取消收藏成功',
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -243,7 +246,7 @@ export default {
 			let obj = Object.assign({
 					method: "settlement_shop_cart",
 					goodsList:goodsList,
-			},this.userBasicParam)
+      },this.userBasicParam)
 
 			this.$ajax.get(this.HOST, {
 					params:obj
@@ -264,7 +267,7 @@ export default {
 					$(".footer-rigth").addClass("true");
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -330,7 +333,7 @@ export default {
 						}else{
 							this.$toast({
 								message : "该商品限购"+item.maxCount+"件",
-								position: 'boottom',//top boottom middle
+								position: 'middle',//top boottom middle
 								duration: 2000,//延时多久消失
 								//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 								//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -348,7 +351,7 @@ export default {
 				} else{
 					this.$toast({
 						message : "库存不足",
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success

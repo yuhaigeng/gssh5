@@ -6,14 +6,14 @@
     </app-header>
     <div class="main-wrap index-wrap">
       <div class="main">
-        <div id="banner-wrap common-wrap">
-          <banner :imgList = "topList" :height = "'280px'" :isLogin = 'isLogin'  v-if="topList.length" v-on:listenEvent = 'jumpRouter'></banner>
+        <div id="banner-wrap common-wrap"  v-if="topList.length">
+          <banner :imgList = "topList" :height = "'280px'" :isLogin = 'isLogin'  v-on:listenEvent = 'jumpRouter'></banner>
         </div>
         <div class="gonggao-wrap sprite icon_voice" v-if="noticeInfoList.length">
-          <gg-banner :imgList = "noticeInfoList" v-if="noticeInfoList.length" v-on:listenIndex="showalert"></gg-banner>
+          <gg-banner :imgList = "noticeInfoList" v-on:listenIndex="showalert"></gg-banner>
         </div>
-        <div class="index-advertisement-wrap">
-          <div class="index-advertisement" v-if ='centerList.length' @click="jumpRouter([centerList[0].jumpType, centerList[0].linkUrl, centerList[0].adTime])">
+        <div class="index-advertisement-wrap"  v-if ='centerList.length'>
+          <div class="index-advertisement" @click="jumpRouter([centerList[0].jumpType, centerList[0].linkUrl, centerList[0].adTime])">
             <img v-lazy="centerList[0].adLogo" alt="">
           </div>
         </div>
@@ -120,16 +120,29 @@ export default {
         websiteNode:'3301'
       }
      system(obj).then(data => {
-        console.log(data)
+       if(data.statusCode == "100000"){
+        this.$toast({
+          message : data.statusStr,
+          position: 'middle',
+          duration: 2000,
+        })
+       }else{
+        this.$toast({
+          message : data.statusStr,
+          position: 'middle',
+          duration: 2000,
+        })
+       }
       })
     },
     //获取首页数据
     get_main_page:function () {
+      let params = {
+        method: "main_page_show_three",
+        websiteNode:this.websiteNode
+      }
       this.$ajax.get(this.HOST, {
-        params:{
-          method: "main_page_show_three",
-          websiteNode:this.websiteNode
-        }
+        params:params
       }).then(result => {
         return result.data;
       }).then(data => {
@@ -142,16 +155,23 @@ export default {
           if (!localStorage.getItem('system')) {
             getSystem(this)
           }
+        }else{
+          this.$toast({
+            message : data.statusStr,
+            position: 'middle',
+            duration: 2000,
+          })
         }
       })
     },
     //自动登陆
     autoLogin:function(){
+      let params = {
+        method:'user_login',
+        tokenId:this.tokenId
+      }
       this.$ajax.get(this.HOST,{
-        params:{
-          method:'user_login',
-          tokenId:this.tokenId
-        }
+        params:params
       }).then(result =>{
         return result.data
       }).then(data =>{
@@ -176,7 +196,11 @@ export default {
           let openid = localStorage.getItem("openid");
           localStorage.clear();
           localStorage.setItem("openid",openid);
-          console.log(data.statusStr)
+          this.$toast({
+            message : data.statusStr,
+            position: 'middle',
+            duration: 2000,
+          })
         }
       });
     },
