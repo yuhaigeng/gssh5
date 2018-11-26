@@ -31,7 +31,7 @@
 
 <script>
 import  addressHeader from "../../components/public/header.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
   name:'addressManagement',
   components:{

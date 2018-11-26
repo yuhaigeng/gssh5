@@ -19,7 +19,7 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getSystem , getTokenId , getSecretKey } from "../../common/common.js";
 export default {
     name:'setUp',
     components:{
@@ -68,6 +68,7 @@ export default {
             })
           }
         }).catch(err => {
+          console.log('请求失败：'+ err.data.statusCode);
         });
       }
     }

@@ -99,7 +99,7 @@
 
 <script>
 import appHeader from "../../components/public/header.vue";
-import { getIsApp, getIsWeiXin, getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getIsApp, getIsWeiXin, getSystem , getIsLogin , getTokenId , getUserData , getSecretKey } from "../../common/common.js";
 export default {
    name: 'vip',
    data() {

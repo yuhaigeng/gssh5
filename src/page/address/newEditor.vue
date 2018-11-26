@@ -37,7 +37,7 @@
 
 <script>
 import  addressHeader from "../../components/public/header.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 import vuePickers from '../../components/public/picker.vue';
 export default {
   name:'newEditor',
@@ -98,11 +98,12 @@ export default {
     }
   },
   mounted:function(){
-    this.firmId = JSON.parse(getUserData()).firmInfoid
+    let obj = JSON.parse(getUserData())
+    this.firmId = obj.firmInfoid
     this. userBasicParam={
-      source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
+      source:'firmId'+ this.firmId,
       tokenId: getTokenId(),
-      sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+      sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
     }
     this.addressData = JSON.parse(sessionStorage.getItem("editorAddress"));
     this.columns = 3;
@@ -168,6 +169,7 @@ export default {
           }
         }
       }).catch(err => {
+        console.log('请求失败：'+ err);
       });
     },
     delApi:function(){
@@ -201,6 +203,7 @@ export default {
         this.delApi();
         this.$router.go(-1)
       }).catch((e) => {
+        console.log('请求失败：'+ err);
       });
     },
     selCity:function(){
@@ -301,7 +304,6 @@ export default {
   font-size: 30px;
 }
 .myBg{
-
   width:100%;
   height:100%;
   background-color: #000;

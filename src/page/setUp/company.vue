@@ -36,7 +36,7 @@
 <script>
 import setHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
   name:'company',
   components:{
@@ -92,6 +92,7 @@ export default {
           this.address = this.personInfo.address
         }
       }).catch(err => {
+        console.log('请求失败：'+ err.data.statusCode);
       });
     },
     save:function(){
@@ -122,6 +123,7 @@ export default {
           });
         }
       }).catch(err => {
+        console.log('请求失败：'+ err.data.statusCode);
       });
     },
     desc_data:function(){
@@ -149,6 +151,7 @@ export default {
           })
         }
       }).catch(err => {
+        console.log('请求失败：'+ err.data.statusCode);
       });
       },
     agreement:function(){
