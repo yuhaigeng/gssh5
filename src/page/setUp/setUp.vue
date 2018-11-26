@@ -48,10 +48,11 @@ export default {
     },
     methods:{
       login_out:function(){
+        let params = Object.assign({
+          method:'user_logout',
+        },this.userBasicParam)
         this.$ajax.get(this.HOST, {
-          params :Object.assign({
-            method:'user_logout',
-          },this.userBasicParam)
+          params:params
         }).then(resp => {
           if(resp.data.statusCode ==  "100000"){
             localStorage.clear();
@@ -59,11 +60,16 @@ export default {
             if (!sessionStorage.getItem('system')) {
               getSystem(this)
             }
+          }else {
+            this.$toast({
+              message : resp.data.statusStr,
+              position: 'bottom',
+              duration: 2000,
+            })
           }
         }).catch(err => {
         });
       }
-
     }
 }
 </script>

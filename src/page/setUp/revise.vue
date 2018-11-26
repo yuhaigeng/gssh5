@@ -57,13 +57,14 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
          },
          methods:{
             changePassword:function(){
+              let params = Object.assign({
+                method:'user_update_pwd',
+                oldPassword:this.$md5(this.oldPassword),
+                newPassword:this.$md5(this.newPassword),
+                confirmPassword:this.$md5(this.confirmPassword),
+              },this.userBasicParam)
               this.$ajax.get(this.HOST, {
-                  params:Object.assign({
-                    method:'user_update_pwd',
-                    oldPassword:this.$md5(this.oldPassword),
-                    newPassword:this.$md5(this.newPassword),
-                    confirmPassword:this.$md5(this.confirmPassword),
-                  },this.userBasicParam)
+                  params:params
               }).then(resp => {
                   if(resp.data.statusCode ==  "100000"){
                     this.$toast({
@@ -71,6 +72,12 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                       center: true,
                       duration: 2000,
                     });
+                  }else {
+                    this.$toast({
+                      message : resp.data.statusStr,
+                      position: 'bottom',
+                      duration: 2000,
+                    })
                   }
               }).catch(err => {
               });

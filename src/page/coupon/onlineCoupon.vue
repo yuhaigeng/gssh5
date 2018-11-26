@@ -71,10 +71,7 @@ export default {
             this.$ajax.get(this.HOST, {
                 params:obj
             }).then(result => {
-                // return JSON.parse(JSON.stringify(result));
                 return result.data;
-
-                // console.log(data);
             }).then(data => {
                 console.log(data);
                 if (data.statusCode == 100000) {
@@ -86,7 +83,11 @@ export default {
                     }
 
                 } else {
-                    console.log(data.statusStr)
+                    this.$toast({
+                        message : data.statusStr,
+                        position: 'bottom',
+                        duration: 2000,
+                    })
                 }
             });
         },
@@ -110,7 +111,11 @@ export default {
                 if (data.statusCode == 100000) {
                     this.couponList[index].onOff = false;
                 } else {
-                    console.log(data.statusStr)
+                    this.$toast({
+                        message : data.statusStr,
+                        position: 'bottom',
+                        duration: 2000,
+                    })
                 }
             });
 

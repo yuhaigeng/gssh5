@@ -184,7 +184,7 @@ export default {
 				console.log(this.couponList)
 				if (this.couponList && this.couponList.length) {
 					this.couponList.forEach((item)=>{
-						
+
 						m = m + parseFloat(item.couponMoney)
 					})
 				}
@@ -215,13 +215,13 @@ export default {
 			return;
 		}
 		if (getIsLogin()) {
-            this.tokenId = getTokenId();
-            const userInfo = JSON.parse(getUserData());
-            this.userBasicParam = {
-                firmId : userInfo.firmInfoid,
-                source : 'firmId'+userInfo.firmInfoid,
-                sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-                tokenId : getTokenId()
+      this.tokenId = getTokenId();
+      const userInfo = JSON.parse(getUserData());
+      this.userBasicParam = {
+        firmId : userInfo.firmInfoid,
+        source : 'firmId'+userInfo.firmInfoid,
+        sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+        tokenId : getTokenId()
 			}
 			this.get_order_detail()
         }
@@ -246,7 +246,7 @@ export default {
 					this.orderInfo = v.orderInfo;
 					this.couponInit(v);
 				} else {
-					
+
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err);
@@ -383,12 +383,13 @@ export default {
 			]
 		},
 		desc_data:function(){
-			this.$ajax.get(this.HOST, {
-				params:{
+      let obj = {
 					method:'gss_desc',
 					websiteNode:this.websiteNode,
 					code:this.websiteNode + this.descCode
 				}
+			this.$ajax.get(this.HOST, {
+				params: obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');

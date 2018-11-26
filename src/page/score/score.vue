@@ -69,7 +69,7 @@
 
 <script>
 import appHeader from "../../components/public/header.vue";
-import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     data() {
         return {
@@ -90,35 +90,39 @@ export default {
         appHeader,
     },
     mounted(){
-        if (getIsLogin()) {
-            const userInfo = JSON.parse(getUserData());
-            this.userBasicParam = {
-                firmId : userInfo.firmInfoid,
-				source : 'firmId'+userInfo.firmInfoid,
-				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-				tokenId : getTokenId()
-            }
-            this.get_firm_score_info();
+      if (getIsLogin()) {
+        const userInfo = JSON.parse(getUserData());
+        this.userBasicParam = {
+          firmId : userInfo.firmInfoid,
+          source : 'firmId'+userInfo.firmInfoid,
+          sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+          tokenId : getTokenId()
         }
-        localStorage.getItem('scoreGoods_desc') && localStorage.removeItem('scoreGoods_desc');
+        this.get_firm_score_info();
+      }
+      localStorage.getItem('scoreGoods_desc') && localStorage.removeItem('scoreGoods_desc');
     },
     methods:{
         get_firm_score_info:function(){
             const obj = Object.assign({
                 method: "firm_score_info",
             },this.userBasicParam)
+
             this.$ajax.get(this.HOST, {
                 params:obj
             }).then(result => {
                 return result.data;
             }).then(data => {
-                console.log(data);
-                if (data.statusCode == 100000) {
-                    this.score_info = data.data;
-                } else {
-                    console.log(data.statusStr);
-                }
-                console.log(this.score_info)
+              console.log(data);
+              if (data.statusCode == 100000) {
+                this.score_info = data.data;
+              } else {
+                this.$toast({
+                  message : data.statusStr,
+                  position: 'middle',//top boottom middle
+                  duration: 2000,//延时多久消失
+                })
+              }
             });
         },
         goBack:function(){

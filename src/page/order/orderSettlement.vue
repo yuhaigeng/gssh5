@@ -57,7 +57,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
   export default {
     name: 'orderSettlement' ,
@@ -108,12 +108,13 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
     },
     methods:{
       desc_data:function(){
+        let obj = {
+          method:'gss_desc',
+          websiteNode:this.websiteNode,
+          code:this.websiteNode + this.descCode
+        }
         this.$ajax.get(this.HOST, {
-          params:{
-            method:'gss_desc',
-            websiteNode:this.websiteNode,
-            code:this.websiteNode + this.descCode
-          }
+          params:obj
         }).then(resp => {
           if(resp.data.statusCode ==  "100000"){
             resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
@@ -125,6 +126,12 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
             let value = JSON.stringify(resp.data.data)
             let obj = `{${key}:${value}}`
             this.cache = Object.assign(this.cache, JSON.parse(obj))
+          }else{
+            this.$toast({
+              message : resp.data.statusStr,
+              position: 'middle',//top boottom middle
+              duration: 2000,//延时多久消失
+            })
           }
         }).catch(err => {
           console.log(err)
@@ -155,6 +162,12 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
             }
             sessionStorage.setItem('orderResult',JSON.stringify(orderResult));
             this.$router.push({path:'/orderResult'})
+          }else{
+            this.$toast({
+              message : data.statusStr,
+              position: 'middle',//top boottom middle
+              duration: 2000,//延时多久消失
+            })
           }
         }).catch(err => {
             console.log('err:'+err);

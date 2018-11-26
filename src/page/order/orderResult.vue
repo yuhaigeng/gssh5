@@ -34,7 +34,7 @@ export default {
       num:'1',
       left:'返回'
       },
-      statusData:JSON.parse(sessionStorage.getItem('orderResult')),
+      statusData:{},
       dataInfo:{
         title:{
           '100000':'订单提交成功',
@@ -47,12 +47,17 @@ export default {
           '100907':'如需重新下单，请取消之前所下订单！'
         },
         time:{
-          '100000':'预计次日'+JSON.parse(localStorage.getItem('system')).default_dispatch_time+'送达，请保持通讯设备畅通',
+          '100000':'',
           '100903':'',
           '100907':''
         }
       }
     }
+  },
+  mounted(){
+    let system = JSON.parse(localStorage.getItem('system'))
+    this.statusData = JSON.parse(sessionStorage.getItem('orderResult'));
+    this.dataInfo.time['100000'] = '预计次日'+system.default_dispatch_time+'送达，请保持通讯设备畅通'
   },
   methods:{
     jumpOrder:function(){
