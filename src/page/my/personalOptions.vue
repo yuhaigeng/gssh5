@@ -1,8 +1,8 @@
 <template>
   <div class="cont cont2" >
-    <div class="cont_tit" v-text="title"></div>
+    <div class="cont_tit" v-text="info.title"></div>
     <div class="cont_order_box clearfloat">
-      <router-link :to="{path:isLogin ? item.linkUrl : 'login', query:{type:item.type}}"   tag="dl" v-for = "(item,index) in orderList" :key="index">
+      <router-link :to="{path:isLogin ? item.linkUrl : 'login', query:{type:item.type}}"   tag="dl" v-for = "(item,index) in info.list" :key="index">
         <dt><img :src="item.icon"/></dt>
         <dd v-text="item.name"></dd>
       </router-link>
@@ -13,7 +13,7 @@
 <script>
   export default {
     name:'personalOptions',
-    props:['orderList', 'title' ,'isLogin'],
+    props:['info' ,'isLogin'],
       data() {
         return {
         }

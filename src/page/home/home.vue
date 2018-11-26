@@ -125,11 +125,12 @@ export default {
     },
     //获取首页数据
     get_main_page:function () {
-      this.$ajax.get(this.HOST, {
-        params:{
+      let params = {
           method: "main_page_show_three",
           websiteNode:this.websiteNode
-        }
+        };
+      this.$ajax.get(this.HOST, {
+        params:params
       }).then(result => {
         return result.data;
       }).then(data => {
@@ -142,6 +143,12 @@ export default {
           if (!localStorage.getItem('system')) {
             getSystem(this)
           }
+        }else{
+          this.$toast({
+            message : data.statusStr,
+            position: 'boottom',
+            duration: 2000,
+          })
         }
       })
     },
