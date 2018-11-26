@@ -43,6 +43,7 @@ export default {
   },
   mounted(){
     this.get_meassage();
+    localStorage.removeItem("isNew")
   },
   methods:{
     get_meassage:function () {

@@ -42,7 +42,6 @@ const getMessage = function (params) {
                 _this.isNew = true;
             } else {
                 _this.isNew = false;
-                console.log("没有新消息")
             }
         } else {
             console.log(data.statusStr)

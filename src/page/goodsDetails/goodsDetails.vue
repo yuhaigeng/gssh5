@@ -113,7 +113,7 @@ export default {
 			list.pop();
 			this.bannerDate = list;
 		}else{
-			
+
 		}
 		if ( localStorage.getItem('good') ) {
 			this.goShopCart = JSON.parse(localStorage.getItem('good'))
@@ -617,8 +617,9 @@ export default {
 	position: absolute;
 	background: none;
 	top: 0 ;
-	left: 50%;
-  margin-left:-384px;
+  left:0;
+  right:0;
+  margin: auto;
 }
 
 .goodsDetails_header .header_back {

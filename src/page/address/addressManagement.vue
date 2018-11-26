@@ -95,7 +95,7 @@ export default {
     },
     editor:function(item){
       if(this.$route.query.isBack){
-        this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:false}})
+        this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true,isDel:false}})
       }else{
         this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true}})
       }
