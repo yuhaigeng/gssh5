@@ -95,12 +95,13 @@ export default {
 	},
     methods: {
 		desc_data:function(){
+      let obj = {
+        method:'gss_desc',
+        websiteNode:this.websiteNode,
+        code:this.websiteNode + this.descCode
+      }
 			this.$ajax.get(this.HOST, {
-				params:{
-					method:'gss_desc',
-					websiteNode:this.websiteNode,
-					code:this.websiteNode + this.descCode
-				}
+				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					resp.data.data.noticeContent = (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
@@ -113,7 +114,7 @@ export default {
 				} else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -145,7 +146,7 @@ export default {
 			} else {
 				let id = item.id;
 				let money = item.money;
-				
+
 				if (this.coupon[this.dataType].selectId) {
 					console.log(this.coupon[this.dataType].selectId)
 					var arr = (this.coupon[this.dataType].selectId).split(',');

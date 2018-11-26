@@ -19,7 +19,7 @@
             <label>详细地址：</label><input type="text"   id="edit_county" v-model="street" placeholder="请输入街道地址(无需输入城区)" >
           </li>
         </ul>
-        <div class="address_del" v-show="this.$route.query.isEdit " @click="del">地址删除</div>
+        <div class="address_del" v-show="this.$route.query.isDel " @click="del">地址删除</div>
       </div>
     </div>
     <vuePickers

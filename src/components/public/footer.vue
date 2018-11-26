@@ -31,7 +31,6 @@ export default {
    props:['isNew','isLogin'],
    data() {
        return {
-        //  logined:localStorage.getItem("user_data") ? true : false,
        }
    },
   components: {}
@@ -65,5 +64,5 @@ export default {
 .router-link-active .tab_bar_Message_a{background-position:-603px -81px;}
 
 .new_msg{width:10px;height:10px;background:red;border-radius:5px;display: inline-block;position:relative;left: 10px;}
-.footer-wrap{ left: 50%;margin-left: -375px;}
+.footer-wrap{ right:0;}
 </style>

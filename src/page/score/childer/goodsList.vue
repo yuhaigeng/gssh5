@@ -1,5 +1,5 @@
 <template>
-    <div class="score_goods_list"> 
+    <div class="score_goods_list">
         <app-header :type ="headerMsg"></app-header>
         <div class="score_goods_main_wrap">
             <div class="main">
@@ -67,36 +67,39 @@ export default {
         if ( !localStorage.getItem("scoreGoods_desc") ) {
             this.get_gss_desc();
         }
-        
+
     },
     methods:{
         get_score_goodsList:function(){
-            this.$ajax.get(this.HOST, {
-                params:{
-                    method: "score_goods_show",
-                    websiteNode: this.websiteNode,
-                    pageSize:this.pageSize,
+          let obj = {
+            method: "score_goods_show",
+            websiteNode: this.websiteNode,
+            pageSize:this.pageSize,
 				    pageNo:this.pageNo
-                }
-            }).then(result => {
-                // return JSON.parse(JSON.stringify(result));
-                return result.data;
-
-                // console.log(data);
-            }).then(data => {
-                console.log(data);
-                if (data.statusCode == 100000) {
-                    
-                    this.isLast = data.data.isLast;
-                    if (data.data.pageNo == 1) {
-                        this.goodsList = data.data.objects;
-                    } else {
-                        this.goodsList = this.goodsList.concat(data.data.objects);
-                    }
-                } else {
-                    console.log(data.statusStr)
-                }
-            });
+          }
+          this.$ajax.get(this.HOST, {
+            params:obj
+          }).then(result => {
+            // return JSON.parse(JSON.stringify(result));
+            return result.data;
+            // console.log(data);
+          }).then(data => {
+            console.log(data);
+            if (data.statusCode == 100000) {
+              this.isLast = data.data.isLast;
+              if (data.data.pageNo == 1) {
+                  this.goodsList = data.data.objects;
+              } else {
+                  this.goodsList = this.goodsList.concat(data.data.objects);
+              }
+            } else {
+              this.$toast({
+                message :data.statusStr,
+                position: 'middle',//top bottom middle
+                duration: 2000,//延时多久消失
+              })
+            }
+          });
         },
         get_gss_desc:function () {
             this.$ajax.get(this.HOST, {
@@ -115,7 +118,11 @@ export default {
                     this.scoreGoods_desc = data.data;
                     localStorage.setItem("scoreGoods_desc",JSON.stringify(data.data))
                 } else {
-                    console.log(data.statusStr)
+                  this.$toast({
+                    message :data.statusStr,
+                    position: 'middle',//top bottom middle
+                    duration: 2000,//延时多久消失
+                  })
                 }
             });
         },
@@ -128,7 +135,7 @@ export default {
             if (!this.isLast) {
                 this.pageNo = this.pageNo+1 ;
                 this.get_score_goodsList();
-            } 
+            }
         }
     },
     beforeDestroy(){
@@ -228,7 +235,7 @@ export default {
     bottom: 0;
     background-color: rgba(0,0,0,.5);
     z-index: 101;
-    
+
 }
 .license_container img{
     width: 100%;

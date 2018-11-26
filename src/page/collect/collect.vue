@@ -146,14 +146,15 @@ export default {
 	},
 	methods:{
 		get_goods_collected:function() {
+      let params ={
+        method: "goods_collection",
+        pageNo: this.pageNo,
+        pageSize: this.pageSize,
+        firmId: this.firmInfoid,
+        userId: this.userId
+      }
 			this.$ajax.get(this.HOST, {
-				params:{
-					method: "goods_collection",
-					pageNo: this.pageNo,
-					pageSize: this.pageSize,
-					firmId: this.firmInfoid,
-					userId: this.userId
-				}
+				params:params
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					this.isLast = resp.data.data.isLast;
@@ -165,7 +166,7 @@ export default {
 				} else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top bottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -176,12 +177,13 @@ export default {
 			});
 		},
 		get_goods_collect_del:function (index) {
+      let params = {
+        method: "goods_collection_del",
+        userId: this.userId,
+        goodsId: this.goodID
+      }
 			this.$ajax.get(this.HOST, {
-				params:{
-					method: "goods_collection_del",
-					userId: this.userId,
-					goodsId: this.goodID
-				}
+				params:params
 			}).then(resp => {
 				if(resp.data.statusCode == 100000) {
 					const arr = this.collectList;
@@ -190,7 +192,7 @@ export default {
 				}else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top bottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -211,7 +213,6 @@ export default {
 			}).then(result => {
 				return result.data;
 			}).then(data => {
-
 				if (data.statusCode=='100000') {
 					sessionStorage.setItem('address',JSON.stringify(data.data));
 					this.$router.push({path:'/orderSettlement'})
@@ -226,7 +227,7 @@ export default {
 					$(".footer-rigth").addClass("true");
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top bottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -300,7 +301,7 @@ export default {
 						}else{
 							this.$toast({
 								message : "该商品限购"+item.maxCount+"件",
-								position: 'boottom',//top boottom middle
+								position: 'middle',//top bottom middle
 								duration: 2000,//延时多久消失
 								//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 								//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -315,7 +316,7 @@ export default {
 				}else {
 					this.$toast({
 						message : "库存不足",
-						position: 'boottom',//top boottom middle
+						position: 'middle',//top bottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
