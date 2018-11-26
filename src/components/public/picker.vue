@@ -1,8 +1,3 @@
-/**
-* @file
-* @author 何文林
-* @date 2017/7/10
-*/
 <template>
   <div id="h-picker">
     <div class="bg_mask" v-show="show"></div>
