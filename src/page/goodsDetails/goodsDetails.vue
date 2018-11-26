@@ -53,7 +53,7 @@ import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/goodsBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
 import $ from 'jquery';
-import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import {  getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {

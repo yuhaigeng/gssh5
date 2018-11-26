@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { getSystem , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import {  getIsLogin  } from "../../common/common.js";
 // 节流函数
 const delay = (function() {
     let timer = 0;
@@ -131,7 +131,7 @@ export default {
 		search(event) {
 			if(event) {
 				if(this.searchVal.length != 0){
-					this.get_goods_name2() 
+					this.get_goods_name2()
 				}
 			}
 		},
@@ -141,7 +141,7 @@ export default {
 		},
 		showSearch(index) {
 			this.searchVal = index;
-			this.get_goods_name2() 
+			this.get_goods_name2()
 		},
 		toDetail(item) {
 			const id = item.id;

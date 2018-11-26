@@ -1,5 +1,5 @@
 <template>
- <div class="common-wrap">
+ <div class="common-wrap managment">
      <app-header :type ="headerMsg"></app-header>
      <ul class="order_management_top clearfloat">
 		<li class="order_man_item" v-for="(item,index) in orderNav" :key="index" :class="{'order_border_bottom':index == navIndex}" @click="navTop(index)" v-text="item.tit"></li>
@@ -47,7 +47,7 @@
 
 <script>
 import appHeader from "../../components/public/header.vue";
-import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import {  getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     name: 'order_management',
     data() {
@@ -69,11 +69,11 @@ export default {
             pageNo: this.pageNo,
             pageSize: this.pageSize,
             websiteNode: this.websiteNode,
-            firmId:getIsLogin() ? JSON.parse(localStorage.getItem("user_data")).firmInfoid :"" ,
+            firmId: "" ,
             orderStatus:1,
             ordersList:[],
             orderStatusText:['已作废','','待发货','已配货','待支付','已支付'],
-            goods:localStorage.getItem('good') ? JSON.parse(localStorage.getItem('good')) : [],
+            goods:[],
 			idArr:[],
         }
     },
@@ -93,9 +93,11 @@ export default {
         }
     },
     mounted() {
+      this.goods = localStorage.getItem('good') && JSON.parse(localStorage.getItem('good'))
         if (getIsLogin()) {
             this.tokenId = getTokenId();
             const userInfo = JSON.parse(getUserData());
+            this.firmId = userInfo.firmInfoid;
             this.userBasicParam = {
                 firmId : userInfo.firmInfoid,
                 source : 'firmId'+userInfo.firmInfoid,
@@ -279,11 +281,9 @@ export default {
 </script>
 
 <style scoped>
-.order_management_wrap {
-	margin-top: 0;
-	height: 1176px
+.managment{
+  margin-top: 107px;
 }
-
 .order_management_top {
 	display: -webkit-box;
 	display: flex;
@@ -293,7 +293,7 @@ export default {
 	max-width: 750px;
 	background: #FFF;
 	font-size: 26px;
-  margin-top: 87px;
+
 }
 
 .order_man_item {
