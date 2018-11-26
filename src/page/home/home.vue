@@ -130,9 +130,9 @@ export default {
     //获取首页数据
     get_main_page:function () {
       let params = {
-        method: "main_page_show_three",
-        websiteNode:this.websiteNode
-      }
+          method : "main_page_show_three",
+          websiteNode : this.websiteNode
+        };
       this.$ajax.get(this.HOST, {
         params:params
       }).then(result => {
@@ -150,7 +150,7 @@ export default {
         }else{
           this.$toast({
             message : data.statusStr,
-            position: 'middle',
+            position: 'bottom',
             duration: 2000,
           })
         }

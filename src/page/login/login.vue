@@ -170,66 +170,66 @@ export default {
     },
     methods:{
       getCode:function(){
-        this.$ajax.get(this.HOST, {
-          params:{
+        let obj = {
             method:'gss_sms',
             mobile: this.message
           }
+        this.$ajax.get(this.HOST, {
+          params: obj
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
-            this.isHidden = false
-            this.$toast({
-              message : resp.data.statusStr,
-              position: 'boottom',
-              duration: 2000,
-            })
+            this.isHidden = false;
           }else{
             this.isHidden = true;
-            this.$toast({
-              message : resp.data.statusStr,
-              position: 'boottom',
-              duration: 2000,
-            })
           }
+          this.$toast({
+            message : resp.data.statusStr,
+            position: 'bottom',
+            duration: 2000,
+          })
         }).catch(err => {
+          console.log(err)
         });
       },
       login_up:function(){
           // Object.assign()
-          this.$ajax.get(this.HOST, {
-            params :Object.assign({
-              method:this.method[this.login],
-              websiteNode:this.websiteNode,
-              mobile:this.login ? this.account : this.message
-            }, this.parameter )
-          }).then(resp => {
-            if(resp.data.statusCode == "100000"){
-              this.setData(resp.data)
-              setTimeout(() =>{
-                this.$router.push({path:'/my'})
-              },500)
-              this.$toast({
-                message : '登录成功',
-                position: 'boottom',
-                duration: 2000,
-              })
-            }else{
-              this.$toast({
-                message : resp.data.statusStr,
-                position: 'boottom',
-                duration: 2000,
-              })
-            }
-          }).catch(err => {
-          });
+        let obj = Object.assign({
+            method:this.method[this.login],
+            websiteNode:this.websiteNode,
+            mobile:this.login ? this.account : this.message
+          }, this.parameter );
+        this.$ajax.get(this.HOST, {
+          params : obj
+        }).then(resp => {
+          if(resp.data.statusCode == "100000"){
+            this.setData(resp.data)
+            setTimeout(() =>{
+              this.$router.push({path:'/my'})
+            },1000)
+            this.$toast({
+              message : '登录成功',
+              position: 'bottom',
+              duration: 2000,
+            })
+          }else{
+            this.$toast({
+              message : resp.data.statusStr,
+              position: 'bottom',
+              duration: 2000,
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        });
       },
       desc_data:function(){
-        this.$ajax.get(this.HOST, {
-          params:{
+        let obj = {
             method:'gss_desc',
             websiteNode:this.websiteNode,
             code:this.websiteNode + this.descCode
           }
+        this.$ajax.get(this.HOST, {
+          params: obj
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
             resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
@@ -240,14 +240,19 @@ export default {
             let value = JSON.stringify(resp.data.data)
             let obj = `{${key}:${value}}`
             this.cache = Object.assign(this.cache,JSON.parse(obj))
+          }else{
+            this.$toast({
+              message : resp.data.statusStr,
+              position: 'bottom',
+              duration: 2000,
+            })
           }
         }).catch(err => {
+          console.log(err)
         });
       },
       login_btn:function(e){
-        var target = event.target;
-        var isActive =target.classList.contains("active")
-        if (isActive) {
+        if (this.isActive) {
           if(this.login == 0){
             this.parameter = {smsCode:this.code}
           }else{

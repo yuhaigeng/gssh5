@@ -37,18 +37,18 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
     props:["userInfo" ,"userVipInfo",'isLogin'],
       data() {
         return {
-          firmId:"" ,
           userBasicParam:{},
           src:'',
         }
       },
       mounted:function(){
-          if(localStorage.getItem("user_data")){
-            this.firmId = JSON.parse(getUserData()).firmInfoid;
+          if(this.isLogin){
+            const obj = JSON.parse(getUserData());
             this.userBasicParam = {
-              source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
-              tokenId: getTokenId(),
-              sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+              firmId : obj.firmInfoid,
+              source : 'firmId'+ obj.firmInfoid,
+              tokenId : getTokenId(),
+              sign : this.$md5('firmId'+ obj.firmInfoid + "key" + getSecretKey()).toUpperCase()
             }
           }
       },
@@ -65,7 +65,6 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
           this.$ajax.get(this.HOST, {
               params :Object.assign({
                 method:'firm_info_update_faceimgurl',
-                firmId:this.firmId,
                 faceImgUrl:this.src
               }, this.userBasicParam )
           }).then(resp => {
@@ -77,6 +76,7 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
               })
             }
           }).catch(err => {
+            console.log(err)
           });
         },
         uploadImg(e){

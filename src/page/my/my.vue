@@ -16,7 +16,7 @@
       </div>
     </app-header>
     <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin" ></loginState>
-    <div  v-cloak class="cont cont1 clearfloat">
+    <div v-cloak class="cont cont1 clearfloat">
       <router-link :to="isLogin ? 'vip' : 'login'" tag="dl"  class="float_left " >
         <dt><b>VIP</b></dt>
         <dd>服务</dd>
@@ -30,8 +30,8 @@
         <dd>果币商城</dd>
       </router-link>
     </div>
-    <personalOptions :orderList="orderList" :title ="title" :isLogin='isLogin'></personalOptions>
-    <personalOptions :orderList="otherList" :title ="title1" :isLogin='isLogin'></personalOptions>
+    <personalOptions :info="orderInfo" :isLogin='isLogin'></personalOptions>
+    <personalOptions :info="otherInfo" :isLogin='isLogin'></personalOptions>
     <app-footer :isLogin="isLogin" :isNew = 'isNew'></app-footer>
   </div>
 </template>
@@ -57,27 +57,26 @@ export default {
         title:'我的',
         routerPath:'/setUp',
       },
-      isLogin:getIsLogin() ? getIsLogin() : false,
+      isLogin:getIsLogin(),
       method:["user_personal_msg","firm_vip_info"],
       userBasicParam:{},
       userInfo:{},
       userVipInfo:{},
-      orderList:dateModule.orderList,
-      otherList:dateModule.otherList,
-      title:dateModule.title,
-      title1:dateModule.title1,
+      orderInfo:dateModule[0],
+      otherInfo:dateModule[1],
       system:{},
       isNew:false,//表示是否有新消息
     }
   },
   mounted(){
-    if(localStorage.getItem("user_data")){
+    if (getIsLogin()) {
       this.system = JSON.parse(localStorage.getItem('system'))
+      const userInfo = JSON.parse(getUserData());
       this.userBasicParam ={
-        firmId:JSON.parse(getUserData()).firmInfoid,
-        source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
+        firmId:userInfo.firmInfoid,
+        source:'firmId'+ userInfo.firmInfoid,
         tokenId: getTokenId(),
-        sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+        sign :this.$md5('firmId'+ userInfo.firmInfoid + "key" + getSecretKey()).toUpperCase()
       }
       if(localStorage.getItem("isNew")){
         this.isNew = JSON.parse(localStorage.getItem("isNew"))
@@ -91,75 +90,93 @@ export default {
   },
   methods:{
     personApi:function(){
-      this.$ajax.get(this.HOST, {
-        params:Object.assign({
+      let obj = Object.assign({
           method:this.method[0],
           firmId: this.userBasicParam.firmId
-        },this.userBasicParam)
+        },this.userBasicParam);
+      this.$ajax.get(this.HOST, {
+        params: obj
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
           this.userInfo = resp.data.data
+        }else{
+          this.$toast({
+            message : resp.data.statusStr,
+            position: 'bottom',
+            duration: 2000,
+          })
         }
       }).catch(err => {
+        console.log(err)
       });
     },
     firm_vip_info:function(){
-      this.$ajax.get(this.HOST, {
-        params:{
+      let obj = {
           method:this.method[1],
           firmId: this.userBasicParam.firmId
         }
+      this.$ajax.get(this.HOST, {
+        params: obj
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
           this.userVipInfo=resp.data.data
+        }else{
+          this.$toast({
+            message : resp.data.statusStr,
+            position: 'bottom',
+            duration: 2000,
+          })
         }
       }).catch(err => {
+        console.log(err)
       });
     }
   }
 }
-var dateModule  = {
-  isLogin:false,//是否登陆
-  title:"我的订单",
-  title1:"其他",
-  orderList:[//订单列表数据结构
-    {
-      icon:'../../static/img/icon_order1.png',
-      type:1,
-      name:'待发货',
-      linkUrl:'orderManagement',
-    },{
-      icon:'../../static/img/icon_order2.png',
-      type:2,
-      name:'已配货',
-      linkUrl:'orderManagement',
-    },{
-      icon:'../../static/img/icon_order3.png',
-      type:3,
-      name:'待支付',
-      linkUrl:'orderManagement',
-    },{
-      icon:'../../static/img/icon_order0.png',
-      type:4,
-      name:'全部订单',
-      linkUrl:'orderManagement',
-    }
-  ],
-  //其他列表数据结构
-  otherList:[
-    {
-      icon:'../../static/img/icon_address.png',
-      type:null,
-      name:'收货地址',
-      linkUrl:'address',
-    },{
-      icon:'../../static/img/icon_collection.png',
-      type:null,
-      name:'收藏',
-      linkUrl:'collect',
-    }
-  ]
-}
+var dateModule  = [
+  {
+    title:"我的订单",
+    list:[//订单列表数据结构
+      {
+        icon:'../../static/img/icon_order1.png',
+        type:1,
+        name:'待发货',
+        linkUrl:'orderManagement',
+      },{
+        icon:'../../static/img/icon_order2.png',
+        type:2,
+        name:'已配货',
+        linkUrl:'orderManagement',
+      },{
+        icon:'../../static/img/icon_order3.png',
+        type:3,
+        name:'待支付',
+        linkUrl:'orderManagement',
+      },{
+        icon:'../../static/img/icon_order0.png',
+        type:4,
+        name:'全部订单',
+        linkUrl:'orderManagement',
+      }
+    ]
+  },{
+    title:"其他",
+    //其他列表数据结构
+    list:[
+      {
+        icon:'../../static/img/icon_address.png',
+        type:null,
+        name:'收货地址',
+        linkUrl:'address',
+      },{
+        icon:'../../static/img/icon_collection.png',
+        type:null,
+        name:'收藏',
+        linkUrl:'collect',
+      }
+    ]
+  }]
+
 </script>
 
 <style scoped >

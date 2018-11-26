@@ -125,11 +125,10 @@
     mounted() {
       // 数据初始化
       if (getIsLogin()) {
+        const userInfo = JSON.parse(getUserData());
         this.isLogin = getIsLogin();
         this.tokenId = getTokenId();
-        this.firmId = JSON.parse(getUserData()).firmInfoid  ;
-        const userInfo = JSON.parse(getUserData());
-
+        this.firmId = userInfo.firmInfoid  ;
         this.userBasicParam = {
           firmId : userInfo.firmInfoid,
           source : 'firmId'+userInfo.firmInfoid,
@@ -169,15 +168,18 @@
     },
     methods: {
       goods_first_nav:function () {
-        this.$ajax.get(this.HOST, {
-          params:{
+        let obj = {
             method: "goods_first_type",
             firmId: this.firmId,
             websiteNode:this.websiteNode,
           }
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            this.goods = resp.data.data;
+        this.$ajax.get(this.HOST, {
+          params:obj
+        }).then(result => {
+          return result.data;
+        }).then( data => {
+          if(data.statusCode == "100000"){
+            this.goods = data.data;
             if(this.$route.query.typeCode){
               let a = this.$route.query.typeCode
               let b = a.substring(0,2);
@@ -204,71 +206,62 @@
               this.typeCode = this.goods[0].typeCode
               this.goods_second_nav()
             }
-          }else{
-            this.$toast({
-              message : resp.data.statusStr,
-              position: 'boottom',
-              duration: 2000,
-            })
           }
         }).catch(err => {
+          console.log(err)
         });
       },
       goods_second_nav:function (num) {
-          this.$ajax.get(this.HOST, {
-            params:{
-              method: "goods_second_type",
-              firmId:this.firmId,
-              websiteNode:this.websiteNode,
-              typeCode: this.typeCode
-            }
-          }).then(resp => {
-            if(resp.data.statusCode == "100000"){
-              this.left_name = resp.data.data;
-              if(this.$route.query.typeCode){
-                let a =  this.$route.query.typeCode;
-                let index  , i ;
-                let topLeft = document.querySelector(".moreDoogs_main_top")
-                let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[num]
-                for ( i = 0 ;i <  this.left_name.length;i++){
-                  if(this.left_name[i].typeCode == a){
-                    break;
-                  }
+        let obj = {
+            method: "goods_second_type",
+            firmId:this.firmId,
+            websiteNode:this.websiteNode,
+            typeCode: this.typeCode
+          }
+        this.$ajax.get(this.HOST, {
+          params:obj
+        }).then(result => {
+          return result.data;
+        }).then( data => {
+          if(data.statusCode == "100000"){
+            this.left_name = data.data;
+            if(this.$route.query.typeCode){
+              let a =  this.$route.query.typeCode;
+              let index  , i ;
+              let topLeft = document.querySelector(".moreDoogs_main_top")
+              let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[num]
+              for ( i = 0 ;i <  this.left_name.length;i++){
+                if(this.left_name[i].typeCode == a){
+                  break;
                 }
-                if(this.isWithout){
-                  index = 0
-                  a = this.left_name[0].typeCode ;
-                }else{
-                  index = i
-                }
-                this.isSelected = index ;
-                this.goodsType = a
-                this.$route.query.typeCode = "";
-                this.goods_info_nav(index)
-                if (ele.offsetLeft > 200) {
-                  topLeft.scrollLeft = ele.offsetLeft-200
-                }else{
-                  topLeft.scrollLeft = 0
-                }
-              }else{
-                this.goodsType =  this.left_name[0].typeCode
-                this.isSelected = 0;
-                this.goods_info_nav()
               }
-
+              if(this.isWithout){
+                index = 0
+                a = this.left_name[0].typeCode ;
+              }else{
+                index = i
+              }
+              this.isSelected = index ;
+              this.goodsType = a
+              this.$route.query.typeCode = "";
+              this.goods_info_nav(index)
+              if (ele.offsetLeft > 200) {
+                topLeft.scrollLeft = ele.offsetLeft-200
+              }else{
+                topLeft.scrollLeft = 0
+              }
             }else{
-              this.$toast({
-                message : resp.data.statusStr,
-                position: 'boottom',
-                duration: 2000,
-              })
+              this.goodsType =  this.left_name[0].typeCode
+              this.isSelected = 0;
+              this.goods_info_nav()
             }
-          }).catch(err => {
-          });
+          }
+        }).catch(err => {
+          console.log(err)
+        });
       },
       goods_info_nav:function (num) {
-        this.$ajax.get(this.HOST, {
-          params:{
+        let obj = {
             method: "goods_info_show_fou",
             firmId:this.firmId,
             websiteNode: this.websiteNode,
@@ -277,10 +270,14 @@
             pageNo: this.pageNo,
             pageSize: this.pageSize,
           }
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            this.goodsList = resp.data.data.page;
-            this.gtes = resp.data.data.gtes;
+        this.$ajax.get(this.HOST, {
+          params:obj
+        }).then(result => {
+          return result.data;
+        }).then( data => {
+          if(data.statusCode == "100000"){
+            this.goodsList = data.data.page;
+            this.gtes = data.data.gtes;
             if(this.$route.query.typeCode){
               let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
               let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
@@ -299,12 +296,13 @@
             }
           }else{
             this.$toast({
-              message : resp.data.statusStr,
-              position: 'boottom',
+              message : data.statusStr,
+              position: 'bottom',
               duration: 2000,
             })
           }
         }).catch(err => {
+          console.log(err)
         });
       },
       submitGoShopCart(){
@@ -312,7 +310,8 @@
         let obj = Object.assign({
             method: "settlement_shop_cart",
             goodsList:goodsList,
-        },this.userBasicParam)
+          },this.userBasicParam);
+
         this.$ajax.get(this.HOST, {
             params:obj
         }).then(result => {
@@ -332,7 +331,7 @@
             $(".footer-rigth").addClass("true");
             this.$toast({
               message : data.statusStr,
-              position: 'boottom',//top boottom middle
+              position: 'bottom',//top bottom middle
               duration: 2000,//延时多久消失
               //iconClass: 'mint-toast-icon mintui mintui-field-warning'
               //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -450,7 +449,7 @@
               }else{
                 this.$toast({
                   message : "该商品限购"+item.maxCount+"件",
-                  position: 'boottom',//top boottom middle
+                  position: 'bottom',//top bottom middle
                   duration: 2000,//延时多久消失
                   //iconClass: 'mint-toast-icon mintui mintui-field-warning'
                   //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -468,7 +467,7 @@
           } else{
             this.$toast({
               message : "库存不足",
-              position: 'boottom',//top boottom middle
+              position: 'bottom',//top bottom middle
               duration: 2000,//延时多久消失
               //iconClass: 'mint-toast-icon mintui mintui-field-warning'
               //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success

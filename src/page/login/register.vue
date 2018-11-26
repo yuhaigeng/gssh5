@@ -7,51 +7,60 @@
         <div class="main">
           <ul class="apply_service_main" :class="{'hidden':isMainHidden}">
             <li>
-              <span class="left">店铺名称：</span><input type="text" id="shopName" placeholder="请输入店铺名称"  v-model=" firmName"  @focus="focus" @blur="blur" />
+              <span class="left" v-text="'店铺名称：'"></span>
+              <input type="text" id="shopName" placeholder="请输入店铺名称"  v-model=" firmName"  @focus="focus" @blur="blur" />
             </li>
             <li>
-              <span class="left">联系电话：</span><input type="text" id="shopPhone" v-model="shopPhone" maxlength="11" placeholder="请输入联系电话" @focus="focus" @blur="blur"/><span class="msg" v-text="phoneMsg"></span>
+              <span class="left" v-text="'联系电话：'"></span>
+              <input type="text" id="shopPhone" v-model="shopPhone" maxlength="11" placeholder="请输入联系电话" @focus="focus" @blur="blur"/>
+              <span class="msg" v-text="phoneMsg"></span>
             </li>
             <li>
-              <span class="left">联系人：</span><input type="text" id="shopPeople" v-model="linkMan" placeholder="请输入联系人" @focus="focus" @blur="blur" />
+              <span class="left" v-text="'联系人：'"></span>
+              <input type="text" id="shopPeople" v-model="linkMan" placeholder="请输入联系人" @focus="focus" @blur="blur" />
             </li>
             <li>
-              <span class="left">选择省市：</span><input type="text" id="province" placeholder="点击选择省市"  v-model="city" readonly="readonly" @focus="focus" @blur="blur" @click="selCity"  />
-
+              <span class="left" v-text="'选择省市：'"></span>
+              <input type="text" id="province" placeholder="点击选择省市"  v-model="city" readonly="readonly" @focus="focus" @blur="blur" @click="selCity"  />
             </li>
             <li>
-              <span class="left">选择地址：</span><input type="text" id="street" placeholder="点击选择详细地址"  v-model="street" readonly="readonly"   @focus="focus" @blur="blur" @click="selStreet" /><span class='msg' v-text="streetMag" ></span>
-
+              <span class="left" v-text="'选择地址：'"></span><input type="text" id="street" placeholder="点击选择详细地址"  v-model="street" readonly="readonly"   @focus="focus" @blur="blur" @click="selStreet" />
+              <span class='msg' v-text="streetMag" ></span>
             </li>
             <li>
-              <span class="left">店铺地址：</span><input type="text" id="shopAddress" v-model="address"  placeholder="请输入店铺地址" @focus="focus" @blur="blur"/>
+              <span class="left" v-text="'店铺地址：'"></span>
+              <input type="text" id="shopAddress" v-model="address"  placeholder="请输入店铺地址" @focus="focus" @blur="blur"/>
             </li>
             <li>
-              <span class="left">选择站点：</span><input type="text" name="sel_websit" id="sel_websit" :value="websiteDate.name" data="" readonly="readonly"  @focus="focus" @blur="blur" />
+              <span class="left" v-text="'选择站点：'"></span>
+              <input type="text" name="sel_websit" id="sel_websit" :value="websiteDate.name" data="" readonly="readonly" @focus="focus" @blur="blur" />
             </li>
             <li>
-              <span class="left">推荐人ID：</span><input type="text" name="recommend_id" id="recommend_id" v-model="recommendId" placeholder="请输入推荐人ID" data="" value=""  @focus="focus" @blur="blur"/><span class="float_right padding_right24"  ><img src="../../assets/img/wenhao.png" @click="agreement(1)"/></span>
+              <span class="left" v-text="'推荐人ID：'"></span>
+              <input type="text" name="recommend_id" id="recommend_id" v-model="recommendId" placeholder="请输入推荐人ID" data="" value=""  @focus="focus" @blur="blur"/>
+              <span class="float_right padding_right24"  ><img src="../../assets/img/wenhao.png" @click="agreement(1)"/></span>
             </li>
             <li>
-              <span class="left">推荐人：</span><input type="text" name="recommend_name" id="recommend_name" v-model="recommendName" placeholder="请输入推荐人店铺名称" data="" value=""  @focus="focus" @blur="blur"/>
+              <span class="left" v-text="'推荐人：'"></span>
+              <input type="text" name="recommend_name" id="recommend_name" v-model="recommendName" placeholder="请输入推荐人店铺名称" data="" value=""  @focus="focus" @blur="blur"/>
             </li>
             <li class="apply_service_txt">
-              <p>特别说明：</p>
+              <p v-text="'特别说明：'"></p>
               <textarea name="" id="shopText"  v-model=" description" placeholder="在这里输入您想说的话" @focus="focus" @blur="blur"></textarea>
             </li>
           </ul>
           <dl class="apply_suc" v-show="isMainHidden">
-            <dt>您的申请提交成功</dt>
+            <dt v-text="'您的申请提交成功'"></dt>
             <dd>
-              <p>稍后业务经理为您服务</p>
-              <p>服务热线：400-0169-682</p>
+              <p v-text="'稍后业务经理为您服务'"></p>
+              <p v-text="'服务热线：'+system.feedback_method"></p>
               <a :href="'tel:'+ system.feedback_method">立即呼叫</a>
             </dd>
           </dl>
         </div>
 				<button class="submit_btn" v-show='!isMainHidden'  @click="submitBtn">提交申请</button>
 			</div>
-			<div class="login_bottom"  v-show='!isMainHidden'  >
+			<div class="login_bottom"  v-show='!isBottomHidden'  >
 				说明：登陆/申请服务说明您已同意<a href="javascritp:void(0)" @click="agreement(0)" >《果速送合作协议》</a>
 			</div>
 			<agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>
@@ -72,53 +81,52 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 import vuePickers from '../../components/public/picker.vue';
   export default {
     name:'register',
-    components:{
-        appHeader,
-        agreementAlert,
-        vuePickers
-    },
     data() {
-        return {
-          headerMsg:{
-            type:"common",
-            title:'申请服务',
-            left:'返回'
-          },
-          firmName:null, //店铺名称
-          linkMan :null,  //联系人
-          address:null,  // 店铺地址
-          shopPhone:null, //联系电话验证
-          phoneMsg:null, //注册提示文本
-          city:null,   //选择城市
-          cities:null,
-          street:null, //街道
-          road:null,   //详细地址
-          province:null,
-          county:null,
-          streetMag:null,
-          description:null, //描述
-          recommendId:null,  //推荐人ID
-          recommendName:null, //店铺名称
-          isMainHidden:false,  //注册提交按钮
-          phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
-          isBottomHidden:false,  //  协议是否显示
-          msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
-          noticeInfoList:null,
-          descCode:null,
-          cityData:{},
-          isShow:false,
-          columns:null,
-          defaultData:[],
-          system:{},
-          cache:{},
-          countyId:null,
-          cityCache:{},
-          streetCache:{}
-        }
+      return {
+        headerMsg:{
+          type:"common",
+          title:'申请服务',
+          left:'返回'
+        },
+        firmName:null, //店铺名称
+        linkMan :null,  //联系人
+        address:null,  // 店铺地址
+        shopPhone:null, //联系电话验证
+        phoneMsg:null, //注册提示文本
+        city:null,   //选择城市
+        cities:null,
+        street:null, //街道
+        road:null,   //详细地址
+        province:null,
+        county:null,
+        streetMag:null,
+        description:null, //描述
+        recommendId:null,  //推荐人ID
+        recommendName:null, //店铺名称
+        isMainHidden:false,  //注册提交按钮
+        phoneNumberReg:/^(1)\d{10}$/, //判断手机号的正则表达式
+        isBottomHidden:false,  //  协议是否显示
+        msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
+        noticeInfoList:null,
+        descCode:null,
+        cityData:{},
+        isShow:false,
+        columns:null,
+        defaultData:[],
+        system:{},
+        cache:{},
+        countyId:null,
+        cityCache:{},
+        streetCache:{}
+      }
+    },
+    components:{
+      appHeader,
+      agreementAlert,
+      vuePickers
     },
     watch:{
       shopPhone:function(val){
@@ -238,7 +246,7 @@ import vuePickers from '../../components/public/picker.vue';
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
             this.isMainHidden = true;
-            isBottomHidden = true;
+            this.isBottomHidden = true;
             this.$toast({
               message : resp.data.statusStr,
               position: 'boottom',

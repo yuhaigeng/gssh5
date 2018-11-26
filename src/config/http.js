@@ -5,7 +5,7 @@ var url = 'http://testapp.guoss.cn/gssapi/server/api.do'; //
 
 // axios.defaults.baseURL = url;
 
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 300;
 
 
 axios.defaults.transformRequest = [function (data) {
@@ -47,7 +47,6 @@ function http(params) {
           console.log("服务器请求超时")
           return
         }
-        alert(err)
       })
   })
 
