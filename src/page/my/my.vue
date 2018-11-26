@@ -32,7 +32,7 @@
     </div>
     <personalOptions :orderList="orderList" :title ="title" :isLogin='isLogin'></personalOptions>
     <personalOptions :orderList="otherList" :title ="title1" :isLogin='isLogin'></personalOptions>
-    <app-footer :isLogin="isLogin"></app-footer>
+    <app-footer :isLogin="isLogin" :isNew = 'isNew'></app-footer>
   </div>
 </template>
 
@@ -59,7 +59,6 @@ export default {
       },
       isLogin:getIsLogin() ? getIsLogin() : false,
       method:["user_personal_msg","firm_vip_info"],
-      firmId: "",
       userBasicParam:{},
       userInfo:{},
       userVipInfo:{},
@@ -67,17 +66,24 @@ export default {
       otherList:dateModule.otherList,
       title:dateModule.title,
       title1:dateModule.title1,
-      system:{}
+      system:{},
+      isNew:false,//表示是否有新消息
     }
   },
   mounted(){
     if(localStorage.getItem("user_data")){
       this.system = JSON.parse(localStorage.getItem('system'))
-      this.firmId = JSON.parse(getUserData()).firmInfoid;
       this.userBasicParam ={
+        firmId:JSON.parse(getUserData()).firmInfoid,
         source:'firmId'+ JSON.parse(getUserData()).firmInfoid,
         tokenId: getTokenId(),
         sign :this.$md5('firmId'+ JSON.parse(getUserData()).firmInfoid + "key" + getSecretKey()).toUpperCase()
+      }
+      if(localStorage.getItem("isNew")){
+        this.isNew = JSON.parse(localStorage.getItem("isNew"))
+      }else{
+        getMessage(this)
+        localStorage.setItem('isNew',this.isNew)
       }
       this.personApi()
       this.firm_vip_info()
@@ -88,7 +94,7 @@ export default {
       this.$ajax.get(this.HOST, {
         params:Object.assign({
           method:this.method[0],
-          firmId:this.firmId
+          firmId: this.userBasicParam.firmId
         },this.userBasicParam)
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
@@ -101,7 +107,7 @@ export default {
       this.$ajax.get(this.HOST, {
         params:{
           method:this.method[1],
-          firmId:this.firmId
+          firmId: this.userBasicParam.firmId
         }
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
@@ -159,6 +165,7 @@ var dateModule  = {
 <style scoped >
 .my{
   max-width: 750px;
+  margin-bottom: 98px;
 }
 .cont.cont1 {
   height: 160px;

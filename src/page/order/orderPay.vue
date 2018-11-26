@@ -57,23 +57,22 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                    left:'返回',
                    title:'订单支付'
                 },
-                orderMsg:null,
+                orderMsg:{},
                 userInfo:JSON.parse(getUserData()),
                 publicParameter : {}
            }
        },
       mounted(){
+        this.api();
         if (localStorage.getItem('order_pay')) {
             this.orderMsg = JSON.parse(localStorage.getItem('order_pay'))
+            this.publicParameter = {
+              orderCode : JSON.parse(localStorage.getItem('order_pay')).orderCode,
+              source : 'firmId'+this.userInfo.firmInfoid,
+              sign : this.$md5('firmId'+this.userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+              tokenId : getTokenId()
+            }
         }
-        this.publicParameter = {
-            orderCode : this.orderMsg.orderCode,
-            source : 'firmId'+this.userInfo.firmInfoid,
-            sign : this.$md5('firmId'+this.userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-            tokenId : getTokenId()
-        }
-        // this.llpay();
-        this.api();
       },
       methods:{
         llpay:function () {
@@ -153,7 +152,7 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
         api:function(){
              if(this.orderMsg){
                 if(getIsWeiXin()){
-                    this.paySel = 0
+                    // this.paySel = 0
                 }else{
                     this.paySel = 1
                 }
@@ -161,9 +160,7 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
         },
         pay:function(){
             const pay = document.getElementsByClassName('true_order')[0].classList.contains('no_pay');
-            console.log(pay)
 						if (!pay) {
-              console.log(this.paySel)
 							if (this.paySel == 0) {
 								// pub.openId && pub.pay.wxpay();
 							}

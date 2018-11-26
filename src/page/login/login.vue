@@ -401,12 +401,15 @@ export default {
   background-color: #999;
 }
 .login_bottom {
+  position: absolute;
   max-width:750px;
   height: 60px;
   text-align: center;
-  position: relative;
   font-size: 20px;
-  bottom: -730px;
+  bottom:0;
+  left:0;
+  right:0;
+  margin: auto;
 }
 .login_bottom a {
   color: #666;

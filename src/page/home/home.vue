@@ -104,9 +104,13 @@ export default {
         sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
         tokenId : getTokenId()
       }
-      getMessage(this)
+      if(localStorage.getItem("isNew")){
+        this.isNew = JSON.parse(localStorage.getItem("isNew"))
+      }else{
+        getMessage(this)
+        localStorage.setItem('isNew',this.isNew)
+      }
     }
-    
     this.get_main_page();
   },
   methods:{
