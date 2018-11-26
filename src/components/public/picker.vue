@@ -5,6 +5,7 @@
 */
 <template>
   <div id="h-picker">
+    <div class="bg_mask" v-show="show"></div>
     <transition name="fade">
       <div class="area_ctrl" v-if="isOpened > 0" v-show="show">
         <div class="area_btn_box">
@@ -411,7 +412,15 @@
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both
 }
-
+.bg_mask{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9900;
+}
 .area_ctrl {
   font-size: 24px;
   vertical-align: middle;

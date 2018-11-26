@@ -104,7 +104,7 @@ export default {
         sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
         tokenId : getTokenId()
       }
-      //getMessage(this)
+      getMessage(this)
     }
     
     this.get_main_page();
@@ -129,8 +129,8 @@ export default {
       }).then(result => {
         return result.data;
       }).then(data => {
-        sessionStorage.setItem('homePage',JSON.stringify(data))
         if (data.statusCode == 100000) {
+          sessionStorage.setItem('homePage',JSON.stringify(data))
           this.mainActivityList = data.data.mainActivityList;
           this.topList = data.data.topList;
           this.noticeInfoList = data.data.noticeInfoList;

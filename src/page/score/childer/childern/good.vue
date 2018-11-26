@@ -1,44 +1,40 @@
 <template>
     <div class="score_goods">
         <app-header :type ="headerMsg"></app-header>
-        <section id="scroll_section" class="scroll_container">
-            <section>
-                <div class="main-wrap goods_detaile_wrap">
-                    <div class="main">
-                        <div class="goodsDetails_img_box">
-                            <banner :imgList = "bannerDate" :height = "'600px'" v-if="bannerDate.length"></banner>
+        <div class="main-wrap goods_detaile_wrap">
+            <div class="main">
+                <div class="goodsDetails_img_box">
+                    <banner :imgList = "bannerDate" :height = "'600px'" v-if="bannerDate.length"></banner>
+                </div>
+                <div class="goodsDetails_box1" v-if="scoreGoods.id">
+                    <div class="goodsDetails_box1_top clearfloat">
+                        <h3 class="goodsDetails_box1_title" style="float: none;" v-text="scoreGoods.goodsName"></h3>
+                        <p class="describe" v-text="scoreGoods.sizeDesc"></p>
+                        <div class="scoreGood_info">
+                            <span class="score_color" v-text="scoreGoods.score"></span>
+                            <span class="font22">币</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="score_rmb" v-text="'￥'+scoreGoods.gssPrice"></span>
                         </div>
-                        <div class="goodsDetails_box1" v-if="scoreGoods.id">
-                            <div class="goodsDetails_box1_top clearfloat">
-                                <h3 class="goodsDetails_box1_title" style="float: none;" v-text="scoreGoods.goodsName"></h3>
-                                <p class="describe" v-text="scoreGoods.sizeDesc"></p>
-                                <div class="scoreGood_info">
-                                    <span class="score_color" v-text="scoreGoods.score"></span>
-                                    <span class="font22">币</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <span class="score_rmb" v-text="'￥'+scoreGoods.gssPrice"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="goodsDetails_box2 scoregoods">
-                            <h4 v-if="scoreGoods.goodsContext"><span></span>&nbsp;商品详情</h4>
-                            <div class="goodsDetails_box2_" v-if="scoreGoods.goodsContext" v-text="scoreGoods.goodsContext"></div>
-                            <h4 v-if="scoreGoods_desc.desc"><span></span>&nbsp;注意事项</h4>
-                            <div class="scoreGoodDetails"  v-if="scoreGoods_desc.desc" v-html="(scoreGoods_desc.desc).toString().replace(/\r\n/g, '<br/>')"></div>
-                        </div>
-                    </div>
-                    <div class="score_goods_btn" v-if="state != null">
-                        <div class="scoregoodsBtn" v-html="btnData[state].txt" :class="btnData[state].cla" @click="exchange()"></div>
                     </div>
                 </div>
-                
-                <div class="order_refund">		
-                    <div class="refund_bg refund_bg_load"></div>
-                    <div class="loading_box">
-                        <div id="gavinPlay"></div>
-                    </div>
+                <div class="goodsDetails_box2 scoregoods">
+                    <h4 v-if="scoreGoods.goodsContext"><span></span>&nbsp;商品详情</h4>
+                    <div class="goodsDetails_box2_" v-if="scoreGoods.goodsContext" v-text="scoreGoods.goodsContext"></div>
+                    <h4 v-if="scoreGoods_desc.desc"><span></span>&nbsp;注意事项</h4>
+                    <div class="scoreGoodDetails"  v-if="scoreGoods_desc.desc" v-html="(scoreGoods_desc.desc).toString().replace(/\r\n/g, '<br/>')"></div>
                 </div>
-            </section>
-        </section>
+            </div>
+            <div class="score_goods_btn" v-if="state != null">
+                <div class="scoregoodsBtn" v-html="btnData[state].txt" :class="btnData[state].cla" @click="exchange()"></div>
+            </div>
+        </div>
+        
+        <div class="order_refund">		
+            <div class="refund_bg refund_bg_load"></div>
+            <div class="loading_box">
+                <div id="gavinPlay"></div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -46,7 +42,7 @@
 
 import appHeader from "../../../../components/public/header.vue";
 import banner from "../../../banner/goodsBanner.vue";
-import BScroll from 'better-scroll'
+//import BScroll from 'better-scroll'
 import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../../common/common.js";
 export default {
     name:'scoreGoods',
@@ -104,14 +100,14 @@ export default {
             this.scoreGoods_desc = JSON.parse(localStorage.getItem('scoreGoods_desc'))
         }
         this.get_scoregoods_details();
-        this.$nextTick(() => {
-            new BScroll('#scroll_section', {  
-                deceleration: 0.001,
-                bounce: true,
-                swipeTime: 1800,
-                click: true,
-            }); 
-        })
+        // this.$nextTick(() => {
+        //     new BScroll('#scroll_section', {  
+        //         deceleration: 0.001,
+        //         bounce: true,
+        //         swipeTime: 1800,
+        //         click: true,
+        //     }); 
+        // })
     },
     methods:{
         get_scoregoods_details:function(){
