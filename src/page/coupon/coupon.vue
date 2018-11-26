@@ -76,9 +76,12 @@ export default {
                 console.log(data);
                 if (data.statusCode == 100000) {
                     this.couponList = data.data;
-
                 } else {
-                    console.log(data.statusStr)
+                    this.$toast({
+                        message : data.statusStr,
+                        position: 'bottom',
+                        duration: 2000,
+                    })
                 }
             });
         },
@@ -90,12 +93,13 @@ export default {
             }
         },
         desc_data(){
+            let obj = {
+                method:'gss_desc',
+                websiteNode:this.websiteNode,
+                code:this.websiteNode + this.descCode
+            }
             this.$ajax.get(this.HOST, {
-				params:{
-					method:'gss_desc',
-					websiteNode:this.websiteNode,
-					code:this.websiteNode + this.descCode
-				}
+				params : obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					resp.data.data.noticeContent = (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
@@ -107,11 +111,9 @@ export default {
                     this.cache = Object.assign(this.cache,JSON.parse(obj))
 				} else {
 					this.$toast({
-						message : data.statusStr,
-						position: 'boottom',//top boottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						message : resp.data.statusStr,
+						position: 'bottom',
+						duration: 2000,
 					})
 				}
 			}).catch(err => {

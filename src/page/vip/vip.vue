@@ -189,7 +189,6 @@ export default {
 			let obj = Object.assign({
 				method: "firm_vip_info"
 				},this.userBasicParam);
-
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(result =>{
@@ -200,7 +199,11 @@ export default {
                     _this.userVipInfo = v;
                     console.log(v)
 				} else {
-					
+					this.$toast({
+                        message : data.statusStr,
+                        position: 'bottom',
+                        duration: 2000,
+                    })
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err);
@@ -211,7 +214,6 @@ export default {
 			let obj = Object.assign({
 				method: "vip_grade_show"
 				},this.userBasicParam);
-
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(result =>{
@@ -221,7 +223,11 @@ export default {
 					let v = data.data;
 					_this.vipGradeList = v;
 				} else {
-					
+					this.$toast({
+                        message : data.statusStr,
+                        position: 'bottom',
+                        duration: 2000,
+                    })
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err);
@@ -232,7 +238,6 @@ export default {
 			let obj = Object.assign({
 				method: "vip_privilege_list"
 				},this.userBasicParam);
-
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(result =>{
@@ -242,7 +247,11 @@ export default {
                     let v = data.data;
 					_this.vipPrivilege = v;
 				} else {
-					
+					this.$toast({
+                        message : data.statusStr,
+                        position: 'bottom',
+                        duration: 2000,
+                    })
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err);

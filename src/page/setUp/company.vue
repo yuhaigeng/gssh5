@@ -77,11 +77,12 @@ export default {
   },
   methods:{
     business:function(){
+      let params = Object.assign({
+        method:'firm_info_show',
+        firmId: this.firmId,
+      },this.userBasicParam)
       this.$ajax.get(this.HOST, {
-        params:Object.assign({
-          method:'firm_info_show',
-          firmId: this.firmId,
-        },this.userBasicParam)
+        params:params
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
           this.personInfo = resp.data.data
@@ -94,16 +95,17 @@ export default {
       });
     },
     save:function(){
+      let params = Object.assign({
+        method:'firm_info_update',
+        firmId:this.firmId,
+        userId:this.userId,
+        firmName:this.firmName,
+        linkMan:this.linkMan,
+        saleCard:this.saleCard,
+        address:this.address,
+      },this.userBasicParam)
       this.$ajax.get(this.HOST, {
-        params:Object.assign({
-          method:'firm_info_update',
-          firmId:this.firmId,
-          userId:this.userId,
-          firmName:this.firmName,
-          linkMan:this.linkMan,
-          saleCard:this.saleCard,
-          address:this.address,
-        },this.userBasicParam)
+        params:params
       }).then(resp => {
         if(resp.data.statusCode == '100000'){
           this.$toast({
@@ -115,7 +117,7 @@ export default {
         }else{
           this.$toast({
             message: resp.data.statusStr,
-            center: true,
+            center: 'bottom',
             duration: 2000,
           });
         }
@@ -123,12 +125,13 @@ export default {
       });
     },
     desc_data:function(){
-      this.$ajax.get(this.HOST, {
-        params:{
-          method:'gss_desc',
-          websiteNode:this.websiteDate.code,
-          code:this.websiteDate.code + '#HYDJ-DESC'
+      let params = {
+        method:'gss_desc',
+        websiteNode:this.websiteDate.code,
+        code:this.websiteDate.code + '#HYDJ-DESC'
       }
+      this.$ajax.get(this.HOST, {
+        params:params
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
           resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
@@ -138,6 +141,12 @@ export default {
           let key = this.websiteDate.code + this.descCode ;
           let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
           this.cache = Object.assign(this.cache,JSON.parse(obj))
+        }else {
+          this.$toast({
+            message : resp.data.statusStr,
+            position: 'bottom',
+            duration: 2000,
+          })
         }
       }).catch(err => {
       });

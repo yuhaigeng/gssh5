@@ -64,33 +64,49 @@ export default {
   },
   methods:{
     addressShow:function(){
-      this.$ajax.get(this.HOST, {
-        params:Object.assign({
+      let params = Object.assign({
           method:'user_address_show',
           firmId:this.firmId,
         },this. userBasicParam)
+      this.$ajax.get(this.HOST, {
+        params:params
       }).then(resp => {
         if(resp.data.statusCode == "100000"){
           this.addresses = resp.data.data
           sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
+        }else {
+          this.$toast({
+            message : resp.data.statusStr,
+            position: 'bottom',
+            duration: 2000,
+          })
         }
       }).catch(err => {
+        console.log('请求失败：'+ err);
       });
     },
     default_data:function(){
-      this.$ajax.get(this.HOST, {
-        params:Object.assign({
+      let params = Object.assign({
           method:'user_address_default',
           firmId:this.firmId,
           addressId:this.addressId,
         },this.userBasicParam)
+      this.$ajax.get(this.HOST, {
+        params:params
       }).then(resp => {
         if(resp.data.statusCode == "100000"){
           this.addresses = resp.data.data
           sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
           this.addressShow()
+        }else {
+          this.$toast({
+            message : resp.data.statusStr,
+            position: 'bottom',
+            duration: 2000,
+          })
         }
       }).catch(err => {
+        console.log('请求失败：'+ err);
       });
     },
     editor:function(item){
