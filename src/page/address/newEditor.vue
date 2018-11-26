@@ -119,70 +119,81 @@ export default {
   },
   methods:{
     update:function(){
-        this.$ajax.get(this.HOST, {
-          params:Object.assign({
-            method:'user_address_update',
-            firmId:this.firmId,
-            addressId:this.addressId,
-            receiverName:this.person,
-            receiverMobile:this.phone,
-            countyId:this.countyId,
-            address:this.street,
-          },this.userBasicParam)
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            this.$toast({
-              message : this.isNew ? '修改成功':'新建成功',
-              position: 'center',
-              duration: 2000,
-            })
-            this.$router.go(-1)
-          }else{
-            this.$toast({
-              message : '请把地址填完整',
-              position: 'center',
-              duration: 2000,
-            })
-          }
-        }).catch(err => {
-        });
+      let params = Object.assign({
+          method:'user_address_update',
+          firmId:this.firmId,
+          addressId:this.addressId,
+          receiverName:this.person,
+          receiverMobile:this.phone,
+          countyId:this.countyId,
+          address:this.street,
+        },this.userBasicParam)
+      this.$ajax.get(this.HOST, {
+        params:params
+      }).then(resp => {
+        if(resp.data.statusCode == "100000"){
+          this.$toast({
+            message : this.isNew ? '修改成功':'新建成功',
+            position: 'center',
+            duration: 2000,
+          })
+          this.$router.go(-1)
+        }else{
+          this.$toast({
+            message : '请把地址填完整',
+            position: 'center',
+            duration: 2000,
+          })
+        }
+      }).catch(err => {
+        console.log('请求失败：'+ err);
+      });
     },
     cityApi:function(){
-        this.$ajax.get(this.HOST, {
-          params:{
-            method:'get_pcc',
-            websiteNode:this.websiteNode,
+      let params = {
+          method:'get_pcc',
+          websiteNode:this.websiteNode,
+        }
+      this.$ajax.get(this.HOST, {
+        params:params
+      }).then(resp => {
+        if(resp.data.statusCode == "100000"){
+          let data = resp.data.data
+          this.cityData.data1.push({'text':data[0].name,'value':data[0].code})
+          let data1 = data[0].cities;
+          this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
+          let data2 = data1[0].cities;
+          for(let i = 0 ; i < data2.length; i++){
+            this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
           }
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            let data = resp.data.data
-            this.cityData.data1.push({'text':data[0].name,'value':data[0].code})
-            let data1 = data[0].cities;
-            this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
-            let data2 = data1[0].cities;
-            for(let i = 0 ; i < data2.length; i++){
-              this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
-            }
-          }
-        }).catch(err => {
-        });
+        }
+      }).catch(err => {
+      });
     },
     delApi:function(){
-        this.$ajax.get(this.HOST, {
-          params:Object.assign({
-            method:'user_address_del',
-            addressId:this.addressId,
-          },this.userBasicParam)
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            this.$toast({
-              message :'删除成功' ,
-              position: 'center',
-              duration: 2000,
-            })
-          }
-        }).catch(err => {
-        });
+      let params = Object.assign({
+          method:'user_address_del',
+          addressId:this.addressId,
+        },this.userBasicParam)
+      this.$ajax.get(this.HOST, {
+        params:params
+      }).then(resp => {
+        if(resp.data.statusCode == "100000"){
+          this.$toast({
+            message :'删除成功' ,
+            position: 'center',
+            duration: 2000,
+          })
+        }else {
+          this.$toast({
+            message : resp.data.statusStr,
+            position: 'bottom',
+            duration: 2000,
+          })
+        }
+      }).catch(err => {
+        console.log('请求失败：'+ err);
+      });
     },
     // 删除地址
     del:function(){

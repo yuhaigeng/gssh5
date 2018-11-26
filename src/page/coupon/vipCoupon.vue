@@ -105,7 +105,11 @@ export default {
                         list:data.data,
                     }
                 } else {
-                    console.log(data.statusStr)
+                    this.$toast({
+                        message : data.statusStr,
+                        position: 'bottom',
+                        duration: 2000,
+                    })
                 }
             });
         },
@@ -129,13 +133,17 @@ export default {
                         list:data.data,
                     }
                 } else {
-                    console.log(data.statusStr)
+                    this.$toast({
+                        message : data.statusStr,
+                        position: 'bottom',
+                        duration: 2000,
+                    })
                 }
             });
         },
         couponNav:function(item){
-            console.log(item)
-            console.log(this.couponInfo[item.type])
+            // console.log(item)
+            // console.log(this.couponInfo[item.type])
             if (this.coupon['type'] != item.type) {
                 if(this.couponInfo[item.type]){
                     const arr1 = this.couponInfo[item.type];
