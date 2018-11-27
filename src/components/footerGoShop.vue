@@ -264,8 +264,8 @@ export default {
 
 .footer-left,.footer-rigth{height:98px;line-height:98px;float:left;font-size:32px;color:#FFF;background-color:#494848;z-index: 13;}
 #gw_car{width:100px;height:100px;border-radius:50%;background-color:#383737;text-align:center;line-height:100px;position:absolute;left:26px;bottom:26px;z-index:15}
-#gw_car.icon_shoppingcar{background-position:-218px -386px ;}
-#gw_car .gw_car_num{width:40px;height:40px;border-radius:50%;background:#e62622;position:absolute;font-size:18px;line-height:40px;color:#FFF}
+#gw_car.icon_shoppingcar{background-position:-220px -374px ;}
+#gw_car .gw_car_num{width:40px;height:40px;border-radius:50%;background:#e62622;position:absolute;font-size:18px;line-height:40px;color:#FFF;top:-10px;right:0;}
 .footer_car{width:100%;max-height:370px;height:auto!important;position:absolute;padding:0;bottom:98px;z-index:12}
 .footer_car .car_left{float:left}
 .footer_car .car_right{float:right;}
@@ -380,5 +380,5 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
 }
-.footer-wrap{ right: 0;}
+.footer-wrap{ right: 0; background-color: #383737;}
 </style>

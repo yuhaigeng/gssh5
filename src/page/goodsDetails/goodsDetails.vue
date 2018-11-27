@@ -687,6 +687,6 @@ export default {
 }
 .detail{
   position: relative;
-  margin-bottom: 98px;
+  top:0;
 }
 </style>

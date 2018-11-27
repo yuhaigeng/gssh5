@@ -15,7 +15,7 @@
         <a class="telPhone" :href="'tel:'+system.feedback_method"></a>
       </div>
     </app-header>
-    <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin" ></loginState>
+    <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin"  :userBasicParam = 'userBasicParam' ></loginState>
     <div v-cloak class="cont cont1 clearfloat">
       <router-link v-for="(item,index) in navInfo" :to="isLogin ? item.jumpRouter : 'login'" tag="dl"  class="float_left " :key='index'>
         <dt v-html="item.text"></dt>
