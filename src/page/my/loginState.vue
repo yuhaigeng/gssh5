@@ -126,7 +126,6 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
 .wo_top {
   width: 100%;
   height: 420px;
-  position: relative;
   background: url(../../assets/img/pic_mine_bg.png) center no-repeat;
   background-size: 100% 100%;
 }
