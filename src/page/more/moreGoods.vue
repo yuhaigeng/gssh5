@@ -91,7 +91,7 @@
         left_name:[],
         goodsList:null,
         listObj:[],
-        typeCode:null,
+        typeCode:"",
         goodsType:null,
         isSelected:0,
         isTop:0,
@@ -251,7 +251,7 @@
                 topLeft.scrollLeft = 0
               }
             }else{
-              this.goodsType =  this.left_name[0].typeCode
+              this.goodsType = this.left_name.length && this.left_name[0].typeCode
               this.isSelected = 0;
               this.goods_info_nav()
             }
@@ -297,7 +297,7 @@
           }else{
             this.$toast({
               message : data.statusStr,
-              position: 'bottom',
+              position: 'middle',
               duration: 2000,
             })
           }

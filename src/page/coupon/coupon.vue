@@ -137,9 +137,9 @@ export default {
 .coupon_list_item.bg .quan_a,.coupon_list_item.bg .coupon_score{color: rgb(145,145,145);}
 .coupon_left{width: 170px;height: 166px;line-height: 166px;font-size: 30px;text-indent: 30px;color: #F76A10;}
 .coupon_right{height: 166px;width: 180px;text-align: center;}
-.coupon_center{flex: 1;}
+.coupon_center{flex: 1; padding:10px 0;}
 .coupon_list_item .coupon_name,
-.coupon_list_item .coupon_score{height: 70px;padding-top: 28px;line-height: 48px;font-size: 26px;width: 100%;}
+.coupon_list_item .coupon_score{height: 48px;line-height: 48px;font-size: 26px;width: 100%;}
 .coupon_list_item .coupon_score{color: #f76a10;height: 90px;line-height: 68px;font-size: 34px;}
 .coupon_list_item .coupon_score span{font-size: 18px;}
 .coupon_center p{line-height: 30px;font-size: 20px;color: #666666;}

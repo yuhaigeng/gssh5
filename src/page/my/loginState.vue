@@ -31,26 +31,15 @@
 
 <script>
 import {Sand} from '../../common/upyun-mu.js'
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
   export default {
     name:'loginState',
-    props:["userInfo" ,"userVipInfo",'isLogin'],
+    props:["userInfo" ,"userVipInfo",'isLogin','userBasicParam'],
       data() {
         return {
-          userBasicParam:{},
           src:'',
         }
       },
       mounted:function(){
-          if(this.isLogin){
-            const obj = JSON.parse(getUserData());
-            this.userBasicParam = {
-              firmId : obj.firmInfoid,
-              source : 'firmId'+ obj.firmInfoid,
-              tokenId : getTokenId(),
-              sign : this.$md5('firmId'+ obj.firmInfoid + "key" + getSecretKey()).toUpperCase()
-            }
-          }
       },
       computed: {
         getWidth: function() {
