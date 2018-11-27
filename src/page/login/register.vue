@@ -379,6 +379,7 @@ import vuePickers from '../../components/public/picker.vue';
 }
 .register{
   max-width: 750px;
+  position: relative;
 }
 .main-wrap {
   width: 100%;
@@ -466,7 +467,7 @@ import vuePickers from '../../components/public/picker.vue';
   text-align: center;
   position: absolute;
   font-size: 20px;
-  bottom:0;
+  bottom:-138px;
   left:0;
   right:0;
   margin: auto;
