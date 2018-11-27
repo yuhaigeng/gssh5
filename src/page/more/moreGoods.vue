@@ -369,6 +369,7 @@
           this.isSelected =  index
           this.goods_info_nav()
           rightTop.scrollTop = 0;
+
           let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[index]
           if (ele.offsetTop>200) {
             wrapTop.scrollTop = ele.offsetTop-200

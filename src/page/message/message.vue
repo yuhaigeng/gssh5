@@ -116,15 +116,6 @@ export default {
   font-size: 26px;
   line-height: 40px;
 }
-.lodemore {
-  width: 100%;
-  height: 100px;
-  text-align: center;
-  line-height: 80px;
-  font-size: 30px;
-  cursor: pointer;
-  background: #FFF;
-  margin-bottom: 10px;
-}
+
 
 </style>

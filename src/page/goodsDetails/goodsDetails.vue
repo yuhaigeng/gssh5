@@ -34,8 +34,8 @@
 							总价: <span v-if="logined" v-text="detailList.priceDesc"></span>
 							<span v-else></span>
 						</div>
-						<div class="goodsDetails_box_left" v-text="'产地：' + detailList.sourceCityName"></div>
-						<div class="goodsDetails_box_right" v-text="'规格：' + detailList.sizeDesc"></div>
+						<div class="goodsDetails_box_left" >产地：<span v-text=" detailList && detailList.sourceCityName"></span></div>
+						<div class="goodsDetails_box_right" >规格：<span v-text=" detailList && detailList.sizeDesc"></span></div>
 					</li>
 				</ul>
 			</div>
@@ -60,7 +60,7 @@ export default {
  		return {
 			isCollect: false,
 			logined:getIsLogin(),
-			detailList: [],
+			detailList: {},
 			bannerDate:[],
 			userId:[],
 			//本地购物车
@@ -511,7 +511,7 @@ export default {
 	margin-top: 0
 }
  .goodsDetails_box2_ {
-	height: 300px;
+	height: 500px;
 }
 .goodsDetails_box2 {
 	font-size: 24px;

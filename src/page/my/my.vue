@@ -96,7 +96,11 @@ export default {
       }
       this.personApi()
       this.firm_vip_info()
+    }else{
+      dateModule[3].text = `<b>0</b><span>张</span>`
+      dateModule[4].text = `<b>0</b><span>个</span>`
     }
+     dateModule[2].text = `<b>VIP</b>`
   },
   methods:{
     personApi:function(){
@@ -130,9 +134,8 @@ export default {
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
           this.userVipInfo=resp.data.data
-          dateModule[2].text = `<b>VIP</b>`
-          dateModule[3].text = `<b>${this.userVipInfo.coupons || 0}</b><span>张</span>`
-          dateModule[4].text = `<b>${this.userVipInfo.surplusScore || 0}</b><span>个</span>`
+          dateModule[3].text = `<b>${this.userVipInfo.coupons}</b><span>张</span>`
+          dateModule[4].text = `<b>${this.userVipInfo.surplusScore}</b><span>个</span>`
         }else{
           this.$toast({
             message : resp.data.statusStr,

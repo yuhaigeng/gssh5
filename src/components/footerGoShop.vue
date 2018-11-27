@@ -272,7 +272,7 @@ export default {
 .footer_car .car_top{width:100%;height:70px;padding:0 24px;line-height:70px;color:#FFF;font-size:24px;background:#999}
 .footer_car .car_main{width:100%;font-size:28px;background:#FFF}
 .car_main ul li{width:100%;height:100px;line-height:100px;border-bottom:1px solid #CCC;padding:0 24px;}
-.footer-left{width:492px;background-color:#494848;text-align:center;text-indent: 0px;}
+.footer-left{width:492px;background-color:#494848;text-align:center;text-indent: 0px; box-shadow: -6px 0 0 0 #494848;}
 .footer-rigth{width:258px;text-align:center}
 .footer-rigth.submit{background: rgb(243, 124, 48)}
 .car_right .sprite{width: 60px;height: 60px;}

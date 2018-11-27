@@ -326,7 +326,7 @@ import vuePickers from '../../components/public/picker.vue';
             })
         } else if (this.address == null) {
             this.$toast({
-              message :'请输入地址' ,
+              message :'请输入店铺地址' ,
               position: 'center',
               duration: 2000,
             })
@@ -383,6 +383,7 @@ import vuePickers from '../../components/public/picker.vue';
 .main-wrap {
   width: 100%;
   margin-top: 107px;
+  margin-bottom: 80px;
   background: #ebeaea;
 }
 .apply_service_main {

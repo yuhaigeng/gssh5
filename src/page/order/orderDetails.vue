@@ -47,11 +47,11 @@
 					<div class="order_details_goods_ clearfloat" v-if="(orderInfo.orderStatus == 3 || orderInfo.orderStatus ==4)">
 						<dl class="clearfloat">
 							<dt>实际总重:</dt>
-							<dd><span>{{item.afterWholePriceSize}}斤</span></dd>
+							<dd><span v-text="item.afterWholePriceSize + item.priceUnit"></span></dd>
 						</dl>
 						<dl class="clearfloat">
 							<dt>实际总价:</dt>
-							<dd><span>{{item.afterCostMoney}}元</span></dd>
+							<dd><span v-text="item.afterCostMoney + '元'"></span></dd>
 						</dl>
 					</div>
 				</li>
@@ -85,7 +85,7 @@
 				<div class="order_details_coupon_box4" v-if="orderInfo.goodsDiscountMoney && (orderInfo.orderStatus == 3 || orderInfo.orderStatus == 4)" >
 					<dl class="clearfloat">
 						<dt>其他优惠:</dt>
-						<dd class="order_coupon_price" v-text="parseInt(orderInfo.goodsDiscountMoney).toFixed(2)" :data="parseInt(orderInfo.goodsDiscountMoney).toFixed(2)"></dd>
+						<dd class="order_coupon_price" v-text="parseInt(orderInfo.goodsDiscountMoney).toFixed(2) + '元'" :data="parseInt(orderInfo.goodsDiscountMoney).toFixed(2)"></dd>
 					</dl>
 				</div>
 				<!--优惠券-->
@@ -469,7 +469,7 @@ export default {
 					}
 				}else{
 					if (item.couponMoney) {
-						return parseInt(item.couponMoney).toFixed(2) + '元';
+						return   parseInt(item.couponMoney).toFixed(2) + '元';
 					}else{
 						return '';
 					}
@@ -485,7 +485,7 @@ export default {
 				return '已选：-'+parseInt(obj.money).toFixed(2)+'元'
 			}
 			if (obj.status == 4) {
-				return "已绑定："+parseInt(obj.money).toFixed(2)+"元"
+				return "已绑定：-"+parseInt(obj.money).toFixed(2)+"元"
 			}
 		},
 		submitOrder(){
