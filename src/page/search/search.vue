@@ -29,7 +29,7 @@
 				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item)">
 					<dl>
 						<dt>
-							<img :src="item.goodsLogo"/>
+							<img v-lazy="item.goodsLogo"/>
 						</dt>
 						<dd>
 							<h3 class="moreGoods_goods_name ellipsis" v-text="item.goodsName"></h3>
@@ -77,10 +77,11 @@ export default {
 	},
 	methods:{
 		get_goods_hot:function(){
+      let obj  = {
+        method: "goods_show_hot",
+      }
 			this.$ajax.get(this.HOST, {
-				params:{
-					method: "goods_show_hot",
-				}
+				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					this.searchList = resp.data.data;
@@ -98,13 +99,14 @@ export default {
 			});
 		},
 		get_goods_name2:function() {
-			this.state = 2;
+      this.state = 2;
+      let obj = {
+        method: "goods_show_name2",
+        websiteNode: this.websiteNode,
+        goodsName:this.searchVal
+      }
 			this.$ajax.get(this.HOST, {
-				params:{
-					method: "goods_show_name2",
-					websiteNode: this.websiteNode,
-					goodsName:this.searchVal
-				}
+				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
 					this.goodsList = resp.data.data;
@@ -158,7 +160,7 @@ export default {
 	directives: {
 		focus: {
 			//根据focusState的状态改变是否聚焦focus
-			update: function (el, value) {  //第二个参数传进来的是个json
+      update: function (el, value) {  //第二个参数传进来的是个json
 				if (value) {
 					el.focus()
 				}

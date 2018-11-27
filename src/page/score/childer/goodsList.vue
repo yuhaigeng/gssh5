@@ -8,7 +8,7 @@
                         <!-- <router-link :to="{path: '/score/goodsList/good',query:{id:item.id}}" tag="dl"> -->
                         <dl>
                             <dt>
-                                <img v-lazy="item.goodsLogo"/>
+                                <img v-lazy="item.goodsLogo" />
                             </dt>
                             <dd>
                                 <p class="name" v-text="item.goodsName"></p>

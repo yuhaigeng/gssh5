@@ -205,6 +205,7 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
 <style scoped>
 .main-wrap{
   margin-top: 107px;
+  margin-bottom: 108px;
 }
 .my_infor {
   height: 160px;
@@ -313,7 +314,7 @@ import { goodlist1 , getgoodsMoney} from "../../common/goods_car.js";
   color: #a93a3a;
   float: right;
   outline: 0;
-  margin-bottom: 100px;
+  padding: 0;
 }
 .get_address{
   line-height:110px;

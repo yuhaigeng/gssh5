@@ -154,7 +154,7 @@ export default {
 					bottom:26+"px"
 				},300)
 				$('.footer-left').animate({
-					'text-indent':0
+					'text-indent':-10
 				},300)
 			}
 		},
@@ -170,7 +170,7 @@ export default {
 						bottom:26+"px"
 					},300)
 					$('.footer-left').animate({
-						'text-indent':0
+						'text-indent':-10
 					},300)
 				}
 			}

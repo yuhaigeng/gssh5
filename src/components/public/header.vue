@@ -78,5 +78,6 @@
   background:none;
   border:none;
   color: #fff;
+  position: absolute;
 }
 </style>

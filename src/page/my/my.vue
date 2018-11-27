@@ -17,7 +17,11 @@
     </app-header>
     <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin" ></loginState>
     <div v-cloak class="cont cont1 clearfloat">
-      <router-link :to="isLogin ? 'vip' : 'login'" tag="dl"  class="float_left " >
+      <router-link v-for="(item,index) in navInfo" :to="isLogin ? item.jumpRouter : 'login'" tag="dl"  class="float_left " :key='index'>
+        <dt v-html="item.text"></dt>
+        <dd v-text="item.text1"></dd>
+      </router-link>
+      <!-- <router-link :to="isLogin ? 'vip' : 'login'" tag="dl"  class="float_left " >
         <dt><b>VIP</b></dt>
         <dd>服务</dd>
       </router-link>
@@ -28,10 +32,9 @@
       <router-link :to=" isLogin ? 'score' :'login'" tag="dl" class="float_left" >
         <dt><b v-text='userVipInfo.surplusScore || 0'></b><span>个</span></dt>
         <dd>果币商城</dd>
-      </router-link>
+      </router-link> -->
     </div>
-    <personalOptions :info="orderInfo" :isLogin='isLogin'></personalOptions>
-    <personalOptions :info="otherInfo" :isLogin='isLogin'></personalOptions>
+    <personalOptions v-for="(item,index) in infoData" :info="item" :isLogin='isLogin' :key="index"></personalOptions>
     <app-footer :isLogin="isLogin" :isNew = 'isNew'></app-footer>
   </div>
 </template>
@@ -41,7 +44,7 @@ import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
 import loginState from "./loginState.vue";
 import personalOptions from "./personalOptions.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import {  getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
   name: 'my',
   components: {
@@ -62,8 +65,15 @@ export default {
       userBasicParam:{},
       userInfo:{},
       userVipInfo:{},
-      orderInfo:dateModule[0],
-      otherInfo:dateModule[1],
+      infoData:[
+        dateModule[0],
+        dateModule[1]
+      ],
+      navInfo:[
+        dateModule[2],
+        dateModule[3],
+        dateModule[4],
+      ],
       system:{},
       isNew:false,//表示是否有新消息
     }
@@ -120,6 +130,9 @@ export default {
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
           this.userVipInfo=resp.data.data
+          dateModule[2].text = `<b>VIP</b>`
+          dateModule[3].text = `<b>${this.userVipInfo.coupons || 0}</b><span>张</span>`
+          dateModule[4].text = `<b>${this.userVipInfo.surplusScore || 0}</b><span>个</span>`
         }else{
           this.$toast({
             message : resp.data.statusStr,
@@ -175,12 +188,28 @@ var dateModule  = [
         linkUrl:'collect',
       }
     ]
+  },
+  {
+    jumpRouter:'vip',
+    text:null,
+    text1:'服务'
+
+  },{
+    jumpRouter:'coupon',
+    text:null,
+    text1:'优惠券'
+
+  },{
+    jumpRouter:'score',
+    text:null,
+    text1:'果币商城'
   }]
 
 </script>
 
 <style scoped >
 .my{
+  position: relative;
   max-width: 750px;
   margin-bottom: 98px;
 }
@@ -201,7 +230,7 @@ var dateModule  = [
 .cont1 dl dt {
   padding-top: 36px;
 }
-.cont1 dl dt b {
+.cont1 >>> b {
   font-size: 40px;
   color: #F51B44;
 }
@@ -210,7 +239,7 @@ var dateModule  = [
   color: #333;
   line-height: 44px;
 }
-.cont1 dl dt span {
+.cont1 >>> span {
   font-size: 24px;
   color: #F51B44;
 }

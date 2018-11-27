@@ -113,7 +113,7 @@ export default {
       if(this.$route.query.isBack){
         this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true,isDel:false}})
       }else{
-        this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true}})
+        this.$router.push({path:this.headerMsg.jumpAfter, query:{isEdit:true,isDel:true}})
       }
       sessionStorage.setItem('editorAddress',JSON.stringify(item));
     },

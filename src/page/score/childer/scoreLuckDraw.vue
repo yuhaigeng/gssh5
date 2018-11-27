@@ -409,7 +409,7 @@ export default {
 .gonggao-wrap{height: 60px;overflow: hidden;}
 .score_active_center{height: 814px;background:url(../../../assets/img/img_bg_money@2x.png) no-repeat center ;}
 .score_active_turntable{width: 750px; height: 814px; background: url(../../../assets/img/img_Lottery_turntable_a@2x.png) no-repeat center;position: relative;overflow: hidden;}
-.score_active_turntable .pointer1{width: 88px;height: 120px;position: relative;left: 50%;margin-left: -44px;top:60px ;z-index: 2;}
+.score_active_turntable .pointer1{width: 88px;height: 120px;position: relative;left: 50%;margin-left: -38px;top:60px ;z-index: 2;}
 .score_active_turntable .pointer{position: absolute;width: 180px;height: 180px;left: 50%;top: 50%;margin-left: -90px;margin-top: -90px;}
 .score_active_turntable .item{width: 684px;height: 684px;position: absolute;left: 30px;top: 70px;transition: all 5s;}/*transition: all 2s;*/
 .score_active_turntable .transition0{

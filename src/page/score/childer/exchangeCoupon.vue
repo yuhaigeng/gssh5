@@ -121,17 +121,9 @@ export default {
                     }).catch((e) => {
                         console.log(e)
                     });
-                } else if (data.statusCode == 100619) {
+                }else{
                   this.$toast({
                     message : data.statusStr,
-                    position: 'middle',//top bottom middle
-                    duration: 2000,//延时多久消失
-                    //iconClass: 'mint-toast-icon mintui mintui-field-warning'
-                    //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
-                  })
-                } else {
-                  this.$toast({
-                    message :data.statusStr,
                     position: 'middle',//top bottom middle
                     duration: 2000,//延时多久消失
                   })
