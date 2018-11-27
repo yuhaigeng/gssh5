@@ -107,7 +107,7 @@ html{ overflow: auto;}
     width: 100%;
     height: 100px;
     text-align: center;
-    line-height: 80px;
+    line-height: 100px;
     font-size: 30px;
     cursor: pointer;
     background: #FFF;
