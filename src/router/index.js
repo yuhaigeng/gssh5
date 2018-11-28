@@ -58,12 +58,14 @@ export default new Router({
           keepAlive: false // 需要被缓存
         }
       },      //主页
-      { path: '/more', component: more}, //更多商品
+      { path: '/more',
+        component: more,
+      }, //更多商品
       { path: '/my', component: my},              //个人中心
       { path: '/message', component: message}, // 消息
       { path: '/login', component: login},   //登录
       { path: '/register', component: register}, //注册
-      { path: '/detail/:id', component: detail}, //详细信息
+      { path: '/detail', component: detail}, //详细信息
       {
         path: '/address',
         component: address

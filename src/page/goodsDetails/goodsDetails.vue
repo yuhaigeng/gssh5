@@ -52,7 +52,6 @@
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/goodsBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import $ from 'jquery';
 import {  getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
 	name:'goodsDetail',
@@ -86,7 +85,8 @@ export default {
 		goodsBanner
  	},
 	created:function() {
-		this.goodsId = this.$route.params.id
+		this.goodsId = this.$route.query.id
+	
  	},
 	mounted(){
 		// 数据初始化
@@ -418,7 +418,12 @@ export default {
 			})
 		},
 		back(){
-			this.$router.go(-1);
+			if(this.$route.query.typeCode){
+				let code = this.$route.query.typeCode
+				this.$router.push({path:'more',query:{typeCode:code}})
+			}else{
+				this.$router.go(-1);	
+			}
 		},
 	},
 	beforeDestroy(){
@@ -511,7 +516,7 @@ export default {
 	margin-top: 0
 }
  .goodsDetails_box2_ {
-	height: 500px;
+	height: 360px;
 }
 .goodsDetails_box2 {
 	font-size: 24px;

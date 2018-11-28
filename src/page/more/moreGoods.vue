@@ -244,7 +244,7 @@
               this.isSelected = index ;
               this.goodsType = a
               this.$route.query.typeCode = "";
-              this.goods_info_nav(index)
+              this.goods_info_nav(index,a)
               if (ele.offsetLeft > 200) {
                 topLeft.scrollLeft = ele.offsetLeft-200
               }else{
@@ -260,7 +260,7 @@
           console.log(err)
         });
       },
-      goods_info_nav:function (num) {
+      goods_info_nav:function (num,code) {
         let obj = {
             method: "goods_info_show_fou",
             firmId:this.firmId,
@@ -278,15 +278,18 @@
           if(data.statusCode == "100000"){
             this.goodsList = data.data.page;
             this.gtes = data.data.gtes;
-            if(this.$route.query.typeCode){
-              let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
-              let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
-              if (ele.offsetTop>200) {
-                wrapTop.scrollTop = ele.offsetTop-200
-              }else{
-                wrapTop.scrollTop = 0
-              }
-             }
+             this.$nextTick(function(){
+                 if(code){
+                    let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
+                    let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
+                    
+                    if (ele.offsetTop>200) {
+                      wrapTop.scrollTop = ele.offsetTop-200
+                    }else{
+                      wrapTop.scrollTop = 0
+                    }
+               }
+              })
             if( this.pageNo == 1){
               this.listObj =  this.goodsList.objects
               this.isLast = this.goodsList.isLast
@@ -385,9 +388,13 @@
         }
       },
       toDetail(item) {
+        console.log(this.goodsType);
+        let data = {
+
+        }
         const id = item.id;
 			  sessionStorage.setItem('goodsDetails',JSON.stringify(item));
-			  this.$router.push({ path:'detail/'+id })
+			  this.$router.push({ path:'detail', query:{id:id ,typeCode:this.goodsType}})
       },
       getNumText(item){
         const msgArr = ['','','不是VIP','等级不足']

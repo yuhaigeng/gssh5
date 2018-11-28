@@ -4,7 +4,7 @@
             <div class="swiper-slide" v-for="(item,index) in imgList" :key="index" >
                 <!-- 第一张和后一张不使用懒加载 解决 与swiper 冲突 -->
                 <img :src="item.adLogo" alt=""  v-if="index==0||index==(imgList.length-1)"  @click="dataEvent(item.jumpType, item.linkUrl, item.adTime)">
-                <img v-lazy="item.adLogo" v-else  @click="jumpRouter(item.jumpType, item.linkUrl, item.adTime)">
+                <img v-lazy="item.adLogo" v-else  @click="dataEvent(item.jumpType, item.linkUrl, item.adTime)">
             </div>
         </div>
         <!-- 如果需要分页器 -->

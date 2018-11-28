@@ -83,7 +83,7 @@ export default {
   },
   //完成挂载
   mounted(){
-    console.log(this.$router)
+    console.log(this)
     if (sessionStorage.getItem('homePage')) {
       const homePage = JSON.parse(sessionStorage.getItem('homePage'));
       this.mainActivityList = homePage.data.mainActivityList;
@@ -212,7 +212,7 @@ export default {
           let codeArr = data[1].split("&");
           return this.$router.push({path:'more',query:{typeCode:codeArr[1]}})
         }else if (type == 2) {
-          return this.$router.push({path:'detail/'+code})
+          return  this.$router.push({ path:'detail', query:{id:code }})
         }else {
           if(this.isLogin){
             if (type == 3) {
@@ -234,7 +234,8 @@ export default {
     },
     goodsJump(id,item){
       sessionStorage.setItem('goodsDetails',JSON.stringify(item.goodsInfo))
-      this.$router.push({path:'detail/'+id})
+       this.$router.push({ path:'detail', query:{id:id }})
+      // this.$router.push({path:'detail/'+id})
     }
   }
 }

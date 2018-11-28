@@ -17,22 +17,10 @@
     </app-header>
     <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin"  :userBasicParam = 'userBasicParam' ></loginState>
     <div v-cloak class="cont cont1 clearfloat">
-      <router-link v-for="(item,index) in navInfo" :to="isLogin ? item.jumpRouter : 'login'" tag="dl"  class="float_left " :key='index'>
-        <dt v-html="item.text"></dt>
-        <dd v-text="item.text1"></dd>
+      <router-link v-for="(item,index) in navInfo " :to="isLogin ? item.jumpRouter : 'login'" tag="dl"  class="float_left " :key='index'>
+        <dt v-html="isLogin ? item.text1 : item.text "></dt>
+        <dd v-text="item.text2"></dd>
       </router-link>
-      <!-- <router-link :to="isLogin ? 'vip' : 'login'" tag="dl"  class="float_left " >
-        <dt><b>VIP</b></dt>
-        <dd>服务</dd>
-      </router-link>
-      <router-link :to="isLogin ?'coupon' : 'login'" tag="dl"  class="float_left " >
-        <dt><b v-text='userVipInfo.coupons || 0'></b><span>张</span></dt>
-        <dd>优惠券</dd>
-      </router-link>
-      <router-link :to=" isLogin ? 'score' :'login'" tag="dl" class="float_left" >
-        <dt><b v-text='userVipInfo.surplusScore || 0'></b><span>个</span></dt>
-        <dd>果币商城</dd>
-      </router-link> -->
     </div>
     <personalOptions v-for="(item,index) in infoData" :info="item" :isLogin='isLogin' :key="index"></personalOptions>
     <app-footer :isLogin="isLogin" :isNew = 'isNew'></app-footer>
@@ -69,16 +57,17 @@ export default {
         dateModule[0],
         dateModule[1]
       ],
-      navInfo:[
-        dateModule[2],
-        dateModule[3],
-        dateModule[4],
-      ],
+      navInfo:[],
       system:{},
       isNew:false,//表示是否有新消息
     }
   },
   mounted(){
+    this.navInfo = [
+        dateModule[2],
+        dateModule[3],
+        dateModule[4],
+    ]
     if (getIsLogin()) {
       this.system = JSON.parse(localStorage.getItem('system'))
       const userInfo = JSON.parse(getUserData());
@@ -96,11 +85,9 @@ export default {
       }
       this.personApi()
       this.firm_vip_info()
-    }else{
-      dateModule[3].text = `<b>0</b><span>张</span>`
-      dateModule[4].text = `<b>0</b><span>个</span>`
     }
-     dateModule[2].text = `<b>VIP</b>`
+       
+    
   },
   methods:{
     personApi:function(){
@@ -134,8 +121,13 @@ export default {
       }).then(resp => {
         if(resp.data.statusCode ==  "100000"){
           this.userVipInfo=resp.data.data
-          dateModule[3].text = `<b>${this.userVipInfo.coupons}</b><span>张</span>`
-          dateModule[4].text = `<b>${this.userVipInfo.surplusScore}</b><span>个</span>`
+          dateModule[3].text1= `<b>${this.userVipInfo.coupons}</b><span>张</span>`
+          dateModule[4].text1= `<b>${this.userVipInfo.surplusScore}</b><span>个</span>`
+          this.navInfo = [
+            dateModule[2],
+            dateModule[3],
+            dateModule[4],
+          ]
         }else{
           this.$toast({
             message : resp.data.statusStr,
@@ -192,20 +184,23 @@ var dateModule  = [
       }
     ]
   },
-  {
+  { // vip 优惠券 果币商城 数据
     jumpRouter:'vip',
-    text:null,
-    text1:'服务'
+    text: `<b>VIP</b>`,
+    text1:`<b>VIP</b>`,
+    text2:'服务' 
 
   },{
     jumpRouter:'coupon',
-    text:null,
-    text1:'优惠券'
+    text:`<b>0</b><span>张</span>`,
+    text1:'',
+    text2:'优惠券'
 
   },{
     jumpRouter:'score',
-    text:null,
-    text1:'果币商城'
+    text: `<b>0</b><span>个</span>`,
+    text1:'',
+    text2:'果币商城'
   }]
 
 </script>

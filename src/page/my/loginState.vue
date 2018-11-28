@@ -2,27 +2,27 @@
   <div v-cloak class="wo_top" :class="{'login':isLogin}">
     <p class="no_login_text" v-show="!isLogin">您还没有登录</p>
     <router-link :to="'login'" tag="span"  class="no_login_btn" v-show="!isLogin">登录</router-link>
-    <dl  v-cloak class="wo_top_info clearfloat" v-if="isLogin && userVipInfo.firmId">
+    <dl  v-cloak class="wo_top_info clearfloat" v-if="isLogin">
       <dt class="float_left">
         <img v-show="userInfo.faceImgUrl" class="user_faceImg" :src="'http://'+userInfo.faceImgUrl"/>
         <input class="login_type1 " type="file" accept="image/*" name="" id="file" value=""  @change="uploadImg"/>
       </dt>
       <dd class="float_left" :class="{'active':userVipInfo.vip > 0}">
-        <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class="'vip'+userVipInfo.vipGrade"   ></router-link> <span class="user_vip_msg"  v-text="'上个月成长值为'+  userVipInfo.lastMonthExp"></span></p>
-        <p><span class="user_phone" v-text="userInfo.linkTel"></span></p>
+        <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName ? userInfo.firmName :'用户名'"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class=" userInfo.firmName ? 'vip'+userVipInfo.vipGrade : 'vip0'"   ></router-link> <span class="user_vip_msg"  v-text="userInfo.firmName ? '上个月成长值为'+ userVipInfo.lastMonthExp : '上个月成长值为0' "></span></p>
+        <p><span class="user_phone" v-text="userInfo.linkTel ? userInfo.linkTel : '电话号码'"></span></p>
       </dd>
       <router-link to="company" tag="dd" class="my_details float_right"></router-link>
     </dl>
-    <div  class="wo_top_growInfo" v-if="isLogin && userVipInfo.firmId">
+    <div  class="wo_top_growInfo" v-if="isLogin">
       <div class="growInfo_pointer" v-show="userVipInfo">
-        <span v-text="'当月成长值'+userVipInfo.firmMonthExp" v-bind:style="{left:getLeft}"></span>
+        <span v-text="userInfo.firmName ? '当月成长值'+userVipInfo.firmMonthExp : '当月成长值0'" v-bind:style="{left:getLeft}"></span>
       </div>
       <div class="growInfo_progress">
         <p class="growInfo_progressAll" ></p>
         <p class="growInfo_progressTrue" v-bind:style="{width: getWidth+'px'}"></p>
       </div>
       <div class="growInfo_progress_subscript">
-        <p class="float_left" v-text="'再积'+userVipInfo.needExp+'成长值下月可享受VIP服务'"></p>
+        <p class="float_left" v-text=" userInfo.firmName ? '再积'+userVipInfo.needExp+'成长值下月可享受VIP服务' : '再积0成长值下月可享受VIP服务' "></p>
         <span class="float_right" v-text="userVipInfo.firmMonthExp > userVipInfo.monthExp ? userVipInfo.firmMonthExp : userVipInfo.monthExp"></span>
       </div>
     </div>
