@@ -187,6 +187,7 @@ export default {
         } else {
           let openid = localStorage.getItem("openid");
           localStorage.clear();
+          sessionStorage.clear();
           localStorage.setItem("openid",openid);
           this.$toast({
             message : data.statusStr,
