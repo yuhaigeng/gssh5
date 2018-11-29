@@ -3,7 +3,7 @@
     <div class="cont_tit" v-text="info.title"></div>
     <div class="cont_order_box clearfloat">
       <router-link :to="{path:isLogin ? item.linkUrl : 'login', query:{type:item.type}}"   tag="dl" v-for = "(item,index) in info.list" :key="index">
-        <dt><img v-lazy ="item.icon" :key="item.icon"/></dt>
+        <dt><img :src ="item.icon" /></dt>
         <dd v-text="item.name"></dd>
       </router-link>
     </div>

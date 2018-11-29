@@ -244,7 +244,9 @@
               this.isSelected = index ;
               this.goodsType = a
               this.$route.query.typeCode = "";
-              this.goods_info_nav(index,a)
+              if(this.left_name.length){
+                this.goods_info_nav(index,a)
+              }
               if (ele.offsetLeft > 200) {
                 topLeft.scrollLeft = ele.offsetLeft-200
               }else{
@@ -253,7 +255,9 @@
             }else{
               this.goodsType = this.left_name.length && this.left_name[0].typeCode
               this.isSelected = 0;
-              this.goods_info_nav()
+              if(this.left_name.length){
+                 this.goods_info_nav()
+              }
             }
           }
         }).catch(err => {
@@ -388,10 +392,6 @@
         }
       },
       toDetail(item) {
-        console.log(this.goodsType);
-        let data = {
-
-        }
         const id = item.id;
 			  sessionStorage.setItem('goodsDetails',JSON.stringify(item));
 			  this.$router.push({ path:'detail', query:{id:id ,typeCode:this.goodsType}})

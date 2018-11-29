@@ -4,7 +4,7 @@
     <router-link :to="'login'" tag="span"  class="no_login_btn" v-show="!isLogin">登录</router-link>
     <dl  v-cloak class="wo_top_info clearfloat" v-if="isLogin">
       <dt class="float_left">
-        <img v-show="userInfo.faceImgUrl" class="user_faceImg" :src="'http://'+userInfo.faceImgUrl"/>
+        <img  class="user_faceImg" :src=" userInfo.faceImgUrl ? 'http://'+userInfo.faceImgUrl :'' " />
         <input class="login_type1 " type="file" accept="image/*" name="" id="file" value=""  @change="uploadImg"/>
       </dt>
       <dd class="float_left" :class="{'active':userVipInfo.vip > 0}">
@@ -15,14 +15,14 @@
     </dl>
     <div  class="wo_top_growInfo" v-if="isLogin">
       <div class="growInfo_pointer" v-show="userVipInfo">
-        <span v-text="userInfo.firmName ? '当月成长值'+userVipInfo.firmMonthExp : '当月成长值0'" v-bind:style="{left:getLeft}"></span>
+        <span v-text="userVipInfo.firmId ? '当月成长值'+userVipInfo.firmMonthExp : '当月成长值0'" v-bind:style="{left:getLeft}"></span>
       </div>
       <div class="growInfo_progress">
         <p class="growInfo_progressAll" ></p>
         <p class="growInfo_progressTrue" v-bind:style="{width: getWidth+'px'}"></p>
       </div>
       <div class="growInfo_progress_subscript">
-        <p class="float_left" v-text=" userInfo.firmName ? '再积'+userVipInfo.needExp+'成长值下月可享受VIP服务' : '再积0成长值下月可享受VIP服务' "></p>
+        <p class="float_left" v-text=" userVipInfo.firmId ? '再积'+userVipInfo.needExp+'成长值下月可享受VIP服务' : '再积0成长值下月可享受VIP服务' "></p>
         <span class="float_right" v-text="userVipInfo.firmMonthExp > userVipInfo.monthExp ? userVipInfo.firmMonthExp : userVipInfo.monthExp"></span>
       </div>
     </div>
@@ -46,7 +46,7 @@ import {Sand} from '../../common/upyun-mu.js'
           return this.userVipInfo.firmMonthExp >= this.userVipInfo.monthExp ? "702" : 0 == this.userVipInfo.firmMonthExp ? "0" : (702 * (this.userVipInfo.firmMonthExp / this.userVipInfo.monthExp)).toFixed(2)
         },
         getLeft: function() {
-          return 617 < this.getWidth ? "477px" : this.getWidth < 85 ? "85px" : this.getWidth + "px"
+          return 617 < this.getWidth ? "477px" : this.getWidth < 85 ? "0px" : this.getWidth + "px"
         }
     },
     methods:{
