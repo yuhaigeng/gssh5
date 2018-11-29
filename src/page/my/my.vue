@@ -18,7 +18,7 @@
     <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin"  :userBasicParam = 'userBasicParam' ></loginState>
     <div v-cloak class="cont cont1 clearfloat">
       <router-link v-for="(item,index) in navInfo " :to="isLogin ? item.jumpRouter : 'login'" tag="dl"  class="float_left " :key='index'>
-        <dt v-html="isLogin ? item.text1 : item.text "></dt>
+        <dt v-html="isLogin && userVipInfo.firmId  ? item.text1 : item.text "></dt>
         <dd v-text="item.text2"></dd>
       </router-link>
     </div>
@@ -53,10 +53,7 @@ export default {
       userBasicParam:{},
       userInfo:{},
       userVipInfo:{},
-      infoData:[
-        dateModule[0],
-        dateModule[1]
-      ],
+      infoData:[],
       navInfo:[],
       system:{},
       isNew:false,//表示是否有新消息
@@ -64,9 +61,13 @@ export default {
   },
   mounted(){
     this.navInfo = [
-        dateModule[2],
-        dateModule[3],
-        dateModule[4],
+      dateModule[2],
+      dateModule[3],
+      dateModule[4],
+    ]
+    this.infoData=[
+      dateModule[0],
+      dateModule[1]
     ]
     if (getIsLogin()) {
       this.system = JSON.parse(localStorage.getItem('system'))

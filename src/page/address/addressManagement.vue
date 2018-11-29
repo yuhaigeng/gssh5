@@ -19,7 +19,7 @@
                 </dd>
               </dl>
               <div class="address_bottom">
-                <button class="address_bottom_left" v-text="item.isDefault == 1 ?'默认' :'设为默认'" :id="item.id" @click="setDefault(item.isDefault,item.id)"></button>
+                <button class="address_bottom_left" v-text="item.isDefault == 1 ?'默认' :'设为默认'" :id="item.id" @click="setDefault(item.isDefault,item.id,index)"></button>
                 <button class="address_bottom_right" @click="editor(item)">编辑</button>
               </div>
           </li>
@@ -85,7 +85,7 @@ export default {
         console.log('请求失败：'+ err);
       });
     },
-    default_data:function(){
+    default_data:function(index){
       let params = Object.assign({
           method:'user_address_default',
           firmId:this.firmId,
@@ -95,9 +95,14 @@ export default {
         params:params
       }).then(resp => {
         if(resp.data.statusCode == "100000"){
-          this.addresses = resp.data.data
-          sessionStorage.setItem('addresses',JSON.stringify(this.addresses))
-          this.addressShow()
+          let data = JSON.parse(sessionStorage.getItem('addresses')) 
+          let a = data[0]
+          data[0] = data[index];
+          data[index] = a;
+          data[0].isDefault = 1;
+          data[index].isDefault = 0;
+          this.addresses = data  
+          sessionStorage.setItem('addresses',JSON.stringify(data))
         }else {
           this.$toast({
             message : resp.data.statusStr,
@@ -117,10 +122,10 @@ export default {
       }
       sessionStorage.setItem('editorAddress',JSON.stringify(item));
     },
-    setDefault:function(ele,id){
+    setDefault:function(ele,id,index){
       if(ele != 1){
         this.addressId = id;
-        this.default_data();
+        this.default_data(index);
       }
     },
     goBack:function(item){

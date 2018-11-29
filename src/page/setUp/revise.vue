@@ -84,25 +84,29 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
             },
             save:function(){
                 if(this.oldPassword == null){
-                    this.$message({
-                      message: '请输入旧密码',
-                      center: true,
-                    });
+                  this.$toast({
+                    message : '请输入原始密码',
+                    position: 'middle',
+                    duration: 2000, 
+                  });
                 }else if(this.newPassword ==  null){
-                     this.$message({
-                      message: '请输新密码',
-                      center: true,
-                    });
+                  this.$toast({
+                    message: '请输新密码',
+                    position: 'middle',
+                    duration: 2000, 
+                   });
                 }else if(this.confirmPassword ==  null){
-                    this.$message({
-                      message: '请再次输入密码',
-                      center: true,
-                    });
+                  this.$toast({
+                    message: '请再次输入密码',
+                    position: 'middle',
+                    duration: 2000, 
+                  });
                 }else if(this.newPassword != this.confirmPassword){
-                     this.$message({
-                      message: '密码不一致，请重新输入',
-                      center: true,
-                    });
+                  this.$toast({
+                    message: '密码不一致，请重新输入',
+                    position: 'middle',
+                    duration: 2000, 
+                  });
                 }else{
                   this.changePassword();
                   this.$router.push({path:"/my"})
@@ -114,7 +118,6 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
 
 <style scoped>
 .chang_password_main_wrap {
-  height: 1244px;
   margin-top: 107px;
 }
 .chang_password_content {

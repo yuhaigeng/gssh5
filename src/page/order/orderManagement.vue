@@ -46,7 +46,6 @@
                     <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
                 </mt-tab-container-item>
             </mt-tab-container>
-            
         </div>
     </div>
  </div>
