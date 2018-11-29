@@ -6,8 +6,8 @@
 	</ul>
     <div class="main-wrap order_management_wrap">
         <div class="main">
-            <ul class="order_management_main" v-for="(item, index) in ordersList" :key="index" @click="toOrderDetail(item)">
-                <li class="order_list">
+            <ul class="order_management_main">
+                <li class="order_list"  v-for="(item, index) in ordersList" :key="index" @click="toOrderDetail(item)">
                     <div class="order_list_top clearfloat">
                         <div class="order_list_num" v-text="'订单编号：'+item.orderCode"></div>
                         <div class="order_list_state" v-text="orderStatusText[+item.orderStatus +1]"></div>

@@ -176,9 +176,6 @@ export default {
   max-width: 750px;
   margin-top: 107px;
 }
-.business_main_wrap {
-  height: 1244px;
-}
 .content1, .content2, .content3 {
   width: 100%;
   background: #fff;

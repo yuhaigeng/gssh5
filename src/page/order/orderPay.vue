@@ -12,13 +12,13 @@
             </div>
           </div>
           <ul class="order_pay_mode_box">
-            <!-- <li id="weixin" @click="paySel = 0" v-show ="paySel === 0">
+            <li id="weixin" v-show='isWeiXin' >
               <dl>
                 <dt class="sprite_login icon_mine_wechat"></dt>
                 <dd class="order_pay_mode_center">微信支付</dd>
                 <dd class="order_pay_mode_right sprite_login " :class="paySel === 0 ? 'icon_chosen' : 'icon_chosen_a'" data='1'></dd>
               </dl>
-            </li> -->
+            </li>
             <li id="yinhangka"  @click="paySel = 1">
               <dl>
                 <dt class="sprite_login icon_pay_card"></dt>
@@ -59,10 +59,12 @@ import { getTokenId , getUserData, getSecretKey, getIsWeiXin} from "../../common
             },
             orderMsg:{},
             userInfo:{},
-            publicParameter : {}
+            publicParameter : {},
+            isWeiXin:null,
           }
        },
       mounted(){
+        this.isWeiXin = getIsWeiXin()
         this.api();
         this.userInfo = JSON.parse(getUserData())
         let pay = localStorage.getItem('order_pay')
