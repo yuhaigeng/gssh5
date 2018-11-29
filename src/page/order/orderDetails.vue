@@ -40,7 +40,7 @@
 						<dd class="order_details_goods_right">X{{item.buyCount}}</dd>
 					</dl>
 					<dl class="clearfloat">
-						<dt>商品总量：{{item.roughWeight}}x{{item.buyCount}}={{item.roughWeight*item.buyCount}}斤</dt>
+						<dt>商品总量：{{item.goodsWholeCount}}x{{item.buyCount}}={{item.goodsWholeCount*item.buyCount + item.priceUnit}}</dt>
 						<dd></dd>
 						<dd class="order_details_goods_right">总价：{{item.costMoney}}元</dd>
 					</dl>
