@@ -2,50 +2,44 @@
  <div class="common-wrap managment">
      <app-header :type ="headerMsg"></app-header>
      <ul class="order_management_top clearfloat">
-		<li class="order_man_item" v-for="(item,index) in orderNav" :key="index" :class="{'order_border_bottom':index == navIndex}" @click="navTop(index)" @click.native.prevent="active = 'tab-container' + index" v-text="item.tit"></li>
+		<li class="order_man_item" v-for="(item,index) in orderNav" :key="index" :class="{'order_border_bottom':index == navIndex}" @click="navTop(index)" v-text="item.tit"></li>
 	</ul>
     <div class="main-wrap order_management_wrap">
         <div class="main">
-            <mt-tab-container class="page-tabbar-tab-container" v-model="active" swipeable>
-                <mt-tab-container-item :id="this.active">
-                    <mt-cell class="order_management_main" v-for="(item, index) in ordersList" :key="index">
-                        <ul @click="toOrderDetail(item)">
-                            <li class="order_list">
-                                <div class="order_list_top clearfloat">
-                                    <div class="order_list_num" v-text="'订单编号：'+item.orderCode"></div>
-                                    <div class="order_list_state" v-text="orderStatusText[+item.orderStatus +1]"></div>
-                                </div>
-                                <div class="order_list_details">
-                                    <div class="order_list_details_top clearfloat">
-                                        <div class="order_list_details_num" v-text=" '商品数量：'+item.containGoodsNum+'件'"></div>
-                                        <div class="order_list_details_money" v-text="'订单金额：￥'+( (item.orderStatus == 3 || item.orderStatus == 4) ? item.realPayMoney : item.orderMoney )+'元'"></div>
-                                    </div>
-                                    <div class="order_list_details_buttom clearfloat">
-                                        <div class="order_list_details_weight" v-text=" '商品重量：'+item.containGoodsWeight+'斤'"></div>
-                                        <div class="order_list_details_time" v-text="'下单时间：'+item.createTime"></div>
-                                    </div>
-                                </div>
-                                <div class="order_list_close" v-if="item.orderStatus == 1 " @click.stop>
-                                    <dl class="order_list_close clearfloat"><dt style="color: #2f83ff;">实际金额按照实际称重计算为准</dt><dd v-on:click.stop="cancle_order(item,index)">取消订单</dd></dl>
-                                </div>
-                                <div class="order_list_close" v-if="item.orderStatus == 2 ">
-                                    <dl class="order_list_close" style="color: #2f83ff;">实际金额按照实际称重计算为准</dl>
-                                </div>
-                                <div class="order_list_close" v-if="item.orderStatus == 3 ">
-                                    <dl class="order_list_close clearfloat"><dt style="color: #d05351;">为避免耽误您再次下单,请尽快支付</dt><dd style="background:#f47c30;color:#FFF;border-color: #FFF;">立即支付</dd></dl>
-                                </div>
-                                <div class="order_list_close" v-if="item.orderStatus == 4">
-                                    <dl class="order_list_close order_suc_">交易成功!</dl>
-                                </div>
-                                <div class="order_list_close" v-if="item.orderStatus == -1" @click.stop>
-                                    <dl class="order_list_close" v-on:click.stop="delete_order(item,index)">关闭交易</dl>
-                                </div>
-                            </li>
-                        </ul>
-                    </mt-cell>
-                    <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
-                </mt-tab-container-item>
-            </mt-tab-container>
+            <ul class="order_management_main">
+                <li class="order_list"  v-for="(item, index) in ordersList" :key="index" @click="toOrderDetail(item)">
+                    <div class="order_list_top clearfloat">
+                        <div class="order_list_num" v-text="'订单编号：'+item.orderCode"></div>
+                        <div class="order_list_state" v-text="orderStatusText[+item.orderStatus +1]"></div>
+                    </div>
+                    <div class="order_list_details">
+                        <div class="order_list_details_top clearfloat">
+                            <div class="order_list_details_num" v-text=" '商品数量：'+item.containGoodsNum+'件'"></div>
+                            <div class="order_list_details_money" v-text="'订单金额：￥'+( (item.orderStatus == 3 || item.orderStatus == 4) ? item.realPayMoney : item.orderMoney )+'元'"></div>
+                        </div>
+                        <div class="order_list_details_buttom clearfloat">
+                            <div class="order_list_details_weight" v-text=" '商品重量：'+item.containGoodsWeight+'斤'"></div>
+                            <div class="order_list_details_time" v-text="'下单时间：'+item.createTime"></div>
+                        </div>
+                    </div>
+                    <div class="order_list_close" v-if="item.orderStatus == 1 " @click.stop>
+                        <dl class="order_list_close clearfloat"><dt style="color: #2f83ff;">实际金额按照实际称重计算为准</dt><dd v-on:click.stop="cancle_order(item,index)">取消订单</dd></dl>
+                    </div>
+                    <div class="order_list_close" v-if="item.orderStatus == 2 ">
+                        <dl class="order_list_close" style="color: #2f83ff;">实际金额按照实际称重计算为准</dl>
+                    </div>
+                    <div class="order_list_close" v-if="item.orderStatus == 3 ">
+                        <dl class="order_list_close clearfloat"><dt style="color: #d05351;">为避免耽误您再次下单,请尽快支付</dt><dd style="background:#f47c30;color:#FFF;border-color: #FFF;">立即支付</dd></dl>
+                    </div>
+                    <div class="order_list_close" v-if="item.orderStatus == 4">
+                        <dl class="order_list_close order_suc_">交易成功!</dl>
+                    </div>
+                    <div class="order_list_close" v-if="item.orderStatus == -1" @click.stop>
+                        <dl class="order_list_close" v-on:click.stop="delete_order(item,index)">关闭交易</dl>
+                    </div>
+                </li>
+            </ul>
+            <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
         </div>
     </div>
  </div>
@@ -71,7 +65,6 @@ export default {
                 {tit:'全部'}
             ],
             navIndex:0,
-            active:'',
             isLast:false,
             pageNo: this.pageNo,
             pageSize: this.pageSize,
@@ -151,7 +144,6 @@ export default {
         });
 	    },
       navTop(index) {
-          this.active = 'tab-container' + index
         if (index != this.navIndex) {
           this.navIndex = index
           this.orderStatus = index + 1
@@ -290,7 +282,7 @@ export default {
 
 <style scoped>
 .managment{
-  margin-top: 87px;
+  margin-top: 107px;
 }
 .order_management_top {
 	display: -webkit-box;
@@ -319,8 +311,7 @@ export default {
 .order_management_main {
 	margin-top: 10px;
 	width: 100%;
-	height: auto;
-    margin-bottom: 18px;
+	height: auto
 }
 
 .order_man_main {
@@ -331,9 +322,8 @@ export default {
 .order_list {
 	margin-bottom: 20px;
 	width: 100%;
-	height: 292px;
-	font-size: 26px;
-    color: #000
+	height: 312px;
+	font-size: 26px
 }
 
 .order_list_top {
@@ -361,7 +351,7 @@ export default {
 	width: 100%;
 	border-bottom: 1px solid #ececec;
 	background: #FFF;
-	line-height: 60px;
+	line-height: 60px
 }
 
 .order_list_details_buttom,
@@ -379,7 +369,7 @@ export default {
 .order_list_details_money,
 .order_list_details_time {
 	float: left;
-	width: 380px
+	width: 400px
 }
 
 .order_list_close {
