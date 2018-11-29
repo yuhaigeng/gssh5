@@ -20,6 +20,8 @@ Vue.prototype.$md5 = md5;
 Vue.use(Mint);
 
 Vue.prototype.HOST = 'http://testapp.guoss.cn/gssapi/server/api.do'
+//http://app.guoss.cn/gss_api/server/api.do
+//http://testapp.guoss.cn/gssapi/server/api.do
 
 import { pageNo , pageSize , websiteDate } from "./config/env.js";
 console.log(websiteDate)
