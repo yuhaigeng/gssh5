@@ -19,6 +19,7 @@
 						</div>
 					</div>
                 </ul>
+                <p v-else class="lodemore" v-text="'暂无优惠卷！'"></p>
             </div>
         </div>
         <agreementAlert :noticeInfoList="noticeInfoList" v-if="noticeInfoList"  v-on:listenClose = "closeAlert"> </agreementAlert>

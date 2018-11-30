@@ -8,7 +8,7 @@
         <input class="login_type1 " type="file" accept="image/*" name="" id="file" value=""  @change="uploadImg"/>
       </dt>
       <dd class="float_left" :class="{'active':userVipInfo.vip > 0}">
-        <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName ? userInfo.firmName :'用户名'"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class="userVipInfo.firmId ? 'vip'+userVipInfo.vipGrade : 'vip0'"   ></router-link> <span class="user_vip_msg"  v-text="userVipInfo.firmId ? '上个月成长值为'+ userVipInfo.lastMonthExp : '上个月成长值为0' "></span></p>
+        <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName ? userInfo.firmName :'用户名'"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class=" userVipInfo.vipGrade ? 'vip'+userVipInfo.vipGrade : 'vip0'"   ></router-link> <span class="user_vip_msg"  v-text="userVipInfo.lastMonthExp ? '上个月成长值为'+ userVipInfo.lastMonthExp : '上个月成长值为0' "></span></p>
         <p><span class="user_phone" v-text="userInfo.linkTel ? userInfo.linkTel : '电话号码'"></span></p>
       </dd>
       <router-link to="company" tag="dd" class="my_details float_right"></router-link>
@@ -171,7 +171,7 @@ import {Sand} from '../../common/upyun-mu.js'
   filter: alpha(opacity=0);
 }
 .wo_top_info dd.float_left {
-  width: 552px;
+  width: 562px;
 }
 .wo_top_info dd {
   padding-left: 30px;
@@ -229,7 +229,7 @@ import {Sand} from '../../common/upyun-mu.js'
   line-height: 40px;
 }
 .wo_top_info .my_details {
-  width: 50px;
+  width: 40px;
   height: 100%;
   background: url(../../assets/img/icon_arrow_while.png) right center no-repeat;
   padding-left: 0;

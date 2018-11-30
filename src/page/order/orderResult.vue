@@ -68,7 +68,7 @@ export default {
       };
       sessionStorage.setItem('orderData',JSON.stringify(orderData))
       sessionStorage.removeItem('orderResult')
-      this.$router.push({path:'orderDetails'})
+      this.$router.replace({path:'orderDetails'})
 
     }
   }

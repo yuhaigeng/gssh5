@@ -40,7 +40,7 @@
 						<dd class="order_details_goods_right">X{{item.buyCount}}</dd>
 					</dl>
 					<dl class="clearfloat">
-						<dt>商品总量：{{item.roughWeight}}x{{item.buyCount}}={{item.roughWeight*item.buyCount}}斤</dt>
+						<dt>商品总量：{{item.goodsWholeCount}}x{{item.buyCount}}={{item.goodsWholeCount*item.buyCount + item.priceUnit}}</dt>
 						<dd></dd>
 						<dd class="order_details_goods_right">总价：{{item.costMoney}}元</dd>
 					</dl>
@@ -383,11 +383,11 @@ export default {
 			]
 		},
 		desc_data:function(){
-      let obj = {
-					method:'gss_desc',
-					websiteNode:this.websiteNode,
-					code:this.websiteNode + this.descCode
-				}
+      		let obj = {
+				method:'gss_desc',
+				websiteNode:this.websiteNode,
+				code:this.websiteNode + this.descCode
+			}
 			this.$ajax.get(this.HOST, {
 				params: obj
 			}).then(resp => {
@@ -678,7 +678,7 @@ export default {
 }
 
 .order_details_goods li dl .goodName {
-	width: 353px;
+	width: 343px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

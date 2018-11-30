@@ -95,13 +95,13 @@ export default {
         params:params
       }).then(resp => {
         if(resp.data.statusCode == "100000"){
-          let data = JSON.parse(sessionStorage.getItem('addresses')) 
+          let data = JSON.parse(sessionStorage.getItem('addresses'))
           let a = data[0]
           data[0] = data[index];
           data[index] = a;
           data[0].isDefault = 1;
           data[index].isDefault = 0;
-          this.addresses = data  
+          this.addresses = data
           sessionStorage.setItem('addresses',JSON.stringify(data))
         }else {
           this.$toast({
@@ -137,6 +137,9 @@ export default {
         this.$router.go(-1)
       }
     }
+  },
+  beforeDestroy(){
+      sessionStorage.getItem('addresses') &&  sessionStorage.removeItem('addresses')
   }
 }
 </script>
