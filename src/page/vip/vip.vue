@@ -1,5 +1,5 @@
 <template>
-   <div class="vip common-wrap">
+   <div class="common-wrap" :class="{'vip':!isApp}">
         <app-header :type="headerMsg" :logined="logined" v-if="!isApp"  v-show="logined"></app-header>
         <div class="vip_main_top" >
             <div class="vip_main_growValue" v-if="userVipInfo && userVipInfo.monthExp">
@@ -99,7 +99,8 @@
 
 <script>
 import appHeader from "../../components/public/header.vue";
-import { getIsApp, getIsWeiXin, getSystem , getIsLogin , getTokenId , getUserData , getSecretKey } from "../../common/common.js";
+import { getIsApp, getIsAndroid ,getIsWeiXin, getSystem , getIsLogin , getTokenId , getUserData , getSecretKey } from "../../common/common.js";
+require ("../../common/appInteractivity.js");
 export default {
    name: 'vip',
    data() {
@@ -110,6 +111,7 @@ export default {
                 title:'VIP服务',
             },
             isApp:getIsApp(),
+            isAndroid:getIsAndroid(),
             logined: getIsLogin(),
             userInfo:null,
             vipPrivilege:[],
@@ -155,17 +157,15 @@ export default {
     },
     mounted(){
         if (this.isApp) {
-            //common.prompt("app");
-			
-			var obj = {
+            
+            window.appInit = this.appInit;
+			let obj = {
 				type:1,
 				methodName:'test4',
 				methodParamters:{}
 			}
-			// appInteractivity(obj)
-			// $(".header-wrap,.empty").addClass("hidden");
-            // pub.vip.eventHeadle.init();
-            alert('1')
+			this.appInteractivity(obj)
+            
         }else{
             if (getIsLogin()) {
                 const userInfo = JSON.parse(getUserData());
@@ -291,7 +291,7 @@ export default {
                             }
                         };
                     }
-                    appInteractivity(jsonObj)
+                    this.appInteractivity(jsonObj)
                 }else{
                     if (item.type == 1 || item.type == 2 || item.type == 3) {
                         this.$router.push({path:'/vipCoupon',query:{type:item.type}})
@@ -324,6 +324,49 @@ export default {
                 })
             }
         },
+        appInteractivity(o){
+            var obj = o;
+            if (this.isAndroid) {
+                try{
+                    android.getMethod(JSON.stringify(obj));
+                }catch(e){
+                    console.log('error/android');
+                    //TODO handle the exception
+                }
+            }else{
+                try{
+                    window.webkit.messageHandlers.getMethod.postMessage(obj)
+                }catch(e){
+                    console.log('error/ios')
+                    //TODO handle the exception
+                }
+                
+            }
+        },
+        appInit(obj){
+            this.userInfo = {
+                cuserInfoid:obj.cuserInfo.id,
+                firmInfoid:obj.firmInfo.id,
+                firmName:obj.firmInfo.firmName,
+                linkTel:obj.cuserInfo.mobile,
+                score:obj.firmInfo.score,
+                next:obj.firmInfo.next,
+                userGrade:obj.firmInfo.userGrade,
+                websiteNode:obj.firmInfo.websiteNode,
+                faceImgUrl:obj.firmInfo.faceImgUrl,
+                websiteNodeName:obj.firmInfo.websiteNodeName
+            };
+            this.system = obj.system;
+            this.userBasicParam = {
+                firmId : this.userInfo.firmInfoid,
+                source : 'firmId'+this.userInfo.firmInfoid,
+                sign : this.$md5('firmId'+this.userInfo.firmInfoid+"key"+obj.secretKey).toUpperCase(),
+                tokenId : obj.tokenId
+            }
+            this.firm_vip_info();
+            this.vip_grade_show();
+            this.vip_privilege_list();
+        }
     }
 }
 
