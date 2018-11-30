@@ -3,7 +3,6 @@
 		<app-header :type="headerMsg">
 			<div slot="commonAlert" @click="get_desc" v-if="dataType == 0">使用说明</div>
 		</app-header>
-
 		<!--选择优惠卷-->
 		<div class="main-wrap coupon_main_wrap">
 			<div class="main">
