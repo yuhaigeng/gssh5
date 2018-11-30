@@ -37,7 +37,12 @@
 							<p class="moreGoods_goods_price">
 								<span v-if="logined"><span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}</span>
 							</p>
-							<div class="moreGoods_goods_icon"></div>
+							<div class="moreGoods_goods_icon">
+								<span v-if="item.isSale" class = "icon_cu"></span>
+								<span v-if="item.isNew" class = "icon_ji"></span>
+								<span v-if="item.isRecommend" class = "icon_jian"></span>
+								<span v-if="item.isHot" class = "icon_re"></span>
+                          </div>
 						</dd>
 					</dl>
 				</div>
@@ -77,9 +82,9 @@ export default {
 	},
 	methods:{
 		get_goods_hot:function(){
-      let obj  = {
-        method: "goods_show_hot",
-      }
+			let obj  = {
+				method: "goods_show_hot",
+			}
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(resp => {
@@ -99,12 +104,12 @@ export default {
 			});
 		},
 		get_goods_name2:function() {
-      this.state = 2;
-      let obj = {
-        method: "goods_show_name2",
-        websiteNode: this.websiteNode,
-        goodsName:this.searchVal
-      }
+			this.state = 2;
+			let obj = {
+				method: "goods_show_name2",
+				websiteNode: this.websiteNode,
+				goodsName:this.searchVal
+			}
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(resp => {
@@ -160,7 +165,7 @@ export default {
 	directives: {
 		focus: {
 			//根据focusState的状态改变是否聚焦focus
-      update: function (el, value) {  //第二个参数传进来的是个json
+      		update: function (el, value) {  //第二个参数传进来的是个json
 				if (value) {
 					el.focus()
 				}
