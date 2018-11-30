@@ -77,9 +77,9 @@ export default {
 	},
 	methods:{
 		get_goods_hot:function(){
-      let obj  = {
-        method: "goods_show_hot",
-      }
+			let obj  = {
+				method: "goods_show_hot",
+			}
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(resp => {
@@ -99,12 +99,12 @@ export default {
 			});
 		},
 		get_goods_name2:function() {
-      this.state = 2;
-      let obj = {
-        method: "goods_show_name2",
-        websiteNode: this.websiteNode,
-        goodsName:this.searchVal
-      }
+			this.state = 2;
+			let obj = {
+				method: "goods_show_name2",
+				websiteNode: this.websiteNode,
+				goodsName:this.searchVal
+			}
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(resp => {
@@ -160,7 +160,7 @@ export default {
 	directives: {
 		focus: {
 			//根据focusState的状态改变是否聚焦focus
-      update: function (el, value) {  //第二个参数传进来的是个json
+      		update: function (el, value) {  //第二个参数传进来的是个json
 				if (value) {
 					el.focus()
 				}

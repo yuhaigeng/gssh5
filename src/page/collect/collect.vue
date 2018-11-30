@@ -31,7 +31,7 @@
 						</dl>
 					</mt-cell-swipe>
 				</li>
-        <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+        		<p class="lodemore" v-text="isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
 			</ul>
 		</div>
 		<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>

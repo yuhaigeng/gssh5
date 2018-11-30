@@ -39,7 +39,7 @@
                     </div>
                 </li>
             </ul>
-            <p class="lodemore" v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+            <p class="lodemore" v-text="isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
         </div>
     </div>
  </div>
