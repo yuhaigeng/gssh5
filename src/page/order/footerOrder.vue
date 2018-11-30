@@ -30,7 +30,9 @@ export default {
 				var arr = (this.couponObj.selectId).split(',');
 				var couponArr = this.couponObj.useable;
 				couponArr.forEach(element => {
-					totalMoney = totalMoney + parseFloat(element.couponMoney)
+					if(arr.indexOf(element.id) > -1){
+						totalMoney = totalMoney + parseFloat(element.couponMoney)
+					}
 				});
 			}
 			return totalMoney.toFixed(2);

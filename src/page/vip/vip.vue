@@ -155,7 +155,17 @@ export default {
     },
     mounted(){
         if (this.isApp) {
-            
+            //common.prompt("app");
+			
+			var obj = {
+				type:1,
+				methodName:'test4',
+				methodParamters:{}
+			}
+			// appInteractivity(obj)
+			// $(".header-wrap,.empty").addClass("hidden");
+            // pub.vip.eventHeadle.init();
+            alert('1')
         }else{
             if (getIsLogin()) {
                 const userInfo = JSON.parse(getUserData());

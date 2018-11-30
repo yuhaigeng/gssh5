@@ -259,6 +259,7 @@ export default {
 .coupon_main_ {
 	padding: 0 24px;
 	padding-top: 24px;
+	margin-bottom: 120px;
 }
 
 .coupon_main_wrap dl {

@@ -110,6 +110,11 @@ export default {
             }).then(data => {
                 if (data.statusCode == 100000) {
                     this.couponList[index].onOff = false;
+                    this.$toast({
+                        message : '领取成功',
+                        position: 'middle',
+                        duration: 2000,
+                    })
                 } else {
                     this.$toast({
                         message : data.statusStr,

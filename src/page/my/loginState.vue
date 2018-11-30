@@ -206,6 +206,11 @@ import {Sand} from '../../common/upyun-mu.js'
 .wo_top_info dd .user_vip_icon.vip4 {
   background: url(../../assets/img/icon_vip4.png) center no-repeat;
 }
+.wo_top_info dd.active .user_vip_icon.vip1{background: url(../../assets/img/icon_vip1_active.png) no-repeat center;}
+.wo_top_info dd.active .user_vip_icon.vip2{background: url(../../assets/img/icon_vip2_active.png) no-repeat center;}
+.wo_top_info dd.active .user_vip_icon.vip3{background: url(../../assets/img/icon_vip3_active.png) no-repeat center;}
+.wo_top_info dd.active .user_vip_icon.vip4{background: url(../../assets/img/icon_vip4_active.png) no-repeat center;}
+
 .wo_top_info dd .user_vip_icon {
   display: inline-block;
   width: 98px;
