@@ -239,6 +239,7 @@ export default {
       // this.$router.push({path:'detail/'+id})
     }
   }
+
 }
 </script>
 
