@@ -5,7 +5,7 @@ var url = 'http://testapp.guoss.cn/gssapi/server/api.do'; //
 
 // axios.defaults.baseURL = url;
 
-axios.defaults.timeout = 300;
+// axios.defaults.timeout = 300;
 
 
 axios.defaults.transformRequest = [function (data) {
@@ -30,6 +30,7 @@ axios.interceptors.response.use((res) => {
   console.log("请求结束 ")
   return res;
 }, (error) => {
+  console.log(error)
   return Promise.reject(error);
 });
 

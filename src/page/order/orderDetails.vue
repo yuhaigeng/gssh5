@@ -383,11 +383,11 @@ export default {
 			]
 		},
 		desc_data:function(){
-      let obj = {
-					method:'gss_desc',
-					websiteNode:this.websiteNode,
-					code:this.websiteNode + this.descCode
-				}
+      		let obj = {
+				method:'gss_desc',
+				websiteNode:this.websiteNode,
+				code:this.websiteNode + this.descCode
+			}
 			this.$ajax.get(this.HOST, {
 				params: obj
 			}).then(resp => {
@@ -678,7 +678,7 @@ export default {
 }
 
 .order_details_goods li dl .goodName {
-	width: 353px;
+	width: 343px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

@@ -252,8 +252,10 @@ export default {
       this.city =  a.join(',')
       this.countyId = b[2]
     }
+  },
+  beforeDestroy(){
+      sessionStorage.getItem('editorAddress') &&  sessionStorage.removeItem('editorAddress')
   }
-
 }
 </script>
 

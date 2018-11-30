@@ -12,7 +12,7 @@
         <dd>
           <p class="good_name ellipsis" v-text="item.goodsInfo.goodsName"></p>
           <p class="good_describe ellipsis" v-if="mainActivityList.goodsNum != 3" v-text="item.goodsInfo.goodsShows"></p>
-          <p class="good_tag"><span v-if="item.noteTable && mainActivityList.goodsNum != 3" v-text="item.noteTable"></span></p>
+          <p class="good_tag" v-if="item.noteTable && mainActivityList.goodsNum != 3"><span v-text="item.noteTable"></span></p>
           <div class="good_box" v-if="isLogin">
             <div :class="{'float_left':mainActivityList.goodsNum != 3}">
               <p class="del" v-if="mainActivityList.goodsNum != 3"><del v-text="(item.goodsInfo.nomalPrice ? '¥'+item.goodsInfo.nomalPrice : '' )"></del></p>

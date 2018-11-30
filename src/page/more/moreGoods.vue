@@ -285,7 +285,7 @@
                  if(code){
                     let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
                     let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
-                    
+
                     if (ele.offsetTop>200) {
                       wrapTop.scrollTop = ele.offsetTop-200
                     }else{
@@ -337,7 +337,7 @@
             $(".footer-rigth").addClass("true");
             this.$toast({
               message : data.statusStr,
-              position: 'bottom',//top bottom middle
+              position: 'middle',//top bottom middle
               duration: 2000,//延时多久消失
               //iconClass: 'mint-toast-icon mintui mintui-field-warning'
               //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -456,7 +456,7 @@
               }else{
                 this.$toast({
                   message : "该商品限购"+item.maxCount+"件",
-                  position: 'bottom',//top bottom middle
+                  position: 'middle',//top bottom middle
                   duration: 2000,//延时多久消失
                   //iconClass: 'mint-toast-icon mintui mintui-field-warning'
                   //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
@@ -474,7 +474,7 @@
           } else{
             this.$toast({
               message : "库存不足",
-              position: 'bottom',//top bottom middle
+              position: 'middle',//top bottom middle
               duration: 2000,//延时多久消失
               //iconClass: 'mint-toast-icon mintui mintui-field-warning'
               //.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
