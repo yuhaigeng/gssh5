@@ -37,7 +37,12 @@
 							<p class="moreGoods_goods_price">
 								<span v-if="logined"><span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}</span>
 							</p>
-							<div class="moreGoods_goods_icon"></div>
+							<div class="moreGoods_goods_icon">
+								<span v-if="item.isSale" class = "icon_cu"></span>
+								<span v-if="item.isNew" class = "icon_ji"></span>
+								<span v-if="item.isRecommend" class = "icon_jian"></span>
+								<span v-if="item.isHot" class = "icon_re"></span>
+                          </div>
 						</dd>
 					</dl>
 				</div>

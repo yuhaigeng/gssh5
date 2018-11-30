@@ -13,7 +13,12 @@
 							<dd class="line-normal-info-wrapper">
 								<div class="often_shop_goods_top clearfloat">
 									<p class="often_shop_goods_tit" v-text="item.goodsInfo.goodsName"></p>
-									<p class="often_shop_goods_icon"></p>
+									<p class="often_shop_goods_icon">
+										<span v-if="item.isSale" class = "icon_cu"></span>
+										<span v-if="item.isNew" class = "icon_ji"></span>
+										<span v-if="item.isRecommend" class = "icon_jian"></span>
+										<span v-if="item.isHot" class = "icon_re"></span>
+									</p>
 								</div>
 								<p class="often_shop_show" v-text="item.goodsInfo.goodsShows"></p>
 								<div class="often_shop_NumPir">
@@ -111,8 +116,6 @@ export default {
 				tokenId : getTokenId()
 			}
 		}
-
-
 		if ( localStorage.getItem('system') ) {
 			this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
 		} else {
@@ -146,13 +149,13 @@ export default {
 	},
 	methods:{
 		get_goods_collected:function() {
-      let params ={
-        method: "goods_collection",
-        pageNo: this.pageNo,
-        pageSize: this.pageSize,
-        firmId: this.firmInfoid,
-        userId: this.userId
-      }
+      	let params ={
+			method: "goods_collection",
+			pageNo: this.pageNo,
+			pageSize: this.pageSize,
+			firmId: this.firmInfoid,
+			userId: this.userId
+		}
 			this.$ajax.get(this.HOST, {
 				params:params
 			}).then(resp => {
@@ -177,11 +180,11 @@ export default {
 			});
 		},
 		get_goods_collect_del:function (index) {
-      let params = {
-        method: "goods_collection_del",
-        userId: this.userId,
-        goodsId: this.goodID
-      }
+			let params = {
+				method: "goods_collection_del",
+				userId: this.userId,
+				goodsId: this.goodID
+			}
 			this.$ajax.get(this.HOST, {
 				params:params
 			}).then(resp => {

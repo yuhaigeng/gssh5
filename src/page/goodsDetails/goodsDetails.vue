@@ -14,7 +14,10 @@
 						<div class="goodsDetails_box1_top clearfloat">
 							<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade" @click="goVip"></span></h3>
 							<div class="goodsDetails_box1_ionc">
-
+								<span v-if="detailList.isSale" class = "icon_cu"></span>
+								<span v-if="detailList.isNew" class = "icon_ji"></span>
+								<span v-if="detailList.isRecommend" class = "icon_jian"></span>
+								<span v-if="detailList.isHot" class = "icon_re"></span>
 							</div>
 						</div>
 						<div class="goodsDetails_text" v-text="detailList.goodsShows"></div>
@@ -27,13 +30,21 @@
 					</li>
 					<li class="clearfloat">
 						<div class="goodsDetails_box_left">
-							单价：<span v-if="logined"><span class="color_f27c32" v-text="detailList.gssPrice"></span>元/{{detailList.priceUnit}}</span>
+							单价：<span v-if="logined">
+									<span class="color_f27c32" v-text="detailList.gssPrice"></span>元/{{detailList.priceUnit}}
+									<del v-if="detailList.vipGrade > 0" v-text="detailList.nomalPrice+'元/'+detailList.priceUnit"></del>
+								</span>
 							<span v-else></span>
 						</div>
 						<div class="goodsDetails_box_right">
-							总价: <span v-if="logined" v-text="detailList.priceDesc"></span>
+							总价：<span v-if="logined">
+									<span v-text="detailList.wholeGssPrice+'元/'+detailList.wholePriceSize"></span>
+									<del v-if="detailList.vipGrade > 0" v-text="detailList.wholeNomalPrice+'元/'+detailList.wholePriceSize"></del>
+								</span>
 							<span v-else></span>
 						</div>
+					</li>
+					<li class="clearfloat">
 						<div class="goodsDetails_box_left" >产地：<span v-text=" detailList && detailList.sourceCityName"></span></div>
 						<div class="goodsDetails_box_right" >规格：<span v-text=" detailList && detailList.sizeDesc"></span></div>
 					</li>
@@ -86,7 +97,6 @@ export default {
  	},
 	created:function() {
 		this.goodsId = this.$route.query.id
-	
  	},
 	mounted(){
 		// 数据初始化
@@ -144,11 +154,11 @@ export default {
 	},
 	methods:{
 		get_goods_detail:function () {
-      let obj = {
-        method: "goods_get_by_id_two",
-        goodsId: this.goodsId,
-        userId: this.userId
-      }
+			let obj = {
+				method: "goods_get_by_id_two",
+				goodsId: this.goodsId,
+				userId: this.userId
+			}
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(resp => {
@@ -172,12 +182,12 @@ export default {
 			});
 		},
 		get_goods_collectAdd:function () {
-      let obj = {
-        method: "goods_collection_add",
-        goodsId: this.goodsId,
-        firmId: this.firmId,
-        userId: this.userId
-      }
+			let obj = {
+				method: "goods_collection_add",
+				goodsId: this.goodsId,
+				firmId: this.firmId,
+				userId: this.userId
+			}
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(resp => {
@@ -198,12 +208,12 @@ export default {
 			});
 		},
 		get_goods_collect_del:function (index) {
-      let obj = {
-        method: "goods_collection_del",
-        goodsId: this.goodsId,
-        firmId: this.firmId,
-        userId: this.userId
-      }
+			let obj = {
+				method: "goods_collection_del",
+				goodsId: this.goodsId,
+				firmId: this.firmId,
+				userId: this.userId
+			}
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(resp => {
@@ -244,12 +254,12 @@ export default {
 		submitGoShopCart(){
 			let goodsList = goodlist1();
 			let obj = Object.assign({
-					method: "settlement_shop_cart",
-					goodsList:goodsList,
-      },this.userBasicParam)
+				method: "settlement_shop_cart",
+				goodsList:goodsList,
+			},this.userBasicParam)
 
 			this.$ajax.get(this.HOST, {
-					params:obj
+				params:obj
 			}).then(result => {
 					return result.data;
 			}).then(data => {
@@ -274,8 +284,8 @@ export default {
 					})
 				}
 			});
-	  },
-	  getNumText(item){
+		},
+		getNumText(item){
 			const msgArr = ['','','不是VIP','等级不足']
 			if (item.vipGrade > 0 && (item.state == 2 || item.state == 3) ) {
 				return msgArr[item.state]
@@ -325,10 +335,8 @@ export default {
 					if(+item.maxCount > 0){
 						if( +good.sum < +item.maxCount){
 							good.sum = parseInt(good.sum) + 1;
-
 							let elLeft = event.target.getBoundingClientRect().left;
 							let elTop = event.target.getBoundingClientRect().top;
-
 							this.sport(elLeft,elTop)
 						}else{
 							this.$toast({
@@ -341,12 +349,9 @@ export default {
 						}
 					}else{
 						good.sum = parseInt(good.sum) + 1;
-
 						let elLeft = event.target.getBoundingClientRect().left;
 						let elTop = event.target.getBoundingClientRect().top;
-
 						this.sport(elLeft,elTop)
-
 					}
 				} else{
 					this.$toast({
@@ -371,9 +376,7 @@ export default {
 				}
 				let elLeft = event.target.getBoundingClientRect().left;
 				let elTop = event.target.getBoundingClientRect().top;
-
 				this.sport(elLeft,elTop)
-
 				this.goShopCart.push(obj)
 			}
 		},
@@ -433,6 +436,11 @@ export default {
 </script>
 
 <style scoped>
+del {
+	color: #999;
+	display: block;
+	margin-left: 70px;
+}
 .icon_vip1 {
 	display: inline-block;
 	width: 62px;
@@ -548,16 +556,8 @@ export default {
 	margin-bottom: 5px;
 	line-height: 40px;
 }
-.goodsDetails_box_left, .goodsDetails_box_right {
-	height: auto;
-	line-height: 40px;
-	padding: 8px 0;
-}
-.goodsDetails_box_left,
-.goodsDetails_box_right {
-	float: left;
-	height: 58px;
-	line-height: 58px
+.goodsDetails_box_left, .goodsDetails_box_right{
+	height: auto;line-height: 40px;padding: 8px 0;float: left;
 }
 
 .goodsDetails_box_left {
