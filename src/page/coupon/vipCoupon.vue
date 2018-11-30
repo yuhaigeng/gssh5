@@ -132,6 +132,11 @@ export default {
                         name:this.vipNav[this.type-1]['name'],
                         list:data.data,
                     }
+                    this.$toast({
+                        message : "领取成功",
+                        position: 'middle',
+                        duration: 2000,
+                    })
                 } else {
                     this.$toast({
                         message : data.statusStr,

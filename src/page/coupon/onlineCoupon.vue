@@ -110,6 +110,11 @@ export default {
             }).then(data => {
                 if (data.statusCode == 100000) {
                     this.couponList[index].onOff = false;
+                    this.$toast({
+                        message : '领取成功',
+                        position: 'middle',
+                        duration: 2000,
+                    })
                 } else {
                     this.$toast({
                         message : data.statusStr,
@@ -125,9 +130,7 @@ export default {
 </script>
 <style scoped>
 @import "../../common/sprite.css";
-.coupon{
-    padding-top: 87px;
-}
+.coupon{padding-top: 87px;}
 .main.score_coupon{padding-top: 20px;}
 .coupon_list_item{width: 710px;height: 166px;margin: 20px;background: #FFFFFF;border-radius: 8px;display: flex;}
 .coupon_list_item.bg{background-color:rgb(242,242,242);}
@@ -145,10 +148,6 @@ export default {
 .coupon_center1{background: url(../../assets/img/exchange01@2x.png) no-repeat 65% center;}
 .coupon_center2{background: url(../../assets/img/exchange02@2x.png) no-repeat 65% center;}
 .coupon_center3{background: url(../../assets/img/exchange03@2x.png) no-repeat 65% center;}
-
-
 .coupon_button.receive {border-radius: 26px;margin-top: 60px}
-
-
 .coupon_button.no_receive {border-radius: 26px;margin-top: 60px;border-color: #f76b0f;color: #f76b0f;}
 </style>
