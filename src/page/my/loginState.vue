@@ -8,7 +8,7 @@
         <input class="login_type1 " type="file" accept="image/*" name="" id="file" value=""  @change="uploadImg"/>
       </dt>
       <dd class="float_left" :class="{'active':userVipInfo.vip > 0}">
-        <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName ? userInfo.firmName :'用户名'"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class=" userInfo.firmName ? 'vip'+userVipInfo.vipGrade : 'vip0'"   ></router-link> <span class="user_vip_msg"  v-text="userInfo.firmName ? '上个月成长值为'+ userVipInfo.lastMonthExp : '上个月成长值为0' "></span></p>
+        <p class="top"><span class="user_name ellipsis" v-text="userInfo.firmName ? userInfo.firmName :'用户名'"></span> <router-link to="vip"  tag="span"  class="user_vip_icon" :class="userVipInfo.firmId ? 'vip'+userVipInfo.vipGrade : 'vip0'"   ></router-link> <span class="user_vip_msg"  v-text="userVipInfo.firmId ? '上个月成长值为'+ userVipInfo.lastMonthExp : '上个月成长值为0' "></span></p>
         <p><span class="user_phone" v-text="userInfo.linkTel ? userInfo.linkTel : '电话号码'"></span></p>
       </dd>
       <router-link to="company" tag="dd" class="my_details float_right"></router-link>
