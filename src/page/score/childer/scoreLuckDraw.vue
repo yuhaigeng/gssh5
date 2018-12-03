@@ -1,6 +1,6 @@
 <template>
     <div class="scoreGame">
-        <app-header :type ="headerMsg"></app-header>
+        <app-header :type ="headerMsg" v-if="!isApp"></app-header>
         <div class="main-wrap">
             <section id="scroll_section" class="scroll_container">
                 <div class="main score_active">
@@ -44,7 +44,7 @@
 import appHeader from "../../../components/public/header.vue";
 import BScroll from 'better-scroll'
 import ggBanner from "../../banner/gonggaoBanner.vue";
-import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../common/common.js";
+import {getIsApp, getIsAndroid , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../common/common.js";
 import { setTimeout } from 'timers';
 export default {
     name:'scoreGame',
@@ -55,11 +55,14 @@ export default {
                 title:'果币抽奖',
                 left:'返回'
             },
+            isApp:getIsApp(),
+            isAndroid:getIsAndroid(),
+            logined: false,
             isLast:false,
             pageSize:this.pageSize,
             pageNo:this.pageNo,
-            websiteNode:this.websiteDate['code'],
-            websiteNodeName:this.websiteDate['name'],
+            websiteNode:'',
+            websiteNodeName:'',
             titleList1:null,
             titleList2:null,
             activeCopy:null,
@@ -88,16 +91,52 @@ export default {
         ggBanner
     },
     mounted(){
-        if(getIsLogin()) {
-            this.tokenId = getTokenId();
-            const userInfo = JSON.parse(getUserData());
-            this.userBasicParam = {
-                firmId : userInfo.firmInfoid,
-                source : 'firmId'+userInfo.firmInfoid,
-                sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-                tokenId : getTokenId()
+        if (this.isApp) {
+            try{
+                let obj = '';
+                if (this.isAndroid) {
+                    obj = android.getMessage();
+                } else {
+                    obj = getMessage();
+                }
+                obj = JSON.parse(obj);
+                console.log(obj);
+                let websiteNodeInfo = {
+                    '3301':'杭州站',
+                    '3302':'宁波站',
+                    '3201':'南京站'
+                }
+                this.logined = true;
+                this.websiteNode = obj.websiteNode;
+                this.websiteNodeName = websiteNodeInfo[obj.websiteNode];
+                this.tokenId = obj.tokenId;
+                this.userBasicParam = {
+                    firmId : obj.firmId,
+                    source : 'firmId'+obj.firmId,
+                    sign : this.$md5('firmId'+obj.firmId+"key"+obj.secretKey).toUpperCase(),
+                    tokenId : obj.tokenId
+                }
+                this.draw_prizes_activity()
+            }catch(e){
+                console.log("APP方法出错"+e)
             }
-            this.draw_prizes_activity()
+        } else {
+            this.logined = getIsLogin();
+            if(this.logined) {
+                this.websiteNode = this.websiteDate['code'];
+                this.websiteNodeName = this.websiteDate['name'];
+                this.tokenId = getTokenId();
+                const userInfo = JSON.parse(getUserData());
+                this.userBasicParam = {
+                    firmId : userInfo.firmInfoid,
+                    source : 'firmId'+userInfo.firmInfoid,
+                    sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+                    tokenId : getTokenId()
+                }
+                this.draw_prizes_activity()
+            }else{
+                this.$router.replace({path:'login'})
+            }
         }
     },
     methods:{
