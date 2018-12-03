@@ -66,7 +66,7 @@
 
 .index-module-item{padding: 30px 0;border-bottom: 1px solid #E5E5E5;}
 .index-module-item dt img{widows: 100%;height: 100%;}
-.index-module-item dt{position: relative;background: url(../../assets/img/default_huodong_pic.png) no-repeat center; background-size: 100%;overflow: hidden;border-radius: 10px;}
+.index-module-item dt{position: relative;overflow: hidden;border-radius: 10px;}
 .index-module-item dt .icon_tags{position: absolute;top: 0;left: 0;}
 
 .index-module-item .good_name{font-size: 36px;color: #333;padding-top: 14px;height: 61px;}

@@ -30,12 +30,9 @@ Vue.prototype.pageSize = pageSize;
 Vue.prototype.websiteDate = websiteDate;
 Vue.prototype.websiteNode = websiteDate.code;
 
+import { Lazyload } from 'mint-ui'
+Vue.use(Lazyload);
 
-Vue.use(Vuelazyload,{
-  loading: '../static/img/default_huodong_pic.png',
-  error: '../static/img/default_huodong_pic.png',
-})
-import Vuelazyload from "vue-lazyload"
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
