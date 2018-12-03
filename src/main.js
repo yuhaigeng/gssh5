@@ -7,7 +7,6 @@ import router from './router'
 
 import axios from 'axios' //引入axios
 
-import Mint from 'mint-ui';
 
 import "./common/mobile-util";
 import 'mint-ui/lib/style.css'
@@ -17,7 +16,9 @@ let md5 = require("js-md5");
 
 Vue.prototype.$md5 = md5;
 
-Vue.use(Mint);
+import { CellSwipe, Toast } from 'mint-ui';
+Vue.prototype.$toast = Toast;
+Vue.component(CellSwipe.name, CellSwipe);
 
 Vue.prototype.HOST = 'http://testapp.guoss.cn/gssapi/server/api.do'
 //http://app.guoss.cn/gss_api/server/api.do
@@ -30,12 +31,11 @@ Vue.prototype.pageSize = pageSize;
 Vue.prototype.websiteDate = websiteDate;
 Vue.prototype.websiteNode = websiteDate.code;
 
-
-Vue.use(Vuelazyload,{
-  loading: '../static/img/default_huodong_pic.png',
-  error: '../static/img/default_huodong_pic.png',
-})
 import Vuelazyload from "vue-lazyload"
+Vue.use(Vuelazyload,{
+  loading: require('@/assets/img/default_huodong_pic.png'),
+  error: require('@/assets/img/default_huodong_pic.png'),
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

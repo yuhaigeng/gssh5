@@ -47,7 +47,6 @@
 import appHeader from "../../components/public/header.vue";
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import { CellSwipe } from 'mint-ui';
 import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
  	data() {

@@ -38,7 +38,7 @@
 						</div>
 						<div class="goodsDetails_box_right">
 							总价：<span v-if="logined">
-									<span v-text="detailList.wholeGssPrice+'元/'+detailList.wholePriceSize"></span>
+									<span v-text="detailList.wholeGssPrice ? detailList.wholeGssPrice  +'元/'+detailList.wholePriceSize : '元/'"></span>
 									<del v-if="detailList.vipGrade > 0" v-text="detailList.wholeNomalPrice+'元/'+detailList.wholePriceSize"></del>
 								</span>
 							<span v-else></span>
