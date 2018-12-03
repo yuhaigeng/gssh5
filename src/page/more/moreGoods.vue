@@ -65,7 +65,6 @@
   </div>
 </template>
 <script>
-
   import appHeader from "../../components/public/header.vue";
   import appFooterGoShop from "../../components/footerGoShop.vue";
   import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
@@ -675,7 +674,6 @@
 .moreGoods_goods_detaile dt img {
 	width: 160px;
 	height: 160px;
-  background: url(../../assets/img/default_huodong_pic.png) no-repeat center;
 }
 
 .moreGoods_goods_detaile dd {

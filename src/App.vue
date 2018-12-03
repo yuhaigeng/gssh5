@@ -133,4 +133,10 @@ img[lazy="loaded"]{
     opacity: 1;
     transition: opacity .3s ease-in .1s;
 }
+img[lazy="error"] {
+  background: url(assets/img/default_huodong_pic.png) no-repeat center;
+}
+img[lazy="loading"] {
+  background: url(assets/img/default_huodong_pic.png) no-repeat center;
+}
 </style>
