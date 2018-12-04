@@ -16,9 +16,31 @@ let md5 = require("js-md5");
 
 Vue.prototype.$md5 = md5;
 
-import { CellSwipe, Toast } from 'mint-ui';
+import { CellSwipe, Toast, Indicator, MessageBox } from 'mint-ui';
 Vue.prototype.$toast = Toast;
+Vue.prototype.$indicator = Indicator;
+Vue.prototype.$messagebox = MessageBox;
 Vue.component(CellSwipe.name, CellSwipe);
+
+axios.interceptors.request.use(function (config) {
+  console.log("请求开始")
+  Indicator.open({//打开loading
+    text: '加载中...',
+    spinnerType: 'fading-circle'
+  });
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
+
+axios.interceptors.response.use((res) => {
+  console.log("请求结束 ")
+  Indicator.close();//关闭loading
+  return res;
+}, (error) => {
+  console.log(error)
+  return Promise.reject(error);
+});
 
 Vue.prototype.HOST = 'http://testapp.guoss.cn/gssapi/server/api.do'
 //http://app.guoss.cn/gss_api/server/api.do

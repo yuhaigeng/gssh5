@@ -2,7 +2,6 @@ import Qs from 'qs'
 import axios from "axios"
 var url = 'http://testapp.guoss.cn/gssapi/server/api.do'; //
 
-
 // axios.defaults.baseURL = url;
 
 // axios.defaults.timeout = 300;
@@ -19,20 +18,27 @@ axios.defaults.transformResponse = [function (data) {
 }]
 
 
-axios.interceptors.request.use(function (config) {
-  console.log("请求开始")
-  return config;
-}, function (error) {
-  return Promise.reject(error);
-});
+// axios.interceptors.request.use(function (config) {
+//   console.log("请求开始")
+//   Indicator.open({//打开loading
+//     text: '加载中...',
+//     spinnerType: 'fading-circle'
+//   });
+//   console.log(111)
+//   return config;
+// }, function (error) {
+//   return Promise.reject(error);
+// });
 
-axios.interceptors.response.use((res) => {
-  console.log("请求结束 ")
-  return res;
-}, (error) => {
-  console.log(error)
-  return Promise.reject(error);
-});
+// axios.interceptors.response.use((res) => {
+//   console.log("请求结束 ")
+//   Indicator.close();//关闭loading
+//   console.log(222)
+//   return res;
+// }, (error) => {
+//   console.log(error)
+//   return Promise.reject(error);
+// });
 
 
 function http(params) {
