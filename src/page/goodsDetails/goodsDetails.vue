@@ -7,7 +7,7 @@
 		<div class="main-wrap goods_detaile_wrap">
 			<div class="main">
 				<div class="goodsDetails_img_box">
-					<goodsBanner :imgList = "bannerDate" :height = "'600px'" v-if="bannerDate.length"></goodsBanner>
+					<goodsBanner :videoList = "bannerDate" :height = "'600px'" v-if="bannerDate.length"></goodsBanner>
 				</div>
 				<ul class="goodsDetails_box1_center">
 					<li class="clearfloat goodsDetails_box1_center_li1">
@@ -61,9 +61,9 @@
 
 <script>
 import appFooterGoShop from "../../components/footerGoShop.vue";
-import goodsBanner from "../../page/banner/goodsBanner.vue";
+import goodsBanner from "../../page/banner/videoBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import {  getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getIsLogin, getTokenId, getUserData, getSecretKey } from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {

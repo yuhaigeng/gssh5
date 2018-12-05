@@ -3,7 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-let _ = require('lodash')
+let lodash = require('lodash')
+
+import VideoPlayer from 'vue-video-player'
+Vue.use(VideoPlayer);
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
 
 
 import axios from 'axios' //引入axios
@@ -30,10 +35,6 @@ function startLoading() {
   });
 }
 
-function endLoading() {
-  Indicator.close()
-}
-
 let needLoadingRequestCount = 0
 
 export function showFullScreenLoading() {
@@ -47,7 +48,7 @@ export function tryHideFullScreenLoading() {
   if (needLoadingRequestCount <= 0) return
   needLoadingRequestCount--
   if (needLoadingRequestCount === 0) {
-    _.debounce(tryCloseLoading, 50)()
+    lodash.debounce(tryCloseLoading, 50)()
   }
 }
 const tryCloseLoading = () => {

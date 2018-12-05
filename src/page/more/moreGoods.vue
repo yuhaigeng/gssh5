@@ -31,10 +31,10 @@
                       <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
                       <div v-if="isLogin">
                         <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
-                          <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
+                          <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}&nbsp;&nbsp;&nbsp;<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
                         </p>
                         <p class="moreGoods_goods_price" v-else>
-                          <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
+                          <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}&nbsp;&nbsp;&nbsp;<span v-text="item.priceDesc"></span>
                         </p>
                         <div class="moreGoods_goods_num">
                           <div class="moreGoods_goods_icon">
