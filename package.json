@@ -22,6 +22,7 @@
     "jquey": "0.0.1-security",
     "js-md5": "^0.7.3",
     "layer": "^0.1.0",
+    "lodash": "^4.17.11",
     "mint-ui": "^2.2.13",
     "spark-md5": "^3.0.0",
     "swiper": "^4.4.1",

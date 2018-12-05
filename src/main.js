@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+let _ = require('lodash')
 
 
 import axios from 'axios' //引入axios
@@ -22,12 +23,42 @@ Vue.prototype.$indicator = Indicator;
 Vue.prototype.$messagebox = MessageBox;
 Vue.component(CellSwipe.name, CellSwipe);
 
-axios.interceptors.request.use(function (config) {
-  console.log("请求开始")
+function startLoading() {
   Indicator.open({//打开loading
     text: '加载中...',
     spinnerType: 'fading-circle'
   });
+}
+
+function endLoading() {
+  Indicator.close()
+}
+
+let needLoadingRequestCount = 0
+
+export function showFullScreenLoading() {
+  if (needLoadingRequestCount === 0) {
+    startLoading()
+  }
+  needLoadingRequestCount++
+}
+
+export function tryHideFullScreenLoading() {
+  if (needLoadingRequestCount <= 0) return
+  needLoadingRequestCount--
+  if (needLoadingRequestCount === 0) {
+    _.debounce(tryCloseLoading, 50)()
+  }
+}
+const tryCloseLoading = () => {
+  if (needLoadingRequestCount === 0) {
+    Indicator.close()
+  }
+}
+
+axios.interceptors.request.use(function (config) {
+  console.log("请求开始")
+  showFullScreenLoading()
   return config;
 }, function (error) {
   return Promise.reject(error);
@@ -35,10 +66,11 @@ axios.interceptors.request.use(function (config) {
 
 axios.interceptors.response.use((res) => {
   console.log("请求结束 ")
-  Indicator.close();//关闭loading
+  tryHideFullScreenLoading()
   return res;
 }, (error) => {
   console.log(error)
+  Indicator.close();//关闭loading
   return Promise.reject(error);
 });
 
