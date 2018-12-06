@@ -8,7 +8,6 @@
                     :options="playerOptions"
                     @play="onPlayerPlay($event)" 
                     @pause="onPlayerPause($event)"
-                    @statechanged="playerStateChanged($event)"
                     v-if="index == 0 && isVideo"
                     >
                 </video-player>
@@ -21,6 +20,8 @@
 </template>
 
 <script>
+require('video.js/dist/video-js.css')
+require('vue-video-player/src/custom-theme.css')
 import Swiper from 'swiper'
 import '@/common/swiper.min.css'
 export default {
@@ -39,7 +40,7 @@ data() {
           type: "video/mp4",
           src: this.videoList[0] //你的视频地址（必填）
         }],
-        poster: "", //你的封面地址
+        poster: this.videoList[1], //你的封面地址
         width: document.documentElement.clientWidth,
         notSupportedMessage: '暂时不支持播放该视频', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
         controlBar: {
@@ -54,15 +55,21 @@ data() {
 },
 props:['videoList','height'],
 mounted(){
+    // let videoPlayer = this.$refs.videoPlayer
     var mySwiper = new Swiper('.swiper-container', {
         direction: 'horizontal',
-        autoplay:{
-            delay: 5000,
-        },
-        loop: true,
+        autoplay: false,
+        loop: false,
         pagination: {
             el: '.swiper-pagination',
             clickable: true
+        },
+        on: {
+            slideChangeTransitionEnd: function(){
+                if(this.activeIndex == 1) {
+                    console.log(111111)
+                }
+            },
         },
     })
     this.isVideo = (this.videoList[0].indexOf(".mp4") != -1);
@@ -70,13 +77,16 @@ mounted(){
 methods: {
     onPlayerPlay(player) {
         console.log("开始播放")
+        // MessageBox.confirm('', { 
+        //     message: true ? '播放本视频将消耗您的流量，建议在WiFi环境下播放' : '商品介绍视频将帮助您更清晰了解商品，但也将耗费较多流量，建议在WiFi环境下查看。',
+        //     title: '', 
+        //     confirmButtonText: '立即播放', 
+        //     cancelButtonText: '下次再看' 
+        // })
     },
     onPlayerPause(player){
         console.log("暂停播放")
     },
-    playerStateChanged (player) {
-
-    }
   },
 computed: {
     player() {
