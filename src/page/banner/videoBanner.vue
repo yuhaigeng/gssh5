@@ -16,6 +16,7 @@
         </div>
         <!-- 如果需要分页器 -->
         <div class="swiper-pagination"></div>
+        <span ref="span"></span>
     </div>
 </template>
 
@@ -50,12 +51,13 @@ data() {
             fullscreenToggle: true  //全屏按钮
         }
       },
-      isVideo: null
+      isVideo: null,
+      videoObj:null,
     }
 },
 props:['videoList','height'],
 mounted(){
-    // let videoPlayer = this.$refs.videoPlayer
+    let _this = this;
     var mySwiper = new Swiper('.swiper-container', {
         direction: 'horizontal',
         autoplay: false,
@@ -66,8 +68,12 @@ mounted(){
         },
         on: {
             slideChangeTransitionEnd: function(){
+                if(this.activeIndex == 0) {
+                    console.log(_this.playerOptions.poster)
+                }
                 if(this.activeIndex == 1) {
-                    console.log(111111)
+                    let video = _this.videoObj;
+                    video && video.pause()
                 }
             },
         },
@@ -76,6 +82,7 @@ mounted(){
 },
 methods: {
     onPlayerPlay(player) {
+        this.videoObj = player;
         console.log("开始播放")
         // MessageBox.confirm('', { 
         //     message: true ? '播放本视频将消耗您的流量，建议在WiFi环境下播放' : '商品介绍视频将帮助您更清晰了解商品，但也将耗费较多流量，建议在WiFi环境下查看。',
