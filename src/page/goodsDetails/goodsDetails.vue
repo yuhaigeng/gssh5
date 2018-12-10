@@ -649,6 +649,7 @@ del {
 	line-height: 36px;
 	padding-top: 7px;
 	font-size: 20px;
+	z-index: 70px;
 }
 
 .wo_header .header_left {

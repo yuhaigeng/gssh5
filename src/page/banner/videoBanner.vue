@@ -67,7 +67,8 @@ export default {
             this.isShowImg = false;
             video.play();
             videoSwiper.style.zIndex = 50
-            videoNext.style.zIndex = 200
+            videoNext.style.zIndex = 80
+            video.style.marginLeft = 0
             this.videoListen(video)
         },
         videoListen(video) {
@@ -76,7 +77,11 @@ export default {
                     console.log("播放完毕")
                     this.$nextTick(function(){
                         this.isShowImg = true;
-                        videoSwiper.style.zIndex = 0
+                        videoSwiper.style.zIndex = 0;
+                        video.pause();
+                        video.style.marginLeft = '9999px';
+                        console.log(video.style.marginTop)
+                        this.exitFullscreen();
                     })
                 })
             }
@@ -85,6 +90,16 @@ export default {
             this.isShowImg = true;
             // console.log(this.videoEsc.currentTime)
             this.videoEsc.currentTime = 0
+        },
+        exitFullscreen() {
+            var de = document;
+            if (de.exitFullscreen) {
+                de.exitFullscreen();
+            } else if (de.mozCancelFullScreen) {
+                de.mozCancelFullScreen();
+            } else if (de.webkitCancelFullScreen) {
+                de.webkitCancelFullScreen();
+            }
         }
     },
 }
@@ -121,9 +136,14 @@ export default {
     background-size: 76px 76px;
 }
 .video_close {
-    color: #fff;
+    color: #000;
     font-size: 24px;
-    text-align: center;
     margin-top: 10px;
+    margin: 10px auto;
+    text-align: center;
+    border: 1px solid #fff;
+    width: 140px;
+    background-color: #fff;
+    border-radius: 13px
 }
 </style>
