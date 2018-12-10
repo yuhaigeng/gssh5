@@ -5,11 +5,7 @@ import App from './App'
 import router from './router'
 let lodash = require('lodash')
 
-import VideoPlayer from 'vue-video-player'
-Vue.use(VideoPlayer);
-
 import axios from 'axios' //引入axios
-
 
 import "./common/mobile-util";
 import 'mint-ui/lib/style.css'
