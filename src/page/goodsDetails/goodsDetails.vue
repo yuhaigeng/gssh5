@@ -1,6 +1,6 @@
 <template>
  	<div class="detail common-wrap">
-    <div class="header-wrap goodsDetails_header">
+    <div class="header-wrap goodsDetails_header" v-if="!isWx">
 			<div class="header_left header_back sprite icon_delete" @click="back"></div>
 			<div class="header_right header_collect sprite" :class="isCollect?'icon_collect_a':'icon_collect_b'" @click="changeCollect"></div>
 		</div>
@@ -63,7 +63,7 @@
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/videoBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import { getIsLogin, getTokenId, getUserData, getSecretKey } from "../../common/common.js";
+import { getIsLogin, getTokenId, getUserData, getSecretKey, getIsWeiXin } from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {
@@ -81,6 +81,7 @@ export default {
 			elBottom: 0, //当前点击加按钮在网页中的绝对left值
 			receiveInCart: false, //购物车组件下落的圆点是否到达目标位置
 			windowHeight: null, //屏幕的高度
+			isWx:getIsWeiXin()
  		}
 	},
 	watch:{
@@ -649,7 +650,6 @@ del {
 	line-height: 36px;
 	padding-top: 7px;
 	font-size: 20px;
-	z-index: 70px;
 }
 
 .wo_header .header_left {

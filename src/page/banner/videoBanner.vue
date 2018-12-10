@@ -49,8 +49,12 @@ export default {
                 slideChangeTransitionEnd: function(){
                     let video = document.getElementById("mainVideo");
                     if(this.activeIndex == 1) {
+                        video.style.marginLeft = 0
+                    }
+                    if(this.activeIndex == 1) {
                         video.pause()
                         _this.isShowImg = true
+                        video.style.marginLeft = '9999px'
                     }
                 },
             },
