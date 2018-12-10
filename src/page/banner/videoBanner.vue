@@ -29,7 +29,7 @@ export default {
             isVideo: null,
             videoPoster:this.videoList[1],
             isShowImg:true,
-            videoEsc:null
+            video:null
         }
     },
     props:['videoList','height'],
@@ -63,7 +63,7 @@ export default {
     methods: {
         isShowVideo() {
             let video = document.getElementById("mainVideo");
-            this.videoEsc = video
+            this.video = video
             let videoSwiper = document.getElementById("videoSwiper");
             let videoNext = document.getElementById("mainVideoClose")
             this.isShowImg = false;
@@ -93,8 +93,9 @@ export default {
         },
         videoEnd() {
             this.isShowImg = true;
-            // console.log(this.videoEsc.currentTime)
-            this.videoEsc.currentTime = 0;
+            // console.log(this.video.currentTime)
+            this.video.currentTime = 0;
+            this.video.style.marginLeft = '9999px';
             this.$emit('listenShow',true);
         },
         exitFullscreen() {
@@ -150,6 +151,6 @@ export default {
     border: 1px solid #fff;
     width: 140px;
     background-color: #fff;
-    border-radius: 13px
+    border-radius: 16px
 }
 </style>
