@@ -76,6 +76,7 @@ export default {
                     console.log("播放完毕")
                     this.$nextTick(function(){
                         this.isShowImg = true;
+                        videoSwiper.style.zIndex = 0
                     })
                 })
             }
