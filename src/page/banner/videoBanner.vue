@@ -49,12 +49,10 @@ export default {
                 slideChangeTransitionEnd: function(){
                     let video = document.getElementById("mainVideo");
                     if(this.activeIndex == 1) {
-                        video.style.marginLeft = 0
-                    }
-                    if(this.activeIndex == 1) {
                         video.pause()
                         _this.isShowImg = true
                         video.style.marginLeft = '9999px'
+                        _this.$emit('listenShow',true);
                     }
                 },
             },
@@ -70,6 +68,8 @@ export default {
             let videoNext = document.getElementById("mainVideoClose")
             this.isShowImg = false;
             video.play();
+            console.log(1)
+            this.$emit('listenShow',false);
             videoSwiper.style.zIndex = 50
             videoNext.style.zIndex = 80
             video.style.marginLeft = 0
@@ -83,6 +83,7 @@ export default {
                         this.isShowImg = true;
                         videoSwiper.style.zIndex = 0;
                         video.pause();
+                        this.$emit('listenShow',true);
                         video.style.marginLeft = '9999px';
                         console.log(video.style.marginTop)
                         this.exitFullscreen();
@@ -93,7 +94,8 @@ export default {
         videoEnd() {
             this.isShowImg = true;
             // console.log(this.videoEsc.currentTime)
-            this.videoEsc.currentTime = 0
+            this.videoEsc.currentTime = 0;
+            this.$emit('listenShow',true);
         },
         exitFullscreen() {
             var de = document;
