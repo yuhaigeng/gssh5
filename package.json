@@ -29,6 +29,7 @@
     "vue-layer": "^0.9.10",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
+    "vuex": "^3.0.1",
     "wind-dom": "0.0.3"
   },
   "devDependencies": {

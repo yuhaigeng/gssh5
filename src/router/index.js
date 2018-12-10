@@ -40,6 +40,8 @@ const orderPay = r => require.ensure([], () => r(require('../page/order/orderPay
 const orderResult = r => require.ensure([], () => r(require('../page/order/orderResult.vue')), 'orderResult');
 
 const other = r => require.ensure([], () => r(require('../page/other/other.vue')), 'other');
+
+const testStore = r => require.ensure([], () => r(require('../components/test')), 'test')
 Vue.use(Router)
 
 export default new Router({
@@ -49,7 +51,11 @@ export default new Router({
     children: [
       {
         path: '',
-        redirect:'/home',
+        redirect:'/test',
+      },
+      {
+        path: '/test',
+        component: testStore,
       },
       {
         path: '/home',
