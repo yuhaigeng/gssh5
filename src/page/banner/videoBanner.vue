@@ -9,6 +9,7 @@
                         <source :src="item" type="video/mp4">
                         暂时不支持播放该视频
                     </video>
+                    <div id="mainVideoClose" class="video_close" @click="videoEnd">退出播放</div>
                 </div>
                 <img :src="item" alt="" v-else>
             </div>
@@ -28,7 +29,7 @@ export default {
             isVideo: null,
             videoPoster:this.videoList[1],
             isShowImg:true,
-            videoEnd:null
+            videoEsc:null
         }
     },
     props:['videoList','height'],
@@ -57,22 +58,21 @@ export default {
         this.isVideo = (this.videoList[0].indexOf(".mp4") != -1);
         console.log(this.isShowImg)
     },
-    watch:{
-        
-    },
     methods: {
         isShowVideo() {
             let video = document.getElementById("mainVideo");
-            this.videoEnd = video
+            this.videoEsc = video
             let videoSwiper = document.getElementById("videoSwiper");
+            let videoNext = document.getElementById("mainVideoClose")
             this.isShowImg = false;
             video.play();
-            videoSwiper.style.zIndex = 300
-            this.videoListen()
+            videoSwiper.style.zIndex = 50
+            videoNext.style.zIndex = 200
+            this.videoListen(video)
         },
-        videoListen() {
+        videoListen(video) {
             if(this.isVideo) {
-                this.videoEnd.addEventListener("ended",() => {
+                video.addEventListener("ended",() => {
                     console.log("播放完毕")
                     this.$nextTick(function(){
                         this.isShowImg = true;
@@ -80,6 +80,11 @@ export default {
                     })
                 })
             }
+        },
+        videoEnd() {
+            this.isShowImg = true;
+            // console.log(this.videoEsc.currentTime)
+            this.videoEsc.currentTime = 0
         }
     },
 }
@@ -114,5 +119,11 @@ export default {
     height: 76px;
    	background: url(../../assets/img/pay.png) no-repeat center;
     background-size: 76px 76px;
+}
+.video_close {
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    margin-top: 10px;
 }
 </style>
