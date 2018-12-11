@@ -72,7 +72,10 @@ export default {
 			state:1,//1 未请求,2 请求中,3 请求完毕
 			websiteNode: this.websiteDate.code
 		}
-	},
+  },
+  mounted(){
+    this.get_goods_hot()
+  },
 	watch:{
 		searchVal() {
 			delay(() => {
@@ -148,14 +151,12 @@ export default {
 		},
 		toDetail(item) {
 			const id = item.id;
+			sessionStorage.setItem('goodsDetails',JSON.stringify(item));
 			this.$router.push({ path:'detail', query:{ id:id }})
 		},
 		goBack() {
 			this.$router.go(-1);
 		},
-	},
-	mounted() {
-		this.get_goods_hot()
 	},
 	directives: {
 		focus: {

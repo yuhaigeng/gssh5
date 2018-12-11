@@ -235,8 +235,7 @@ export default {
     },
     goodsJump(id,item){
       sessionStorage.setItem('goodsDetails',JSON.stringify(item.goodsInfo))
-       this.$router.push({ path:'detail', query:{id:id }})
-      // this.$router.push({path:'detail/'+id})
+      this.$router.push({ path:'detail', query:{id:id }})
     }
   }
 
