@@ -63,7 +63,7 @@
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/goodsBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import {  getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import {  getIsLogin , getTokenId , getUserData, getSecretKey,getWeiXinSdk} from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {
@@ -131,7 +131,10 @@ export default {
 			this.goShopCart = []
 		}
 		this.windowHeight = window.innerHeight;
-		this.get_goods_detail()
+    this.get_goods_detail()
+
+    getWeiXinSdk(this)
+
 	},
 	computed:{
 		// 获取宽度
@@ -425,7 +428,7 @@ export default {
 				let code = this.$route.query.typeCode
 				this.$router.push({path:'more',query:{typeCode:code}})
 			}else{
-				this.$router.go(-1);	
+				this.$router.go(-1);
 			}
 		},
 	},
