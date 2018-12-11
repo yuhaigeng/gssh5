@@ -2,7 +2,7 @@
     <div class="swiper-container common-wrap" :style="{height:height}">
         <div class="swiper-wrapper" id="videoSwiper">
             <div class="swiper-slide" v-for="(item,index) in videoList" :key="index">
-                <img class="video_payImg" :src="videoPoster" v-if="isShowImg && isVideo" @click="isShowVideo"/>
+                <img class="video_payImg" :src="videoPoster" v-if="isShowImg && isVideo && index == 0" @click="isShowVideo"/>
                 <div class="video_pay" v-if="isShowImg && index == 0 && isVideo" @click="isShowVideo"></div>
                 <div class="video" v-if="index == 0 && isVideo ">
                     <video id="mainVideo" class="myVideo" preload="none" webkit-playsinline="true" x5-playsinline="true" playsinline="true" controls="controls" width="100%" height="100%" style="max-height: 480px;" fristplay="no">
@@ -52,6 +52,7 @@ export default {
                         if(this.activeIndex == 1) {
                             video.pause()
                             _this.isShowImg = true
+                            videoSwiper.style.zIndex = 0
                             video.style.marginLeft = '9999px'
                             _this.$emit('listenShow',true);
                         }
@@ -60,7 +61,6 @@ export default {
             },
         })
         this.isVideo = (this.videoList[0].indexOf(".mp4") != -1);
-        console.log(this.isShowImg)
     },
     methods: {
         isShowVideo() {
@@ -72,14 +72,12 @@ export default {
                 }).then(action => { 
                 if (action == 'confirm') {     //确认的回调
                     let video = document.getElementById("mainVideo");
-                    this.video = video
                     let videoSwiper = document.getElementById("videoSwiper");
-                    let videoNext = document.getElementById("mainVideoClose")
+                    this.video = video
                     this.isShowImg = false;
                     video.play();
                     this.$emit('listenShow',false);
                     videoSwiper.style.zIndex = 50
-                    videoNext.style.zIndex = 80
                     video.style.marginLeft = 0
                     this.videoListen(video)
                 }
@@ -99,7 +97,6 @@ export default {
                         video.pause();
                         this.$emit('listenShow',true);
                         video.style.marginLeft = '9999px';
-                        console.log(video.style.marginTop)
                         this.exitFullscreen();
                     })
                 })
@@ -160,13 +157,12 @@ export default {
 .video_close {
     color: #000;
     font-size: 24px;
-    margin-top: 10px;
     margin: 10px auto;
     text-align: center;
-    border: 1px solid #fff;
     width: 140px;
     background-color: #fff;
-    border-radius: 16px
+    border-radius: 16px;
+    z-index: 80px;
 }
 
 </style>
