@@ -139,4 +139,22 @@ img[lazy="error"] {
 img[lazy="loading"] {
   background: url(assets/img/default_huodong_pic.png) no-repeat center;
 }
+.mint-indicator {
+    height: 100%;
+}
+.mint-indicator-mask {
+    z-index: 90;
+}
+.mint-indicator-wrapper {
+    padding: 40px 50px !important;
+    z-index: 99;
+}
+.mint-spinner-fading-circle {
+    width: 64px !important;
+    height: 64px !important;
+}
+.mint-indicator-text {
+    font-size: 24px;
+    margin-top: 20px;
+}
 </style>

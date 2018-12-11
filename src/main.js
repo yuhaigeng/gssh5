@@ -3,11 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import store from './store'
-
+let lodash = require('lodash')
 
 import axios from 'axios' //引入axios
 
+import wx from 'weixin-js-sdk'
 
 import "./common/mobile-util";
 import 'mint-ui/lib/style.css'
@@ -17,9 +17,58 @@ let md5 = require("js-md5");
 
 Vue.prototype.$md5 = md5;
 
-import { CellSwipe, Toast } from 'mint-ui';
+import { CellSwipe, Toast, Indicator, MessageBox } from 'mint-ui';
 Vue.prototype.$toast = Toast;
+Vue.prototype.$indicator = Indicator;
+Vue.prototype.$messagebox = MessageBox;
 Vue.component(CellSwipe.name, CellSwipe);
+
+function startLoading() {
+  Indicator.open({//打开loading
+    text: '加载中...',
+    spinnerType: 'fading-circle'
+  });
+}
+
+let needLoadingRequestCount = 0
+
+export function showFullScreenLoading() {
+  if (needLoadingRequestCount === 0) {
+    startLoading()
+  }
+  needLoadingRequestCount++
+}
+
+export function tryHideFullScreenLoading() {
+  if (needLoadingRequestCount <= 0) return
+  needLoadingRequestCount--
+  if (needLoadingRequestCount === 0) {
+    lodash.debounce(tryCloseLoading, 50)()
+  }
+}
+const tryCloseLoading = () => {
+  if (needLoadingRequestCount === 0) {
+    Indicator.close()
+  }
+}
+
+axios.interceptors.request.use(function (config) {
+  console.log("请求开始")
+  showFullScreenLoading()
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
+
+axios.interceptors.response.use((res) => {
+  console.log("请求结束 ")
+  tryHideFullScreenLoading()
+  return res;
+}, (error) => {
+  console.log(error)
+  Indicator.close();//关闭loading
+  return Promise.reject(error);
+});
 
 Vue.prototype.HOST = 'http://testapp.guoss.cn/gssapi/server/api.do'
 //http://app.guoss.cn/gss_api/server/api.do
