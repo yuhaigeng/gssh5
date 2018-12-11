@@ -62,18 +62,31 @@ export default {
     },
     methods: {
         isShowVideo() {
-            let video = document.getElementById("mainVideo");
-            this.video = video
-            let videoSwiper = document.getElementById("videoSwiper");
-            let videoNext = document.getElementById("mainVideoClose")
-            this.isShowImg = false;
-            video.play();
-            console.log(1)
-            this.$emit('listenShow',false);
-            videoSwiper.style.zIndex = 50
-            videoNext.style.zIndex = 80
-            video.style.marginLeft = 0
-            this.videoListen(video)
+            this.$messagebox.confirm('', { 
+                message: '播放本视频将消耗您的流量，建议在WiFi环境下播放', 
+                title: '', 
+                confirmButtonText: '立即播放', 
+                cancelButtonText: '下次再看' 
+                }).then(action => { 
+                if (action == 'confirm') {     //确认的回调
+                    let video = document.getElementById("mainVideo");
+                    this.video = video
+                    let videoSwiper = document.getElementById("videoSwiper");
+                    let videoNext = document.getElementById("mainVideoClose")
+                    this.isShowImg = false;
+                    video.play();
+                    console.log(1)
+                    this.$emit('listenShow',false);
+                    videoSwiper.style.zIndex = 50
+                    videoNext.style.zIndex = 80
+                    video.style.marginLeft = 0
+                    this.videoListen(video)
+                }
+                }).catch(err => { 
+                if (err == 'cancel') {     //取消的回调
+                    console.log(2);
+                } 
+            });
         },
         videoListen(video) {
             if(this.isVideo) {
@@ -153,4 +166,5 @@ export default {
     background-color: #fff;
     border-radius: 16px
 }
+
 </style>

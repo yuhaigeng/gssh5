@@ -202,7 +202,7 @@ export default {
       this.$messagebox.confirm('您确定要删除地址吗？','').then(action => {
         this.delApi();
         this.$router.go(-1)
-      }).catch((e) => {
+      }).catch((err) => {
         console.log('请求失败：'+ err);
       });
     },

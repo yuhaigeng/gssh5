@@ -7,6 +7,8 @@ let lodash = require('lodash')
 
 import axios from 'axios' //引入axios
 
+import wx from 'weixin-js-sdk'
+
 import "./common/mobile-util";
 import 'mint-ui/lib/style.css'
 import './common/coverMint.css'
