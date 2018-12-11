@@ -108,6 +108,7 @@ export default {
             this.isShowImg = true;
             // console.log(this.video.currentTime)
             this.video.currentTime = 0;
+            this.video.pause();
             this.video.style.marginLeft = '9999px';
             this.$emit('listenShow',true);
         },
