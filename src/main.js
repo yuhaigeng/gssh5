@@ -70,8 +70,9 @@ axios.interceptors.response.use((res) => {
   return Promise.reject(error);
 });
 
-Vue.prototype.HOST = 'http://testapp.guoss.cn/gssapi/server/api.do'
-//http://app.guoss.cn/gss_api/server/api.do
+Vue.prototype.HOST = 
+'http://testapp.guoss.cn/gssapi/server/api.do'
+// 'http://app.guoss.cn/gss_api/server/api.do'
 //http://testapp.guoss.cn/gssapi/server/api.do
 
 import { pageNo , pageSize , websiteDate } from "./config/env.js";
