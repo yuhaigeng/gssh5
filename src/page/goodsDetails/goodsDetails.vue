@@ -63,7 +63,7 @@
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/videoBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import { getIsLogin, getTokenId, getUserData, getSecretKey, getWxJssdk } from "../../common/common.js";
+import {  getIsLogin , getTokenId , getUserData, getSecretKey, getWxJssdk } from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {
@@ -114,17 +114,6 @@ export default {
 		}
 		if ( localStorage.getItem('system') ) {
 			this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
-		} else {
-
-		}
-		if (sessionStorage.getItem('goodsDeatils')) {
-			const details = JSON.parse(sessionStorage.getItem('goodsDeatils'));
-			this.detailList = details;
-			const list = this.detailList.goodsPics.split('@');
-			list.pop();
-			this.bannerDate = list;
-		}else{
-
 		}
 		if ( localStorage.getItem('good') ) {
 			this.goShopCart = JSON.parse(localStorage.getItem('good'))
@@ -132,8 +121,8 @@ export default {
 			this.goShopCart = []
 		}
 		this.windowHeight = window.innerHeight;
-		this.get_goods_detail()
-		console.log(getWxJssdk(this))
+    	this.get_goods_detail()
+    	// getWxJssdk(this)
 	},
 	computed:{
 		// 获取宽度
@@ -431,13 +420,10 @@ export default {
 				let code = this.$route.query.typeCode
 				this.$router.push({path:'more',query:{typeCode:code}})
 			}else{
-				this.$router.go(-1);	
+				this.$router.go(-1);
 			}
 		},
-	},
-	beforeDestroy(){
-        sessionStorage.getItem('goodsDetails') && sessionStorage.removeItem('goodsDetails');
-    }
+	}
 }
 </script>
 

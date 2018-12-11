@@ -56,7 +56,7 @@ export default {
                             video.style.marginLeft = '9999px'
                             _this.$emit('listenShow',true);
                         }
-                    } 
+                    }
                 },
             },
         })

@@ -22,36 +22,25 @@ const getSystem = function (params) {
     });
 }
 //获取微信jssdk
-const getWxJssdk = function (params) {
-    const _this = params
-    _this.$ajax.get(_this.HOST, {
-        params: {
-            method: "weixin_config",
-            url: "http://testapp.guoss.cn/gssapi/server/api.do"
-        }
-    }).then(result => {
-        return result.data;
-    }).then(data => {
-        console.log(data)
-        if (data.statusCode == 100000) {
-            //return data.data;
-            console.log(data.data)
-            wx.config({
-                debug: true, // 开启调试模式
-                appId: data.data.appId, // 必填，公众号的唯一标识
-                timestamp: data.data.timestamp, // 必填，生成签名的时间戳
-                nonceStr: data.data.nonceStr, // 必填，生成签名的随机串
-                signature: data.data.signature,// 必填，签名
-                jsApiList: data.data.jsApiList // 必填，需要使用的JS接口列表
-            });
-        } else {
-            console.log(data.statusStr)
-        }
-    }).catch(err => {
-        // console.log(JSON.parse(data).data.mainActivityList);
-        console.log('请求失败：' + err.statusCode);
-    });
-}
+// const getWxJssdk = function(params){
+//     const _this = params
+//     _this.$ajax.get(_this.HOST,{
+//       params:{
+//         method : 'weixin_config',
+//         url : _this.HOST
+//       }
+//     }).then(result => {
+//       return result.data;
+//   }).then(data => {
+//       if(data.statusCode == 100000){
+//         return data.data
+//       }else{
+//         console.log(data.statusStr)
+//       }
+//   }).catch(err => {
+//     console.log('请求失败：' + err.statusCode);
+//   });
+// }
 //获取是否有新消息
 const getMessage = function (params) {
     const _this = params;
@@ -126,5 +115,5 @@ export{
     getIsApp,
     getIsWeiXin,
     getUserData,
-    getWxJssdk
+    // getWxJssdk
 }
