@@ -239,8 +239,7 @@ export default {
 		},
 		toDetail(item) {
 			const id = item.goodsInfoId;
-			sessionStorage.setItem('goodsDetails',JSON.stringify(item.goodsInfo));
-			 this.$router.push({ path:'detail', query:{id:id}})
+      this.$router.push({ path:'detail', query:{id:id}})
 		},
 		getNumText(item){
 			const msgArr = ['','','不是VIP','等级不足']

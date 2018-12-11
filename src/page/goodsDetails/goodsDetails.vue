@@ -114,17 +114,6 @@ export default {
 		}
 		if ( localStorage.getItem('system') ) {
 			this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
-		} else {
-
-		}
-		if (sessionStorage.getItem('goodsDeatils')) {
-			const details = JSON.parse(sessionStorage.getItem('goodsDeatils'));
-			this.detailList = details;
-			const list = this.detailList.goodsPics.split('@');
-			list.pop();
-			this.bannerDate = list;
-		}else{
-
 		}
 		if ( localStorage.getItem('good') ) {
 			this.goShopCart = JSON.parse(localStorage.getItem('good'))
@@ -134,7 +123,7 @@ export default {
 		this.windowHeight = window.innerHeight;
     this.get_goods_detail()
 
-    getWxJssdk(this)
+    // getWxJssdk(this)
 
 	},
 	computed:{
@@ -436,10 +425,7 @@ export default {
 				this.$router.go(-1);
 			}
 		},
-	},
-	beforeDestroy(){
-        sessionStorage.getItem('goodsDetails') && sessionStorage.removeItem('goodsDetails');
-    }
+	}
 }
 </script>
 

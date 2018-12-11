@@ -69,7 +69,6 @@ html{ overflow: auto;}
 	width: 100%;
 	margin: 0 auto;
 	height: 87px;
-	border-bottom: 1px solid #d8d8d8;
 	position: fixed;
 	background: #f6f6f6;
 	z-index: 3;

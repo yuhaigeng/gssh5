@@ -22,25 +22,25 @@ const getSystem = function (params) {
     });
 }
 //获取微信jssdk
-const getWxJssdk = function(params){
-    const _this = params
-    _this.$ajax.get(_this.HOST,{
-      params:{
-        method : 'weixin_config',
-        url : _this.HOST
-      }
-    }).then(result => {
-      return result.data;
-  }).then(data => {
-      if(data.statusCode == 100000){
-        return data.data
-      }else{
-        console.log(data.statusStr)
-      }
-  }).catch(err => {
-    console.log('请求失败：' + err.statusCode);
-  });
-}
+// const getWxJssdk = function(params){
+//     const _this = params
+//     _this.$ajax.get(_this.HOST,{
+//       params:{
+//         method : 'weixin_config',
+//         url : _this.HOST
+//       }
+//     }).then(result => {
+//       return result.data;
+//   }).then(data => {
+//       if(data.statusCode == 100000){
+//         return data.data
+//       }else{
+//         console.log(data.statusStr)
+//       }
+//   }).catch(err => {
+//     console.log('请求失败：' + err.statusCode);
+//   });
+// }
 //获取是否有新消息
 const getMessage = function (params) {
     const _this = params;
