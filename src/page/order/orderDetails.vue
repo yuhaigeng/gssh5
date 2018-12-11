@@ -111,7 +111,7 @@
 			<div class="order_details_money_details" v-if=" orderInfo && (orderInfo.orderStatus == 2 || orderInfo.orderStatus == 3 || orderInfo.orderStatus == 4)">
 				<dl class="clearfloat">
 					<dt>订单总金额:</dt>
-					<dd><span class="color_f27c32">{{orderInfo.goodsMoney}}</span>元</dd>
+					<dd><span class="color_f27c32" v-text="(parseInt(orderInfo.goodsMoney)).toFixed(2)"></span>元</dd>
 				</dl>
 				<dl class="clearfloat">
 					<dt>应付金额:</dt>
@@ -191,6 +191,23 @@ export default {
 				return m.toFixed(2);
 			}
 		},
+		caclCouponMoney(){
+			let m = '';
+			if (this.orderInfo.orderStatus == 2) {
+				return '?'
+			} else {
+				m = 0;
+				//v.coupons.couponInfo.couponMoney == '' ? 0: parseFloat(v.coupons.couponInfo.couponMoney))+(v.coupons.goodCouponInfo.couponMoney == '' ? 0: parseFloat(v.coupons.goodCouponInfo.couponMoney))+(v.coupons.typeCouponInfo.couponMoney == '' ? 0: parseFloat(v.coupons.typeCouponInfo.couponMoney)))
+				console.log(this.couponList)
+				if (this.couponList && this.couponList.length) {
+					this.couponList.forEach((item)=>{
+
+						m = m + parseFloat(item.couponMoney)
+					})
+				}
+				return m.toFixed(2);
+			}
+		},
 		getRealMoney(){
 			let m = '';
 			if (this.orderInfo.orderStatus == 2) {
@@ -199,7 +216,7 @@ export default {
 				if ((this.orderInfo.orderStatus == 3 && this.orderInfo.isGoToPay == 1) || this.orderInfo.orderStatus=='4') {
 					return (parseFloat(this.orderInfo.realPayMoney)).toFixed(2)
 				}else{
-					return ((parseFloat(this.orderInfo.realPayMoney) - parseFloat(this.getCouponMoney))).toFixed(2)
+					return ((parseFloat(this.orderInfo.realPayMoney) - parseFloat(this.caclCouponMoney))).toFixed(2)
 				}
 			}
 		}

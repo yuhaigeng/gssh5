@@ -3,7 +3,6 @@
 		<app-header :type="headerMsg">
 			<div slot="commonAlert" @click="get_desc" v-if="dataType == 0">使用说明</div>
 		</app-header>
-
 		<!--选择优惠卷-->
 		<div class="main-wrap coupon_main_wrap">
 			<div class="main">
@@ -95,18 +94,18 @@ export default {
 	},
     methods: {
 		desc_data:function(){
-      let obj = {
-        method:'gss_desc',
-        websiteNode:this.websiteNode,
-        code:this.websiteNode + this.descCode
-      }
+			let obj = {
+				method:'gss_desc',
+				websiteNode:this.websiteNode,
+				code:this.websiteNode + this.descCode
+			}
 			this.$ajax.get(this.HOST, {
 				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
-          let data = resp.data.data
+          			let data = resp.data.data
 					data.noticeContent = (data.desc.toString()).replace(/\r\n/g, '<br/>');
-				  data.noticeTitle =  data.title;
+				  	data.noticeTitle =  data.title;
 					data.alertType = 1;
 					this.noticeInfoList = data;
 					let key = this.websiteNode + this.descCode ;
@@ -127,20 +126,20 @@ export default {
 		},
 		get_desc() {
             // console.log(this.cache[this.websiteNode+this.descCode])
-      if (this.cache[this.websiteNode+this.descCode]) {
-          this.noticeInfoList = this.cache[this.websiteNode+this.descCode]
-      }else{
-          this.desc_data()
-      }
+			if (this.cache[this.websiteNode+this.descCode]) {
+				this.noticeInfoList = this.cache[this.websiteNode+this.descCode]
+			}else{
+				this.desc_data()
+			}
 		},
 		closeAlert:function(){
             this.noticeInfoList = null;
 		},
 		choose(item) {
-      const _this = this;
-      let coupon = 	this.coupon[this.dataType]
+			const _this = this;
+			let coupon = 	this.coupon[this.dataType]
 			if (coupon.name == 'couponInfo') {
-			  coupon.selectId = item.id;
+			  	coupon.selectId = item.id;
 				coupon.couponMoney = item.couponMoney;
 				setTimeout(() => {
 					this.$router.go(-1)
@@ -161,18 +160,18 @@ export default {
 						arr.splice(arr.indexOf(id), 1);
 						console.log(arr)
 						if (arr.length) {
-						coupon.selectId = arr.join(',');
+							coupon.selectId = arr.join(',');
 						}else{
 							coupon.selectId = '';
 						}
 					}
 				}else{
-				coupon.selectId = id;
+					coupon.selectId = id;
 				}
 			}
 		},
 		noUse(couponNum) {
-      let coupon = 	this.coupon[this.dataType]
+      		let coupon = 	this.coupon[this.dataType]
 			coupon.selectId = '';
 			coupon.couponMoney = 0;
 			this.$router.go(-1)
@@ -259,6 +258,7 @@ export default {
 .coupon_main_ {
 	padding: 0 24px;
 	padding-top: 24px;
+	margin-bottom: 120px;
 }
 
 .coupon_main_wrap dl {

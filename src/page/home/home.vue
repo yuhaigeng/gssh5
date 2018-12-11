@@ -6,8 +6,8 @@
     </app-header>
     <div class="main-wrap index-wrap">
       <div class="main">
-        <div class="banner-wrap common-wrap"   >
-          <banner  v-if="topList.length" :imgList = "topList" :height="'280px'" :isLogin = 'isLogin'  v-on:listenEvent = 'jumpRouter'></banner>
+        <div class="banner-wrap common-wrap">
+          <banner v-if="topList.length" :imgList = "topList" :height = "'280px'" :isLogin = 'isLogin'  v-on:listenEvent = 'jumpRouter'></banner>
         </div>
         <div class="gonggao-wrap sprite icon_voice" v-if="noticeInfoList.length">
           <gg-banner :imgList = "noticeInfoList" v-on:listenIndex="showalert"></gg-banner>

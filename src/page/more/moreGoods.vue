@@ -1,72 +1,70 @@
 <template>
   <div class="moreGoods common-wrap">
-      <app-header :type ="headerMsg">
-      </app-header>
-      <div class="moreDoogs_main_wrap">
-        <div class="moreDoogs_main_top" >
-          <ul class="moreDoogs_main_top_list" v-bind:style="{width:getTopWidth}"  >
-            <li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
+    <app-header :type ="headerMsg">
+    </app-header>
+    <div class="moreDoogs_main_wrap">
+      <div class="moreDoogs_main_top" >
+        <ul class="moreDoogs_main_top_list" v-bind:style="{width:getTopWidth}"  >
+          <li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
+        </ul>
+      </div>
+      <div class="moreDoogs_main_box clearfloat">
+        <div class="moreDoogs_main_box_left_wrap" v-bind:style="{height:getLeftHeight}">
+          <ul class="moreDoogs_main_box_left" >
+            <li v-for="(item,index) in left_name" :class="{isSelected:index == isSelected}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
           </ul>
         </div>
-        <div class="moreDoogs_main_box clearfloat">
-          <div class="moreDoogs_main_box_left_wrap" v-bind:style="{height:getLeftHeight}">
-            <ul class="moreDoogs_main_box_left" >
-              <li v-for="(item,index) in left_name" :class="{isSelected:index == isSelected}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
+        <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}" >
+          <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
+            <ul class="moreGoods_box_list_class" v-show="gtes.length">
+              <li v-for="(item,index) in gtes" :key="index" v-text="item.name" :class="{active:index == isThree}" @click="threeNav(index,item.id)"></li>
             </ul>
-          </div>
-          <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}" >
-            <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
-              <ul class="moreGoods_box_list_class" v-show="gtes.length">
-                <li v-for="(item,index) in gtes" :key="index" v-text="item.name" :class="{active:index == isThree}" @click="threeNav(index,item.id)"></li>
-              </ul>
-              <ul class="moreGoods_box_list"  v-show="left_name.length">
-                <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item)" >
-                  <dl class="moreGoods_goods_detaile clearfloat">
-                    <dt>
-                      <img v-lazy="item.goodsLogo" alt="" :key="item.goodsLogo">
-                      <span v-if="item.vipGrade > 0" :class = "'icon_vip'+ item.vipGrade"></span>
-                    </dt>
-                    <dd>
-                       <h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
-                       <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
-                       <div v-if="isLogin">
-                          <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
-                            <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
-                          </p>
-                          <p class="moreGoods_goods_price" v-else>
-                            <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
-                          </p>
-                          <div class="moreGoods_goods_num">
-                            <div class="moreGoods_goods_icon">
-                              <span v-if="item.isSale" class = "icon_cu"></span>
-                              <span v-if="item.isNew" class = "icon_ji"></span>
-                              <span v-if="item.isRecommend"  class = "icon_jian"></span>
-                              <span v-if="item.isHot" class = "icon_re"></span>
-                            </div>
-                            <div class="moreGoods_goods_number clearfloat" >
-                              <b class='bStyle' v-if="getNumText(item)" v-text="getNumText(item)" ></b>
-                              <span v-if="!getNumText(item)" v-show="getGoodNum(item.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(item)"><img src="../../assets/img/btn_m@2x.png"/></span>
-                              <span v-if="!getNumText(item)" v-show="getGoodNum(item.id)" class="goodsNumber fontColor" v-text="getGoodNum(item.id)"></span>
-                              <span v-if="!getNumText(item)" class="goodsNumber_max" v-on:click.stop="addGood(item,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
-                            </div>
+            <ul class="moreGoods_box_list"  v-show="left_name.length">
+              <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item)" >
+                <dl class="moreGoods_goods_detaile clearfloat">
+                  <dt>
+                    <img v-lazy="item.goodsLogo" alt="" :key="item.goodsLogo">
+                    <span v-if="item.vipGrade > 0" :class = "'icon_vip'+ item.vipGrade"></span>
+                  </dt>
+                  <dd>
+                      <h3 class="moreGoods_goods_name" v-text="item.goodsName"></h3>
+                      <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
+                      <div v-if="isLogin">
+                        <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
+                          <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
+                        </p>
+                        <p class="moreGoods_goods_price" v-else>
+                          <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
+                        </p>
+                        <div class="moreGoods_goods_num">
+                          <div class="moreGoods_goods_icon">
+                            <span v-if="item.isSale" class = "icon_cu"></span>
+                            <span v-if="item.isNew" class = "icon_ji"></span>
+                            <span v-if="item.isRecommend"  class = "icon_jian"></span>
+                            <span v-if="item.isHot" class = "icon_re"></span>
                           </div>
-                       </div>
-                    </dd>
-                  </dl>
-                </li>
-              </ul>
-              <p class="lodemore" v-show='left_name.length' v-text=" this.isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
-              <p class="noMore" v-show="left_name.length == 0" v-text="'暂无更多信息'"></p>
-            </div>
-				  </div>
+                          <div class="moreGoods_goods_number clearfloat" >
+                            <b class='bStyle' v-if="getNumText(item)" v-text="getNumText(item)" ></b>
+                            <span v-if="!getNumText(item)" v-show="getGoodNum(item.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(item)"><img src="../../assets/img/btn_m@2x.png"/></span>
+                            <span v-if="!getNumText(item)" v-show="getGoodNum(item.id)" class="goodsNumber fontColor" v-text="getGoodNum(item.id)"></span>
+                            <span v-if="!getNumText(item)" class="goodsNumber_max" v-on:click.stop="addGood(item,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
+                          </div>
+                        </div>
+                      </div>
+                  </dd>
+                </dl>
+              </li>
+            </ul>
+            <p class="lodemore" v-show='left_name.length' v-text="isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+            <p class="noMore" v-show="left_name.length == 0" v-text="'暂无更多信息'"></p>
+          </div>
         </div>
       </div>
-      <app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
-
+    </div>
+    <app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
   </div>
 </template>
 <script>
-
   import appHeader from "../../components/public/header.vue";
   import appFooterGoShop from "../../components/footerGoShop.vue";
   import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
@@ -676,7 +674,6 @@
 .moreGoods_goods_detaile dt img {
 	width: 160px;
 	height: 160px;
-  background: url(../../assets/img/default_huodong_pic.png) no-repeat center;
 }
 
 .moreGoods_goods_detaile dd {
