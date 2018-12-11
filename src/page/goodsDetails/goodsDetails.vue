@@ -63,7 +63,7 @@
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/videoBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import {  getIsLogin , getTokenId , getUserData, getSecretKey,getWeiXinSdk} from "../../common/common.js";
+import {  getIsLogin , getTokenId , getUserData, getSecretKey,getWxJssdk} from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {
@@ -134,7 +134,7 @@ export default {
 		this.windowHeight = window.innerHeight;
     this.get_goods_detail()
 
-    getWeiXinSdk(this)
+    getWxJssdk(this)
 
 	},
 	computed:{
