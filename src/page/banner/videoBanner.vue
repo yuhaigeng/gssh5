@@ -2,8 +2,8 @@
     <div class="swiper-container common-wrap" :style="{height:height}">
         <div class="swiper-wrapper" id="videoSwiper">
             <div class="swiper-slide" v-for="(item,index) in videoList" :key="index">
-                <img class="video_payImg" :src="videoPoster" v-if="isShowImg" @click="isShowVideo"/>
-                <div class="video_pay" v-if="isShowImg && index == 0" @click="isShowVideo"></div>
+                <img class="video_payImg" :src="videoPoster" v-if="isShowImg && isVideo" @click="isShowVideo"/>
+                <div class="video_pay" v-if="isShowImg && index == 0 && isVideo" @click="isShowVideo"></div>
                 <div class="video" v-if="index == 0 && isVideo ">
                     <video id="mainVideo" class="myVideo" preload="none" webkit-playsinline="true" x5-playsinline="true" playsinline="true" controls="controls" width="100%" height="100%" style="max-height: 480px;" fristplay="no">
                         <source :src="item" type="video/mp4">
@@ -48,12 +48,14 @@ export default {
             on: {
                 slideChangeTransitionEnd: function(){
                     let video = document.getElementById("mainVideo");
-                    if(this.activeIndex == 1) {
-                        video.pause()
-                        _this.isShowImg = true
-                        video.style.marginLeft = '9999px'
-                        _this.$emit('listenShow',true);
-                    }
+                    if(_this.isVideo) {
+                        if(this.activeIndex == 1) {
+                            video.pause()
+                            _this.isShowImg = true
+                            video.style.marginLeft = '9999px'
+                            _this.$emit('listenShow',true);
+                        }
+                    } 
                 },
             },
         })
@@ -75,7 +77,6 @@ export default {
                     let videoNext = document.getElementById("mainVideoClose")
                     this.isShowImg = false;
                     video.play();
-                    console.log(1)
                     this.$emit('listenShow',false);
                     videoSwiper.style.zIndex = 50
                     videoNext.style.zIndex = 80
