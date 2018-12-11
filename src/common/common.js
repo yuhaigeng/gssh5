@@ -115,5 +115,5 @@ export{
     getIsApp,
     getIsWeiXin,
     getUserData,
-    getWxJssdk
+    // getWxJssdk
 }

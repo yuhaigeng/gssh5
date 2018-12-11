@@ -96,10 +96,8 @@ export default {
 				} else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						position: 'bottom',
+						duration: 2000
 					})
 				}
 			}).catch(err => {
@@ -122,10 +120,8 @@ export default {
 				} else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						position: 'bottom',
+						duration: 2000
 					})
 				}
 			}).catch(err => {
@@ -155,7 +151,7 @@ export default {
 		},
 		toDetail(item) {
 			const id = item.id;
-      this.$router.push({ path:'detail', query:{id:id }})
+			this.$router.push({ path:'detail', query:{ id:id }})
 		},
 		goBack() {
 			this.$router.go(-1);
