@@ -121,10 +121,8 @@ export default {
 			this.goShopCart = []
 		}
 		this.windowHeight = window.innerHeight;
-    this.get_goods_detail()
-
-    // getWxJssdk(this)
-
+    	this.get_goods_detail()
+    	// getWxJssdk(this)
 	},
 	computed:{
 		// 获取宽度

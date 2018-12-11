@@ -151,6 +151,7 @@ export default {
 		},
 		toDetail(item) {
 			const id = item.id;
+			sessionStorage.setItem('goodsDetails',JSON.stringify(item));
 			this.$router.push({ path:'detail', query:{ id:id }})
 		},
 		goBack() {
