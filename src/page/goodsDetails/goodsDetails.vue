@@ -63,7 +63,7 @@
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/videoBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import {  getIsLogin , getTokenId , getUserData, getSecretKey, getWxJssdk } from "../../common/common.js";
+import {  getIsLogin , getTokenId , getUserData, getSecretKey} from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {
@@ -423,7 +423,10 @@ export default {
 				this.$router.go(-1);
 			}
 		},
-	}
+	},
+	beforeDestroy(){
+        sessionStorage.getItem('goodsDetails') && sessionStorage.removeItem('goodsDetails');
+    }
 }
 </script>
 

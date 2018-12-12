@@ -1,10 +1,10 @@
 <template>
     <div class="swiper-container " :style="{height:height}">
         <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="(item,index) in imgList" :key="index" >
+            <div class="swiper-slide" v-for="(item,index) in imgList" :key="index"  >
                 <!-- 第一张和后一张不使用懒加载 解决 与swiper 冲突 -->
-                <img :src="item.adLogo" alt=""  v-if="index==0||index==(imgList.length-1)"  @click="dataEvent(item.jumpType, item.linkUrl, item.adTime)">
-                <img v-lazy="item.adLogo" v-else  @click="dataEvent(item.jumpType, item.linkUrl, item.adTime)">
+                <img :src="item.adLogo" alt=""  v-if="index==0||index==(imgList.length-1)" :data= "[item.jumpType,item.linkUrl,item.adTime ]"  >
+                <img v-lazy="item.adLogo" v-else :data= "[item.jumpType,item.linkUrl,item.adTime ]" >
             </div>
         </div>
         <!-- 如果需要分页器 -->
@@ -27,12 +27,18 @@ export default {
         delay: 5000,
         disableOnInteraction : false,
     },
+    on:{
+      click:(e) =>{
+        let data =  e.target.getAttribute('data')
+        this.dataEvent(data[0],data[1],data[2])
+      }
+    },
     loop: true,
-
     pagination: {
         el: '.swiper-pagination',
         clickable: true
     },
+
   })
  },
  methods:{
