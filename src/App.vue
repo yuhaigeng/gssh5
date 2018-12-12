@@ -156,4 +156,7 @@ img[lazy="loading"] {
     font-size: 24px;
     margin-top: 20px;
 }
+.mint-msgbox-message {
+    color: #333
+}
 </style>
