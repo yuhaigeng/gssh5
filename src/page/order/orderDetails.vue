@@ -136,7 +136,7 @@
 import appHeader from "../../components/public/header.vue";
 import explainAlert from  "../../components/public/alert.vue";
 
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     data() {
         return {

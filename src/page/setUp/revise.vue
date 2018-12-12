@@ -27,7 +27,7 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
     export default {
         name:'revise',
         components:{
@@ -87,25 +87,25 @@ import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecr
                   this.$toast({
                     message : '请输入原始密码',
                     position: 'middle',
-                    duration: 2000, 
+                    duration: 2000,
                   });
                 }else if(this.newPassword ==  null){
                   this.$toast({
                     message: '请输新密码',
                     position: 'middle',
-                    duration: 2000, 
+                    duration: 2000,
                    });
                 }else if(this.confirmPassword ==  null){
                   this.$toast({
                     message: '请再次输入密码',
                     position: 'middle',
-                    duration: 2000, 
+                    duration: 2000,
                   });
                 }else if(this.newPassword != this.confirmPassword){
                   this.$toast({
                     message: '密码不一致，请重新输入',
                     position: 'middle',
-                    duration: 2000, 
+                    duration: 2000,
                   });
                 }else{
                   this.changePassword();

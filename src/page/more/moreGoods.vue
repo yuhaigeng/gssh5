@@ -67,7 +67,7 @@
 <script>
   import appHeader from "../../components/public/header.vue";
   import appFooterGoShop from "../../components/footerGoShop.vue";
-  import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+  import {  getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
   import { goodlist1 } from "../../common/goods_car.js";
   import $ from 'jquery';
   export default {
