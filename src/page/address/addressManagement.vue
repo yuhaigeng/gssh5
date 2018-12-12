@@ -1,6 +1,6 @@
 <template>
   <div class="common-wrap">
-    <div class="address" v-show="isManage">
+    <div class="address" >
       <addressHeader :type="headerMsg"></addressHeader>
       <div class="main-wrap address_box">
         <ul class="address_main">
@@ -50,7 +50,6 @@ export default {
       userBasicParam:{},
       addresses:null,
       addressId:null,
-      isManage:true,
     }
   },
   mounted:function(){
@@ -96,9 +95,9 @@ export default {
       }).then(resp => {
         if(resp.data.statusCode == "100000"){
           let data = JSON.parse(sessionStorage.getItem('addresses'))
-          let a = data[0]
+          let address = data[0]
           data[0] = data[index];
-          data[index] = a;
+          data[index] = address;
           data[0].isDefault = 1;
           data[index].isDefault = 0;
           this.addresses = data
