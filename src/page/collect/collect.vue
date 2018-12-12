@@ -75,7 +75,7 @@ export default {
 	watch:{
 		goShopCart: {
 			handler:function( val,oldVal ) {
-			localStorage.setItem('good',JSON.stringify(val))
+				localStorage.setItem('good',JSON.stringify(val))
 			},
 			deep:true,
 		}
@@ -148,7 +148,7 @@ export default {
 	},
 	methods:{
 		get_goods_collected:function() {
-      	let params ={
+      	let params = {
 			method: "goods_collection",
 			pageNo: this.pageNo,
 			pageSize: this.pageSize,

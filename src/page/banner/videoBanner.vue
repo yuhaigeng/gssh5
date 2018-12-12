@@ -23,6 +23,7 @@
 <script>
 import Swiper from 'swiper'
 import '@/common/swiper.min.css'
+import '@/common/confirm.css'
 export default {
     data() {
         return {
@@ -64,28 +65,33 @@ export default {
     },
     methods: {
         isShowVideo() {
+            sessionStorage.getItem("isVideoPlay") ? this.videoPlay() :
             this.$messagebox.confirm('', { 
                 message: '播放本视频将消耗您的流量，建议在WiFi环境下播放', 
-                title: '', 
+                title: '  ',
                 confirmButtonText: '立即播放', 
                 cancelButtonText: '下次再看' 
                 }).then(action => { 
                 if (action == 'confirm') {     //确认的回调
-                    let video = document.getElementById("mainVideo");
-                    let videoSwiper = document.getElementById("videoSwiper");
-                    this.video = video
-                    this.isShowImg = false;
-                    video.play();
-                    this.$emit('listenShow',false);
-                    videoSwiper.style.zIndex = 50
-                    video.style.marginLeft = 0
-                    this.videoListen(video)
+                    sessionStorage.setItem("isVideoPlay", true)
+                    this.videoPlay()
                 }
                 }).catch(err => { 
                 if (err == 'cancel') {     //取消的回调
                     console.log(2);
                 } 
             });
+        },
+        videoPlay() {
+            let video = document.getElementById("mainVideo");
+            let videoSwiper = document.getElementById("videoSwiper");
+            this.video = video
+            this.isShowImg = false;
+            video.play();
+            this.$emit('listenShow',false);
+            videoSwiper.style.zIndex = 50
+            video.style.marginLeft = 0
+            this.videoListen(video)
         },
         videoListen(video) {
             if(this.isVideo) {
@@ -164,5 +170,4 @@ export default {
     border-radius: 16px;
     z-index: 80px;
 }
-
 </style>

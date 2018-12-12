@@ -209,13 +209,13 @@ export default {
             },1000)
             this.$toast({
               message : '登录成功',
-              position: 'bottom',
+              position: "middle",
               duration: 2000,
             })
           }else{
             this.$toast({
               message : resp.data.statusStr,
-              position: 'bottom',
+              position: 'middle',
               duration: 2000,
             })
           }

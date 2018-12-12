@@ -136,7 +136,7 @@
 import appHeader from "../../components/public/header.vue";
 import explainAlert from  "../../components/public/alert.vue";
 
-import { getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     data() {
         return {
@@ -184,10 +184,10 @@ export default {
 				console.log(this.couponList)
 				if (this.couponList && this.couponList.length) {
 					this.couponList.forEach((item)=>{
-
-						m = m + parseFloat(item.couponMoney)
+						m = m + parseFloat( item.couponMoney ? item.couponMoney : 0 )
 					})
 				}
+				console.log(m)
 				return m.toFixed(2);
 			}
 		},
@@ -201,8 +201,7 @@ export default {
 				console.log(this.couponList)
 				if (this.couponList && this.couponList.length) {
 					this.couponList.forEach((item)=>{
-
-						m = m + parseFloat(item.couponMoney)
+						m = m + parseFloat( item.couponMoney ? item.couponMoney : 0 )
 					})
 				}
 				return m.toFixed(2);
@@ -232,13 +231,13 @@ export default {
 			return;
 		}
 		if (getIsLogin()) {
-      this.tokenId = getTokenId();
-      const userInfo = JSON.parse(getUserData());
-      this.userBasicParam = {
-        firmId : userInfo.firmInfoid,
-        source : 'firmId'+userInfo.firmInfoid,
-        sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-        tokenId : getTokenId()
+			this.tokenId = getTokenId();
+			const userInfo = JSON.parse(getUserData());
+			this.userBasicParam = {
+				firmId : userInfo.firmInfoid,
+				source : 'firmId'+userInfo.firmInfoid,
+				sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+				tokenId : getTokenId()
 			}
 			this.get_order_detail()
         }

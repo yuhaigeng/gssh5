@@ -1,0 +1,11 @@
+.mint-msgbox-header {
+    background: url(../assets/img/confirm.png) no-repeat center;
+    padding: 101px 0 0;
+    margin-top: 40px;
+}
+.mint-msgbox-content {
+    padding: 28px 60px;
+}
+.mint-msgbox-confirm {
+    color: #e93b3d
+}
