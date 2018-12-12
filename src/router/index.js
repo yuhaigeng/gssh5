@@ -45,6 +45,16 @@ const testStore = r => require.ensure([], () => r(require('../components/test'))
 Vue.use(Router)
 
 export default new Router({
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      setTimeout(() => {
+        document.querySelectorAll("body")[0].scrollTop = 0;
+      }, 100);
+      //document.querySelectorAll("body")[0].scrollTop = 0;
+    }
+  },
   routes: [{
     path: '/',
     component: App,
