@@ -41,7 +41,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import alertVue from '../../components/public/alert.vue';
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import {  getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     name:'login',
     components:{
@@ -167,6 +167,7 @@ export default {
       },
     },
     mounted(){
+
     },
     methods:{
       getCode:function(){
@@ -208,13 +209,13 @@ export default {
             },1000)
             this.$toast({
               message : '登录成功',
-              position: 'bottom',
+              position: "middle",
               duration: 2000,
             })
           }else{
             this.$toast({
               message : resp.data.statusStr,
-              position: 'bottom',
+              position: 'middle',
               duration: 2000,
             })
           }

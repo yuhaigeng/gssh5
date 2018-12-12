@@ -32,7 +32,7 @@ import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
 import loginState from "./loginState.vue";
 import personalOptions from "./personalOptions.vue";
-import {  getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import {getSystem ,  getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
   name: 'my',
   components: {
@@ -70,7 +70,11 @@ export default {
       dateModule[1]
     ]
     if (getIsLogin()) {
-      this.system = JSON.parse(localStorage.getItem('system'))
+      if(localStorage.getItem('system')){
+        this.system = JSON.parse(localStorage.getItem('system'))
+      }else{
+        getSystem(this)
+      }
       const userInfo = JSON.parse(getUserData());
       this.userBasicParam ={
         firmId:userInfo.firmInfoid,
@@ -87,8 +91,8 @@ export default {
       this.personApi()
       this.firm_vip_info()
     }
-       
-    
+
+
   },
   methods:{
     personApi:function(){
@@ -189,7 +193,7 @@ var dateModule  = [
     jumpRouter:'vip',
     text: `<b>VIP</b>`,
     text1:`<b>VIP</b>`,
-    text2:'服务' 
+    text2:'服务'
 
   },{
     jumpRouter:'coupon',
