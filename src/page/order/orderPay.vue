@@ -12,7 +12,7 @@
             </div>
           </div>
           <ul class="order_pay_mode_box">
-            <li id="weixin" v-show='isWeiXin' >
+            <li id="weixin" v-show='isWeiXin'  @click="paySel = 0" >
               <dl>
                 <dt class="sprite_login icon_mine_wechat"></dt>
                 <dd class="order_pay_mode_center">微信支付</dd>
