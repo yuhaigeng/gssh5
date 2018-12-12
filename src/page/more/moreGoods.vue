@@ -5,21 +5,21 @@
     <div class="moreDoogs_main_wrap">
       <div class="moreDoogs_main_top" >
         <ul class="moreDoogs_main_top_list" v-bind:style="{width:getTopWidth}"  >
-          <li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
+          <li v-for="(item,index) in top_nav" :key="index" :class="{topClass:index == isTopNav}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
         </ul>
       </div>
       <div class="moreDoogs_main_box clearfloat">
         <div class="moreDoogs_main_box_left_wrap" v-bind:style="{height:getLeftHeight}">
           <ul class="moreDoogs_main_box_left" >
-            <li v-for="(item,index) in left_name" :class="{isSelected:index == isSelected}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
+            <li v-for="(item,index) in  left_nav" :class="{isSelected:index == isLeftNav}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
           </ul>
         </div>
         <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}" >
           <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
-            <ul class="moreGoods_box_list_class" v-show="gtes.length">
-              <li v-for="(item,index) in gtes" :key="index" v-text="item.name" :class="{active:index == isThree}" @click="threeNav(index,item.id)"></li>
+            <ul class="moreGoods_box_list_class" v-show="three_nav.length">
+              <li v-for="(item,index) in  three_nav" :key="index" v-text="item.name" :class="{active:index == isThreeNav}" @click="threeNav(index,item.id)"></li>
             </ul>
-            <ul class="moreGoods_box_list"  v-show="left_name.length">
+            <ul class="moreGoods_box_list"  v-show=" left_nav.length">
               <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item)" >
                 <dl class="moreGoods_goods_detaile clearfloat">
                   <dt>
@@ -55,8 +55,8 @@
                 </dl>
               </li>
             </ul>
-            <p class="lodemore" v-show='left_name.length' v-text="isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
-            <p class="noMore" v-show="left_name.length == 0" v-text="'暂无更多信息'"></p>
+            <p class="lodemore" v-show=' left_nav.length' v-text="isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+            <p class="noMore" v-show=" left_nav.length == 0" v-text="'暂无更多信息'"></p>
           </div>
         </div>
       </div>
@@ -85,15 +85,15 @@
         pageSize: this.pageSize,
         websiteNode:this.websiteDate.code,
         firmId:'',
-        goods:[],
-        left_name:[],
+        top_nav:[],
+        left_nav:[],
         goodsList:null,
         listObj:[],
         typeCode:"",
         goodsType:null,
-        isSelected:0,
-        isTop:0,
-        isThree:0,
+        isLeftNav:0,
+        isTopNav:0,
+        isThreeNav:0,
         isLast:false,
         //本地购物车
         goShopCart:[],
@@ -104,8 +104,8 @@
         receiveInCart: false, //购物车组件下落的圆点是否到达目标位置
         windowHeight: null, //屏幕的高度
         isWithout:null,
-        gtes:[],
-        eyeId:null
+        three_nav:[],
+        eyeId:null //三级菜单id
       }
     },
     watch:{
@@ -148,7 +148,7 @@
     computed:{
       // 获取宽度
       getTopWidth:function(){
-        return  (this.goods.length * 164) + 24 +'px'
+        return  (this.top_nav.length * 164) + 24 +'px'
       },
       // 获取高度
       getLeftHeight:function(){
@@ -177,31 +177,31 @@
           return result.data;
         }).then( data => {
           if(data.statusCode == "100000"){
-            this.goods = data.data;
+            this.top_nav = data.data;
             if(this.$route.query.typeCode){
               let a = this.$route.query.typeCode
               let b = a.substring(0,2);
               let  i ,index , len=[];
-              for ( i = 0 ;i < this.goods.length;i++){
-                if(this.goods[i].typeCode == b){
+              for ( i = 0 ;i < this.top_nav.length;i++){
+                if(this.top_nav[i].typeCode == b){
                   break;
                 }
                 len.push(i)
               }
-              if(len.length == this.goods.length){
+              if(len.length == this.top_nav.length){
                 this.isWithout = true;
                 index = 0;
-                b = this.goods[0].typeCode
+                b = this.top_nav[0].typeCode
               }else{
                 this.isWithout = false;
                 index = i;
               }
-              this.isTop = index
+              this.isTopNav = index
               this.typeCode = b
               this.goods_second_nav(index)
             }else{
-              this.isTop = 0
-              this.typeCode = this.goods[0].typeCode
+              this.isTopNav = 0
+              this.typeCode = this.top_nav[0].typeCode
               this.goods_second_nav()
             }
           }
@@ -222,27 +222,27 @@
           return result.data;
         }).then( data => {
           if(data.statusCode == "100000"){
-            this.left_name = data.data;
+            this. left_nav = data.data;
             if(this.$route.query.typeCode){
               let a =  this.$route.query.typeCode;
               let index  , i ;
               let topLeft = document.querySelector(".moreDoogs_main_top")
               let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[num]
-              for ( i = 0 ;i <  this.left_name.length;i++){
-                if(this.left_name[i].typeCode == a){
+              for ( i = 0 ;i <  this. left_nav.length;i++){
+                if(this. left_nav[i].typeCode == a){
                   break;
                 }
               }
               if(this.isWithout){
                 index = 0
-                a = this.left_name[0].typeCode ;
+                a = this. left_nav[0].typeCode ;
               }else{
                 index = i
               }
-              this.isSelected = index ;
+              this.isLeftNav = index ;
               this.goodsType = a
               this.$route.query.typeCode = "";
-              if(this.left_name.length){
+              if(this. left_nav.length){
                 this.goods_info_nav(index,a)
               }
               if (ele.offsetLeft > 200) {
@@ -251,9 +251,9 @@
                 topLeft.scrollLeft = 0
               }
             }else{
-              this.goodsType = this.left_name.length && this.left_name[0].typeCode
-              this.isSelected = 0;
-              if(this.left_name.length){
+              this.goodsType = this. left_nav.length && this. left_nav[0].typeCode
+              this.isLeftNav = 0;
+              if(this. left_nav.length){
                  this.goods_info_nav()
               }
             }
@@ -279,7 +279,7 @@
         }).then( data => {
           if(data.statusCode == "100000"){
             this.goodsList = data.data.page;
-            this.gtes = data.data.gtes;
+            this.three_nav = data.data.gtes;
              this.$nextTick(function(){
                  if(code){
                     let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
@@ -351,7 +351,7 @@
           if (typeCode != this.typeCode) {
             this.pageNo = '1'
             this.typeCode = typeCode;
-            this.isTop = index;
+            this.isTopNav = index;
             this.goods_second_nav()
             rightTop.scrollTop = 0;
             wrapTop.scrollTop = 0;
@@ -368,10 +368,10 @@
         let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
         if ( this.goodsType != typeCode ) {
           this.eyeId = null;
-          this.isThree = 0;
+          this.isThreeNav = 0;
           this.pageNo = '1'
           this.goodsType = typeCode
-          this.isSelected =  index
+          this.isLeftNav =  index
           this.goods_info_nav()
           rightTop.scrollTop = 0;
 
@@ -542,7 +542,7 @@
       threeNav(index,id){
         console.log(id)
         this.pageNo = '1'
-        this.isThree = index;
+        this.isThreeNav = index;
         this.eyeId = id
         this.goods_info_nav()
       }
