@@ -430,10 +430,12 @@ export default {
 			}else{
 				this.$router.go(-1);
 			}
+			
 		},
 	},
 	beforeDestroy(){
-        sessionStorage.getItem('goodsDetails') && sessionStorage.removeItem('goodsDetails');
+		sessionStorage.getItem('goodsDetails') && sessionStorage.removeItem('goodsDetails');
+		sessionStorage.getItem('isVideoPlay') && sessionStorage.removeItem('isVideoPlay');
     }
 }
 </script>
