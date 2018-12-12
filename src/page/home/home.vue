@@ -58,6 +58,7 @@ export default {
       headerMsg:{
           type:"home",
       },
+      userBasicParam:{}
     }
   },
   components: {
@@ -112,6 +113,9 @@ export default {
       }
     }
     this.get_main_page();
+    if (sessionStorage.getItem('isopen') != 1) {
+			this.open_Statistics();
+		}
   },
   methods:{
     click() {
@@ -196,6 +200,25 @@ export default {
           })
         }
       });
+    },
+    //实现打开微信公众号的次数统计--通过sessionStorage
+    open_Statistics:function(){
+      let params = {
+        method:'user_login_rcd',
+        firmId:this.userBasicParam.firmId,
+        url:this.HOST,
+        type:"post",
+        dataType:"jsonp",
+      }
+       this.$ajax.get(this.HOST,{
+        params:params
+      }).then(result =>{
+        return result.data
+      }).then( data => {
+          if(data.statusCode == 100000){
+            sessionStorage.setItem("isopen",1);
+          }
+      })
     },
     //显示关闭弹框
     showalert:function (data) {

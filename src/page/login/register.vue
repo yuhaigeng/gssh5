@@ -29,7 +29,7 @@
             </li>
             <li>
               <span class="left" v-text="'店铺地址：'"></span>
-              <input type="text" id="shopAddress" v-model="address"  placeholder="请输入店铺地址" @focus="focus" @blur="blur"/>
+              <input type="text" id="shopAddress" v-model="shopAddress"  placeholder="请输入店铺地址" @focus="focus" @blur="blur"/>
             </li>
             <li>
               <span class="left" v-text="'选择站点：'"></span>
@@ -93,16 +93,15 @@ import vuePickers from '../../components/public/picker.vue';
         },
         firmName:null, //店铺名称
         linkMan :null,  //联系人
-        address:null,  // 店铺地址
+        shopAddress:null,  // 店铺地址
         shopPhone:null, //联系电话验证
         phoneMsg:null, //注册提示文本
         city:null,   //选择城市
-        cities:null,
         street:null, //街道
         road:null,   //详细地址
-        province:null,
-        county:null,
-        streetMag:null,
+        countyId:null, // 城市 ID
+        streetId:null, // 街道 ID
+        streetMag:null,  // 提示信息
         description:null, //描述
         recommendId:null,  //推荐人ID
         recommendName:null, //店铺名称
@@ -111,14 +110,13 @@ import vuePickers from '../../components/public/picker.vue';
         isBottomHidden:false,  //  协议是否显示
         msgArr:["请输入验证码！","请输入密码！","请输入手机号码！","请输入正确的手机号！"],
         noticeInfoList:null,
-        descCode:null,
-        cityData:{},
-        isShow:false,
-        columns:null,
-        defaultData:[],
-        system:{},
-        cache:{},
-        countyId:null,
+        descCode:null,  //弹窗数据
+        cityData:{}, //城市数据
+        isShow:false, // 选择城市 插件 显示与隐藏
+        columns:null, //列数
+        defaultData:[],//默认
+        system:{}, //系统数据 客服热线
+        alertCache:{},
         cityCache:{},
         streetCache:{}
       }
@@ -171,7 +169,7 @@ import vuePickers from '../../components/public/picker.vue';
               this.noticeInfoList = resp.data.data;
               let key = this.websiteDate.code + this.descCode ;
               let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
-              this.cache = Object.assign(this.cache,JSON.parse(obj))
+              this.alertCache = Object.assign(this.alertCache,JSON.parse(obj))
             }
           }).catch(err => {
           });
@@ -230,13 +228,13 @@ import vuePickers from '../../components/public/picker.vue';
           params:{
             method:'firm_register',
             firmName:this.firmName,
-            address:this.address,
+            address:this.shopAddress,
             linkTel:this.shopPhone,
             linkMan:this.linkMan,
             description:this.description,
             websiteNode:this.websiteDate.code,
-            province:this.province,
-            city:this.city,
+            province:this.countyId,
+            city:this.streetId,
             county:this.county,
             street:this.street,
             road:this.road,
@@ -274,8 +272,8 @@ import vuePickers from '../../components/public/picker.vue';
         }else{
           this.descCode = "#TJR-DESC";
         }
-        if (this.cache[this.websiteDate.code+this.descCode]) {
-          this.noticeInfoList = this.cache[this.websiteDate.code+this.descCode]
+        if (this.alertCache[this.websiteDate.code+this.descCode]) {
+          this.noticeInfoList = this.alertCache[this.websiteDate.code+this.descCode]
         }else{
           this.desc_data()
         }
@@ -324,7 +322,7 @@ import vuePickers from '../../components/public/picker.vue';
               position: 'center',
               duration: 2000,
             })
-        } else if (this.address == null) {
+        } else if (this.shopAddress == null) {
             this.$toast({
               message :'请输入店铺地址' ,
               position: 'center',

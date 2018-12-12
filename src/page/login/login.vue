@@ -75,7 +75,7 @@ export default {
         websiteNode: this.websiteDate.code,
         parameter:null,
         descCode:"#HZ-DESC",
-        cache:{}
+        cache:{} //弹框数据存储
       }
     },
     watch:{
@@ -209,13 +209,13 @@ export default {
             },1000)
             this.$toast({
               message : '登录成功',
-              position: "middle",
+              position: "center",
               duration: 2000,
             })
           }else{
             this.$toast({
               message : resp.data.statusStr,
-              position: 'middle',
+              position: 'center',
               duration: 2000,
             })
           }
