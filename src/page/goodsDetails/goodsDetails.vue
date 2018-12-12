@@ -121,6 +121,14 @@ export default {
 			this.goShopCart = []
 		}
 		this.windowHeight = window.innerHeight;
+		if ( sessionStorage.getItem('goodsDetails')) {
+			let goodsDetail = JSON.parse(sessionStorage.getItem('goodsDetails'));
+			this.detailList = goodsDetail;
+			console.log(goodsDetail)
+			const list = this.detailList.goodsPics.split('@');
+			list.pop();
+			this.bannerDate = list
+		}
     	this.get_goods_detail()
     	// getWxJssdk(this)
 	},
