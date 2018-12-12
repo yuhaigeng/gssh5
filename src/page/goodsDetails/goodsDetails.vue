@@ -12,47 +12,47 @@
 			<ul class="goodsDetails_box1_center">
 				<li class="clearfloat goodsDetails_box1_center_li1">
 					<div class="goodsDetails_box1_top clearfloat">
-						<h3 class="goodsDetails_box1_title">{{detailList.goodsName}}<span v-if="detailList.vipGrade > 0" :class = "'icon_vip'+ detailList.vipGrade" @click="goVip"></span></h3>
+						<h3 class="goodsDetails_box1_title">{{detailObj.goodsName}}<span v-if="detailObj.vipGrade > 0" :class = "'icon_vip'+ detailObj.vipGrade" @click="goVip"></span></h3>
 						<div class="goodsDetails_box1_ionc">
-							<span v-if="detailList.isSale" class = "icon_cu"></span>
-							<span v-if="detailList.isNew" class = "icon_ji"></span>
-							<span v-if="detailList.isRecommend" class = "icon_jian"></span>
-							<span v-if="detailList.isHot" class = "icon_re"></span>
+							<span v-if="detailObj.isSale" class = "icon_cu"></span>
+							<span v-if="detailObj.isNew" class = "icon_ji"></span>
+							<span v-if="detailObj.isRecommend" class = "icon_jian"></span>
+							<span v-if="detailObj.isHot" class = "icon_re"></span>
 						</div>
 					</div>
-					<div class="goodsDetails_text" v-text="detailList.goodsShows"></div>
+					<div class="goodsDetails_text" v-text="detailObj.goodsShows"></div>
 					<div class="moreGoods_goods_number clearfloat" v-if="logined">
-						<b class='bStyle' v-if="getNumText(detailList)" v-text="getNumText(detailList)" ></b>
-						<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailList)"><img src="../../assets/img/btn_m@2x.png"/></span>
-						<span v-if="!getNumText(detailList)" v-show="getGoodNum(detailList.id)" class="goodsNumber fontColor" v-text="getGoodNum(detailList.id)"></span>
-						<span v-if="!getNumText(detailList)" class="goodsNumber_max" v-on:click.stop="addGood(detailList,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
+						<b class='bStyle' v-if="getNumText(detailObj)" v-text="getNumText(detailObj)" ></b>
+						<span v-if="!getNumText(detailObj)" v-show="getGoodNum(detailObj.id)" class="goodsNumber_min"  v-on:click.stop="cutGood(detailObj)"><img src="../../assets/img/btn_m@2x.png"/></span>
+						<span v-if="!getNumText(detailObj)" v-show="getGoodNum(detailObj.id)" class="goodsNumber fontColor" v-text="getGoodNum(detailObj.id)"></span>
+						<span v-if="!getNumText(detailObj)" class="goodsNumber_max" v-on:click.stop="addGood(detailObj,$event)"><img src="../../assets/img/btn_a@2x.png"></span>
 					</div>
 				</li>
 				<li class="clearfloat">
 					<div class="goodsDetails_box_left">
 						单价：<span v-if="logined">
-								<span class="color_f27c32" v-text="detailList.gssPrice"></span>元/{{detailList.priceUnit}}
-								<del v-if="detailList.vipGrade > 0" v-text="detailList.nomalPrice+'元/'+detailList.priceUnit"></del>
+								<span class="color_f27c32" v-text="detailObj.gssPrice"></span>元/{{detailObj.priceUnit}}
+								<del v-if="detailObj.vipGrade > 0" v-text="detailObj.nomalPrice+'元/'+detailObj.priceUnit"></del>
 							</span>
 						<span v-else></span>
 					</div>
 					<div class="goodsDetails_box_right">
 						总价：<span v-if="logined">
-								<span v-text="detailList.wholeGssPrice ? detailList.wholeGssPrice  +'元/'+detailList.wholePriceSize : '元/'"></span>
-								<del v-if="detailList.vipGrade > 0" v-text="detailList.wholeNomalPrice+'元/'+detailList.wholePriceSize"></del>
+								<span v-text="detailObj.wholeGssPrice ? detailObj.wholeGssPrice  +'元/'+detailObj.wholePriceSize : '元/'"></span>
+								<del v-if="detailObj.vipGrade > 0" v-text="detailObj.wholeNomalPrice+'元/'+detailObj.wholePriceSize"></del>
 							</span>
 						<span v-else></span>
 					</div>
 				</li>
 				<li class="clearfloat">
-					<div class="goodsDetails_box_left" >产地：<span v-text=" detailList && detailList.sourceCityName"></span></div>
-					<div class="goodsDetails_box_right" >规格：<span v-text=" detailList && detailList.sizeDesc"></span></div>
+					<div class="goodsDetails_box_left" >产地：<span v-text=" detailObj && detailObj.sourceCityName"></span></div>
+					<div class="goodsDetails_box_right" >规格：<span v-text=" detailObj && detailObj.sizeDesc"></span></div>
 				</li>
 			</ul>
 		</div>
 		<div class="goodsDetails_box2">
 			<h4><span></span>&nbsp;&nbsp;商品详情</h4>
-			<div class="goodsDetails_box2_" v-html="detailList.goodsContext"></div>
+			<div class="goodsDetails_box2_" v-html="detailObj.goodsContext"></div>
 		</div>
     </div>
 		<app-footer-go-shop :goShopCart="goShopCart" :systemMoney="systemMoney" v-on:listenSubmit="submitGoShopCart"></app-footer-go-shop>
@@ -70,7 +70,7 @@ export default {
  		return {
 			isCollect: false,
 			logined:getIsLogin(),
-			detailList: {},
+			detailObj: {},
 			bannerDate:[],
 			userId:[],
 			//本地购物车
@@ -145,7 +145,7 @@ export default {
 	},
 	methods:{
 		isVideoPaly(data) {
-			console.log(data)
+			// console.log(data)
 			this.isShow = data
 		},
 		get_goods_detail:function () {
@@ -158,8 +158,8 @@ export default {
 				params:obj
 			}).then(resp => {
 				if (resp.data.statusCode == 100000) {
-					this.detailList = resp.data.data;
-					const list = this.detailList.goodsPics.split('@');
+					this.detailObj = resp.data.data;
+					const list = this.detailObj.goodsPics.split('@');
 					list.pop();
 					this.bannerDate = list;
 					this.isCollect = (resp.data.data.isColl > 0 ? true : false)
