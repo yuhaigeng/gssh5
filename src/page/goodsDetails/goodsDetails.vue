@@ -63,7 +63,7 @@
 import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/videoBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
-import {  getIsLogin , getTokenId , getUserData, getSecretKey} from "../../common/common.js";
+import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
 	name:'goodsDetail',
  	data() {
@@ -72,7 +72,7 @@ export default {
 			logined:getIsLogin(),
 			detailInfo: {},
 			bannerDate:[],
-			userId:[],
+			userId:'',
 			//本地购物车
 			goShopCart:[],
 			systemMoney:-1,//系统参数配置中配置的起售金额
@@ -114,13 +114,6 @@ export default {
 		}
 		if ( localStorage.getItem('system') ) {
 			this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
-    }
-    if (sessionStorage.getItem('goodsDeatils')) {
-			const details = JSON.parse(sessionStorage.getItem('goodsDeatils'));
-			this.detailList = details;
-			const list = this.detailList.goodsPics.split('@');
-			list.pop();
-			this.bannerDate = list;
 		}
 		if ( localStorage.getItem('good') ) {
 			this.goShopCart = JSON.parse(localStorage.getItem('good'))
@@ -191,7 +184,7 @@ export default {
 				console.log('请求失败：'+ err);
 			});
 		},
-		get_goods_collectAdd:function () {
+		addCollect:function () {
 			let obj = {
 				method: "goods_collection_add",
 				goodsId: this.goodsId,
@@ -205,10 +198,8 @@ export default {
 					this.isCollect = true
 					this.$toast({
 						message : '收藏成功',
-						position: 'middle',//top boottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						position: 'middle',
+						duration: 2000
 					})
 				} else {
 
@@ -217,7 +208,7 @@ export default {
 				console.log('请求失败：'+ err.statusCode);
 			});
 		},
-		get_goods_collect_del:function (index) {
+		delCollect:function (index) {
 			let obj = {
 				method: "goods_collection_del",
 				goodsId: this.goodsId,
@@ -231,10 +222,8 @@ export default {
 					this.isCollect = false;
 					this.$toast({
 						message : '取消收藏成功',
-						position: 'middle',//top boottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						position: 'middle',
+						duration: 2000
 					})
 				} else {
 
@@ -255,9 +244,9 @@ export default {
 				this.$router.push({ path:'/login'})
 			}else {
 				if(this.isCollect){
-					this.get_goods_collect_del();
+					this.delCollect();
 				}else {
-					this.get_goods_collectAdd()
+					this.addCollect()
 				}
 			}
 		},

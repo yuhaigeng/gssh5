@@ -26,7 +26,7 @@
 				</dl>
 			</div>
 			<div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
-				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="toDetail(item)">
+				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="goDetail(item)">
 					<dl>
 						<dt>
 							<img v-lazy="item.goodsLogo"/>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import {  getIsLogin  } from "../../common/common.js";
+import { getIsLogin } from "../../common/common.js";
 // 节流函数
 const delay = (function() {
     let timer = 0;
@@ -149,7 +149,7 @@ export default {
 			this.searchVal = index;
 			this.get_goods_name2()
 		},
-		toDetail(item) {
+		goDetail(item) {
 			const id = item.id;
 			sessionStorage.setItem('goodsDetails',JSON.stringify(item));
 			this.$router.push({ path:'detail', query:{ id:id }})

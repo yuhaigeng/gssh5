@@ -34,8 +34,6 @@ export default {
         }
     },
     props:['videoList','height'],
-    created(){
-    },
     mounted(){
         let _this = this;
         var mySwiper = new Swiper('.swiper-container', {
