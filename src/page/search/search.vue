@@ -4,17 +4,17 @@
 				<div class="searchCallback sprite arrow_left" @click="goBack"></div>
 			<div class="search">
 				<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" v-focus="focusState"/>
-				<div class="delete sprite delete_b" @click="del()"></div>
+				<div class="delete sprite delete_b" @click="delSearch()"></div>
 			</div>
 		</div>
 		<div class="main-wrap">
-			<div class="search_star" v-if="!searchVal">
+			<div class="search_star" v-show="!searchVal">
 				<p class="search_tit">热门搜索</p>
 				<ul class="search_item">
 					<li v-for="(item,index) in searchList" :key="index" @click="showSearch(item.keyword)" v-text="item.keyword"></li>
 				</ul>
 			</div>
-			<div class="search_none" v-if="!goodsList.length && searchVal && state == 3">
+			<div class="search_none" v-show="!goodsList.length && searchVal && state == 3">
 				<dl>
 					<dt>
 						<img src="../../assets/img/pic_logo@2x.png"/>
@@ -25,7 +25,7 @@
 					</dd>
 				</dl>
 			</div>
-			<div class="search_resurt" v-if="goodsList.length && searchVal && state == 3 ">
+			<div class="search_resurt" v-show="goodsList.length && searchVal && state == 3 ">
 				<div class="search_goods" v-for="(item,index) in goodsList" :key="index" @click="goDetail(item)">
 					<dl>
 						<dt>
@@ -141,7 +141,7 @@ export default {
 				}
 			}
 		},
-		del() {
+		delSearch() {
 			this.searchVal = ''
 			this.goodsList = []
 		},
