@@ -128,6 +128,7 @@ export default {
 		}
 		this.windowHeight = window.innerHeight;
 		this.get_goods_collected()
+		console.log("vuextest")
 	},
 	computed:{
 		// 获取宽度
