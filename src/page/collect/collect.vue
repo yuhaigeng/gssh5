@@ -149,13 +149,13 @@ export default {
 	},
 	methods:{
 		get_goods_collected:function() {
-      	let params = {
-			method: "goods_collection",
-			pageNo: this.pageNo,
-			pageSize: this.pageSize,
-			firmId: this.firmInfoid,
-			userId: this.userId
-		}
+			let params = {
+				method: "goods_collection",
+				pageNo: this.pageNo,
+				pageSize: this.pageSize,
+				firmId: this.firmInfoid,
+				userId: this.userId
+			}
 			this.$ajax.get(this.HOST, {
 				params:params
 			}).then(resp => {
