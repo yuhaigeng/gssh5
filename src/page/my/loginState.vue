@@ -51,11 +51,12 @@ import {Sand} from '../../common/upyun-mu.js'
     },
     methods:{
         headePic(){
+          let params = Object.assign({
+            method:'firm_info_update_faceimgurl',
+            faceImgUrl:this.src
+          }, this.userBasicParam )
           this.$ajax.get(this.HOST, {
-            params :Object.assign({
-              method:'firm_info_update_faceimgurl',
-              faceImgUrl:this.src
-            }, this.userBasicParam )
+            params : params
           }).then(resp => {
             if(resp.data.statusCode == "100000"){
               this.$toast({

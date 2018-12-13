@@ -22,7 +22,7 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
-import { getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getIsLogin  } from "../../common/common.js";
 export default {
   name: 'message',
   components: {

@@ -21,57 +21,57 @@
 import setHeader from "../../components/public/header.vue";
 import { getSystem , getTokenId , getSecretKey } from "../../common/common.js";
 export default {
-    name:'setUp',
-    components:{
-      setHeader
-    },
-    data() {
-      return {
-        items:[
-          {name:'企业信息',routerUrl:"company"},
-          {name:'登陆密码',routerUrl:"revise"}
-        ],
-        headerMsg:{
-          type:"common",
-          title:'设置',
-          left:'返回'
-        },
-        userBasicParam:{},
-      }
-    },
-    mounted(){
-      this.userBasicParam = {
-        source:'firmId'+ this.firmId,
-        tokenId: getTokenId(),
-        sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
-      }
-    },
-    methods:{
-      login_out:function(){
-        let params = Object.assign({
-          method:'user_logout',
-        },this.userBasicParam)
-        this.$ajax.get(this.HOST, {
-          params:params
-        }).then(resp => {
-          if(resp.data.statusCode ==  "100000"){
-            localStorage.clear();
-            this.$router.push({path:'/my'})
-            if (!sessionStorage.getItem('system')) {
-              getSystem(this)
-            }
-          }else {
-            this.$toast({
-              message : resp.data.statusStr,
-              position: 'bottom',
-              duration: 2000,
-            })
-          }
-        }).catch(err => {
-          console.log('请求失败：'+ err.data.statusCode);
-        });
-      }
+  name:'setUp',
+  components:{
+    setHeader
+  },
+  data() {
+    return {
+      items:[
+        {name:'企业信息',routerUrl:"company"},
+        {name:'登陆密码',routerUrl:"revise"}
+      ],
+      headerMsg:{
+        type:"common",
+        title:'设置',
+        left:'返回'
+      },
+      userBasicParam:{},
     }
+  },
+  mounted(){
+    this.userBasicParam = {
+      source:'firmId'+ this.firmId,
+      tokenId: getTokenId(),
+      sign :this.$md5('firmId'+ this.firmId + "key" + getSecretKey()).toUpperCase()
+    }
+  },
+  methods:{
+    login_out:function(){
+      let params = Object.assign({
+        method:'user_logout',
+      },this.userBasicParam)
+      this.$ajax.get(this.HOST, {
+        params:params
+      }).then(resp => {
+        if(resp.data.statusCode ==  "100000"){
+          localStorage.clear();
+          this.$router.push({path:'/my'})
+          if (!sessionStorage.getItem('system')) {
+            getSystem(this)
+          }
+        }else {
+          this.$toast({
+            message : resp.data.statusStr,
+            position: 'bottom',
+            duration: 2000,
+          })
+        }
+      }).catch(err => {
+        console.log('请求失败：'+ err.data.statusCode);
+      });
+    }
+  }
 }
 </script>
 

@@ -5,22 +5,22 @@
     <div class="moreDoogs_main_wrap">
       <div class="moreDoogs_main_top" >
         <ul class="moreDoogs_main_top_list" v-bind:style="{width:getTopWidth}"  >
-          <li v-for="(item,index) in top_nav" :key="index" :class="{topClass:index == isTopNav}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
+          <li v-for="(item,index) in top_nav" :key="index" :class="{topClass:index == topNavIndex}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
         </ul>
       </div>
       <div class="moreDoogs_main_box clearfloat">
         <div class="moreDoogs_main_box_left_wrap" v-bind:style="{height:getLeftHeight}">
           <ul class="moreDoogs_main_box_left" >
-            <li v-for="(item,index) in  left_nav" :class="{isSelected:index == isLeftNav}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
+            <li v-for="(item,index) in  left_nav" :class="{isSelected:index == leftNavIndex}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
           </ul>
         </div>
         <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}" >
           <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
             <ul class="moreGoods_box_list_class" v-show="three_nav.length">
-              <li v-for="(item,index) in  three_nav" :key="index" v-text="item.name" :class="{active:index == isThreeNav}" @click="threeNav(index,item.id)"></li>
+              <li v-for="(item,index) in  three_nav" :key="index" v-text="item.name" :class="{active:index == threeNavIndex}" @click="threeNav(index,item.id)"></li>
             </ul>
             <ul class="moreGoods_box_list"  v-show=" left_nav.length">
-              <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item)" >
+              <li v-for="(item,index) in goodsArr " :key="index"  @click="toDetail(item)" >
                 <dl class="moreGoods_goods_detaile clearfloat">
                   <dt>
                     <img v-lazy="item.goodsLogo" alt="" :key="item.goodsLogo">
@@ -87,13 +87,15 @@
         firmId:'',
         top_nav:[],
         left_nav:[],
-        goodsList:null,
-        listObj:[],
-        typeCode:"",
-        goodsType:null,
-        isLeftNav:0,
-        isTopNav:0,
-        isThreeNav:0,
+        three_nav:[],
+        pageObj:{},     // 存储 四级接口 数据对象
+        goodsArr:[],    // 商品数据
+        leftTypeCode:"",   // 左侧导航栏 code
+        goodsTypeCode:"", // 商品 code
+        threeTypeCode:"", //三级菜单 code
+        leftNavIndex:0,
+        topNavIndex:0,
+        threeNavIndex:0,
         isLast:false,
         //本地购物车
         goShopCart:[],
@@ -103,9 +105,8 @@
         elBottom: 0, //当前点击加按钮在网页中的绝对left值
         receiveInCart: false, //购物车组件下落的圆点是否到达目标位置
         windowHeight: null, //屏幕的高度
-        isWithout:null,
-        three_nav:[],
-        eyeId:null //三级菜单id
+        isWithout:null, // 没数据时候 不显示处理
+        routerTypeCode:"",
       }
     },
     watch:{
@@ -142,6 +143,9 @@
       } else {
         this.goShopCart = []
       }
+      if(this.$route.query.typeCode){
+       this.routerTypeCode =  this.$route.query.typeCode
+      }
       this.goods_first_nav()
       this.windowHeight = window.innerHeight;
     },
@@ -166,42 +170,41 @@
     },
     methods: {
       goods_first_nav:function () {
-        let obj = {
-            method: "goods_first_type",
-            firmId: this.firmId,
-            websiteNode:this.websiteNode,
-          }
+        let params = {
+          method: "goods_first_type",
+          firmId: this.firmId,
+          websiteNode:this.websiteNode,
+        }
         this.$ajax.get(this.HOST, {
-          params:obj
+          params:params
         }).then(result => {
           return result.data;
         }).then( data => {
           if(data.statusCode == "100000"){
             this.top_nav = data.data;
-            if(this.$route.query.typeCode){
-              let a = this.$route.query.typeCode
-              let b = a.substring(0,2);
-              let  i ,index , len=[];
+            if(this.routerTypeCode){
+              let str = this.routerTypeCode.substring(0,2);
+              let  i ,index , arr=[];
               for ( i = 0 ;i < this.top_nav.length;i++){
-                if(this.top_nav[i].typeCode == b){
+                if(this.top_nav[i].typeCode == str){
                   break;
                 }
-                len.push(i)
+                arr.push(i)
               }
-              if(len.length == this.top_nav.length){
+              if(arr.length == this.top_nav.length){
                 this.isWithout = true;
                 index = 0;
-                b = this.top_nav[0].typeCode
+                str = this.top_nav[0].typeCode
               }else{
                 this.isWithout = false;
                 index = i;
               }
-              this.isTopNav = index
-              this.typeCode = b
-              this.goods_second_nav(index)
+              this.topNavIndex = index
+              this.leftTypeCode = str
+              this.goods_second_nav()
             }else{
-              this.isTopNav = 0
-              this.typeCode = this.top_nav[0].typeCode
+              this.topNavIndex = 0
+              this.leftTypeCode = this.top_nav[0].typeCode
               this.goods_second_nav()
             }
           }
@@ -209,41 +212,40 @@
           console.log(err)
         });
       },
-      goods_second_nav:function (num) {
-        let obj = {
+      goods_second_nav:function () {
+        let params = {
             method: "goods_second_type",
             firmId:this.firmId,
             websiteNode:this.websiteNode,
-            typeCode: this.typeCode
+            typeCode: this.leftTypeCode
           }
         this.$ajax.get(this.HOST, {
-          params:obj
+          params:params
         }).then(result => {
           return result.data;
         }).then( data => {
           if(data.statusCode == "100000"){
             this. left_nav = data.data;
-            if(this.$route.query.typeCode){
-              let a =  this.$route.query.typeCode;
+            if(this.routerTypeCode){
               let index  , i ;
               let topLeft = document.querySelector(".moreDoogs_main_top")
-              let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[num]
+              let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[this.topNavIndex]
               for ( i = 0 ;i <  this. left_nav.length;i++){
-                if(this. left_nav[i].typeCode == a){
+                if(this. left_nav[i].typeCode == this.routerTypeCode){
                   break;
                 }
               }
               if(this.isWithout){
                 index = 0
-                a = this. left_nav[0].typeCode ;
+                this.routerTypeCode= this. left_nav[0].typeCode ;
               }else{
                 index = i
               }
-              this.isLeftNav = index ;
-              this.goodsType = a
+              this.leftNavIndex = index ;
+              this.goodsTypeCode = this.routerTypeCode
               this.$route.query.typeCode = "";
-              if(this. left_nav.length){
-                this.goods_info_nav(index,a)
+              if(this.left_nav.length){
+                this.goods_info_nav()
               }
               if (ele.offsetLeft > 200) {
                 topLeft.scrollLeft = ele.offsetLeft-200
@@ -251,8 +253,8 @@
                 topLeft.scrollLeft = 0
               }
             }else{
-              this.goodsType = this. left_nav.length && this. left_nav[0].typeCode
-              this.isLeftNav = 0;
+              this.goodsTypeCode = this. left_nav.length && this. left_nav[0].typeCode
+              this.leftNavIndex = 0;
               if(this. left_nav.length){
                  this.goods_info_nav()
               }
@@ -262,42 +264,42 @@
           console.log(err)
         });
       },
-      goods_info_nav:function (num,code) {
-        let obj = {
+      goods_info_nav:function () {
+        let params = {
             method: "goods_info_show_fou",
             firmId:this.firmId,
             websiteNode: this.websiteNode,
-            typeCode:this.goodsType,
-            eyeId: this.eyeId,
+            typeCode:this.goodsTypeCode,
+            eyeId: this.threeTypeCode,
             pageNo: this.pageNo,
             pageSize: this.pageSize,
           }
         this.$ajax.get(this.HOST, {
-          params:obj
+          params:params
         }).then(result => {
           return result.data;
         }).then( data => {
           if(data.statusCode == "100000"){
-            this.goodsList = data.data.page;
+            this.pageObj = data.data.page;
             this.three_nav = data.data.gtes;
              this.$nextTick(function(){
-                 if(code){
-                    let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
-                    let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
-
-                    if (ele.offsetTop>200) {
-                      wrapTop.scrollTop = ele.offsetTop-200
-                    }else{
-                      wrapTop.scrollTop = 0
-                    }
-               }
+                if(this.routerTypeCode){
+                  let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
+                  let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[this.leftNavIndex]
+                  if (ele.offsetTop>200) {
+                    wrapTop.scrollTop = ele.offsetTop-200
+                  }else{
+                    wrapTop.scrollTop = 0
+                  }
+                }
+                this.routerTypeCode = "";
               })
             if( this.pageNo == 1){
-              this.listObj =  this.goodsList.objects
-              this.isLast = this.goodsList.isLast
+              this.goodsArr =  this.pageObj.objects
+              this.isLast = this.pageObj.isLast
             }else{
-              this.listObj =  this.listObj.concat(this.goodsList.objects)
-              this.isLast  = this.goodsList.isLast
+              this.goodsArr =  this.goodsArr.concat(this.pageObj.objects)
+              this.isLast  = this.pageObj.isLast
             }
           }else{
             this.$toast({
@@ -312,13 +314,13 @@
       },
       submitGoShopCart(){
         let goodsList = goodlist1();
-        let obj = Object.assign({
+        let params = Object.assign({
             method: "settlement_shop_cart",
             goodsList:goodsList,
           },this.userBasicParam);
 
         this.$ajax.get(this.HOST, {
-            params:obj
+            params:params
         }).then(result => {
             return result.data;
         }).then(data => {
@@ -350,8 +352,8 @@
         let topLeft = document.querySelector(".moreDoogs_main_top")
           if (typeCode != this.typeCode) {
             this.pageNo = '1'
-            this.typeCode = typeCode;
-            this.isTopNav = index;
+            this.leftTypeCode = typeCode;
+            this.topNavIndex = index;
             this.goods_second_nav()
             rightTop.scrollTop = 0;
             wrapTop.scrollTop = 0;
@@ -366,12 +368,12 @@
       leftNav(typeCode,index) {
         let rightTop = document.querySelector(".moreDoogs_main_box_right")
         let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
-        if ( this.goodsType != typeCode ) {
-          this.eyeId = null;
-          this.isThreeNav = 0;
+        if ( this.goodsTypeCode != typeCode ) {
+          this.threeTypeCode = null;
+          this.threeNavIndex = 0;
           this.pageNo = '1'
-          this.goodsType = typeCode
-          this.isLeftNav =  index
+          this.goodsTypeCode = typeCode
+          this.leftNavIndex =  index
           this.goods_info_nav()
           rightTop.scrollTop = 0;
 
@@ -392,7 +394,7 @@
       toDetail(item) {
         const id = item.id;
         sessionStorage.setItem('goodsDetails',JSON.stringify(item));
-			  this.$router.push({ path:'detail', query:{id:id ,typeCode:this.goodsType}})
+			  this.$router.push({ path:'detail', query:{id:id ,typeCode:this.goodsTypeCode}})
       },
       getNumText(item){
         const msgArr = ['','','不是VIP','等级不足']
@@ -463,12 +465,9 @@
               }
             }else{
               good.sum = parseInt(good.sum) + 1;
-
               let elLeft = event.target.getBoundingClientRect().left;
               let elTop = event.target.getBoundingClientRect().top;
-
               this.sport(elLeft,elTop)
-
             }
           } else{
             this.$toast({
@@ -540,10 +539,9 @@
         })
       },
       threeNav(index,id){
-        console.log(id)
         this.pageNo = '1'
-        this.isThreeNav = index;
-        this.eyeId = id
+        this.threeNavIndex = index;
+        this.threeTypeCode = id
         this.goods_info_nav()
       }
     }

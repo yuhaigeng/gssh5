@@ -76,11 +76,11 @@ export default {
   },
   watch:{
     phone:function(val){
-      var n = val.replace(/\D/g,"");
-      if (n == 0) {
+      var filterNum = val.replace(/\D/g,"");
+      if (filterNum == 0) {
         this.phone ='';
       }else{
-        this.phone =n;
+        this.phone =filterNum;
       }
       if(this.phone.length ==0){
         this.tipsMsg  = null;
@@ -243,14 +243,14 @@ export default {
     },
     confirmFn(val){
       this.isShow = false;
-      let a = [],
-          b = [];
+      let arrText = [],
+          arrValue = [];
       for( var key in val){
-        a.push(val[key].text)
-        b.push(val[key].value)
+        arrText.push(val[key].text)
+        arrValue.push(val[key].value)
       }
-      this.city =  a.join(',')
-      this.countyId = b[2]
+      this.city = arrText.join(',')
+      this.countyId = arrValue[2]
     }
   },
   beforeDestroy(){

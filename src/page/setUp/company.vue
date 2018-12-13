@@ -36,7 +36,7 @@
 <script>
 import setHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
-import { getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
   name:'company',
   components:{

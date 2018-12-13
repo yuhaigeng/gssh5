@@ -27,7 +27,7 @@
 
 <script>
 import setHeader from "../../components/public/header.vue";
-import { getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import {  getTokenId , getUserData, getSecretKey } from "../../common/common.js";
     export default {
         name:'revise',
         components:{
@@ -44,7 +44,7 @@ import { getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from
                 userBasicParam:{},
                 oldPassword:null,
                 newPassword:null,
-                confirmPassword:null,
+                confirmPassword:null, //确认密码
              }
          },
          mounted(){

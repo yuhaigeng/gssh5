@@ -41,7 +41,6 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import alertVue from '../../components/public/alert.vue';
-import {  getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
 export default {
     name:'login',
     components:{
@@ -103,11 +102,11 @@ export default {
         }
       },
       message: function(val) {
-        var n = val.replace(/\D/g,"");
-        if (n == 0) {
+        var filterNum = val.replace(/\D/g,"");
+        if (filterNum == 0) {
           this.message='';
         }else{
-          this.message=n;
+          this.message=filterNum;
         }
         if(this.message.length ==0){
           this.tipsMsg  = null;
@@ -125,11 +124,11 @@ export default {
         }
       },
       account:function(val){
-        var n = val.replace(/\D/g,"");
-        if (n == 0) {
+        var filterNum = val.replace(/\D/g,"");
+        if (filterNum == 0) {
           this.account='';
         }else{
-          this.account=n;
+          this.account=filterNum;
         }
         if(this.account.length == 0){
           this.tipsMsg  = null;
@@ -157,8 +156,8 @@ export default {
         }
       },
       code:function(val){
-        var n = val.replace(/\D/g,"");
-        this.code = n;
+        var filterNum = val.replace(/\D/g,"");
+        this.code = filterNum;
         if( this.message.length == 11 && this.code.length == 6 ){
           this.isActive = true;
         }else{
@@ -171,12 +170,12 @@ export default {
     },
     methods:{
       getCode:function(){
-        let obj = {
-            method:'gss_sms',
-            mobile: this.message
-          }
+        let params = {
+          method:'gss_sms',
+          mobile: this.message
+        }
         this.$ajax.get(this.HOST, {
-          params: obj
+          params: params
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
             this.isHidden = false;
@@ -194,13 +193,13 @@ export default {
       },
       login_up:function(){
           // Object.assign()
-        let obj = Object.assign({
+        let params = Object.assign({
             method:this.method[this.login],
             websiteNode:this.websiteNode,
             mobile:this.login ? this.account : this.message
           }, this.parameter );
         this.$ajax.get(this.HOST, {
-          params : obj
+          params : params
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
             this.setData(resp.data)
@@ -224,13 +223,13 @@ export default {
         });
       },
       desc_data:function(){
-        let obj = {
+        let params = {
             method:'gss_desc',
             websiteNode:this.websiteNode,
             code:this.websiteNode + this.descCode
           }
         this.$ajax.get(this.HOST, {
-          params: obj
+          params: params
         }).then(resp => {
           if(resp.data.statusCode == "100000"){
             resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');

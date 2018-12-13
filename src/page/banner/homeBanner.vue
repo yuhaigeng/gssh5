@@ -30,7 +30,7 @@ export default {
     on:{
       click:(e) =>{
         let data =  e.target.getAttribute('data')
-        this.dataEvent(data[0],data[1],data[2])
+        this.dataEvent(data)
       }
     },
     loop: true,
@@ -42,8 +42,8 @@ export default {
   })
  },
  methods:{
-   dataEvent(type,code,tit){
-      let data = [type,code,tit]
+   dataEvent(arr){
+      let data =  arr.split(',')
       this.$emit('listenEvent',data )
    }
   }
