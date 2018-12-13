@@ -3,7 +3,7 @@
 		<app-header :type="headerMsg"></app-header>
 		<div class="main-wrap often_shop_main_wrap">
 			<ul>
-				<li class="line-wrapper" v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="toDetail(item)">
+				<li class="line-wrapper" v-for="(item,index) in collectList" :key="item.goodsInfoId" @click="goDetail(item)">
 					<mt-cell-swipe :right="rightButtons(index)">
 						<dl class="line-normal-wrapper clearfloat">
 							<dt class="line-normal-avatar-wrapper">
@@ -61,7 +61,7 @@ export default {
 			isLast:false,
 			pageNo: this.pageNo,
 			pageSize: this.pageSize,
-			userId: JSON.parse(localStorage.getItem("user_data")).cuserInfoid,
+			userId: '',
 			//本地购物车
 			goShopCart:[],
 			systemMoney:-1,//系统参数配置中配置的起售金额
@@ -94,19 +94,20 @@ export default {
 					style: { background: 'red', color: '#fff',width:'200px',fontSize:'24px',textAlign:'center',lineHeight:'200px'},
 					handler: function(index){
 						_this.goodID = _this.collectList[this.data].goodsInfoId;
-						_this.get_goods_collect_del(this.data);
+						_this.delCollect(this.data);
 					}
 				}
 			]
 		}
 	},
 	mounted() {
-		this.get_goods_collected()
 		// 数据初始化
 		if (getIsLogin()) {
 			this.isLogin = getIsLogin();
 			this.tokenId = getTokenId();
 			const userInfo = JSON.parse(getUserData());
+			this.userId = userInfo.cuserInfoid;
+			console.log(this.userId)
 
 			this.userBasicParam = {
 				firmId : userInfo.firmInfoid,
@@ -126,6 +127,7 @@ export default {
 			this.goShopCart = []
 		}
 		this.windowHeight = window.innerHeight;
+		this.get_goods_collected()
 	},
 	computed:{
 		// 获取宽度
@@ -148,13 +150,13 @@ export default {
 	},
 	methods:{
 		get_goods_collected:function() {
-      	let params = {
-			method: "goods_collection",
-			pageNo: this.pageNo,
-			pageSize: this.pageSize,
-			firmId: this.firmInfoid,
-			userId: this.userId
-		}
+			let params = {
+				method: "goods_collection",
+				pageNo: this.pageNo,
+				pageSize: this.pageSize,
+				firmId: this.firmInfoid,
+				userId: this.userId
+			}
 			this.$ajax.get(this.HOST, {
 				params:params
 			}).then(resp => {
@@ -168,17 +170,15 @@ export default {
 				} else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'middle',//top bottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						position: 'middle',
+						duration: 2000
 					})
 				}
 			}).catch(err => {
 				console.log('请求失败：'+ err.statusCode);
 			});
 		},
-		get_goods_collect_del:function (index) {
+		delCollect:function (index) {
 			let params = {
 				method: "goods_collection_del",
 				userId: this.userId,
@@ -194,10 +194,8 @@ export default {
 				}else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'middle',//top bottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						position: 'middle',
+						duration: 2000
 					})
 				}
 			}).catch(err => {
@@ -237,7 +235,7 @@ export default {
 				}
 			});
 		},
-		toDetail(item) {
+		goDetail(item) {
 			const id = item.goodsInfoId;
 			sessionStorage.setItem('goodsDetails',JSON.stringify(item.goodsInfo));
 			this.$router.push({ path:'detail', query:{id:id}})

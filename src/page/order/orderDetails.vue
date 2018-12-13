@@ -155,7 +155,7 @@ export default {
 			couponList:[],
 			orderStatusText:['已作废','','待发货','已配货','待支付','已支付'],
 			orderStatusBtnText:['删除订单','','取消订单','','去支付',''],
-			goods:localStorage.getItem('good') ? JSON.parse(localStorage.getItem('good')) : [],
+			goods:[],
 			idArr:[],
 			cache:{}
         }
@@ -231,6 +231,7 @@ export default {
 			return;
 		}
 		if (getIsLogin()) {
+			this.goods = localStorage.getItem('good') ? JSON.parse(localStorage.getItem('good')) : [],
 			this.tokenId = getTokenId();
 			const userInfo = JSON.parse(getUserData());
 			this.userBasicParam = {
@@ -332,10 +333,8 @@ export default {
 				}else{
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						position: 'boottom',
+						duration: 2000
 					})
 				}
 
@@ -418,10 +417,8 @@ export default {
 				}else {
 					this.$toast({
 						message : data.statusStr,
-						position: 'boottom',//top boottom middle
-						duration: 2000,//延时多久消失
-						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
-						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+						position: 'boottom',
+						duration: 2000
 					})
 				}
 			}).catch(err => {
