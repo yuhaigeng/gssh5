@@ -101,13 +101,13 @@ export default {
 		}
 	},
 	mounted() {
-		this.get_goods_collected()
 		// 数据初始化
 		if (getIsLogin()) {
 			this.isLogin = getIsLogin();
 			this.tokenId = getTokenId();
 			const userInfo = JSON.parse(getUserData());
 			this.userId = userInfo.cuserInfoid;
+			console.log(this.userId)
 
 			this.userBasicParam = {
 				firmId : userInfo.firmInfoid,
@@ -127,6 +127,7 @@ export default {
 			this.goShopCart = []
 		}
 		this.windowHeight = window.innerHeight;
+		this.get_goods_collected()
 	},
 	computed:{
 		// 获取宽度
