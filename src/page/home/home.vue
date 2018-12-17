@@ -39,8 +39,8 @@ import banner from "../banner/homeBanner.vue";
 import ggBanner from "../banner/gonggaoBanner.vue";
 import homeGoods from "./homeGoods.vue";
 import alert from "../../components/public/alert.vue";
-import { getSystem , getMessage , getIsLogin , getTokenId , getSecretKey, getUserData } from "../../common/common.js";
-import { system } from "../../api/index.js";
+import { getMessage , getIsLogin , getTokenId , getSecretKey, getUserData } from "../../common/common.js";
+import { getSystem , autoLogin , getHomeDate , getIsNewMessage} from "../../api/index.js";
 export default {
   name: 'home',
   data() {
@@ -115,37 +115,23 @@ export default {
   },
   methods:{
     click() {
-      let obj = {
-        method: "system_config_constant",
-        websiteNode:'3301'
-      }
-     system(obj).then(data => {
-        this.$toast({
-          message : data.statusStr,
-          position: 'middle',
-          duration: 2000,
-        })
-      })
     },
     //获取首页数据
     get_main_page:function () {
-      let params = {
-          method : "main_page_show_three",
-          websiteNode : this.websiteNode
-        };
-      this.$ajax.get(this.HOST, {
-        params:params
-      }).then(result => {
-        return result.data;
-      }).then(data => {
+      let _this = this;
+      getHomeDate().then(data => {
         if (data.statusCode == 100000) {
           sessionStorage.setItem('homePage',JSON.stringify(data))
-          this.mainActivityList = data.data.mainActivityList;
-          this.topList = data.data.topList;
-          this.noticeInfoList = data.data.noticeInfoList;
-          this.centerList = data.data.centerList;
+          _this.mainActivityList = data.data.mainActivityList;
+          _this.topList = data.data.topList;
+          _this.noticeInfoList = data.data.noticeInfoList;
+          _this.centerList = data.data.centerList;
           if (!localStorage.getItem('system')) {
-            getSystem(this)
+            getSystem().then(data => {
+              if (data.statusCode == 100000) {
+                localStorage.setItem("system",JSON.stringify(data.data))
+              }
+            })
           }
         }else{
           this.$toast({
@@ -158,15 +144,7 @@ export default {
     },
     //自动登陆
     autoLogin:function(){
-      let params = {
-        method:'user_login',
-        tokenId:this.tokenId
-      }
-      this.$ajax.get(this.HOST,{
-        params:params
-      }).then(result =>{
-        return result.data
-      }).then(data =>{
+      autoLogin(this.tokenId).then( data => {
         if (data.statusCode == 100000) {
           const user_data={
             cuserInfoid:data.data.cuserInfo.id,
@@ -195,7 +173,7 @@ export default {
             duration: 2000,
           })
         }
-      });
+      })
     },
     //显示关闭弹框
     showalert:function (data) {
@@ -235,8 +213,7 @@ export default {
     },
     goodsJump(id,item){
       sessionStorage.setItem('goodsDetails',JSON.stringify(item.goodsInfo))
-       this.$router.push({ path:'detail', query:{id:id }})
-      // this.$router.push({path:'detail/'+id})
+      this.$router.push({ path:'detail', query:{id:id }})
     }
   }
 

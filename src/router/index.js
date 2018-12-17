@@ -61,12 +61,12 @@ export default new Router({
     children: [
       {
         path: '',
-        redirect:'/test',
+        redirect: '/home',
       },
-      {
-        path: '/test',
-        component: testStore,
-      },
+      // {
+      //   path: '/test',
+      //   component: testStore,
+      // },
       {
         path: '/home',
         component: home,

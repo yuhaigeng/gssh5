@@ -96,5 +96,4 @@ export{
     getIsApp,
     getIsWeiXin,
     getUserData,
-
 }
