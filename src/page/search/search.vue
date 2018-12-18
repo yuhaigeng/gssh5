@@ -53,6 +53,7 @@
 
 <script>
 import {  getIsLogin  } from "../../common/common.js";
+import { getSearchHotcityList , getSearchGoodsList , getSearchGoodsList1 } from "../../api/index.js"
 // 节流函数
 const delay = (function() {
     let timer = 0;
@@ -82,53 +83,59 @@ export default {
 	},
 	methods:{
 		get_goods_hot:function(){
-			let obj  = {
-				method: "goods_show_hot",
-			}
-			this.$ajax.get(this.HOST, {
-				params:obj
-			}).then(resp => {
-				if (resp.data.statusCode == 100000) {
-					this.searchList = resp.data.data;
+			let _this = this;
+			getSearchHotcityList().then(function (d) {
+				if (d.statusCode == 100000) {
+					_this.searchList = d.data;
 				} else {
-					this.$toast({
-						message : data.statusStr,
+					_this.$toast({
+						message : d.statusStr,
 						position: 'boottom',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-			}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
-			});
+			}).catch( err => {
+				console.log(err)
+			})
 		},
 		get_goods_name2:function() {
-			this.state = 2;
-			let obj = {
-				method: "goods_show_name2",
-				websiteNode: this.websiteNode,
-				goodsName:this.searchVal
-			}
-			this.$ajax.get(this.HOST, {
-				params:obj
-			}).then(resp => {
-				if (resp.data.statusCode == 100000) {
-					this.goodsList = resp.data.data;
-					this.state = 3;
+			let _this = this;
+			getSearchGoodsList(_this.searchVal).then(function (d) {
+				if (d.statusCode == 100000) {
+					_this.goodsList = d.data;
+					_this.state = 3;
 				} else {
-					this.$toast({
-						message : data.statusStr,
+					_this.$toast({
+						message : d.statusStr,
 						position: 'boottom',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-			}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
-				this.state = 3;
-			});
+			}).catch( err => {
+				console.log(err)
+			})
+		},
+		get_goods_name:function() {
+			let _this = this;
+			getSearchGoodsList1(_this.searchVal).then(function (d) {
+				if (d.statusCode == 100000) {
+					_this.goodsList = d.data;
+				} else {
+					_this.$toast({
+						message : d.statusStr,
+						position: 'boottom',//top boottom middle
+						duration: 2000,//延时多久消失
+						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
+						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
+					})
+				}
+			}).catch( err => {
+				console.log(err)
+			})
 		},
 		clearTimer() {
 			if (this.timer) {
@@ -138,7 +145,7 @@ export default {
 		search(event) {
 			if(event) {
 				if(this.searchVal.length != 0){
-					this.get_goods_name2()
+					this.get_goods_name()
 				}
 			}
 		},
@@ -146,14 +153,14 @@ export default {
 			this.searchVal = ''
 			this.goodsList = []
 		},
-		showSearch(index) {
-			this.searchVal = index;
+		showSearch(text) {
+			this.searchVal = text;
 			this.get_goods_name2()
 		},
 		toDetail(item) {
 			const id = item.id;
 			sessionStorage.setItem('goodsDetails',JSON.stringify(item));
-			 this.$router.push({ path:'detail', query:{id:id }})
+			this.$router.push({ path:'detail', query:{id:id }})
 		},
 		goBack() {
 			this.$router.go(-1);

@@ -11,8 +11,8 @@
           <ul v-cloak class="msg_login" v-show="login===0">
             <li class="sprite icon_phone">
               <input type="text" id="login_phoneNumber1" value="" maxlength="11" placeholder="请输入您的手机号码" v-model="message" autocomplete="on" @focus="focus" @blur="blur"/>
-              <a id="get_verify_code" @click="get_verify_code" v-html = "'获取验证码'" v-if="isHidden"></a>
-              <a id="time"  v-else>{{count +"秒后重试"}}</a>
+              <a id="get_verify_code" @click="get_verify_code" v-html = "'获取验证码'" v-show="isHidden"></a>
+              <a id="time" v-show="!isHidden">{{count +"秒后重试"}}</a>
             </li>
             <li class="sprite icon_key">
               <input type="text" id="verify_code" name="" placeholder="请输入收到的验证码" maxlength="6" :disabled="isHidden" autocomplete="off"  v-model="code" @focus="focus" @blur="blur" />
@@ -41,7 +41,8 @@
 <script>
 import appHeader from "../../components/public/header.vue";
 import alertVue from '../../components/public/alert.vue';
-import { getSystem , getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { setStore , setSession } from "../../config/mUtils.js";
+import { getGuossSms , userLogin , userDynamicLogin , getGuossDesc } from "../../api/index.js";
 export default {
     name:'login',
     components:{
@@ -71,9 +72,7 @@ export default {
         count:'',
         timer:null,
         noticeInfoList:null,
-        method:['user_dynamic_login','user_login'],
         websiteNode: this.websiteDate.code,
-        parameter:null,
         descCode:"#HZ-DESC",
         cache:{}
       }
@@ -169,21 +168,17 @@ export default {
     mounted(){
     },
     methods:{
+      //获取短信验证码
       getCode:function(){
-        let obj = {
-            method:'gss_sms',
-            mobile: this.message
-          }
-        this.$ajax.get(this.HOST, {
-          params: obj
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            this.isHidden = false;
+        let _this = this;
+        getGuossSms(_this.message).then(function (data) {
+          if(data.statusCode == "100000"){
+            _this.isHidden = false;
           }else{
-            this.isHidden = true;
+            _this.isHidden = true;
           }
-          this.$toast({
-            message : resp.data.statusStr,
+          _this.$toast({
+            message : data.statusStr,
             position: 'bottom',
             duration: 2000,
           })
@@ -191,75 +186,88 @@ export default {
           console.log(err)
         });
       },
-      login_up:function(){
-          // Object.assign()
-        let obj = Object.assign({
-            method:this.method[this.login],
-            websiteNode:this.websiteNode,
-            mobile:this.login ? this.account : this.message
-          }, this.parameter );
-        this.$ajax.get(this.HOST, {
-          params : obj
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            this.setData(resp.data)
+      desc_data:function(){
+        let _this = this;
+        getGuossDesc(_this.websiteNode + _this.descCode).then(function (data) {
+          if(data.statusCode == "100000"){
+            data.data.noticeContent =  (data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+            data.data.noticeTitle =  data.data.title;
+            data.data.alertType = 1;
+            _this.noticeInfoList = data.data;
+            let key = JSON.stringify(_this.websiteNode + _this.descCode);
+            let value = JSON.stringify(data.data)
+            let obj = `{${key}:${value}}`
+            _this.cache = Object.assign(_this.cache,JSON.parse(obj))
+          }else{
+            _this.$toast({
+              message : data.statusStr,
+              position: 'bottom',
+              duration: 2000,
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        });
+      },
+      //点击登录按钮
+      login_btn:function(e){
+        if (this.isActive) {
+          if(this.login == 0){
+            this.sms_login()
+          }else{
+            this.admin_login()
+          }
+        }
+      },
+      //账号密码登录
+      admin_login:function () {
+        let _this = this;
+        userLogin(_this.account,_this.$md5(_this.passWord)).then(function (data) {
+          if(data.statusCode == "100000"){
+            _this.setData(data.data)
             setTimeout(() =>{
-              this.$router.push({path:'/my'})
+              _this.$router.push({path:'/my'})
             },1000)
-            this.$toast({
+            _this.$toast({
               message : '登录成功',
               position: 'bottom',
               duration: 2000,
             })
           }else{
-            this.$toast({
-              message : resp.data.statusStr,
+            _this.$toast({
+              message : data.statusStr,
               position: 'bottom',
               duration: 2000,
             })
           }
         }).catch(err => {
           console.log(err)
-        });
-      },
-      desc_data:function(){
-        let obj = {
-            method:'gss_desc',
-            websiteNode:this.websiteNode,
-            code:this.websiteNode + this.descCode
-          }
-        this.$ajax.get(this.HOST, {
-          params: obj
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-            resp.data.data.noticeTitle =  resp.data.data.title;
-            resp.data.data.alertType = 1;
-            this.noticeInfoList = resp.data.data;
-            let key = JSON.stringify(this.websiteNode + this.descCode);
-            let value = JSON.stringify(resp.data.data)
-            let obj = `{${key}:${value}}`
-            this.cache = Object.assign(this.cache,JSON.parse(obj))
+        })
+      }, 
+      //短信验证码登录
+      sms_login:function () {
+        let _this = this;
+        userDynamicLogin(_this.message,_this.code).then(function (data) {
+          if(data.statusCode == "100000"){
+            _this.setData(data.data)
+            setTimeout(() =>{
+              _this.$router.push({path:'/my'})
+            },1000)
+            _this.$toast({
+              message : '登录成功',
+              position: 'bottom',
+              duration: 2000,
+            })
           }else{
-            this.$toast({
-              message : resp.data.statusStr,
+            _this.$toast({
+              message : data.statusStr,
               position: 'bottom',
               duration: 2000,
             })
           }
         }).catch(err => {
           console.log(err)
-        });
-      },
-      login_btn:function(e){
-        if (this.isActive) {
-          if(this.login == 0){
-            this.parameter = {smsCode:this.code}
-          }else{
-            this.parameter = {password:this.$md5(this.passWord)}
-          }
-          this.login_up();
-        }
+        })
       },
       get_verify_code:function(){
         const TIME_COUNT = 60;
@@ -293,22 +301,22 @@ export default {
       closeAlert:function(){
         this.noticeInfoList = null;
       },
-      setData:function(resp){
+      setData:function(data){
         let user_data={
-          cuserInfoid:resp.data.cuserInfo.id,
-          firmInfoid:resp.data.firmInfo.id,
-          firmName:resp.data.firmInfo.firmName,
-          linkTel:resp.data.cuserInfo.mobile,
-          score:resp.data.firmInfo.score,
-          next:resp.data.firmInfo.next,
-          userGrade:resp.data.firmInfo.userGrade,
-          websiteNode:resp.data.firmInfo.websiteNode,
-          faceImgUrl:resp.data.firmInfo.faceImgUrl,
-          websiteNodeName:resp.data.firmInfo.websiteNodeName
+          cuserInfoid:data.cuserInfo.id,
+          firmInfoid:data.firmInfo.id,
+          firmName:data.firmInfo.firmName,
+          linkTel:data.cuserInfo.mobile,
+          score:data.firmInfo.score,
+          next:data.firmInfo.next,
+          userGrade:data.firmInfo.userGrade,
+          websiteNode:data.firmInfo.websiteNode,
+          faceImgUrl:data.firmInfo.faceImgUrl,
+          websiteNodeName:data.firmInfo.websiteNodeName
         }
-        localStorage.setItem("user_data",JSON.stringify(user_data));
-        localStorage.setItem("tokenId",resp.data.tokenId);
-        localStorage.setItem("secretKey",resp.data.secretKey);
+        setStore("user_data",JSON.stringify(user_data));
+        setStore("tokenId",data.tokenId);
+        setStore("secretKey",data.secretKey);
       }
   }
 

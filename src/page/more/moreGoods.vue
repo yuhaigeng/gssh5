@@ -5,22 +5,22 @@
     <div class="moreDoogs_main_wrap">
       <div class="moreDoogs_main_top" >
         <ul class="moreDoogs_main_top_list" v-bind:style="{width:getTopWidth}"  >
-          <li v-for="(item,index) in goods" :key="index" :class="{topClass:index == isTop}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
+          <li v-for="(item,index) in topNavList" :key="index" :class="{topClass:index == topNavIndex}" @click="topNav(item.typeCode,index)" v-text="item.typeName"></li>
         </ul>
       </div>
       <div class="moreDoogs_main_box clearfloat">
         <div class="moreDoogs_main_box_left_wrap" v-bind:style="{height:getLeftHeight}">
           <ul class="moreDoogs_main_box_left" >
-            <li v-for="(item,index) in left_name" :class="{isSelected:index == isSelected}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
+            <li v-for="(item,index) in leftNavList" :class="{isSelected:index == leftNavIndex}" :key="index"  v-text="item.typeName" @click="leftNav(item.typeCode,index)"></li>
           </ul>
         </div>
         <div class="moreDoogs_main_box_right" v-bind:style="{height:getLeftHeight}" >
           <div class="moreDoogs_main_box_right_box" v-bind:style="{height:getLeftHeight}">
-            <ul class="moreGoods_box_list_class" v-show="gtes.length">
-              <li v-for="(item,index) in gtes" :key="index" v-text="item.name" :class="{active:index == isThree}" @click="threeNav(index,item.id)"></li>
+            <ul class="moreGoods_box_list_class" v-show="tagesNav.length">
+              <li v-for="(item,index) in tagesNav" :key="index" v-text="item.name" :class="{active:index == tagesNavIndex}" @click="threeNav(index,item.id)"></li>
             </ul>
-            <ul class="moreGoods_box_list"  v-show="left_name.length">
-              <li v-for="(item,index) in listObj " :key="index"  @click="toDetail(item)" >
+            <ul class="moreGoods_box_list"  v-show="leftNavList.length">
+              <li v-for="(item,index) in goodsList " :key="index"  @click="toDetail(item)" >
                 <dl class="moreGoods_goods_detaile clearfloat">
                   <dt>
                     <img v-lazy="item.goodsLogo" alt="" :key="item.goodsLogo">
@@ -31,7 +31,7 @@
                       <p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
                       <div v-if="isLogin">
                         <p class="moreGoods_goods_price" v-if="item.vipGrade > 0">
-                          <span  class="fontColor" v-text="item.wholeGssPrice"></span>{{'元/'+item.wholePriceSize}}<del>{{item.nomalPrice + '元/'+item.wholePriceSize}}</del>
+                          <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<del>{{item.nomalPrice + '元/'+item.priceUnit}}</del>
                         </p>
                         <p class="moreGoods_goods_price" v-else>
                           <span  class="fontColor" v-text="item.gssPrice"></span>{{'元/'+item.priceUnit}}<span v-text="item.priceDesc"></span>
@@ -55,8 +55,8 @@
                 </dl>
               </li>
             </ul>
-            <p class="lodemore" v-show='left_name.length' v-text="isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
-            <p class="noMore" v-show="left_name.length == 0" v-text="'暂无更多信息'"></p>
+            <p class="lodemore" v-show='leftNavList.length' v-text="isLast ? '没有更多数据了':'点击加载更多'" @click="loadMore"></p>
+            <p class="noMore" v-show="leftNavList.length == 0" v-text="'暂无更多信息'"></p>
           </div>
         </div>
       </div>
@@ -68,6 +68,7 @@
   import appHeader from "../../components/public/header.vue";
   import appFooterGoShop from "../../components/footerGoShop.vue";
   import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+  import { getMoreFistList , getMoreSecondList , getMoreGoodsList , submitGoCart } from "../../api/index.js";
   import { goodlist1 } from "../../common/goods_car.js";
   import $ from 'jquery';
   export default {
@@ -80,21 +81,24 @@
           left:'返回',
           jumpBefore:'home',
         },
-        isLogin:'',
+        isLogin:false,
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         websiteNode:this.websiteDate.code,
         firmId:'',
-        goods:[],
-        left_name:[],
-        goodsList:null,
-        listObj:[],
+        topNavList:[],//顶部导航
+        topNavIndex:0,
+        leftNavList:[],//侧边导航
+        leftNavIndex:0,
+        goodsList:[],//商品列表
+        tagesNav:[],//商品列表里面的菜单项
+        tagesNavIndex:0,
+        isClickLoad:false,//是否点击加载
         typeCode:"",
-        goodsType:null,
-        isSelected:0,
-        isTop:0,
-        isThree:0,
+        eyeId:'',
+        goodsType:'',
         isLast:false,
+        queryParameter:null,
         //本地购物车
         goShopCart:[],
         systemMoney:-1,//系统参数配置中配置的起售金额
@@ -103,9 +107,12 @@
         elBottom: 0, //当前点击加按钮在网页中的绝对left值
         receiveInCart: false, //购物车组件下落的圆点是否到达目标位置
         windowHeight: null, //屏幕的高度
-        isWithout:null,
-        gtes:[],
-        eyeId:null
+        cache:{
+          'goods_first_type':{},
+          'goods_second_type':{},
+          'goods_info_show_fou':{}
+        }
+        
       }
     },
     watch:{
@@ -126,7 +133,7 @@
         const userInfo = JSON.parse(getUserData());
         this.isLogin = getIsLogin();
         this.tokenId = getTokenId();
-        this.firmId = userInfo.firmInfoid  ;
+        this.firmId = userInfo.firmInfoid ;
         this.userBasicParam = {
           firmId : userInfo.firmInfoid,
           source : 'firmId'+userInfo.firmInfoid,
@@ -144,11 +151,14 @@
       }
       this.goods_first_nav()
       this.windowHeight = window.innerHeight;
+      if(this.$route.query.typeCode){
+        this.queryParameter = this.$route.query.typeCode
+      }
     },
     computed:{
       // 获取宽度
       getTopWidth:function(){
-        return  (this.goods.length * 164) + 24 +'px'
+        return  (this.topNavList.length * 164) + 24 +'px'
       },
       // 获取高度
       getLeftHeight:function(){
@@ -165,150 +175,129 @@
       },
     },
     methods: {
+      //请求一级列表
       goods_first_nav:function () {
-        let obj = {
-            method: "goods_first_type",
-            firmId: this.firmId,
-            websiteNode:this.websiteNode,
-          }
-        this.$ajax.get(this.HOST, {
-          params:obj
-        }).then(result => {
-          return result.data;
-        }).then( data => {
-          if(data.statusCode == "100000"){
-            this.goods = data.data;
-            if(this.$route.query.typeCode){
-              let a = this.$route.query.typeCode
-              let b = a.substring(0,2);
-              let  i ,index , len=[];
-              for ( i = 0 ;i < this.goods.length;i++){
-                if(this.goods[i].typeCode == b){
-                  break;
-                }
-                len.push(i)
-              }
-              if(len.length == this.goods.length){
-                this.isWithout = true;
-                index = 0;
-                b = this.goods[0].typeCode
-              }else{
-                this.isWithout = false;
-                index = i;
-              }
-              this.isTop = index
-              this.typeCode = b
-              this.goods_second_nav(index)
-            }else{
-              this.isTop = 0
-              this.typeCode = this.goods[0].typeCode
-              this.goods_second_nav()
-            }
+        let _this = this;
+        getMoreFistList(_this.firmId).then(function (d) {
+          if(d.statusCode == "100000"){
+            
+            _this.goods_first_nav_data(d.data)
+            
           }
         }).catch(err => {
           console.log(err)
         });
       },
-      goods_second_nav:function (num) {
-        let obj = {
-            method: "goods_second_type",
-            firmId:this.firmId,
-            websiteNode:this.websiteNode,
-            typeCode: this.typeCode
+      //对于一级列表的数据处理
+      goods_first_nav_data:function (data) {
+        if (this.cache['goods_first_type']) {
+            this.cache['goods_first_type'] = data;
           }
-        this.$ajax.get(this.HOST, {
-          params:obj
-        }).then(result => {
-          return result.data;
-        }).then( data => {
-          if(data.statusCode == "100000"){
-            this.left_name = data.data;
-            if(this.$route.query.typeCode){
-              let a =  this.$route.query.typeCode;
-              let index  , i ;
-              let topLeft = document.querySelector(".moreDoogs_main_top")
-              let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[num]
-              for ( i = 0 ;i <  this.left_name.length;i++){
-                if(this.left_name[i].typeCode == a){
-                  break;
-                }
-              }
-              if(this.isWithout){
-                index = 0
-                a = this.left_name[0].typeCode ;
-              }else{
-                index = i
-              }
-              this.isSelected = index ;
-              this.goodsType = a
-              this.$route.query.typeCode = "";
-              if(this.left_name.length){
-                this.goods_info_nav(index,a)
-              }
-              if (ele.offsetLeft > 200) {
-                topLeft.scrollLeft = ele.offsetLeft-200
-              }else{
-                topLeft.scrollLeft = 0
-              }
+        this.topNavList = data;
+        if (!this.isClickLoad) {
+          if (this.queryParameter) {
+            let code = this.queryParameter.substring(0,2);
+            this.topNavIndex = this.filterValofData(code,this.topNavList);
+          } else {
+            this.topNavIndex = 0;
+          }
+          setTimeout(() => {
+            let topLeft = document.querySelector(".moreDoogs_main_top")
+            let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[this.topNavIndex]
+            console.log(ele)
+            if (ele.offsetLeft > 200) {
+              topLeft.scrollLeft = ele.offsetLeft-200
             }else{
-              this.goodsType = this.left_name.length && this.left_name[0].typeCode
-              this.isSelected = 0;
-              if(this.left_name.length){
-                 this.goods_info_nav()
-              }
+              topLeft.scrollLeft = 0
             }
+          }, 200);
+        } 
+        this.typeCode = this.topNavList[this.topNavIndex].typeCode;
+        this.goods_second_nav()
+      },
+      //筛选数组数据里面的某个数据 == 返回值为在数组的位置
+      filterValofData:function (val , arr) {
+        let index = 0;
+        let data = arr.filter(function (o , i ) {
+          if (o.typeCode == val) {
+            index = i;
+            return;
           }
-        }).catch(err => {
+        })
+        return index;
+      },
+      //二级列表菜单的请求
+      goods_second_nav:function () {
+        let _this = this;
+        getMoreSecondList(_this.firmId , _this.typeCode ).then(function (d) {
+          if(d.statusCode == "100000"){
+            
+            _this.goods_second_nav_data(d.data)
+          }
+        }).catch( err => {
           console.log(err)
         });
       },
-      goods_info_nav:function (num,code) {
-        let obj = {
-            method: "goods_info_show_fou",
-            firmId:this.firmId,
-            websiteNode: this.websiteNode,
-            typeCode:this.goodsType,
-            eyeId: this.eyeId,
-            pageNo: this.pageNo,
-            pageSize: this.pageSize,
+      //二级列表菜单的数据处理
+      goods_second_nav_data:function (data) {
+        if (!this.cache['goods_second_type'][this.typeCode]) {
+          this.cache['goods_second_type'][this.typeCode] = data;
+        }
+        this.leftNavList = data;
+        if (!this.isClickLoad) {
+          if (this.queryParameter) {
+            let code = this.queryParameter;
+            this.leftNavIndex = this.filterValofData(code,this.leftNavList);
+          } else {
+            this.leftNavIndex = 0;
           }
-        this.$ajax.get(this.HOST, {
-          params:obj
-        }).then(result => {
-          return result.data;
-        }).then( data => {
-          if(data.statusCode == "100000"){
-            this.goodsList = data.data.page;
-            this.gtes = data.data.gtes;
-             this.$nextTick(function(){
-                 if(code){
-                    let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
-                    let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[num]
-
-                    if (ele.offsetTop>200) {
-                      wrapTop.scrollTop = ele.offsetTop-200
-                    }else{
-                      wrapTop.scrollTop = 0
-                    }
-               }
-              })
-            if( this.pageNo == 1){
-              this.listObj =  this.goodsList.objects
-              this.isLast = this.goodsList.isLast
+          setTimeout(() => {
+            let topLeft = document.querySelector(".moreDoogs_main_box_left_wrap")
+            let ele = document.querySelectorAll(".moreDoogs_main_box_left_wrap li")[this.leftNavIndex]
+            if (ele.offsetTop > 200) {
+              topLeft.scrollTop = ele.offsetTop-200
             }else{
-              this.listObj =  this.listObj.concat(this.goodsList.objects)
-              this.isLast  = this.goodsList.isLast
+              topLeft.scrollTop = 0
             }
+          }, 200);
+        }
+        this.goodsType = this.leftNavList.length && this.leftNavList[this.leftNavIndex].typeCode;
+        if (this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ]) {
+          this.goods_info_nav_data(this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ])
+        } else {
+          this.goods_info_nav()
+        }
+      },
+      //请求的商品列表
+      goods_info_nav:function () {
+        let _this = this;
+        getMoreGoodsList(_this.firmId , _this.goodsType , _this.eyeId , _this.pageNo , _this.pageSize).then(function (d) {
+          if(d.statusCode == "100000"){
+            _this.goods_info_nav_data(d.data)
           }else{
-            this.$toast({
-              message : data.statusStr,
+            _this.$toast({
+              message : d.statusStr,
               position: 'middle',
               duration: 2000,
             })
           }
-        }).catch(err => {
+        }).catch( err => {
           console.log(err)
-        });
+        })
+      },
+      //商品列表的数据处理
+      goods_info_nav_data:function (data) {
+        if (!this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ]) {
+          this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ] = data;
+        }
+        let listData = data.page;
+        this.tagesNav = data.gtes;
+        this.isLast  = listData.isLast;
+        if( this.pageNo == 1){
+          this.goodsList =  listData.objects;
+        }else{
+          this.goodsList =  this.goodsList.concat(listData.objects);
+        }
       },
       submitGoShopCart(){
         let goodsList = goodlist1();
@@ -351,8 +340,14 @@
           if (typeCode != this.typeCode) {
             this.pageNo = '1'
             this.typeCode = typeCode;
-            this.isTop = index;
-            this.goods_second_nav()
+            this.topNavIndex = index;
+            this.leftNavIndex = 0;
+            this.isClickLoad = true;
+            if (this.cache['goods_second_type'][typeCode]) {
+              this.goods_second_nav_data(this.cache['goods_second_type'][typeCode])
+            } else {
+              this.goods_second_nav()              
+            }
             rightTop.scrollTop = 0;
             wrapTop.scrollTop = 0;
             let ele = document.querySelectorAll(".moreDoogs_main_top_list li")[index]
@@ -367,12 +362,21 @@
         let rightTop = document.querySelector(".moreDoogs_main_box_right")
         let wrapTop = document.querySelector(".moreDoogs_main_box_left_wrap")
         if ( this.goodsType != typeCode ) {
-          this.eyeId = null;
-          this.isThree = 0;
+          this.eyeId = '';
+          this.tagesNavIndex = 0;
           this.pageNo = '1'
           this.goodsType = typeCode
-          this.isSelected =  index
-          this.goods_info_nav()
+          this.leftNavIndex =  index;
+          this.isClickLoad = true;
+          console.log(this.cache['goods_info_show_fou'])
+          console.log('typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo)
+          console.log(this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ])
+          if (this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ]) {
+            this.goods_info_nav_data(this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ])
+          } else {
+            this.goods_info_nav()
+          }
+          
           rightTop.scrollTop = 0;
 
           let ele = document.querySelectorAll(".moreDoogs_main_box_left li")[index]
@@ -385,8 +389,12 @@
       },
       loadMore:function(){
         if(!this.isLast){
-          this.pageNo ++
-          this.goods_info_nav()
+          this.pageNo ++;
+          if (this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ]) {
+            this.goods_info_nav_data(this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ])
+          } else {
+            this.goods_info_nav()
+          }
         }
       },
       toDetail(item) {
@@ -540,11 +548,14 @@
         })
       },
       threeNav(index,id){
-        console.log(id)
         this.pageNo = '1'
-        this.isThree = index;
-        this.eyeId = id
-        this.goods_info_nav()
+        this.tagesNavIndex = index;
+        this.eyeId = id;
+        if (this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ]) {
+          this.goods_info_nav_data(this.cache['goods_info_show_fou']['typeCode'+this.goodsType + 'eyeId'+this.eyeId + 'pageNo'+this.pageNo ])
+        } else {
+          this.goods_info_nav()
+        }
       }
     }
   }

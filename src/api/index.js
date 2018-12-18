@@ -52,11 +52,12 @@ export const getMoreSecondList = (firmId, typeCode) => http({
 })
 
 //分类列表+商品列表
-export const getMoreGoodsList = (firmId, typeCode, pageNo, pageSize) => http({
+export const getMoreGoodsList = (firmId, typeCode, eyeId, pageNo, pageSize) => http({
   method: 'goods_info_show_fou',
   websiteNode: websiteDate.code,
   firmId: firmId,
   typeCode: typeCode,
+  eyeId: eyeId,
   pageNo: pageNo,
   pageSize: pageSize
 })
@@ -99,11 +100,13 @@ export const getSearchHotcityList = () => http({
 //搜索商品列表->点击热词搜索
 export const getSearchGoodsList = (goodsName) => http({
   method: 'goods_show_name2',
+  websiteNode: websiteDate.code,
   goodsName: goodsName
 });
 //搜索商品列表->输入内容搜索
 export const getSearchGoodsList1 = (goodsName) => http({
   method: 'goods_show_name',
+  websiteNode: websiteDate.code,
   goodsName: goodsName
 });
 //获取消息列表
@@ -148,7 +151,7 @@ export const getProvincialCityList = () => http({
   websiteNode:websiteDate.code
 })
 //获取街道数据
-export const getStreet = () => http({
+export const getStreet = (code) => http({
   method: 'get_street',
   code:code
 })

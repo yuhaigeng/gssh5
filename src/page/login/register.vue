@@ -82,6 +82,7 @@
 import appHeader from "../../components/public/header.vue";
 import agreementAlert from  "../../components/public/alert.vue";
 import vuePickers from '../../components/public/picker.vue';
+import { getGuossDesc , getProvincialCityList , getStreet , register } from "../../api/index.js";
   export default {
     name:'register',
     data() {
@@ -157,110 +158,95 @@ import vuePickers from '../../components/public/picker.vue';
     },
     methods:{
       desc_data:function(){
-          this.$ajax.get(this.HOST, {
-            params:{
-              method:'gss_desc',
-              websiteNode:this.websiteDate.code,
-              code:this.websiteDate.code + this.descCode
-            }
-          }).then(resp => {
-            if(resp.data.statusCode == "100000"){
-              resp.data.data.noticeContent =  (resp.data.data.desc.toString()).replace(/\r\n/g, '<br/>');
-              resp.data.data.noticeTitle =  resp.data.data.title;
-              resp.data.data.alertType = 1;
-              this.noticeInfoList = resp.data.data;
-              let key = this.websiteDate.code + this.descCode ;
-              let obj = '{'+'"'+key+'"'+':'+JSON.stringify(resp.data.data)+'}'
-              this.cache = Object.assign(this.cache,JSON.parse(obj))
-            }
-          }).catch(err => {
-          });
+        let _this = this;
+        getGuossDesc(_this.websiteDate.code + this.descCode).then(function (data) {
+          if(data.statusCode == "100000"){
+            data.data.noticeContent =  (data.data.desc.toString()).replace(/\r\n/g, '<br/>');
+            data.data.noticeTitle =  data.data.title;
+            data.data.alertType = 1;
+            _this.noticeInfoList = data.data;
+            let key = _this.websiteDate.code + _this.descCode ;
+            let obj = '{'+'"'+key+'"'+':'+JSON.stringify(data.data)+'}'
+            _this.cache = Object.assign(_this.cache,JSON.parse(obj))
+          }
+        }).catch( err => {
+          console.log(err)
+        })
       },
       cityApi:function(){
-          this.$ajax.get(this.HOST, {
-            params:{
-              method:'get_pcc',
-              websiteNode:this.websiteDate.code,
+        let _this = this;
+        getProvincialCityList().then(function (d) {
+          if(d.statusCode == "100000"){
+            let data = d.data;
+            _this.cityData.data1.push({'text':data[0].name,'value':data[0].code})
+            let data1 = data[0].cities;
+            _this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
+            let data2 = data1[0].cities;
+            for(let i = 0 ; i < data2.length; i++){
+                _this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
             }
-          }).then(resp => {
-            if(resp.data.statusCode == "100000"){
-              let data = resp.data.data
-              this.cityData.data1.push({'text':data[0].name,'value':data[0].code})
-              let data1 = data[0].cities;
-              this.cityData.data2.push({'text':data1[0].name,'value':data1[0].code})
-              let data2 = data1[0].cities;
-              for(let i = 0 ; i < data2.length; i++){
-                  this.cityData.data3.push({'text':data2[i].name,'value':data2[i].code})
-              }
-              let key = JSON.stringify(this.websiteDate.code);
-              let value =JSON.stringify( this.cityData)
-              let obj = `{${ key}:${value}}`
-              this.cityCache = Object.assign(this.cityCache , JSON.parse(obj))
-            }
-          }).catch(err => {
-          });
+            let key = JSON.stringify(_this.websiteDate.code);
+            let value =JSON.stringify( _this.cityData)
+            let obj = `{${ key}:${value}}`
+            _this.cityCache = Object.assign(_this.cityCache , JSON.parse(obj))
+          }
+        }).catch( err => {
+          console.log(err)
+        });
       },
       streetApi:function(){
-        this.$ajax.get(this.HOST, {
-          params:{
-            method:'get_street',
-            code:this.countyId
-          }
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            let data = resp.data.data;
+        let _this = this;
+        getStreet(_this.countyId).then(function (d) {
+          if(d.statusCode == "100000"){
+            let data = d.data;
             if(data.length){
               for(let i = 0 ; i < data.length; i++){
-                this.cityData.data1.push({'text':data[i].name,'value':data[i].code})
+                _this.cityData.data1.push({'text':data[i].name,'value':data[i].code})
               }
             }else{
-              this.cityData.data1= [{'text':'','value':''}]
+              _this.cityData.data1= [{'text':'','value':''}]
             }
-            console.log(this.cityData)
-            let key  = JSON.stringify(this.countyId);
-            let value = JSON.stringify(this.cityData.data1);
+            console.log(_this.cityData)
+            let key  = JSON.stringify(_this.countyId);
+            let value = JSON.stringify(_this.cityData.data1);
             let obj = `{${key} : ${value}}` ;
-            this.streetCache = Object.assign(this.streetCache , JSON.parse(obj))
+            _this.streetCache = Object.assign(_this.streetCache , JSON.parse(obj))
           }
-        }).catch(err => {
-        });
+        }).catch( err => {
+          console.log(err)
+        })
       },
       rgister:function(){
-        this.$ajax.get(this.HOST, {
-          params:{
-            method:'firm_register',
-            firmName:this.firmName,
-            address:this.address,
-            linkTel:this.shopPhone,
-            linkMan:this.linkMan,
-            description:this.description,
-            websiteNode:this.websiteDate.code,
-            province:this.province,
-            city:this.city,
-            county:this.county,
-            street:this.street,
-            road:this.road,
-            referrerId:this.recommendId,
-            referrer:this.recommendName
+        let _this = this,
+          params = {
+            firmName:_this.firmName,
+            address:_this.address,
+            linkTel:_this.shopPhone,
+            linkMan:_this.linkMan,
+            description:_this.description,
+            websiteNode:_this.websiteDate.code,
+            province:_this.province,
+            city:_this.city,
+            county:_this.county,
+            street:_this.street,
+            road:_this.road,
+            referrerId:_this.recommendId,
+            referrer:_this.recommendName
+          };
+
+        register(params).then(function (data) {
+          if(data.statusCode == "100000"){
+            _this.isMainHidden = true;
+            _this.isBottomHidden = true;
           }
-        }).then(resp => {
-          if(resp.data.statusCode == "100000"){
-            this.isMainHidden = true;
-            this.isBottomHidden = true;
-            this.$toast({
-              message : resp.data.statusStr,
-              position: 'boottom',
-              duration: 2000,
-              })
-          }else{
-            this.$toast({
-              message : resp.data.statusStr,
-              position: 'boottom',
-              duration: 2000,
-              })
-          }
-        }).catch(err => {
-        });
+          _this.$toast({
+            message : data.statusStr,
+            position: 'boottom',
+            duration: 2000,
+          })
+        }).catch( err => {
+          console.log(err)
+        })
       },
       focus:function(){
         this.isBottomHidden = true;
