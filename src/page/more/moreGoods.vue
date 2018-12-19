@@ -67,8 +67,8 @@
 <script>
   import appHeader from "../../components/public/header.vue";
   import appFooterGoShop from "../../components/footerGoShop.vue";
-  import { getSystem  , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
-  import { getMoreFistList , getMoreSecondList , getMoreGoodsList , submitGoCart } from "../../api/index.js";
+  import { mapState , mapMutations } from "vuex";
+  import { getSystem ,getMoreFistList , getMoreSecondList , getMoreGoodsList , submitGoCart } from "../../api/index.js";
   import { goodlist1 } from "../../common/goods_car.js";
   import $ from 'jquery';
   export default {
@@ -81,11 +81,9 @@
           left:'返回',
           jumpBefore:'home',
         },
-        isLogin:false,
         pageNo: this.pageNo,
         pageSize: this.pageSize,
         websiteNode:this.websiteDate.code,
-        firmId:'',
         topNavList:[],//顶部导航
         topNavIndex:0,
         leftNavList:[],//侧边导航
@@ -100,8 +98,7 @@
         isLast:false,
         queryParameter:null,
         //本地购物车
-        goShopCart:[],
-        systemMoney:-1,//系统参数配置中配置的起售金额
+        //systemMoney:-1,//系统参数配置中配置的起售金额
         showMoveDot: [], //控制下落的小圆点显示隐藏
         elLeft: 0, //当前点击加按钮在网页中的绝对top值
         elBottom: 0, //当前点击加按钮在网页中的绝对left值
@@ -112,50 +109,17 @@
           'goods_second_type':{},
           'goods_info_show_fou':{}
         }
-        
-      }
-    },
-    watch:{
-      goShopCart: {
-        handler:function( val,oldVal ) {
-          localStorage.setItem('good',JSON.stringify(val))
-        },
-        deep:true,
       }
     },
     components: {
       appHeader,
       appFooterGoShop
     },
-    mounted() {
-      // 数据初始化
-      if (getIsLogin()) {
-        const userInfo = JSON.parse(getUserData());
-        this.isLogin = getIsLogin();
-        this.tokenId = getTokenId();
-        this.firmId = userInfo.firmInfoid ;
-        this.userBasicParam = {
-          firmId : userInfo.firmInfoid,
-          source : 'firmId'+userInfo.firmInfoid,
-          sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-          tokenId : getTokenId()
-        }
-      }
-      if ( localStorage.getItem('system') ) {
-        this.systemMoney = JSON.parse(localStorage.getItem('system')).how_much_money_dispatch;
-      }
-      if ( localStorage.getItem('good') ) {
-        this.goShopCart = JSON.parse(localStorage.getItem('good'))
-      } else {
-        this.goShopCart = []
-      }
-      this.goods_first_nav()
-      this.windowHeight = window.innerHeight;
-      if(this.$route.query.typeCode){
-        this.queryParameter = this.$route.query.typeCode
-      }
-    },
     computed:{
+      ...mapState([
+          'tokenId','secretKey','firmId','userData','isLogin','system',
+          'goShopCart',
+      ]),
       // 获取宽度
       getTopWidth:function(){
         return  (this.topNavList.length * 164) + 24 +'px'
@@ -173,8 +137,56 @@
         let e = a-b-c-d;
         return e + 'px';
       },
+      systemMoney:function () {
+        if (this.system) {
+          return this.system.how_much_money_dispatch;
+        }
+      }
+    },
+    created(){
+      if(this.$route.query.typeCode){
+        this.queryParameter = this.$route.query.typeCode
+      }
+      this.INIT_DATA();
+      this.INIT_BUYCART();
+    },
+    watch:{
+      goShopCart: {
+        handler:function( val,oldVal ) {
+          localStorage.setItem('good',JSON.stringify(val))
+        },
+        deep:true,
+      }
+    },
+    mounted() {
+      // 数据初始化
+      if (this.isLogin) {
+        this.publicParameters = {
+          tokenId:this.tokenId,
+          source:'firmId'+this.firmId,
+          sign:this.$md5('firmId'+this.firmId+"key"+this.secretKey).toUpperCase()
+        }
+      }
+      this.initData()
+      this.goods_first_nav()
+      this.windowHeight = window.innerHeight;
+      
     },
     methods: {
+      ...mapMutations([
+        'INIT_DATA','INIT_BUYCART','SAVE_SYSTEM'
+      ]),
+      //初始化时获取基本数据
+      async initData(){
+        if (!this.system) {
+          let _this = this;
+          getSystem().then(d => {
+            if (d.statusCode == 100000) {
+              _this.SAVE_SYSTEM(d.data)
+            }
+          })
+        };
+      },
       //请求一级列表
       goods_first_nav:function () {
         let _this = this;
@@ -240,6 +252,9 @@
       },
       //二级列表菜单的数据处理
       goods_second_nav_data:function (data) {
+        if (!data.length) {
+          return;
+        };
         if (!this.cache['goods_second_type'][this.typeCode]) {
           this.cache['goods_second_type'][this.typeCode] = data;
         }

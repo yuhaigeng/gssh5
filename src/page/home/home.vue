@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <app-footer :isNew = 'isNew' :isLogin = "isLogin"></app-footer>
+    <app-footer :isNew = 'isNewMessage' :isLogin = "isLogin"></app-footer>
     <alert :noticeInfoList="noticeInfo" v-if="noticeInfo" v-on:listenClose = "closeAlert"></alert>
   </div>
 </template>
@@ -39,8 +39,9 @@ import banner from "../banner/homeBanner.vue";
 import ggBanner from "../banner/gonggaoBanner.vue";
 import homeGoods from "./homeGoods.vue";
 import alert from "../../components/public/alert.vue";
-import { getMessage , getIsLogin , getTokenId , getSecretKey, getUserData } from "../../common/common.js";
+import {mapState, mapMutations} from 'vuex'
 import { getSystem , autoLogin , getHomeDate , getIsNewMessage} from "../../api/index.js";
+import { setStore, setSession } from "../../config/mUtils.js";
 export default {
   name: 'home',
   data() {
@@ -50,16 +51,14 @@ export default {
       noticeInfoList:[],
       centerList:[],
       noticeInfo:null,
-      tokenId:null,
-      isLogin:getIsLogin(),
       websiteNodeName:this.websiteDate.name,
       websiteNode:this.websiteDate.code,
-      isNew:false,//表示是否有新消息
       headerMsg:{
           type:"home",
       },
     }
   },
+  //组件
   components: {
     appHeader,
     appFooter,
@@ -67,6 +66,12 @@ export default {
     ggBanner,
     alert,
     homeGoods
+  },
+  //计算属性
+  computed:{
+    ...mapState([
+        'tokenId','secretKey','firmId','userData','isLogin','isAutoLogin','isNewMessage','system'
+    ]),
   },
   //生命周期总结
   // beforecreate : 举个栗子：可以在这加个loading事件
@@ -79,71 +84,71 @@ export default {
   },
   //:完成了 data 数据的初始化，el没有
   created(){
-
+    this.INIT_DATA()
   },
   //完成挂载
   mounted(){
-    console.log(this)
     if (sessionStorage.getItem('homePage')) {
       const homePage = JSON.parse(sessionStorage.getItem('homePage'));
-      this.mainActivityList = homePage.data.mainActivityList;
-      this.topList = homePage.data.topList;
-      this.noticeInfoList = homePage.data.noticeInfoList;
-      this.centerList = homePage.data.centerList;
+      this.homePageData(homePage)
     }
-    if (getIsLogin()) {
-      this.tokenId = getTokenId();
-      if (sessionStorage.getItem("isAuto") != "true") {
+    if (this.isLogin) {
+      this.publicParameters = {
+        tokenId:this.tokenId,
+        source:'firmId'+this.firmId,
+        sign:this.$md5('firmId'+this.firmId+"key"+this.secretKey).toUpperCase()
+      }
+      if (this.isAutoLogin) {
         this.autoLogin();
-      }
-      const userInfo = JSON.parse(getUserData());
-
-      this.userBasicParam = {
-        firmId : userInfo.firmInfoid,
-        source : 'firmId'+userInfo.firmInfoid,
-        sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-        tokenId : getTokenId()
-      }
-      if(localStorage.getItem("isNew")){
-        this.isNew = JSON.parse(localStorage.getItem("isNew"))
-      }else{
-        getMessage(this)
-        localStorage.setItem('isNew',this.isNew)
       }
     }
     this.get_main_page();
   },
   methods:{
-    click() {
+    ...mapMutations([
+      'INIT_DATA','SAVE_LOGIN_INFO','SAVE_AUTO_LOGIM','SAVE_MESSAGE','SAVE_SYSTEM'
+    ]),
+    //初始化时获取基本数据
+    async initData(){
+      if (!this.system) {
+        let _this = this;
+        getSystem().then(d => {
+          if (d.statusCode == 100000) {
+            _this.SAVE_SYSTEM(d.data)
+          }
+        })
+      };
     },
     //获取首页数据
     get_main_page:function () {
       let _this = this;
-      getHomeDate().then(data => {
-        if (data.statusCode == 100000) {
-          sessionStorage.setItem('homePage',JSON.stringify(data))
-          _this.mainActivityList = data.data.mainActivityList;
-          _this.topList = data.data.topList;
-          _this.noticeInfoList = data.data.noticeInfoList;
-          _this.centerList = data.data.centerList;
-          if (!localStorage.getItem('system')) {
-            getSystem().then(data => {
-              if (data.statusCode == 100000) {
-                localStorage.setItem("system",JSON.stringify(data.data))
-              }
-            })
-          }
+      getHomeDate().then(d => {
+        if (d.statusCode == 100000) {
+          sessionStorage.setItem('homePage',JSON.stringify(d.data))
+          _this.homePageData(d.data);
+          
         }else{
-          this.$toast({
-            message : data.statusStr,
+          _this.$toast({
+            message : d.statusStr,
             position: 'bottom',
             duration: 2000,
           })
         }
+        if (!_this.isNewMessage) {
+          _this.getMessage()
+        }
       })
+    },
+    homePageData:function (data) {
+      this.mainActivityList = data.mainActivityList;
+      this.topList = data.topList;
+      this.noticeInfoList = data.noticeInfoList;
+      this.centerList = data.centerList;
+      this.initData()
     },
     //自动登陆
     autoLogin:function(){
+      let _this = this;
       autoLogin(this.tokenId).then( data => {
         if (data.statusCode == 100000) {
           const user_data={
@@ -158,10 +163,8 @@ export default {
             faceImgUrl:data.data.firmInfo.faceImgUrl,
             websiteNodeName:data.data.firmInfo.websiteNodeName
           }
-          sessionStorage.setItem("isAuto","true");
-          localStorage.setItem("user_data",JSON.stringify(user_data));
-          localStorage.setItem("tokenId",data.data.tokenId);
-          localStorage.setItem("secretKey",data.data.secretKey);
+          _this.SAVE_AUTO_LOGIM();
+          _this.SAVE_LOGIN_INFO({'tokenId':data.data.tokenId,'secretKey':data.data.secretKey,user_data});
         } else {
           let openid = localStorage.getItem("openid");
           localStorage.clear();
@@ -172,6 +175,13 @@ export default {
             position: 'middle',
             duration: 2000,
           })
+        }
+      })
+    },
+    getMessage:function () {
+      getIsNewMessage(this.firmId , this.publicParameters).then(d => {
+        if (d.statusCode == 100000) {
+          d.data && this.SAVE_MESSAGE( true )
         }
       })
     },

@@ -1,17 +1,8 @@
 
-import http from '../config/http.js'
-
-// import fetch from '../config/fetch'
-// import {
-//   getStore
-// } from '../config/mUtils'
-
 import {
-  pageNo,
-  pageSize,
   websiteDate
 } from "../config/env.js";
-
+import http from '../config/http.js';
 // 获取配置信息
 export const getSystem = () => http({
   method: 'system_config_constant',
@@ -62,20 +53,23 @@ export const getMoreGoodsList = (firmId, typeCode, eyeId, pageNo, pageSize) => h
   pageSize: pageSize
 })
 //商品详情接口
-export const getGoodsDetail = (id) => http({
+export const getGoodsDetail = (goodsId, userId) => http({
   method: 'goods_get_by_id_two',
-  goodsId:id
+  goodsId:goodsId,
+  userId:userId
 });
 //添加商品收藏接口
-export const addGoodsColle = (id,userId) => http({
+export const addGoodsColle = (gooodsId, firmId,userId) => http({
   method: 'goods_collection_add',
-  goodsId:id,
+  goodsId: gooodsId,
+  firmId: firmId,
   userId: userId
 })
 //删除商品收藏接口
-export const delGoodsColle = (id, userId) => http({
+export const delGoodsColle = (gooodsId, firmId, userId) => http({
   method: 'goods_collection_del',
-  goodsId: id,
+  goodsId: gooodsId,
+  firmId: firmId,
   userId: userId
 })
 
@@ -160,6 +154,17 @@ export const register = (dataObj) => http(Object.assign({
   method: 'firm_register'
 },dataObj))
 
+// 个人中心
+//获取个人信息
+export const getPersonInfo = (firmId,dataObj) => http(Object.assign({
+  method: 'user_personal_msg',
+  firmId:firmId,
+},dataObj))
+//获取vip信息
+export const getUserVipInfo = (firmId) => http({
+  method: 'firm_vip_info',
+  firmId:firmId
+})
 
 
 

@@ -64,6 +64,7 @@ import appFooterGoShop from "../../components/footerGoShop.vue";
 import goodsBanner from "../../page/banner/goodsBanner.vue";
 import { goodlist1 } from "../../common/goods_car.js";
 import {  getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { getGoodsDetail , addGoodsColle , delGoodsColle , submitGoCart } from "../../api/index.js";
 export default {
 	name:'goodsDetail',
  	data() {
@@ -154,46 +155,33 @@ export default {
 	},
 	methods:{
 		get_goods_detail:function () {
-			let obj = {
-				method: "goods_get_by_id_two",
-				goodsId: this.goodsId,
-				userId: this.userId
-			}
-			this.$ajax.get(this.HOST, {
-				params:obj
-			}).then(resp => {
-				if (resp.data.statusCode == 100000) {
-					this.detailList = resp.data.data;
-					const list = this.detailList.goodsPics.split('@');
-					list.pop();
-					this.bannerDate = list;
-					this.isCollect = (resp.data.data.isColl > 0 ? true : false)
+			let _this = this;
+			getGoodsDetail( _this.goodsId , _this.userId ).then(function (d) {
+				if (d.statusCode == 100000) {
+					_this.detailList = d.data;
+					const list = _this.detailList.goodsPics.split('@');
+						list.pop();
+					_this.bannerDate = list;
+					_this.isCollect = (d.data.isColl > 0 ? true : false)
 				} else {
-					this.$toast({
-						message : data.statusStr,
+					_this.$toast({
+						message : d.statusStr,
 						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
 						//iconClass: 'mint-toast-icon mintui mintui-field-warning'
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				}
-			}).catch(err => {
-				console.log('请求失败：'+ err);
+			}).catch( err => {
+				console.log(err)
 			});
 		},
 		get_goods_collectAdd:function () {
-			let obj = {
-				method: "goods_collection_add",
-				goodsId: this.goodsId,
-				firmId: this.firmId,
-				userId: this.userId
-			}
-			this.$ajax.get(this.HOST, {
-				params:obj
-			}).then(resp => {
-				if (resp.data.statusCode == 100000) {
-					this.isCollect = true
-					this.$toast({
+			let _this = this;
+			addGoodsColle(_this.goodsId , _this.firmId , _this.userId).then(function (d) {
+				if (d.statusCode == 100000) {
+					_this.isCollect = true
+					_this.$toast({
 						message : '收藏成功',
 						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
@@ -201,25 +189,18 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				} else {
-
+					
 				}
-			}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
-			});
+			}).catch( err => {
+				console.log(err)
+			})
 		},
 		get_goods_collect_del:function (index) {
-			let obj = {
-				method: "goods_collection_del",
-				goodsId: this.goodsId,
-				firmId: this.firmId,
-				userId: this.userId
-			}
-			this.$ajax.get(this.HOST, {
-				params:obj
-			}).then(resp => {
-				if (resp.data.statusCode == 100000) {
-					this.isCollect = false;
-					this.$toast({
+			let _this = this;
+			delGoodsColle(_this.goodsId , _this.firmId , _this.userId).then(function (d) {
+				if (d.statusCode == 100000) {
+					_this.isCollect = false
+					_this.$toast({
 						message : '取消收藏成功',
 						position: 'middle',//top boottom middle
 						duration: 2000,//延时多久消失
@@ -227,11 +208,11 @@ export default {
 						//.mintui-search .mintui-more .mintui-back.mintui-field-error .mintui-field-warning .mintui-success .mintui-field-success
 					})
 				} else {
-
+					
 				}
-			}).catch(err => {
-				console.log('请求失败：'+ err.statusCode);
-			});
+			}).catch( err => {
+				console.log(err)
+			})
 		},
 		goVip() {
 			if(!this.logined) {

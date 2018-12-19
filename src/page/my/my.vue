@@ -12,7 +12,7 @@
           <dt><img src="../../assets/img/icon_server.png"/></dt>
           <dd>人工客服</dd>
         </dl>
-        <a class="telPhone" :href="'tel:'+system.feedback_method"></a>
+        <a class="telPhone" :href="'tel:'+feedback_method"></a>
       </div>
     </app-header>
     <loginState :userInfo = "userInfo" :userVipInfo= "userVipInfo" :isLogin = "isLogin"  :userBasicParam = 'userBasicParam' ></loginState>
@@ -23,7 +23,7 @@
       </router-link>
     </div>
     <personalOptions v-for="(item,index) in infoData" :info="item" :isLogin='isLogin' :key="index"></personalOptions>
-    <app-footer :isLogin="isLogin" :isNew = 'isNew'></app-footer>
+    <app-footer :isLogin="isLogin" :isNew = 'isNewMessage'></app-footer>
   </div>
 </template>
 
@@ -32,15 +32,10 @@ import appHeader from "../../components/public/header.vue";
 import appFooter from "../../components/public/footer.vue";
 import loginState from "./loginState.vue";
 import personalOptions from "./personalOptions.vue";
-import {  getMessage , getIsLogin , getTokenId , getUserData, getSecretKey } from "../../common/common.js";
+import { mapState , mapMutations } from "vuex";
+import { getSystem , getPersonInfo , getUserVipInfo , getIsNewMessage} from "../../api/index.js";
 export default {
   name: 'my',
-  components: {
-    appHeader,
-    appFooter,
-    loginState,
-    personalOptions,
-  },
   data() {
     return {
       headerMsg:{
@@ -48,16 +43,32 @@ export default {
         title:'我的',
         routerPath:'/setUp',
       },
-      isLogin:getIsLogin(),
       method:["user_personal_msg","firm_vip_info"],
       userBasicParam:{},
       userInfo:{},
       userVipInfo:{},
       infoData:[],
       navInfo:[],
-      system:{},
-      isNew:false,//表示是否有新消息
     }
+  },
+  computed:{
+    ...mapState([
+        'tokenId','secretKey','firmId','userData','isLogin','system','isNewMessage',
+    ]),
+    feedback_method:function () {
+      if (this.system) {
+        return this.system.feedback_method;
+      }
+    }
+  },
+  components: {
+    appHeader,
+    appFooter,
+    loginState,
+    personalOptions,
+  },
+  created(){
+    this.INIT_DATA();
   },
   mounted(){
     this.navInfo = [
@@ -69,41 +80,30 @@ export default {
       dateModule[0],
       dateModule[1]
     ]
-    if (getIsLogin()) {
-      this.system = JSON.parse(localStorage.getItem('system'))
-      const userInfo = JSON.parse(getUserData());
-      this.userBasicParam ={
-        firmId:userInfo.firmInfoid,
-        source:'firmId'+ userInfo.firmInfoid,
-        tokenId: getTokenId(),
-        sign :this.$md5('firmId'+ userInfo.firmInfoid + "key" + getSecretKey()).toUpperCase()
-      }
-      if(localStorage.getItem("isNew")){
-        this.isNew = JSON.parse(localStorage.getItem("isNew"))
-      }else{
-        getMessage(this)
-        localStorage.setItem('isNew',this.isNew)
+    console.log(this.isLogin)
+    if (this.isLogin) {
+      //this.system = JSON.parse(localStorage.getItem('system'))
+      this.publicParameters = {
+        tokenId:this.tokenId,
+        source:'firmId'+this.firmId,
+        sign:this.$md5('firmId'+this.firmId+"key"+this.secretKey).toUpperCase()
       }
       this.personApi()
       this.firm_vip_info()
     }
-       
-    
   },
   methods:{
+    ...mapMutations([
+      'INIT_DATA','SAVE_MESSAGE','SAVE_SYSTEM'
+    ]),
     personApi:function(){
-      let obj = Object.assign({
-          method:this.method[0],
-          firmId: this.userBasicParam.firmId
-        },this.userBasicParam);
-      this.$ajax.get(this.HOST, {
-        params: obj
-      }).then(resp => {
-        if(resp.data.statusCode ==  "100000"){
-          this.userInfo = resp.data.data
+      let _this = this;
+      getPersonInfo(_this.firmId , _this.publicParameters).then(function (d) {
+        if(d.statusCode ==  "100000"){
+          _this.userInfo = d.data
         }else{
-          this.$toast({
-            message : resp.data.statusStr,
+          _this.$toast({
+            message : d.statusStr,
             position: 'bottom',
             duration: 2000,
           })
@@ -113,33 +113,38 @@ export default {
       });
     },
     firm_vip_info:function(){
-      let obj = {
-          method:this.method[1],
-          firmId: this.userBasicParam.firmId
-        }
-      this.$ajax.get(this.HOST, {
-        params: obj
-      }).then(resp => {
-        if(resp.data.statusCode ==  "100000"){
-          this.userVipInfo=resp.data.data
-          dateModule[3].text1= `<b>${this.userVipInfo.coupons}</b><span>张</span>`
-          dateModule[4].text1= `<b>${this.userVipInfo.surplusScore}</b><span>个</span>`
-          this.navInfo = [
+      let _this = this;
+      getUserVipInfo(_this.firmId).then(function (d) {
+        if (d.statusCode == 100000) {
+          _this.userVipInfo=d.data
+          dateModule[3].text1= `<b>${_this.userVipInfo.coupons}</b><span>张</span>`
+          dateModule[4].text1= `<b>${_this.userVipInfo.surplusScore}</b><span>个</span>`
+          _this.navInfo = [
             dateModule[2],
             dateModule[3],
             dateModule[4],
           ]
         }else{
-          this.$toast({
-            message : resp.data.statusStr,
+          _this.$toast({
+            message : d.statusStr,
             position: 'bottom',
             duration: 2000,
           })
         }
+        if (!_this.isNewMessage) {
+          _this.getMessage()
+        }
       }).catch(err => {
         console.log(err)
       });
-    }
+    },
+    getMessage:function () {
+      getIsNewMessage(this.firmId , this.publicParameters).then(d => {
+        if (d.statusCode == 100000) {
+          d.data && this.SAVE_MESSAGE( true )
+        }
+      })
+    },
   }
 }
 var dateModule  = [

@@ -11,11 +11,18 @@ Vue.use(Vuex)
 
 const state = {
   websiteDate,
-  tokenId: getStore('tokenId') ? getStore('tokenId') : '',
-  secretKey: getStore('secretKey') ? getStore('secretKey') : '',
-  userData: getStore('secretKey') ? getStore('secretKey') : '',
-  cartList:[],
-  isNewMessage: getSession('message') ? getSession('message') : '',
+  tokenId: '',
+  secretKey: '',
+  userData: null,
+  firmId:'',
+  userId:'',
+  isLogin: false,
+  isNewMessage: false, //是否有新的消息
+  isAutoLogin:false,//是否调用过自动登录
+  goShopCart: [],//购物车
+  system:null,//系统消息
+  
+
   
 
 }
