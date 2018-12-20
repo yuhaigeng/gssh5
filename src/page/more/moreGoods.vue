@@ -356,8 +356,11 @@
             this.pageNo = '1'
             this.typeCode = typeCode;
             this.topNavIndex = index;
+            this.leftNavList = [];
             this.leftNavIndex = 0;
+            this.goodsList = [];
             this.isClickLoad = true;
+
             if (this.cache['goods_second_type'][typeCode]) {
               this.goods_second_nav_data(this.cache['goods_second_type'][typeCode])
             } else {
