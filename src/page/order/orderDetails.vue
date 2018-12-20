@@ -887,6 +887,7 @@ export default {
 	float: right;
 	outline: none;
 	margin-bottom: 0;
+	padding: 0;
 }
 .conpon_item_box .order_details_coupon {
 	width: 100%;
