@@ -3,7 +3,7 @@
 		<div class="header-wrap clearfloat">
 				<div class="searchCallback sprite arrow_left" @click="goBack"></div>
 			<div class="search">
-				<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" v-focus="focusState"/>
+				<input type="text" class="sprite icon_search_grey" placeholder="请输入商品名称" v-model="searchVal" @input="search($event)" ref="focusState"/>
 				<div class="delete sprite delete_b" @click="delSearch()"></div>
 			</div>
 		</div>
@@ -21,7 +21,7 @@
 					</dt>
 					<dd>
 						<p>非常抱歉，暂时没有您需要的水果！</p>
-						<p>400-0169-682</p>
+						<p v-text="phone"></p>
 					</dd>
 				</dl>
 			</div>
@@ -30,12 +30,15 @@
 					<dl>
 						<dt>
 							<img v-lazy="item.goodsLogo"/>
+							<span v-if="item.vipGrade > 0" :class = "'icon_vip' + item.vipGrade"></span>
 						</dt>
 						<dd>
 							<h3 class="moreGoods_goods_name ellipsis" v-text="item.goodsName"></h3>
 							<p class="moreGoods_goods_text" v-text="item.goodsShows"></p>
-							<p class="moreGoods_goods_price">
-								<span v-if="logined"><span class="fontColor">{{item.gssPrice}}</span>元/箱 &nbsp; &nbsp;{{item.priceDesc}}</span>
+							<p class="moreGoods_goods_price" v-if="logined">
+								<span v-if="item.vipGrade > 0"><span class="fontColor">{{item.gssPrice}}</span>元/{{item.priceUnit}} &nbsp; &nbsp;<del>{{item.nomalPrice}}元/{{item.priceUnit}}</del></span>
+
+								<span v-else><span class="fontColor">{{item.gssPrice}}</span>元/{{item.priceUnit}} &nbsp; &nbsp;{{item.priceDesc}}</span>
 							</p>
 							<div class="moreGoods_goods_icon">
 								<span v-if="item.isSale" class = "icon_cu"></span>
@@ -53,6 +56,7 @@
 
 <script>
 import { getIsLogin } from "../../common/common.js";
+
 // 节流函数
 const delay = (function() {
     let timer = 0;
@@ -64,17 +68,21 @@ const delay = (function() {
 export default {
 	data() {
 		return {
-			focusState:false,
 			searchVal:'',
 			logined:getIsLogin(),
 			searchList:[],
 			goodsList:[],
 			state:1,//1 未请求,2 请求中,3 请求完毕
-			websiteNode: this.websiteDate.code
+			websiteNode: this.websiteDate.code,
+			phone:''
 		}
   },
   mounted(){
-    this.get_goods_hot()
+	this.get_goods_hot()
+	if(localStorage.getItem("system")) {
+		const system = JSON.parse(localStorage.getItem("system"))
+		this.phone = system.feedback_method
+	}
   },
 	watch:{
 		searchVal() {
@@ -144,6 +152,7 @@ export default {
 		delSearch() {
 			this.searchVal = ''
 			this.goodsList = []
+			this.$refs.focusState.focus()
 		},
 		showSearch(index) {
 			this.searchVal = index;
@@ -157,22 +166,51 @@ export default {
 		goBack() {
 			this.$router.go(-1);
 		},
-	},
-	directives: {
-		focus: {
-			//根据focusState的状态改变是否聚焦focus
-      		update: function (el, value) {  //第二个参数传进来的是个json
-				if (value) {
-					el.focus()
-				}
-			}
-		}
 	}
 }
 </script>
 
 <style scoped>
 @import "../../common/sprite.css";
+.icon_vip1 {
+	display: block;
+	position: absolute;
+	width: 62px;
+	height: 32px;
+	background: url(../../assets/img/vip_icon1_square_active.png);
+	left: 0;
+	top: 0;
+}
+
+.icon_vip2 {
+	display: block;
+	position: absolute;
+	width: 62px;
+	height: 32px;
+	background: url(../../assets/img/vip_icon2_square_active.png);
+	left: 0;
+	top: 0;
+}
+
+.icon_vip3 {
+	display: block;
+	position: absolute;
+	width: 62px;
+	height: 32px;
+	background: url(../../assets/img/vip_icon3_square_active.png);
+	left: 0;
+	top: 0;
+}
+
+.icon_vip4 {
+	display: block;
+	position: absolute;
+	width: 62px;
+	height: 32px;
+	background: url(../../assets/img/vip_icon4_square_active.png);
+	left: 0;
+	top: 0;
+}
 .moreGoods_box_list .moreGoods_goods_name {
 	font-size: 30px;
 	width: 400px;
@@ -290,11 +328,12 @@ export default {
 	height: 100%;
 	overflow: auto;
 }
-
-.search_goods{padding-top: 20px;}
+.search_resurt {
+	padding-top: 20px;
+}
 .search_goods dl{width: 100%;height: 257px;background: #FFF;border-bottom: 1px solid #e7e7e7;padding-top:2px ;}
 .search_goods dl dt,.search_goods dl dd{float: left;}
-.search_goods dl dt{width: 276px;height: 256px;}
+.search_goods dl dt{width: 276px;height: 256px;position: relative;}
 .search_goods dl dt img{width: 250px;height: 250px;}
 .search_goods dl dd {
     width: 474px;

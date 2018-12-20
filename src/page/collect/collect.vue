@@ -22,7 +22,10 @@
 								</div>
 								<p class="often_shop_show" v-text="item.goodsInfo.goodsShows"></p>
 								<div class="often_shop_NumPir">
-									<div class="os_pir">
+									<div class="os_pir" v-if="item.goodsInfo.vipGrade > 0">
+										<span class="often_shop_color" v-text="item.goodsInfo.gssPrice"></span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<del>{{item.goodsInfo.nomalPrice}}元/{{item.goodsInfo.priceUnit}}</del>
+									</div>
+									<div class="os_pir" v-else>
 										<span class="often_shop_color" v-text="item.goodsInfo.gssPrice"></span>元/{{item.goodsInfo.priceUnit}}&nbsp;&nbsp;<span v-text="item.goodsInfo.priceDesc"></span>
 									</div>
 									<div class="os_Num">
@@ -406,8 +409,8 @@ export default {
 	width: 62px;
 	height: 32px;
 	background: url(../../assets/img/vip_icon1_square_active.png);
-	top: 15px;
-	left: 15px;
+	top: 18px;
+	left: 20px;
 }
 
 .icon_vip2 {
@@ -416,8 +419,8 @@ export default {
 	width: 62px;
 	height: 32px;
 	background: url(../../assets/img/vip_icon2_square_active.png);
-	top: 15px;
-	left: 15px;
+	top: 18px;
+	left: 20px;
 }
 
 .icon_vip3 {
@@ -426,8 +429,8 @@ export default {
 	width: 62px;
 	height: 32px;
 	background: url(../../assets/img/vip_icon3_square_active.png);
-	top: 15px;
-	left: 15px;
+	top: 18px;
+	left: 20px;
 }
 
 .icon_vip4 {
@@ -436,8 +439,8 @@ export default {
 	width: 62px;
 	height: 32px;
 	background: url(../../assets/img/vip_icon4_square_active.png);
-	top: 15px;
-	left: 15px;
+	top: 18px;
+	left: 20px;
 }
  .fontColor {
 	color: #eb5c2b;
