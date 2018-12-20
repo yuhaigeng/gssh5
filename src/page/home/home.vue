@@ -87,10 +87,10 @@ export default {
     console.log(this)
     if (sessionStorage.getItem('homePage')) {
       const homePage = JSON.parse(sessionStorage.getItem('homePage'));
-      this.mainActivityList = homePage.data.mainActivityList;
-      this.topList = homePage.data.topList;
-      this.noticeInfoList = homePage.data.noticeInfoList;
-      this.centerList = homePage.data.centerList;
+      this.mainActivityList = homePage.mainActivityList;
+      this.topList = homePage.topList;
+      this.noticeInfoList = homePage.noticeInfoList;
+      this.centerList = homePage.centerList;
     }
     if (getIsLogin()) {
       this.tokenId = getTokenId();
@@ -143,7 +143,7 @@ export default {
         return result.data;
       }).then(data => {
         if (data.statusCode == 100000) {
-          sessionStorage.setItem('homePage',JSON.stringify(data))
+          sessionStorage.setItem('homePage',JSON.stringify(data.data))
           this.mainActivityList = data.data.mainActivityList;
           this.topList = data.data.topList;
           this.noticeInfoList = data.data.noticeInfoList;
