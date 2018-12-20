@@ -328,8 +328,9 @@ export default {
 	height: 100%;
 	overflow: auto;
 }
-
-.search_goods{padding-top: 20px;}
+.search_resurt {
+	padding-top: 20px;
+}
 .search_goods dl{width: 100%;height: 257px;background: #FFF;border-bottom: 1px solid #e7e7e7;padding-top:2px ;}
 .search_goods dl dt,.search_goods dl dd{float: left;}
 .search_goods dl dt{width: 276px;height: 256px;position: relative;}
