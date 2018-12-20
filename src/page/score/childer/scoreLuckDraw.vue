@@ -1,40 +1,38 @@
 <template>
-    <div class="scoreGame">
-        <app-header :type ="headerMsg"></app-header>
+    <div class="scoreGame" :class="{'active':isApp}">
+        <app-header :type ="headerMsg" v-if="!isApp"></app-header>
         <div class="main-wrap">
-            <section id="scroll_section" class="scroll_container">
-                <div class="main score_active">
-                    <div class="score_active_main">
-                        <div class="gonggao-wrap icon_ad2">
-                            <gg-banner :imgList = "ggList" :type = "'scoreActive'" v-if="ggList.length"></gg-banner>
-                        </div>
-                        <div class="score_active_center">
-                            <div class="score_active_turntable">
-                                <img class="pointer1" src="../../../assets/img/img_Pointer@2x.png" alt="" />
-                                <canvas class="item animation0 transform0" id="wheelcanvas" ref="luckyCanvas" width="680px" height="680px" @transitionend="transitionend" @webkitTransitionend="transitionend"></canvas>
-                                <img class="pointer" src="../../../assets/img/btn_Start draw@2x.png" @click="btn_Start"/>
-                            </div>
-                        </div>
-                        <p class="active_count" v-text="'还剩余'+count+'次抽奖机会'"></p>
+            <div class="main score_active">
+                <div class="score_active_main">
+                    <div class="gonggao-wrap icon_ad2">
+                        <gg-banner :imgList = "ggList" :type = "'scoreActive'" v-if="ggList.length"></gg-banner>
                     </div>
-                    <div class="score_active_box score_active_rule sprite_login bg_Headline">
-                        <p class="title">活动规则</p>
-                        <div class="box">
-                            <dl v-html="titleList1"></dl>
+                    <div class="score_active_center">
+                        <div class="score_active_turntable">
+                            <img class="pointer1" src="../../../assets/img/img_Pointer@2x.png" alt="" />
+                            <canvas class="item animation0 transform0" id="wheelcanvas" ref="luckyCanvas" width="680px" height="680px" @transitionend="transitionend" @webkitTransitionend="transitionend"></canvas>
+                            <img class="pointer" src="../../../assets/img/btn_Start draw@2x.png" @click="btn_Start"/>
                         </div>
                     </div>
-                    <!--<div class="score_active_box score_active_prize">
-                        <p class="title"></p>
-                    </div>-->
-                    <div class="score_active_box score_active_matter sprite_login bg_Headline">
-                        <p class="title">注意事项</p>
-                        <ul class="box">
-                            <dl v-html="titleList2"></dl>
-                        </ul>
-                    </div>
-                    <div class="score_active_copy" v-text="activeCopy"></div>
+                    <p class="active_count" v-text="'还剩余'+count+'次抽奖机会'"></p>
                 </div>
-            </section>
+                <div class="score_active_box score_active_rule sprite_login bg_Headline">
+                    <p class="title">活动规则</p>
+                    <div class="box">
+                        <dl v-html="titleList1"></dl>
+                    </div>
+                </div>
+                <!--<div class="score_active_box score_active_prize">
+                    <p class="title"></p>
+                </div>-->
+                <div class="score_active_box score_active_matter sprite_login bg_Headline">
+                    <p class="title">注意事项</p>
+                    <ul class="box">
+                        <dl v-html="titleList2"></dl>
+                    </ul>
+                </div>
+                <div class="score_active_copy" v-text="activeCopy"></div>
+            </div>
 		</div>
     </div>
 </template>
@@ -42,9 +40,8 @@
 <script>
 
 import appHeader from "../../../components/public/header.vue";
-import BScroll from 'better-scroll'
 import ggBanner from "../../banner/gonggaoBanner.vue";
-import { getIsLogin , getTokenId , getUserData, getSecretKey } from "../../../common/common.js";
+import { getIsApp, getIsWeiXin ,getIsAndroid ,getIsLogin , getTokenId , getUserData, getSecretKey , getIsIos } from "../../../common/common.js";
 import { setTimeout } from 'timers';
 export default {
     name:'scoreGame',
@@ -55,11 +52,14 @@ export default {
                 title:'果币抽奖',
                 left:'返回'
             },
+            isApp:getIsApp(),
+            isAndroid:getIsAndroid(),
+            logined: false,
             isLast:false,
             pageSize:this.pageSize,
             pageNo:this.pageNo,
-            websiteNode:this.websiteDate['code'],
-            websiteNodeName:this.websiteDate['name'],
+            websiteNode:'',
+            websiteNodeName:'',
             titleList1:null,
             titleList2:null,
             activeCopy:null,
@@ -88,16 +88,57 @@ export default {
         ggBanner
     },
     mounted(){
-        if(getIsLogin()) {
-            this.tokenId = getTokenId();
-            const userInfo = JSON.parse(getUserData());
-            this.userBasicParam = {
-                firmId : userInfo.firmInfoid,
-                source : 'firmId'+userInfo.firmInfoid,
-                sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
-                tokenId : getTokenId()
+        this.isApp = getIsAndroid() || getIsIos();
+        this.$toast({
+            message :'111',
+            position: 'middle',//top bottom middle
+            duration: 2000,//延时多久消失
+        })
+        if (this.isApp && !getIsWeiXin()) {
+            try{
+                let obj = '';
+                if (this.isAndroid) {
+                    obj = android.getMessage();
+                } else {
+                    obj = getMessage();
+                }
+                obj = JSON.parse(obj);
+                let websiteNodeInfo = {
+                    '3301':'杭州站',
+                    '3302':'宁波站',
+                    '3201':'南京站'
+                }
+                this.logined = true;
+                this.websiteNode = obj.websiteNode;
+                this.websiteNodeName = websiteNodeInfo[obj.websiteNode];
+                this.tokenId = obj.tokenId;
+                this.userBasicParam = {
+                    firmId : obj.firmId,
+                    source : 'firmId'+obj.firmId,
+                    sign : this.$md5('firmId'+obj.firmId+"key"+obj.secretKey).toUpperCase(),
+                    tokenId : obj.tokenId
+                }
+                this.draw_prizes_activity()
+            }catch(e){
+                console.log("APP方法出错"+e)
             }
-            this.draw_prizes_activity()
+        } else {
+            this.logined = getIsLogin();
+            if(this.logined) {
+                this.websiteNode = this.websiteDate['code'];
+                this.websiteNodeName = this.websiteDate['name'];
+                this.tokenId = getTokenId();
+                const userInfo = JSON.parse(getUserData());
+                this.userBasicParam = {
+                    firmId : userInfo.firmInfoid,
+                    source : 'firmId'+userInfo.firmInfoid,
+                    sign : this.$md5('firmId'+userInfo.firmInfoid+"key"+getSecretKey()).toUpperCase(),
+                    tokenId : getTokenId()
+                }
+                this.draw_prizes_activity()
+            }else{
+                this.$router.replace({path:'login'})
+            }
         }
     },
     methods:{
@@ -144,9 +185,9 @@ export default {
         initGgList(arr){
             let ggList = [];
             arr.forEach(element => {
-                    ggList.push({
-                        noticeTitle:element.account.substring(0,3)+'****'+element.account.substring(7,11)+'的'+this.websiteNodeName+'用户获得了'+element.goodsName
-                    })
+                ggList.push({
+                    noticeTitle:element.account.substring(0,3)+'****'+element.account.substring(7,11)+'的'+this.websiteNodeName+'用户获得了'+element.goodsName
+                })
             });
             this.ggList = ggList;
         },
@@ -370,7 +411,7 @@ export default {
             this.isRotate = !this.isRotate;
             this.$messagebox({
                 title:'',
-                message: '恭喜获得' + this.prizesName+"<br/>123"
+                message: '恭喜获得' + this.prizesName
             })
         }
     }
@@ -394,10 +435,7 @@ export default {
     background-color: #ebebeb;
     z-index: 19;
 }
-.scroll_container{
-    width: 100%;
-    height: 100%;
-}
+.scoreGame.active{padding-top: 0}
 .main-wrap{max-width: 750px;width: 100%;margin: 0 auto;background: #ebeaea;}
 .score_active{background-color: #ff4812;}
 .score_active_main{width: 100%;}

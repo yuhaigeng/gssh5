@@ -95,6 +95,11 @@ const getIsAndroid =  function () {
     var sUserAgent = navigator.userAgent.toLowerCase();
     return sUserAgent.match(/Android/i) ? true : false;
 };
+// 判断环境是;
+const getIsIos = function () {
+  var ua = navigator.userAgent.toLowerCase();
+  return !!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);;
+};
 // 判断环境是否为微信
 const getIsWeiXin = function () {
     return navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == 'micromessenger';
@@ -112,6 +117,7 @@ export{
     getTokenId,
     getSecretKey,
     getIsAndroid,
+    getIsIos,
     getIsApp,
     getIsWeiXin,
     getUserData,
